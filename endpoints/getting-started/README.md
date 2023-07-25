@@ -27,7 +27,7 @@ Run the application:
 
 With the app running locally, you can execute the simple echo client using:
 
-    $ php endpoints.php make-request http://localhost:8080 APIKEY
+    $ php src/make_request.php http://localhost:8080 APIKEY
 
 The `APIKEY` can be any string as the local endpoint proxy doesn't need authentication.
 
@@ -47,7 +47,7 @@ With the project deployed, you'll need to create an API key to access the API.
 
 With the API key, you can use the echo client to access the API:
 
-    $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY
+    $ php src/make_request.php https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY
 
 ### Using the JWT client.
 
@@ -80,7 +80,7 @@ To use the service account for authentication:
 
 Now you can use the JWT client to make requests to the API:
 
-    $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/service-account.json
+    $ php src/make_request.php https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/service-account.json
 
 ### Using the ID Token client.
 
@@ -110,7 +110,7 @@ To use the client ID for authentication:
 
 Now you can use the client ID to make requests to the API:
 
-    $ php endpoints.php make-request https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-secrets.json
+    $ php src/make_request.php https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-secrets.json
 
 
 If you experience any issues, try running `gcloud endpoints configs describe` to

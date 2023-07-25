@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START language_classify_text]
+use Google\Cloud\Language\V1\ClassifyTextRequest;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 
 /**
  * @param string $text The text to analyze
@@ -46,7 +47,9 @@ function classify_text(string $text): void
         ->setType(Type::PLAIN_TEXT);
 
     // Call the analyzeSentiment function
-    $response = $languageServiceClient->classifyText($document);
+    $request = (new ClassifyTextRequest())
+        ->setDocument($document);
+    $response = $languageServiceClient->classifyText($request);
     $categories = $response->getCategories();
     // Print document information
     foreach ($categories as $category) {

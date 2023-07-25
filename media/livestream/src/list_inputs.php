@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_list_inputs]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\ListInputsRequest;
 
 /**
  * Lists the inputs for a given location.
@@ -40,8 +41,10 @@ function list_inputs(
     // Instantiate a client.
     $livestreamClient = new LivestreamServiceClient();
     $parent = $livestreamClient->locationName($callingProjectId, $location);
+    $request = (new ListInputsRequest())
+        ->setParent($parent);
 
-    $response = $livestreamClient->listInputs($parent);
+    $response = $livestreamClient->listInputs($request);
     // Print the input list.
     $inputs = $response->iterateAllElements();
     print('Inputs:' . PHP_EOL);

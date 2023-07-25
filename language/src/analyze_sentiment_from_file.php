@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START language_sentiment_gcs]
+use Google\Cloud\Language\V1\AnalyzeSentimentRequest;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 
 /**
  * @param string $uri The cloud storage object to analyze (gs://your-bucket-name/your-object-name)
@@ -41,7 +42,9 @@ function analyze_sentiment_from_file(string $uri): void
         ->setType(Type::PLAIN_TEXT);
 
     // Call the analyzeSentiment function
-    $response = $languageServiceClient->analyzeSentiment($document);
+    $request = (new AnalyzeSentimentRequest())
+        ->setDocument($document);
+    $response = $languageServiceClient->analyzeSentiment($request);
     $document_sentiment = $response->getDocumentSentiment();
     // Print document information
     printf('Document Sentiment:' . PHP_EOL);

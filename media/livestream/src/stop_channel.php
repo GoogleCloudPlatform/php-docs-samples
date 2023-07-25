@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_stop_channel]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\StopChannelRequest;
 
 /**
  * Stops a channel.
@@ -44,7 +45,9 @@ function stop_channel(
     $formattedName = $livestreamClient->channelName($callingProjectId, $location, $channelId);
 
     // Run the channel stop request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->stopChannel($formattedName);
+    $request = (new StopChannelRequest())
+        ->setName($formattedName);
+    $operationResponse = $livestreamClient->stopChannel($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         // Print results

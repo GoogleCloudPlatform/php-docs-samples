@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_cdn_key_akamai]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
-use Google\Cloud\Video\Stitcher\V1\CdnKey;
 use Google\Cloud\Video\Stitcher\V1\AkamaiCdnKey;
+use Google\Cloud\Video\Stitcher\V1\CdnKey;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateCdnKeyRequest;
 
 /**
  * Creates an Akamai CDN key.
@@ -57,10 +58,20 @@ function create_cdn_key_akamai(
     $cdnKey->setAkamaiCdnKey($cloudCdn);
 
     // Run CDN key creation request
-    $response = $stitcherClient->createCdnKey($parent, $cdnKey, $cdnKeyId);
-
-    // Print results
-    printf('CDN key: %s' . PHP_EOL, $response->getName());
+    $request = (new CreateCdnKeyRequest())
+        ->setParent($parent)
+        ->setCdnKey($cdnKey)
+        ->setCdnKeyId($cdnKeyId);
+    $operationResponse = $stitcherClient->createCdnKey($request);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('CDN key: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_create_cdn_key_akamai]
 

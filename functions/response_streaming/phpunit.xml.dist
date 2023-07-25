@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2018 Google Inc.
+  Copyright 2020 Google LLC
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php" colors="true">
+<phpunit bootstrap="../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="App Engine for PHP 7.2 WordPress test">
+        <testsuite name="Cloud Functions HTTP Methods Test Suite">
             <directory>test</directory>
-            <exclude>./vendor</exclude>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-    </php>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">.</directory>
+            <exclude>
+              <directory>./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -15,11 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Samples\Dlp;
 
+use Google\Cloud\Dlp\V2\DlpJob;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use PHPUnitRetry\RetryTrait;
+use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeStats;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
 
 /**
  * Unit Tests for dlp commands.
@@ -28,6 +38,7 @@ class dlpTest extends TestCase
 {
     use TestTrait;
     use RetryTrait;
+    use ProphecyTrait;
 
     public function testInspectImageFile()
     {
@@ -655,6 +666,161 @@ class dlpTest extends TestCase
         $this->assertStringNotContainsString('Info type: PERSON_NAME', $output);
     }
 
+    public function testDeidReidFPEUsingSurrogate()
+    {
+        $unwrappedKey = 'YWJjZGVmZ2hpamtsbW5vcA==';
+        $string = 'My PHONE NUMBER IS 7319976811';
+        $surrogateTypeName = 'PHONE_TOKEN';
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_free_text_with_fpe_using_surrogate', [
+            self::$projectId,
+            $string,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_free_text_with_fpe_using_surrogate', [
+            self::$projectId,
+            $deidOutput,
+            $unwrappedKey,
+            $surrogateTypeName,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testDeIdentifyTableFpe()
+    {
+        $inputCsvFile = __DIR__ . '/data/fpe_input.csv';
+        $outputCsvFile = __DIR__ . '/data/fpe_output_unittest.csv';
+        $outputCsvFile2 = __DIR__ . '/data/reidentify_fpe_ouput_unittest.csv';
+        $encryptedFieldNames = 'EmployeeID';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $output = $this->runFunctionSnippet('deidentify_table_fpe', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $output = $this->runFunctionSnippet('reidentify_table_fpe', [
+            self::$projectId,
+            $outputCsvFile,
+            $outputCsvFile2,
+            $encryptedFieldNames,
+            $keyName,
+            $wrappedKey,
+        ]);
+
+        $this->assertEquals(
+            sha1_file($inputCsvFile),
+            sha1_file($outputCsvFile2)
+        );
+        unlink($outputCsvFile);
+        unlink($outputCsvFile2);
+    }
+
+    public function testDeidReidDeterministic()
+    {
+        $inputString = 'My PHONE NUMBER IS 731997681';
+        $infoTypeName = 'PHONE_NUMBER';
+        $surrogateTypeName = 'PHONE_TOKEN';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_deterministic', [
+            self::$projectId,
+            $keyName,
+            $wrappedKey,
+            $inputString,
+            $infoTypeName,
+            $surrogateTypeName
+        ]);
+        $this->assertMatchesRegularExpression('/My PHONE NUMBER IS PHONE_TOKEN\(\d+\):\(\w|\/|=|\)+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_deterministic', [
+            self::$projectId,
+            $deidOutput,
+            $surrogateTypeName,
+            $keyName,
+            $wrappedKey,
+        ]);
+        $this->assertEquals($inputString, $reidOutput);
+    }
+
+    public function testDeidReidTextFPE()
+    {
+        $string = 'My SSN is 372819127';
+        $keyName = $this->requireEnv('DLP_DEID_KEY_NAME');
+        $wrappedKey = $this->requireEnv('DLP_DEID_WRAPPED_KEY');
+        $surrogateType = 'SSN_TOKEN';
+
+        $deidOutput = $this->runFunctionSnippet('deidentify_fpe', [
+            self::$projectId,
+            $string,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertMatchesRegularExpression('/My SSN is SSN_TOKEN\(\d+\):\d+/', $deidOutput);
+
+        $reidOutput = $this->runFunctionSnippet('reidentify_text_fpe', [
+            self::$projectId,
+            $deidOutput,
+            $keyName,
+            $wrappedKey,
+            $surrogateType,
+        ]);
+        $this->assertEquals($string, $reidOutput);
+    }
+
+    public function testGetJob()
+    {
+
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $getJobName = $this->runFunctionSnippet('list_jobs', [
+            self::$projectId,
+            $filter,
+        ]);
+        preg_match($jobIdRegex, $getJobName, $jobIds);
+        $jobName = $jobIds[0];
+
+        $output = $this->runFunctionSnippet('get_job', [
+            $jobName
+        ]);
+        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
+    }
+
+    public function testCreateJob()
+    {
+        $gcsPath = $this->requireEnv('GCS_PATH');
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertRegExp($jobIdRegex, $jobName);
+        $output = $this->runFunctionSnippet(
+            'delete_job',
+            [$jobName]
+        );
+        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
+    }
+
     public function testRedactImageListedInfotypes()
     {
         $imagePath = __DIR__ . '/data/test.png';
@@ -721,5 +887,199 @@ class dlpTest extends TestCase
             sha1_file($imagePath)
         );
         unlink($outputPath);
+    }
+
+    public function testDeidentifyTimeExtract()
+    {
+        $inputCsvFile = __DIR__ . '/data/table3.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_time_extract_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_time_extract', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString(',1970', $csvLines_ouput[1]);
+
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyDictionaryReplacement()
+    {
+        $string = 'My name is Charlie and email address is charlie@example.com.';
+        $output = $this->runFunctionSnippet('deidentify_dictionary_replacement', [
+            self::$projectId,
+            $string
+        ]);
+        $this->assertStringNotContainsString('charlie@example.com', $output);
+        $this->assertNotEquals($output, $string);
+    }
+
+    public function testDeidentifyTablePrimitiveBucketing()
+    {
+        $inputCsvFile = __DIR__ . '/data/table4.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_primitive_bucketing_output_unittest.csv';
+
+        $output = $this->runFunctionSnippet('deidentify_table_primitive_bucketing', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringContainsString('High', $csvLines_ouput[1]);
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableWithCryptoHash()
+    {
+        $inputCsvFile = __DIR__ . '/data/table5.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_with_crypto_hash_output_unittest.csv';
+        // Generate randome string.
+        $transientCryptoKeyName = sha1(rand());
+
+        $output = $this->runFunctionSnippet('deidentify_table_with_crypto_hash', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $transientCryptoKeyName
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringNotContainsString('user1@example.org', $csvLines_ouput[1]);
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyTableWithMultipleCryptoHash()
+    {
+        $inputCsvFile = __DIR__ . '/data/table6.csv';
+        $outputCsvFile = __DIR__ . '/data/deidentify_table_with_multiple_crypto_hash_output_unittest.csv';
+        // Generate randome string.
+        $transientCryptoKeyName1 = sha1(rand());
+        $transientCryptoKeyName2 = sha1(rand());
+
+        $output = $this->runFunctionSnippet('deidentify_table_with_multiple_crypto_hash', [
+            self::$projectId,
+            $inputCsvFile,
+            $outputCsvFile,
+            $transientCryptoKeyName1,
+            $transientCryptoKeyName2
+        ]);
+
+        $this->assertNotEquals(
+            sha1_file($outputCsvFile),
+            sha1_file($inputCsvFile)
+        );
+
+        $csvLines_input = file($inputCsvFile, FILE_IGNORE_NEW_LINES);
+        $csvLines_ouput = file($outputCsvFile, FILE_IGNORE_NEW_LINES);
+
+        $this->assertEquals($csvLines_input[0], $csvLines_ouput[0]);
+        $this->assertStringNotContainsString('user1@example.org', $csvLines_ouput[1]);
+        $this->assertStringContainsString('abbyabernathy1', $csvLines_ouput[2]);
+        unlink($outputCsvFile);
+    }
+
+    public function testDeidentifyCloudStorage()
+    {
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $inputgcsPath = 'gs://' . $bucketName;
+        $outgcsPath = 'gs://' . $bucketName;
+        $deidentifyTemplateName = $this->requireEnv('DLP_DEIDENTIFY_TEMPLATE');
+        $structuredDeidentifyTemplateName = $this->requireEnv('DLP_STRUCTURED_DEIDENTIFY_TEMPLATE');
+        $imageRedactTemplateName = $this->requireEnv('DLP_IMAGE_REDACT_DEIDENTIFY_TEMPLATE');
+        $datasetId = $this->requireEnv('DLP_DATASET_ID');
+        $tableId = $this->requireEnv('DLP_TABLE_ID');
+
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
+
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
+            ->setState(JobState::PENDING);
+
+        $getDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
+            ->setState(JobState::DONE)
+            ->setInspectDetails((new InspectDataSourceDetails())
+                ->setResult((new Result())
+                    ->setInfoTypeStats([
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
+                            ->setCount(6),
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
+                            ->setCount(9)
+                    ])));
+
+        $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createDlpJobResponse);
+
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($getDlpJobResponse);
+
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/deidentify_cloud_storage.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'deidentify_cloud_storage' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock->reveal();
+
+        $output = $this->runFunctionSnippet($tmpFileName, [
+            self::$projectId,
+            $inputgcsPath,
+            $outgcsPath,
+            $deidentifyTemplateName,
+            $structuredDeidentifyTemplateName,
+            $imageRedactTemplateName,
+            $datasetId,
+            $tableId
+        ]);
+
+        // delete a temp file.
+        unlink($tmpFilePath);
+
+        $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+        $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
     }
 }
