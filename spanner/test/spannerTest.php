@@ -1189,4 +1189,43 @@ class spannerTest extends TestCase
             self::deleteServiceAccount(self::$serviceAccountEmail);
         }
     }
+
+    public function testCreateTableForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('create_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Created Customers and ShoppingCarts table with FKShoppingCartsCustomerId ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateTableForeignKeyDeleteCascade
+     */
+    public function testAlterTableDropForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('drop_foreign_key_constraint_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table to drop FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testAlterTableDropForeignKeyDeleteCascade
+     */
+    public function testAlterTableAddForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('alter_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table with FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
 }
