@@ -19,12 +19,13 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START dlp_quickstart]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
+use Google\Cloud\Dlp\V2\InspectContentRequest;
+use Google\Cloud\Dlp\V2\Likelihood;
 
 // Instantiate a client.
 $dlp = new DlpServiceClient();
@@ -66,11 +67,11 @@ $projectId = getenv('GCLOUD_PROJECT');
 $parent = $dlp->projectName($projectId);
 
 // Run request
-$response = $dlp->inspectContent([
-    'parent' => $parent,
-    'inspectConfig' => $inspectConfig,
-    'item' => $content
-]);
+$inspectContentRequest = (new InspectContentRequest())
+    ->setParent($parent)
+    ->setInspectConfig($inspectConfig)
+    ->setItem($content);
+$response = $dlp->inspectContent($inspectContentRequest);
 
 // Print the results
 $findings = $response->getResult()->getFindings();
