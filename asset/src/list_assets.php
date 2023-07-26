@@ -32,7 +32,10 @@ function list_assets(string $projectId, array $assetTypes = [], int $pageSize = 
     $client = new AssetServiceClient();
 
     // Run request
-    $request = (new ListAssetsRequest());
+    $request = (new ListAssetsRequest())
+        ->setParent("projects/$projectId")
+        ->setAssetTypes($assetTypes)
+        ->setPageSize($pageSize);
     $response = $client->listAssets($request);
 
     // Print the asset names in the result

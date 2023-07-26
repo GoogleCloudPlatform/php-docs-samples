@@ -36,7 +36,9 @@ function export_assets(string $projectId, string $dumpFilePath)
 
     $gcsDestination = new GcsDestination(['uri' => $dumpFilePath]);
     $outputConfig = new OutputConfig(['gcs_destination' => $gcsDestination]);
-    $request = (new ExportAssetsRequest());
+    $request = (new ExportAssetsRequest())
+        ->setParent("projects/$projectId")
+        ->setOutputConfig($outputConfig);
 
     $resp = $client->exportAssets($request);
 
