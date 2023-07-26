@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +32,12 @@ use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\Schedule;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
-use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
+use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
 use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\StorageConfig_TimespanConfig;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
+use Google\Cloud\Dlp\V2\StorageConfig\TimespanConfig;
 use Google\Protobuf\Duration;
 
 /**
@@ -56,12 +55,12 @@ use Google\Protobuf\Duration;
 function create_trigger(
     string $callingProjectId,
     string $bucketName,
-    string $triggerId = '',
-    string $displayName = '',
-    string $description = '',
-    int $scanPeriod = 0,
-    bool $autoPopulateTimespan = false,
-    int $maxFindings = 0
+    string $triggerId,
+    string $displayName,
+    string $description,
+    int $scanPeriod,
+    bool $autoPopulateTimespan,
+    int $maxFindings
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -98,14 +97,14 @@ function create_trigger(
         ->setSchedule($schedule);
 
     // Create the storageConfig object
-    $fileSet = (new CloudStorageOptions_FileSet())
+    $fileSet = (new FileSet())
         ->setUrl('gs://' . $bucketName . '/*');
 
     $storageOptions = (new CloudStorageOptions())
         ->setFileSet($fileSet);
 
     // Auto-populate start and end times in order to scan new objects only.
-    $timespanConfig = (new StorageConfig_TimespanConfig())
+    $timespanConfig = (new TimespanConfig())
         ->setEnableAutoPopulationOfTimespanConfig($autoPopulateTimespan);
 
     $storageConfig = (new StorageConfig())

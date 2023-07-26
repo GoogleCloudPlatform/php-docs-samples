@@ -189,6 +189,7 @@ class dlpTest extends TestCase
         $triggerId = uniqid('my-php-test-trigger-');
         $scanPeriod = 1;
         $autoPopulateTimespan = true;
+        $maxFindings = 10;
 
         $output = $this->runFunctionSnippet('create_trigger', [
             self::$projectId,
@@ -198,6 +199,7 @@ class dlpTest extends TestCase
             $description,
             $scanPeriod,
             $autoPopulateTimespan,
+            $maxFindings
         ]);
         $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertStringContainsString('Successfully created trigger ' . $fullTriggerId, $output);
@@ -207,6 +209,12 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Display Name: ' . $displayName, $output);
         $this->assertStringContainsString('Description: ' . $description, $output);
         $this->assertStringContainsString('Auto-populates timespan config: yes', $output);
+
+        $updateOutput = $this->runFunctionSnippet('update_trigger', [
+            self::$projectId,
+            $triggerId
+        ]);
+        $this->assertStringContainsString('Successfully update trigger ' . $fullTriggerId, $updateOutput);
 
         $output = $this->runFunctionSnippet('delete_trigger', [
             self::$projectId,
@@ -1081,5 +1089,56 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
         $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
+    }
+
+    public function testStoredInfotype()
+    {
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $outputgcsPath = 'gs://' . $bucketName;
+        $storedInfoTypeId = 'github-usernames';
+        $gcsPath = 'gs://' . $bucketName . '/term-list.txt';
+        // Optionally set a display name and a description.
+        $description = 'Dictionary of GitHub usernames used in commits';
+        $displayName = 'GitHub usernames';
+
+        // Test create stored infotype.
+        $output = $this->runFunctionSnippet('create_stored_infotype', [
+            self::$projectId,
+            $outputgcsPath,
+            $storedInfoTypeId,
+            $displayName,
+            $description
+        ]);
+        $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/', $output);
+        $storedInfoTypeName = explode('Successfully created Stored InfoType : ', $output)[1];
+        sleep(10);
+
+        // Test inspect stored infotype.
+        $textToInspect = 'The commit was made by test@gmail.com.';
+        $inspectOutput = $this->runFunctionSnippet('inspect_with_stored_infotype', [
+            self::$projectId,
+            $storedInfoTypeName,
+            $textToInspect
+        ]);
+
+        $this->assertStringContainsString('Quote: The', $inspectOutput);
+        $this->assertStringContainsString('Info type: STORED_TYPE', $inspectOutput);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $inspectOutput);
+
+        // Test update stored infotype.
+        $updateOutput = $this->runFunctionSnippet('update_stored_infotype', [
+            self::$projectId,
+            $gcsPath,
+            $outputgcsPath,
+            $storedInfoTypeId
+        ]);
+        $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId, $updateOutput);
+
+        //Test delete stored infotype.
+        $deletOutput = $this->runFunctionSnippet(
+            'delete_stored_infotype',
+            [$storedInfoTypeName]
+        );
+        $this->assertStringContainsString('Successfully deleted stored infotype ' . $storedInfoTypeName, $deletOutput);
     }
 }
