@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_create_cloud_storage_subscription]
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\CloudStorageConfig;
 
 /**
  * Creates a Pub/Sub GCS subscription.
@@ -36,14 +35,14 @@ use Google\Cloud\PubSub\V1\CloudStorageConfig;
  * @param string $tableName  The Cloud Storage bucket name.
  *        The bucket name must be without any prefix like "gs://".
  */
-function create_storage_subscription($projectId, $topicName, $subscriptionName, $bucket)
+function create_cloud_storage_subscription($projectId, $topicName, $subscriptionName, $bucket)
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
     $topic = $pubsub->topic($topicName);
     $subscription = $topic->subscription($subscriptionName);
-    $config = new CloudStorageConfig(['bucket' => $bucket]);
+    $config = ['bucket' => $bucket];
     $subscription->create([
         'cloudStorageConfig' => $config
     ]);

@@ -313,10 +313,9 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
-        $projectId = $this->requireEnv('GOOGLE_PROJECT_ID');
-        $bucket = $projectId . '.' . $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET');
+        $bucket = $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET');
 
-        $output = $this->runFunctionSnippet('create_storage_subscription', [
+        $output = $this->runFunctionSnippet('create_cloud_storage_subscription', [
             self::$projectId,
             $topic,
             $subscription,
