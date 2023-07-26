@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_export_assets]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\ExportAssetsRequest;
 use Google\Cloud\Asset\V1\GcsDestination;
 use Google\Cloud\Asset\V1\OutputConfig;
 
@@ -35,8 +36,9 @@ function export_assets(string $projectId, string $dumpFilePath)
 
     $gcsDestination = new GcsDestination(['uri' => $dumpFilePath]);
     $outputConfig = new OutputConfig(['gcs_destination' => $gcsDestination]);
+    $request = (new ExportAssetsRequest());
 
-    $resp = $client->exportAssets("projects/$projectId", $outputConfig);
+    $resp = $client->exportAssets($request);
 
     $resp->pollUntilComplete();
 
