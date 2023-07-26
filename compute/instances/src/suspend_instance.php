@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_suspend_instance]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\SuspendInstanceRequest;
 
 /**
  * Suspend a running Google Compute Engine instance.
@@ -43,7 +44,11 @@ function suspend_instance(
 ) {
     // Suspend the running Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->suspend($instanceName, $projectId, $zone);
+    $request = (new SuspendInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->suspend($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

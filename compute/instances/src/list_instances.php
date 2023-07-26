@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_instances_list]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\ListInstancesRequest;
 
 /**
  * List all instances for a particular Cloud project and zone.
@@ -38,7 +39,10 @@ function list_instances(string $projectId, string $zone)
 {
     // List Compute Engine instances using InstancesClient.
     $instancesClient = new InstancesClient();
-    $instancesList = $instancesClient->list($projectId, $zone);
+    $request = (new ListInstancesRequest())
+        ->setProject($projectId)
+        ->setZone($zone);
+    $instancesList = $instancesClient->list($request);
 
     printf('Instances for %s (%s)' . PHP_EOL, $projectId, $zone);
     foreach ($instancesList as $instance) {

@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_disable]
-use Google\Cloud\Compute\V1\ProjectsClient;
+use Google\Cloud\Compute\V1\Client\ProjectsClient;
 use Google\Cloud\Compute\V1\Operation;
+use Google\Cloud\Compute\V1\SetUsageExportBucketProjectRequest;
 
 /**
  * Disable Compute Engine usage export bucket for the Cloud Project.
@@ -38,7 +39,10 @@ function disable_usage_export_bucket(string $projectId)
 {
     // Disable the usage export location by sending null as usageExportLocationResource.
     $projectsClient = new ProjectsClient();
-    $operation = $projectsClient->setUsageExportBucket($projectId, null);
+    $request = (new SetUsageExportBucketProjectRequest())
+        ->setProject($projectId)
+        ->setUsageExportLocationResource(null);
+    $operation = $projectsClient->setUsageExportBucket($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
