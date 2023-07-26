@@ -19,14 +19,16 @@
 namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Exception;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Auth\ApplicationDefaultCredentials;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\DeleteInstanceRequest;
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExponentialBackoffTrait;
-use Google\Auth\ApplicationDefaultCredentials;
+use Google\Cloud\TestUtils\TestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
@@ -80,12 +82,12 @@ trait BigtableTestTrait
             $columns,
             array_fill(0, count($columns), new ColumnFamily)
         ));
+        $createTableRequest = (new CreateTableRequest())
+            ->setParent($formattedParent)
+            ->setTableId($tableId)
+            ->setTable($table);
 
-        self::$tableAdminClient->createtable(
-            $formattedParent,
-            $tableId,
-            $table
-        );
+        self::$tableAdminClient->createtable($createTableRequest);
 
         return $tableId;
     }
@@ -148,7 +150,9 @@ trait BigtableTestTrait
             self::$projectId,
             self::$instanceId
         );
-        self::$instanceAdminClient->deleteInstance($instanceName);
+        $deleteInstanceRequest = (new DeleteInstanceRequest())
+            ->setName($instanceName);
+        self::$instanceAdminClient->deleteInstance($deleteInstanceRequest);
     }
 
     private static function runFileSnippet($sampleName, $params = [])
