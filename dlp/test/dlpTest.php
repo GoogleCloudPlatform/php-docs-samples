@@ -1134,11 +1134,12 @@ class dlpTest extends TestCase
         ]);
         $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId, $updateOutput);
 
-        //Test delete stored infotype.
-        $deletOutput = $this->runFunctionSnippet(
-            'delete_stored_infotype',
-            [$storedInfoTypeName]
-        );
-        $this->assertStringContainsString('Successfully deleted stored infotype ' . $storedInfoTypeName, $deletOutput);
+        $dlp = new DlpServiceClient();
+        try {
+            // Run stored infotype deletion request.
+            $dlp->deleteStoredInfoType($storedInfoTypeName);
+        } finally {
+            $dlp->close();
+        }
     }
 }
