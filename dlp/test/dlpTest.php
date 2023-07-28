@@ -26,10 +26,17 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use PHPUnitRetry\RetryTrait;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Finding;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
+use Google\Cloud\Dlp\V2\InspectContentResponse;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
+use Google\Cloud\Dlp\V2\InspectResult;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\StoredInfoType;
+use Google\Cloud\Dlp\V2\StoredInfoTypeState;
+use Google\Cloud\Dlp\V2\StoredInfoTypeVersion;
 
 /**
  * Unit Tests for dlp commands.
@@ -1101,45 +1108,129 @@ class dlpTest extends TestCase
         $description = 'Dictionary of GitHub usernames used in commits';
         $displayName = 'GitHub usernames';
 
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock1 = $this->prophesize(DlpServiceClient::class);
+
+        $createStoredInfoTypeResponse = (new StoredInfoType())
+            ->setName('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId)
+            ->setCurrentVersion((new StoredInfoTypeVersion())
+                    ->setState(StoredInfoTypeState::READY)
+            );
+
+        $inspectContentResponse = (new InspectContentResponse())
+            ->setResult((new InspectResult())
+                ->setFindings([
+                    (new Finding())
+                        ->setQuote('The')
+                        ->setInfoType((new InfoType())->setName('STORED_TYPE'))
+                        ->setLikelihood(Likelihood::VERY_LIKELY)
+                ]));
+
+        $dlpServiceClientMock1->createStoredInfoType(Argument::any(), Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createStoredInfoTypeResponse);
+
+        $dlpServiceClientMock1->inspectContent(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($inspectContentResponse);
+
+        $dlpServiceClientMock1->updateStoredInfoType(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createStoredInfoTypeResponse);
+
         // Test create stored infotype.
-        $output = $this->runFunctionSnippet('create_stored_infotype', [
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/create_stored_infotype.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'create_stored_infotype' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent,
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        $output = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
             $outputgcsPath,
             $storedInfoTypeId,
             $displayName,
             $description
         ]);
+        // delete temp file
+        unlink($tmpFilePath);
         $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/', $output);
         $storedInfoTypeName = explode('Successfully created Stored InfoType : ', $output)[1];
-        sleep(10);
 
         // Test inspect stored infotype.
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/inspect_with_stored_infotype.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'inspect_with_stored_infotype' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent,
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
         $textToInspect = 'The commit was made by test@gmail.com.';
-        $inspectOutput = $this->runFunctionSnippet('inspect_with_stored_infotype', [
+        $inspectOutput = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
             $storedInfoTypeName,
             $textToInspect
         ]);
+        // delete temp file
+        unlink($tmpFilePath);
 
         $this->assertStringContainsString('Quote: The', $inspectOutput);
         $this->assertStringContainsString('Info type: STORED_TYPE', $inspectOutput);
         $this->assertStringContainsString('Likelihood: VERY_LIKELY', $inspectOutput);
 
         // Test update stored infotype.
-        $updateOutput = $this->runFunctionSnippet('update_stored_infotype', [
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/update_stored_infotype.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'update_stored_infotype' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent,
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        $updateOutput = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
             $gcsPath,
             $outputgcsPath,
             $storedInfoTypeId
         ]);
+        // delete temp file
+        unlink($tmpFilePath);
         $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId, $updateOutput);
-
-        $dlp = new DlpServiceClient();
-        try {
-            // Run stored infotype deletion request.
-            $dlp->deleteStoredInfoType($storedInfoTypeName);
-        } finally {
-            $dlp->close();
-        }
     }
 }
