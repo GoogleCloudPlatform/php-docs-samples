@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -1233,8 +1234,13 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Bucket size range: [1, 1]', $output);
     }
 
-    public function create_hybrid_job_trigger(string $triggerId, string $displayName, string $description): string
+    public function testInspectSendDataToHybridJobTrigger()
     {
+        $displayName = uniqid('My trigger display name ');
+        $description = uniqid('My trigger description ');
+        $triggerId = uniqid('my-php-test-trigger-');
+        $string = 'My email is test@example.org';
+
         // Instantiate a client.
         $dlp = new DlpServiceClient();
 
@@ -1280,21 +1286,7 @@ class dlpTest extends TestCase
             'triggerId' => $triggerId
         ]);
 
-        return $trigger->getName();
-    }
-
-    public function testInspectSendDataToHybridJobTrigger()
-    {
-        $displayName = uniqid('My trigger display name ');
-        $description = uniqid('My trigger description ');
-        $triggerId = uniqid('my-php-test-trigger-');
-        $string = 'My email is test@example.org';
-
-        $fullTriggerId = $this->create_hybrid_job_trigger(
-            $triggerId,
-            $displayName,
-            $description
-        );
+        $fullTriggerId = $trigger->getName();
 
         // Mock the necessary objects and methods
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
@@ -1362,5 +1354,11 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
         $this->assertStringContainsString('infoType PHONE_NUMBER', $output);
+
+        $output = $this->runFunctionSnippet('delete_trigger', [
+            self::$projectId,
+            $triggerId
+        ]);
+        $this->assertStringContainsString('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 }
