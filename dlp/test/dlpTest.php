@@ -1095,7 +1095,7 @@ class dlpTest extends TestCase
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
         $outputgcsPath = 'gs://' . $bucketName;
-        $storedInfoTypeId = 'github-usernames';
+        $storedInfoTypeId = uniqid('github-usernames-');
         $gcsPath = 'gs://' . $bucketName . '/term-list.txt';
         // Optionally set a display name and a description.
         $description = 'Dictionary of GitHub usernames used in commits';
