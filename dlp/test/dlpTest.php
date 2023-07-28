@@ -1103,7 +1103,6 @@ class dlpTest extends TestCase
 
     public function testDeidentifyReplaceInfotype()
     {
-
         $inputString = 'Please call Steve Smith. His number is (555) 253-0000.';
         $output = $this->runFunctionSnippet('deidentify_replace_infotype', [
             self::$projectId,
@@ -1115,7 +1114,6 @@ class dlpTest extends TestCase
 
     public function testKAnonymityWithEntityId()
     {
-
         $datasetId = $this->requireEnv('DLP_DATASET_ID');
         $tableId = $this->requireEnv('DLP_TABLE_ID');
 
