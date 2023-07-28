@@ -76,7 +76,7 @@ function inspect_send_data_to_hybrid_job_trigger(
     $triggerJob = null;
     try {
         $triggerJob = $dlp->activateJobTrigger($name);
-    } catch (\Exception $e) {
+    } catch (\InvalidArgumentException $e) {
         $result = $dlp->listDlpJobs($parent, ['filter' => 'trigger_name=' . $name]);
         foreach ($result as $job) {
             $triggerJob = $job;

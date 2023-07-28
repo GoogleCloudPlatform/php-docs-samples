@@ -29,19 +29,17 @@ use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\Action\SaveFindings;
 use Google\Cloud\Dlp\V2\EntityId;
 use Google\Cloud\Dlp\V2\PrivacyMetric\KAnonymityConfig;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\Dlp\V2\OutputStorageConfig;
 
 /**
  * Computes the k-anonymity of a column set in a Google BigQuery table with entity id.
  *
  * @param string    $callingProjectId  The project ID to run the API call under.
- * @param string    $topicId           The name of the Pub/Sub topic to notify once the job completes.
- * @param string    $subscriptionId    The name of the Pub/Sub subscription to use when listening for job.
  * @param string    $datasetId         The ID of the dataset to inspect.
  * @param string    $tableId           The ID of the table to inspect.
  * @param string[]  $quasiIdNames      Array columns that form a composite key (quasi-identifiers).
@@ -50,16 +48,18 @@ use Google\Cloud\PubSub\PubSubClient;
 function k_anonymity_with_entity_id(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $topicId,
-    string $subscriptionId,
     string $datasetId,
     string $tableId,
     array  $quasiIdNames
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
-    $pubsub = new PubSubClient();
-    $topic = $pubsub->topic($topicId);
+
+    // Specify the BigQuery table to analyze.
+    $bigqueryTable = (new BigQueryTable())
+        ->setProjectId($callingProjectId)
+        ->setDatasetId($datasetId)
+        ->setTableId($tableId);
 
     // Create a list of FieldId objects based on the provided list of column names.
     $quasiIds = array_map(
@@ -81,18 +81,22 @@ function k_anonymity_with_entity_id(
     $privacyMetric = (new PrivacyMetric())
         ->setKAnonymityConfig($statsConfig);
 
-    // Specify the BigQuery table to analyze.
-    $bigqueryTable = (new BigQueryTable())
+    // Specify the bigquery table to store the findings.
+    // The "test_results" table in the given BigQuery dataset will be created if it doesn't
+    // already exist.
+    $outBigqueryTable = (new BigQueryTable())
         ->setProjectId($callingProjectId)
         ->setDatasetId($datasetId)
-        ->setTableId($tableId);
+        ->setTableId('test_results');
 
-    // Create action to publish job status notifications over Google Cloud Pub/Sub.
-    $pubSubAction = (new PublishToPubSub())
-        ->setTopic($topic->name());
+    $outputStorageConfig = (new OutputStorageConfig())
+        ->setTable($outBigqueryTable);
+
+    $findings = (new SaveFindings())
+        ->setOutputConfig($outputStorageConfig);
 
     $action = (new Action())
-        ->setPubSub($pubSubAction);
+        ->setSaveFindings($findings);
 
     // Construct risk analysis job config to run.
     $riskJob = (new RiskAnalysisJobConfig())
@@ -100,37 +104,22 @@ function k_anonymity_with_entity_id(
         ->setSourceTable($bigqueryTable)
         ->setActions([$action]);
 
-    // Listen for job notifications via an existing topic/subscription.
-    $subscription = $topic->subscription($subscriptionId);
-
     // Submit request.
     $parent = "projects/$callingProjectId/locations/global";
     $job = $dlp->createDlpJob($parent, [
         'riskJob' => $riskJob
     ]);
 
-    // Poll Pub/Sub using exponential backoff until job finishes.
-    // Consider using an asynchronous execution model such as Cloud Functions.
-    $attempt = 1;
-    $startTime = time();
+    $numOfAttempts = 10;
     do {
-        foreach ($subscription->pull() as $message) {
-            if (
-                isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()
-            ) {
-                $subscription->acknowledge($message);
-                // Get the updated job. Loop to avoid race condition with DLP API.
-                do {
-                    $job = $dlp->getDlpJob($job->getName());
-                } while ($job->getState() == JobState::RUNNING);
-                break 2; // break from parent do while.
-            }
-        }
         printf('Waiting for job to complete' . PHP_EOL);
-        // Exponential backoff with max delay of 60 seconds.
-        sleep(min(60, pow(2, ++$attempt)));
-    } while (time() - $startTime < 600); // 10 minute timeout.
+        sleep(10);
+        $job = $dlp->getDlpJob($job->getName());
+        if ($job->getState() == JobState::DONE) {
+            break;
+        }
+        $numOfAttempts--;
+    } while ($numOfAttempts > 0);
 
     // Print finding counts
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));

@@ -35,10 +35,6 @@ use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityEquivalenceClass;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityHistogramBucket;
 use Google\Cloud\Dlp\V2\Value;
-use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\Topic;
-use Google\Cloud\PubSub\Subscription;
-use Google\Cloud\PubSub\Message;
 use Google\Cloud\Dlp\V2\HybridInspectResponse;
 use Google\Cloud\Dlp\V2\HybridOptions;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -1154,43 +1150,6 @@ class dlpTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($getDlpJobResponse);
 
-        $pubsubObj = new PubSubClient();
-        $topic = $pubsubObj->createTopic('dlp-pubsub-topic-test');
-        $topicId = $topic->name();
-        $subscriptionId = 'dlp-subcription-test';
-        $subscription = $topic->subscription($subscriptionId);
-        $subscription->create();
-
-        $pubSubClientMock = $this->prophesize(PubSubClient::class);
-        $topicMock = $this->prophesize(Topic::class);
-        $subscriptionMock = $this->prophesize(Subscription::class);
-        $messageMock = $this->prophesize(Message::class);
-
-        // Set up the mock expectations for the Pub/Sub functions
-        $pubSubClientMock->topic($topicId)
-            ->shouldBeCalled()
-            ->willReturn($topicMock->reveal());
-
-        $topicMock->name()
-            ->shouldBeCalled()
-            ->willReturn('projects/' . self::$projectId . '/topics/' . $topicId);
-
-        $topicMock->subscription($subscriptionId)
-            ->shouldBeCalled()
-            ->willReturn($subscriptionMock->reveal());
-
-        $subscriptionMock->pull()
-            ->shouldBeCalled()
-            ->willReturn([$messageMock->reveal()]);
-
-        $messageMock->attributes()
-            ->shouldBeCalledTimes(2)
-            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/job-name-123']);
-
-        $subscriptionMock->acknowledge(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($messageMock->reveal());
-
         // Creating a temp file for testing.
         $sampleFile = __DIR__ . '/../src/k_anonymity_with_entity_id.php';
         $tmpFileName = basename($sampleFile, '.php') . '_temp';
@@ -1199,7 +1158,6 @@ class dlpTest extends TestCase
         $fileContent = file_get_contents($sampleFile);
         $replacements = [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            '$pubsub = new PubSubClient();' => 'global $pubsub;',
             'k_anonymity_with_entity_id' => $tmpFileName
         ];
         $fileContent = strtr($fileContent, $replacements);
@@ -1208,23 +1166,17 @@ class dlpTest extends TestCase
             $fileContent,
         );
         global $dlp;
-        global $pubsub;
 
         $dlp = $dlpServiceClientMock->reveal();
-        $pubsub = $pubSubClientMock->reveal();
 
         // Call the method under test
         $output = $this->runFunctionSnippet($tmpFileName, [
             self::$projectId,
-            $topicId,
-            $subscriptionId,
             $datasetId,
             $tableId,
             ['Age', 'Mystery']
         ]);
-        // delete topic , subscription , and temp file
-        $topic->delete();
-        $subscription->delete();
+        // delete temp file
         unlink($tmpFilePath);
 
         // Assert the expected behavior or outcome
