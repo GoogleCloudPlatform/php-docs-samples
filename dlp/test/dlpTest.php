@@ -1234,13 +1234,11 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Bucket size range: [1, 1]', $output);
     }
 
-    public function testInspectSendDataToHybridJobTrigger()
-    {
-        $displayName = uniqid('My trigger display name ');
-        $description = uniqid('My trigger description ');
-        $triggerId = uniqid('my-php-test-trigger-');
-        $string = 'My email is test@example.org';
-
+    public function create_hybrid_job_trigger(
+        string $triggerId,
+        string $displayName,
+        string $description
+    ): string {
         // Instantiate a client.
         $dlp = new DlpServiceClient();
 
@@ -1286,7 +1284,21 @@ class dlpTest extends TestCase
             'triggerId' => $triggerId
         ]);
 
-        $fullTriggerId = $trigger->getName();
+        return $trigger->getName();
+    }
+
+    public function testInspectSendDataToHybridJobTrigger()
+    {
+        $displayName = uniqid('My trigger display name ');
+        $description = uniqid('My trigger description ');
+        $triggerId = uniqid('my-php-test-trigger-');
+        $string = 'My email is test@example.org';
+
+        $fullTriggerId = $this->create_hybrid_job_trigger(
+            $triggerId,
+            $displayName,
+            $description
+        );
 
         // Mock the necessary objects and methods
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
