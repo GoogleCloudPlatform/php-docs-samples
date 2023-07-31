@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function query_cursor_start_at_document(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_start_at_snapshot_query_cursor]
     # [START firestore_query_cursor_start_at_document]
     $citiesRef = $db->collection('samples/php/cities');
     $docRef = $citiesRef->document('SF');
@@ -46,7 +45,6 @@ function query_cursor_start_at_document(string $projectId): void
         ->orderBy('population')
         ->startAt($snapshot);
     # [END firestore_query_cursor_start_at_document]
-    # [END fs_start_at_snapshot_query_cursor]
     $snapshot = $query->documents();
     foreach ($snapshot as $document) {
         printf('Document %s returned by start at SF snapshot query cursor.' . PHP_EOL, $document->id());

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+// [START functions_cloudevent_storage]
 // [START functions_helloworld_storage]
 
 use CloudEvents\V1\CloudEventInterface;
@@ -29,6 +30,7 @@ FunctionsFramework::cloudEvent('helloGCS', 'helloGCS');
 
 function helloGCS(CloudEventInterface $cloudevent)
 {
+    // This function supports all Cloud Storage event types.
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
     $data = $cloudevent->getData();
     fwrite($log, 'Event: ' . $cloudevent->getId() . PHP_EOL);
@@ -40,4 +42,5 @@ function helloGCS(CloudEventInterface $cloudevent)
     fwrite($log, 'Updated: ' . $data['updated'] . PHP_EOL);
 }
 
+// [END functions_cloudevent_storage]
 // [END functions_helloworld_storage]

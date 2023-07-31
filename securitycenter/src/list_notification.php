@@ -15,26 +15,31 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 1) {
-    return printf('Usage: php %s ORGANIZATION_ID\n', basename(__FILE__));
-}
-list($_, $organizationId) = $argv;
+namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_list_notification_configs]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
-/** Uncomment and populate these variables in your code */
-// $organizationId = '{your-org-id}';
+/**
+ * @param string $organizationId        Your org ID
+ */
+function list_notification(string $organizationId): void
+{
+    $securityCenterClient = new SecurityCenterClient();
+    // 'parent' must be in one of the following formats:
+    //		"organizations/{orgId}"
+    //		"projects/{projectId}"
+    //		"folders/{folderId}"
+    $parent = $securityCenterClient::organizationName($organizationId);
 
-$securityCenterClient = new SecurityCenterClient();
-$organizationName = $securityCenterClient::organizationName($organizationId);
+    foreach ($securityCenterClient->listNotificationConfigs($parent) as $element) {
+        printf('Found notification config %s' . PHP_EOL, $element->getName());
+    }
 
-foreach ($securityCenterClient->listNotificationConfigs($organizationName) as $element) {
-    printf('Found notification config %s' . PHP_EOL, $element->getName());
+    print('Notification configs were listed' . PHP_EOL);
 }
-
-print('Notification configs were listed' . PHP_EOL);
-
 // [END securitycenter_list_notification_configs]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

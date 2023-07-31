@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -32,7 +32,6 @@ use Google\Cloud\Firestore\FirestoreClient;
  * @param string $collectionName
  * @param int $batchSize
  */
-# [START fs_delete_collection]
 # [START firestore_data_delete_collection]
 function data_delete_collection(string $projectId, string $collectionName, int $batchSize)
 {
@@ -51,7 +50,6 @@ function data_delete_collection(string $projectId, string $collectionName, int $
     }
 }
 # [END firestore_data_delete_collection]
-# [END fs_delete_collection]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

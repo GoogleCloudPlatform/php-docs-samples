@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -40,7 +40,6 @@ function data_set_from_map_nested(string $projectId): void
     ]);
     // Set the reference document
     $db->collection('samples/php/data')->document('two')->set(['foo' => 'bar']);
-    # [START fs_add_doc_data_types]
     # [START firestore_data_set_from_map_nested]
     $data = [
         'stringExample' => 'Hello World',
@@ -55,7 +54,6 @@ function data_set_from_map_nested(string $projectId): void
     $db->collection('samples/php/data')->document('one')->set($data);
     printf('Set multiple data-type data for the one document in the data collection.' . PHP_EOL);
     # [END firestore_data_set_from_map_nested]
-    # [END fs_add_doc_data_types]
 }
 
 // The following 2 lines are only needed to run the samples

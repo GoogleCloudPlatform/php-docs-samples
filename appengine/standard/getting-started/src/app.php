@@ -69,7 +69,7 @@ $container->set('cloudsql', function ($container) {
     // $dbName = 'YOUR_CLOUDSQL_DATABASE_NAME';
     // $dbUser = 'YOUR_CLOUDSQL_USER';
     // $dbPass = 'YOUR_CLOUDSQL_PASSWORD';
-    $dsn = "mysql:unix_socket=/cloudsql/${dbConn};dbname=${dbName}";
+    $dsn = "mysql:unix_socket=/cloudsql/{$dbConn};dbname={$dbName}";
     $pdo = new PDO($dsn, $dbUser, $dbPass);
     // [END gae_php_app_cloudsql_client_setup]
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

@@ -18,53 +18,62 @@
 /*
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/secretmanager/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/secretmanager/README.md
  */
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID SECRET_ID MEMBER\n", basename(__FILE__));
-}
-list($_, $projectId, $secretId, $member) = $argv;
+namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_iam_revoke_access]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'YOUR_GOOGLE_CLOUD_PROJECT' (e.g. 'my-project');
-// $secretId = 'YOUR_SECRET_ID' (e.g. 'my-secret');
-// $member = 'YOUR_MEMBER' (e.g. 'user:foo@example.com');
+/**
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $secretId  Your secret ID (e.g. 'my-secret')
+ * @param string $member Your member (e.g. 'user:foo@example.com')
+ */
+function iam_revoke_access(string $projectId, string $secretId, string $member): void
+{
+    // Create the Secret Manager client.
+    $client = new SecretManagerServiceClient();
 
-// Create the Secret Manager client.
-$client = new SecretManagerServiceClient();
+    // Build the resource name of the secret.
+    $name = $client->secretName($projectId, $secretId);
 
-// Build the resource name of the secret.
-$name = $client->secretName($projectId, $secretId);
+    // Get the current IAM policy.
+    $policy = $client->getIamPolicy((new GetIamPolicyRequest)->setResource($name));
 
-// Get the current IAM policy.
-$policy = $client->getIamPolicy($name);
-
-// Remove the member from the list of bindings.
-foreach ($policy->getBindings() as $binding) {
-    if ($binding->getRole() == 'roles/secretmanager.secretAccessor') {
-        $members = $binding->getMembers();
-        foreach ($members as $i => $existingMember) {
-            if ($member == $existingMember) {
-                unset($members[$i]);
-                $binding->setMembers($members);
-                break;
+    // Remove the member from the list of bindings.
+    foreach ($policy->getBindings() as $binding) {
+        if ($binding->getRole() == 'roles/secretmanager.secretAccessor') {
+            $members = $binding->getMembers();
+            foreach ($members as $i => $existingMember) {
+                if ($member == $existingMember) {
+                    unset($members[$i]);
+                    $binding->setMembers($members);
+                    break;
+                }
             }
         }
     }
+
+    // Build the request.
+    $request = (new SetIamPolicyRequest)
+        ->setResource($name)
+        ->setPolicy($policy);
+
+    // Save the updated policy to the server.
+    $client->setIamPolicy($request);
+
+    // Print out a success message.
+    printf('Updated IAM policy for %s', $secretId);
 }
-
-// Save the updated policy to the server.
-$client->setIamPolicy($name, $policy);
-
-// Print out a success message.
-printf('Updated IAM policy for %s', $secretId);
 // [END secretmanager_iam_revoke_access]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

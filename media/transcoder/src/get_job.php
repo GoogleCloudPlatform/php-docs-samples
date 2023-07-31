@@ -19,13 +19,14 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_get_job]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\GetJobRequest;
 
 /**
  * Gets a Transcoder job.
@@ -40,7 +41,9 @@ function get_job($projectId, $location, $jobId)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedName = $transcoderServiceClient->jobName($projectId, $location, $jobId);
-    $job = $transcoderServiceClient->getJob($formattedName);
+    $request = (new GetJobRequest())
+        ->setName($formattedName);
+    $job = $transcoderServiceClient->getJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $job->getName());

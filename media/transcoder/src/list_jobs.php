@@ -19,13 +19,14 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_list_jobs]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\ListJobsRequest;
 
 /**
  * Lists all Transcoder jobs in a location.
@@ -39,7 +40,9 @@ function list_jobs($projectId, $location)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedParent = $transcoderServiceClient->locationName($projectId, $location);
-    $response = $transcoderServiceClient->listJobs($formattedParent);
+    $request = (new ListJobsRequest())
+        ->setParent($formattedParent);
+    $response = $transcoderServiceClient->listJobs($request);
 
     // Print job list.
     $jobs = $response->iterateAllElements();

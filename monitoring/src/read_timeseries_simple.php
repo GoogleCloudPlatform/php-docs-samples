@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
@@ -26,7 +26,7 @@ namespace Google\Cloud\Samples\Monitoring;
 // [START monitoring_read_timeseries_simple]
 use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Cloud\Monitoring\V3\TimeInterval;
-use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -56,7 +56,7 @@ function read_timeseries_simple($projectId, $minutesAgo = 20)
     $interval->setStartTime($startTime);
     $interval->setEndTime($endTime);
 
-    $view = ListTimeSeriesRequest_TimeSeriesView::FULL;
+    $view = TimeSeriesView::FULL;
 
     $result = $metrics->listTimeSeries(
         $projectName,
@@ -74,3 +74,7 @@ function read_timeseries_simple($projectId, $minutesAgo = 20)
     }
 }
 // [END monitoring_read_timeseries_simple]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

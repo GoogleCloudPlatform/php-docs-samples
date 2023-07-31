@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_update_backup]
 use Google\Cloud\Spanner\SpannerClient;
+use DateTime;
 
 /**
  * Update the backup expire time.
@@ -35,17 +36,21 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function update_backup($instanceId, $backupId)
+function update_backup(string $instanceId, string $backupId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $backup = $instance->backup($backupId);
+    $backup->reload();
 
-    // Expire time must be within 366 days of the create time of the backup.
-    $newTimestamp = new \DateTime('+30 days');
-    $backup->updateExpireTime($newTimestamp);
+    $newExpireTime = new DateTime('+30 days');
+    $maxExpireTime = new DateTime($backup->info()['maxExpireTime']);
+    // The new expire time can't be greater than maxExpireTime for the backup.
+    $newExpireTime = min($newExpireTime, $maxExpireTime);
 
-    print("Backup $backupId new expire time: " . $backup->info()['expireTime'] . PHP_EOL);
+    $backup->updateExpireTime($newExpireTime);
+
+    printf('Backup %s new expire time: %s' . PHP_EOL, $backupId, $backup->info()['expireTime']);
 }
 // [END spanner_update_backup]
 

@@ -17,7 +17,7 @@
 
 declare(strict_types=1);
 
-use GuzzleHttp\Psr7;
+use Slim\Psr7\Factory\StreamFactory;
 
 include __DIR__ . '/vendor/autoload.php';
 
@@ -48,7 +48,8 @@ $app->post('/', function ($request, $response) {
             : 'An error occurred';
     }
 
-    return $response->withBody(Psr7\stream_for($message));
+    $streamFactory = new StreamFactory;
+    return $response->withBody($streamFactory->createStream($message));
 });
 
 $app->run();

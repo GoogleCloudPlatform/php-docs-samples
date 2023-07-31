@@ -9,7 +9,7 @@
     "scripts": {
         "start": [
            "Composer\\Config::disableProcessTimeout",
-           "FUNCTION_TARGET=tipsRetry php -S localhost:${PORT:-8080} vendor/bin/router.php"
+           "FUNCTION_TARGET=tipsRetry php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     }
 }

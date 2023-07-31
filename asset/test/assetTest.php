@@ -19,16 +19,19 @@ namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
 
 /**
  * Unit Tests for asset commands.
+ *
+ * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
  */
 class assetTest extends TestCase
 {
+    use RetryTrait;
     use TestTrait;
-    use EventuallyConsistentTestTrait;
 
     private static $storage;
     private static $bucketName;
@@ -62,28 +65,24 @@ class assetTest extends TestCase
     public function testListAssets()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
-        $this->runEventuallyConsistentTest(function () use ($assetName) {
-            $output = $this->runFunctionSnippet('list_assets', [
-                'projectId' => self::$projectId,
-                'assetTypes' => ['storage.googleapis.com/Bucket'],
-                'pageSize' => 1000,
-            ]);
+        $output = $this->runFunctionSnippet('list_assets', [
+            'projectId' => self::$projectId,
+            'assetTypes' => ['storage.googleapis.com/Bucket'],
+            'pageSize' => 1000,
+        ]);
 
-            $this->assertStringContainsString($assetName, $output);
-        }, 10, true);
+        $this->assertStringContainsString($assetName, $output);
     }
 
     public function testBatchGetAssetsHistory()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
 
-        $this->runEventuallyConsistentTest(function () use ($assetName) {
-            $output = $this->runFunctionSnippet('batch_get_assets_history', [
-                'projectId' => self::$projectId,
-                'assetNames' => [$assetName],
-            ]);
+        $output = $this->runFunctionSnippet('batch_get_assets_history', [
+            'projectId' => self::$projectId,
+            'assetNames' => [$assetName],
+        ]);
 
-            $this->assertStringContainsString($assetName, $output);
-        }, 10, true);
+        $this->assertStringContainsString($assetName, $output);
     }
 }

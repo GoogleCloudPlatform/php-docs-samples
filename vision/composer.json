@@ -3,37 +3,6 @@
     "type": "project",
     "require": {
         "google/cloud-vision": "^1.0.0",
-        "google/cloud-storage": "^1.20.1",
-        "symfony/console": "^5.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Vision\\": "src/"
-        },
-        "files": [
-            "src/detect_label.php",
-            "src/detect_label_gcs.php",
-            "src/detect_text.php",
-            "src/detect_text_gcs.php",
-            "src/detect_face.php",
-            "src/detect_face_gcs.php",
-            "src/detect_landmark.php",
-            "src/detect_landmark_gcs.php",
-            "src/detect_logo.php",
-            "src/detect_logo_gcs.php",
-            "src/detect_safe_search.php",
-            "src/detect_safe_search_gcs.php",
-            "src/detect_image_property.php",
-            "src/detect_image_property_gcs.php",
-            "src/detect_document_text.php",
-            "src/detect_document_text_gcs.php",
-            "src/detect_web.php",
-            "src/detect_web_gcs.php",
-            "src/detect_object.php",
-            "src/detect_object_gcs.php",
-            "src/detect_web_with_geo_metadata.php",
-            "src/detect_web_with_geo_metadata_gcs.php",
-            "src/detect_pdf_gcs.php"
-        ]
+        "google/cloud-storage": "^1.20.1"
     }
 }

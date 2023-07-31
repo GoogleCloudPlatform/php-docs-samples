@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -37,9 +37,10 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
- * @param string $versionTime The version of the database to backup.
+ * @param string $versionTime The version of the database to backup. Read more
+ * at https://cloud.google.com/spanner/docs/reference/rest/v1/projects.instances.backups#Backup.FIELDS.version_time
  */
-function create_backup($instanceId, $databaseId, $backupId, $versionTime)
+function create_backup(string $instanceId, string $databaseId, string $backupId, string $versionTime = '-1hour'): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -64,7 +65,7 @@ function create_backup($instanceId, $databaseId, $backupId, $versionTime)
             'Backup %s of size %d bytes was created at %s for version of database at %s' . PHP_EOL,
             basename($info['name']), $info['sizeBytes'], $info['createTime'], $info['versionTime']);
     } else {
-        print('Backup is not ready!' . PHP_EOL);
+        printf('Unexpected state: %s' . PHP_EOL, $backup->state());
     }
 }
 // [END spanner_create_backup]

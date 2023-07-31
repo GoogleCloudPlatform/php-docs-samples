@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
  */
 
 namespace Google\Cloud\Samples\Firestore;
@@ -36,7 +36,6 @@ function query_cursor_pagination(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    # [START fs_paginated_query_cursor]
     # [START firestore_query_cursor_pagination]
     $citiesRef = $db->collection('samples/php/cities');
     $firstQuery = $citiesRef->orderBy('population')->limit(3);
@@ -53,7 +52,6 @@ function query_cursor_pagination(string $projectId): void
     $nextQuery = $citiesRef->orderBy('population')->startAfter([$lastPopulation]);
     $snapshot = $nextQuery->documents();
     # [END firestore_query_cursor_pagination]
-    # [END fs_paginated_query_cursor]
     foreach ($snapshot as $document) {
         printf('Document %s returned by paginated query cursor.' . PHP_EOL, $document->id());
     }

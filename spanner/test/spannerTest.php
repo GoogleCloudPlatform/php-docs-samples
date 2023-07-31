@@ -17,14 +17,22 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-use Google\Cloud\Spanner\Database;
+use Google\Cloud\Spanner\InstanceConfiguration;
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Instance;
+use Google\Cloud\Spanner\Transaction;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnitRetry\RetryTrait;
 use PHPUnit\Framework\TestCase;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 
+/**
+ * @retryAttempts 3
+ * @retryDelayMethod exponentialBackoff
+ */
 class spannerTest extends TestCase
 {
     use TestTrait {
@@ -82,6 +90,21 @@ class spannerTest extends TestCase
     /** @var $lastUpdateData int */
     protected static $lastUpdateDataTimestamp;
 
+    /** @var string $baseConfigId */
+    protected static $baseConfigId;
+
+    /** @var string $customInstanceConfigId */
+    protected static $customInstanceConfigId;
+
+    /** @var InstanceConfiguration $customInstanceConfig */
+    protected static $customInstanceConfig;
+
+    /** @var string $databaseRole */
+    protected static $databaseRole;
+
+    /** @var string serviceAccountEmail */
+    protected static $serviceAccountEmail = null;
+
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -104,16 +127,16 @@ class spannerTest extends TestCase
             'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
-        self::$multiInstanceId = 'test-' . time() . rand() . 'm';
+        self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
         self::$defaultLeader = 'us-central1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
-
-        $config = $spanner->instanceConfiguration(self::$instanceConfig);
-        $operation = self::$multiInstance->create($config);
-        $operation->pollUntilComplete();
+        self::$baseConfigId = 'nam7';
+        self::$customInstanceConfigId = 'custom-' . time() . rand();
+        self::$customInstanceConfig = $spanner->instanceConfiguration(self::$customInstanceConfigId);
+        self::$databaseRole = 'new_parent';
     }
 
     public function testCreateInstance()
@@ -132,6 +155,64 @@ class spannerTest extends TestCase
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created instance test-', $output);
+    }
+
+    public function testCreateInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('create_instance_config', [
+            self::$customInstanceConfigId, self::$baseConfigId
+        ]);
+
+        $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testCreateInstanceConfig
+     */
+    public function testUpdateInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('update_instance_config', [
+            self::$customInstanceConfigId
+        ]);
+
+        $this->assertStringContainsString(sprintf('Updated instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testUpdateInstanceConfig
+     */
+    public function testDeleteInstanceConfig()
+    {
+        $output = $this->runFunctionSnippet('delete_instance_config', [
+            self::$customInstanceConfigId
+        ]);
+        $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    /**
+     * @depends testUpdateInstanceConfig
+     */
+    public function testListInstanceConfigOperations()
+    {
+        $output = $this->runFunctionSnippet('list_instance_config_operations', [
+            self::$customInstanceConfigId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Instance config operation for %s of type %s has status done.',
+                self::$customInstanceConfigId,
+                'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
+            ),
+            $output);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Instance config operation for %s of type %s has status done.',
+                self::$customInstanceConfigId,
+                'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
+            ),
+            $output);
     }
 
     /**
@@ -156,6 +237,28 @@ class spannerTest extends TestCase
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database en-test-', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testUpdateDatabase()
+    {
+        $output = $this->runFunctionSnippet('update_database', [
+            'instanceId' => self::$instanceId,
+            'databaseId' => self::$databaseId
+        ]);
+        $this->assertStringContainsString(self::$databaseId, $output);
+        $this->assertStringContainsString(true, $output);
+
+        // reset the enableDropProtection for test tear down
+        $spanner = new SpannerClient();
+        $instance = $spanner->instance(self::$instanceId);
+        $database = $instance->database(self::$databaseId);
+        $op = $database->updateDatabase(['enableDropProtection' => false]);
+        $op->pollUntilComplete();
+        $database->reload();
+        $this->assertFalse($database->info()['enableDropProtection']);
     }
 
     /**
@@ -803,6 +906,148 @@ class spannerTest extends TestCase
         });
     }
 
+    /**
+     * @depends testAddColumn
+     */
+    public function testSpannerDmlBatchUpdateRequestPriority()
+    {
+        $output = $this->runFunctionSnippet('dml_batch_update_request_priority');
+        $this->assertStringContainsString('Executed 2 SQL statements using Batch DML with PRIORITY_LOW.', $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testDmlReturningInsert()
+    {
+        $output = $this->runFunctionSnippet('insert_dml_returning');
+
+        $expectedOutput = sprintf('Melissa Garcia inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Russell Morales inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Jacqueline Long inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Dylan Shaw inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Inserted row(s) count: 4');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testDmlReturningUpdate()
+    {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->update('Albums', [
+                'AlbumId' => 1,
+                'SingerId' => 1,
+                'MarketingBudget' => 1000
+            ]);
+            $t->commit();
+        });
+
+        $output = $this->runFunctionSnippet('update_dml_returning');
+
+        $expectedOutput = sprintf('MarketingBudget: 2000');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Updated row(s) count: 1');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testDmlReturningInsert
+     */
+    public function testDmlReturningDelete()
+    {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->insert('Singers', [
+                'SingerId' => 3,
+                'FirstName' => 'Alice',
+                'LastName' => 'Trentor'
+            ]);
+            $t->commit();
+        });
+
+        $output = $this->runFunctionSnippet('delete_dml_returning');
+
+        $expectedOutput = sprintf('3 Alice Trentor');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Deleted row(s) count: 1');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testAddDropDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
+        $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
+        $this->assertStringContainsString('Revoked privileges and dropped role new_child' . PHP_EOL, $output);
+    }
+
+    /**
+     * @depends testAddDropDatabaseRole
+     */
+    public function testListDatabaseRoles()
+    {
+        $output = $this->runFunctionSnippet('list_database_roles', [
+            self::$projectId,
+            self::$instanceId,
+            self::$databaseId
+        ]);
+        $this->assertStringContainsString(sprintf('databaseRoles/%s', self::$databaseRole), $output);
+    }
+
+    /**
+     * @depends testAddDropDatabaseRole
+     * @depends testInsertDataWithDml
+     */
+    public function testReadDataWithDatabaseRole()
+    {
+        $output = $this->runFunctionSnippet('read_data_with_database_role');
+        $this->assertStringContainsString('SingerId: 10, Firstname: Virginia, LastName: Watson', $output);
+    }
+
+    /**
+     * depends testAddDropDatabaseRole
+     */
+    public function testEnableFineGrainedAccess()
+    {
+        self::$serviceAccountEmail = $this->createServiceAccount(str_shuffle('testSvcAcnt'));
+        $output = $this->runFunctionSnippet('enable_fine_grained_access', [
+            self::$projectId,
+            self::$instanceId,
+            self::$databaseId,
+            sprintf('serviceAccount:%s', self::$serviceAccountEmail),
+            self::$databaseRole,
+            'DatabaseRoleBindingTitle'
+        ]);
+        $this->assertStringContainsString('Enabled fine-grained access in IAM', $output);
+    }
+
+    /**
+     * @depends testUpdateData
+     */
+    public function testReadWriteRetry()
+    {
+        $output = $this->runFunctionSnippet('read_write_retry');
+        $this->assertStringContainsString('Setting second album\'s budget as the first album\'s budget.', $output);
+        $this->assertStringContainsString('Transaction complete.', $output);
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
@@ -884,6 +1129,49 @@ class spannerTest extends TestCase
         );
     }
 
+    private function createServiceAccount($serviceAccountId)
+    {
+        $client = self::getIamHttpClient();
+        // make the request
+        $response = $client->post('/v1/projects/' . self::$projectId . '/serviceAccounts', [
+            'json' => [
+                'accountId' => $serviceAccountId,
+                'serviceAccount' => [
+                    'displayName' => 'Test Service Account',
+                    'description' => 'This account should be deleted automatically after the unit tests complete.'
+                ]
+            ]
+        ]);
+
+        return json_decode($response->getBody())->email;
+    }
+
+    public static function deleteServiceAccount($serviceAccountEmail)
+    {
+        $client = self::getIamHttpClient();
+        // make the request
+        $client->delete('/v1/projects/' . self::$projectId . '/serviceAccounts/' . $serviceAccountEmail);
+    }
+
+    private static function getIamHttpClient()
+    {
+        // TODO: When this method is exposed in googleapis/google-cloud-php, remove the use of the following
+        $scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getMiddleware($scopes);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
+
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'base_uri' => 'https://iam.googleapis.com',
+            'auth' => 'google_auth'  // authorize all requests
+        ]);
+        return $client;
+    }
+
     public static function tearDownAfterClass(): void
     {
         if (self::$instance->exists()) {// Clean up database
@@ -894,6 +1182,50 @@ class spannerTest extends TestCase
         $database->drop();
         self::$instance->delete();
         self::$lowCostInstance->delete();
-        self::$multiInstance->delete();
+        if (self::$customInstanceConfig->exists()) {
+            self::$customInstanceConfig->delete();
+        }
+        if (!is_null(self::$serviceAccountEmail)) {
+            self::deleteServiceAccount(self::$serviceAccountEmail);
+        }
+    }
+
+    public function testCreateTableForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('create_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Created Customers and ShoppingCarts table with FKShoppingCartsCustomerId ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateTableForeignKeyDeleteCascade
+     */
+    public function testAlterTableDropForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('drop_foreign_key_constraint_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table to drop FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testAlterTableDropForeignKeyDeleteCascade
+     */
+    public function testAlterTableAddForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('alter_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table with FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
     }
 }

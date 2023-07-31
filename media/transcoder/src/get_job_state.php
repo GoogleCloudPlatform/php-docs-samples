@@ -19,14 +19,15 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_get_job_state]
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\GetJobRequest;
 use Google\Cloud\Video\Transcoder\V1\Job;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 
 /**
  * Gets a Transcoder job's state.
@@ -41,7 +42,9 @@ function get_job_state($projectId, $location, $jobId)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedName = $transcoderServiceClient->jobName($projectId, $location, $jobId);
-    $job = $transcoderServiceClient->getJob($formattedName);
+    $request = (new GetJobRequest())
+        ->setName($formattedName);
+    $job = $transcoderServiceClient->getJob($request);
 
     // Print job state.
     printf('Job state: %s' . PHP_EOL, Job\ProcessingState::name($job->getState()));
