@@ -807,13 +807,16 @@ class dlpTest extends TestCase
 
     public function testCreateJob()
     {
-        $gcsPath = $this->requireEnv('GCS_PATH');
+        $gcsPath = sprintf(
+            'gs://%s/dlp/harmful.csv',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
         $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
         $jobName = $this->runFunctionSnippet('create_job', [
             self::$projectId,
             $gcsPath
         ]);
-        $this->assertRegExp($jobIdRegex, $jobName);
+        $this->assertMatchesRegularExpression($jobIdRegex, $jobName);
         $output = $this->runFunctionSnippet(
             'delete_job',
             [$jobName]
