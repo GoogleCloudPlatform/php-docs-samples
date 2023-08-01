@@ -1049,40 +1049,38 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @dataProvider dialects
+     * @depends testCreateDatabase
      */
-    public function testCreateSequence($dialect)
+    public function testCreateSequence()
     {
-        $output = $this->runFunctionSnippet(sprintf('%screate_sequence', $dialect));
+        $output = $this->runFunctionSnippet('create_sequence');
         $this->assertStringContainsString(
             'Created Seq sequence and Customers table, where ' .
             'the key column CustomerId uses the sequence as a default value',
             $output
         );
-        $this->assertStringContainsString('Number of customer records inserted is', $output);
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
     }
 
     /**
-     * @dataProvider dialects
      * @depends testCreateSequence
      */
-    public function testAlterSequence($dialect)
+    public function testAlterSequence()
     {
-        $output = $this->runFunctionSnippet(sprintf('%salter_sequence', $dialect));
+        $output = $this->runFunctionSnippet('alter_sequence');
         $this->assertStringContainsString(
             'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
             $output
         );
-        $this->assertStringContainsString('Number of customer records inserted is', $output);
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
     }
 
     /**
-     * @dataProvider dialects
      * @depends testAlterSequence
      */
-    public function testDropSequence($dialect)
+    public function testDropSequence()
     {
-        $output = $this->runFunctionSnippet(sprintf('%sdrop_sequence', $dialect));
+        $output = $this->runFunctionSnippet('drop_sequence');
         $this->assertStringContainsString(
             'Altered Customers table to drop DEFAULT from CustomerId ' .
             'column and dropped the Seq sequence',
@@ -1212,14 +1210,6 @@ class spannerTest extends TestCase
             'auth' => 'google_auth'  // authorize all requests
         ]);
         return $client;
-    }
-
-    public function dialects()
-    {
-        return [
-            [''],
-            ['postgresql_'],
-        ];
     }
 
     public static function tearDownAfterClass(): void

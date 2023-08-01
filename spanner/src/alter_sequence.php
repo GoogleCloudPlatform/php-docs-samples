@@ -58,24 +58,23 @@ function alter_sequence(
         PHP_EOL
     );
 
-    $rows = $transaction->execute(
+    $res = $transaction->execute(
         'INSERT INTO Customers (CustomerName) VALUES ' .
         "('Lea'), ('Catalina'), ('Smith') THEN RETURN CustomerId"
-    )->rows(Result::RETURN_ASSOCIATIVE);
+    );
+    $rows = $res->rows(Result::RETURN_ASSOCIATIVE);
 
-    $insertCount = 0;
     foreach ($rows as $row) {
         printf('Inserted customer record with CustomerId: %d %s',
             $row['CustomerId'],
             PHP_EOL
         );
-        $insertCount++;
     }
     $transaction->commit();
 
     printf(sprintf(
         'Number of customer records inserted is: %d %s',
-        $insertCount,
+        $res->stats()['rowCountExact'],
         PHP_EOL
     ));
 }

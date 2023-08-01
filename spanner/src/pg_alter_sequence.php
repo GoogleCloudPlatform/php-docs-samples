@@ -23,42 +23,62 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_drop_sequence]
+// [START spanner_postgresql_alter_sequence]
+use Google\Cloud\Spanner\Result;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Drops a sequence.
+ * Alters a sequence.
  * Example:
  * ```
- * postgresql_drop_sequence($instanceId, $databaseId);
+ * pg_alter_sequence($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function postgresql_drop_sequence(
+function pg_alter_sequence(
     string $instanceId,
     string $databaseId
     ): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
+    $transaction = $database->transaction();
 
-    $operation = $database->updateDdlBatch([
-        'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',
-        'DROP SEQUENCE Seq'
-    ]);
+    $operation = $database->updateDdl(
+        'ALTER SEQUENCE Seq SKIP RANGE 1000 5000000'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf(
-        'Altered Customers table to drop DEFAULT from CustomerId ' .
-        'column and dropped the Seq sequence' .
+        'Altered Seq sequence to skip an inclusive range between 1000 and 5000000' .
         PHP_EOL
     );
+
+    $res = $transaction->execute(
+        'INSERT INTO Customers (CustomerName) VALUES ' .
+        "('Lea'), ('Catalina'), ('Smith') RETURNING CustomerId"
+    );
+    $rows = $res->rows(Result::RETURN_ASSOCIATIVE);
+
+    foreach ($rows as $row) {
+        printf('Inserted customer record with CustomerId: %d %s',
+            $row['customerid'],
+            PHP_EOL
+        );
+    }
+    $transaction->commit();
+
+    printf(sprintf(
+        'Number of customer records inserted is: %d %s',
+        $res->stats()['rowCountExact'],
+        PHP_EOL
+    ));
 }
-// [END spanner_postgresql_drop_sequence]
+// [END spanner_postgresql_alter_sequence]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

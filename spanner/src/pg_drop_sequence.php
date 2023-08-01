@@ -23,66 +23,42 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_create_sequence]
-use Google\Cloud\Spanner\Result;
+// [START spanner_postgresql_drop_sequence]
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Creates a sequence.
+ * Drops a sequence.
  * Example:
  * ```
- * postgresql_create_sequence($instanceId, $databaseId);
+ * pg_drop_sequence($instanceId, $databaseId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function postgresql_create_sequence(
+function pg_drop_sequence(
     string $instanceId,
     string $databaseId
     ): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $transaction = $database->transaction();
 
     $operation = $database->updateDdlBatch([
-        'CREATE SEQUENCE Seq BIT_REVERSED_POSITIVE',
-        "CREATE TABLE Customers (CustomerId BIGINT DEFAULT nextval('Seq'), " .
-        'CustomerName character varying(1024), PRIMARY KEY (CustomerId))'
+        'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',
+        'DROP SEQUENCE Seq'
     ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf(
-        'Created Seq sequence and Customers table, where ' .
-        'the key column CustomerId uses the sequence as a default value' .
+        'Altered Customers table to drop DEFAULT from CustomerId ' .
+        'column and dropped the Seq sequence' .
         PHP_EOL
     );
-
-    $rows = $transaction->execute(
-        'INSERT INTO Customers (CustomerName) VALUES ' .
-        "('Alice'), ('David'), ('Marc') RETURNING CustomerId"
-    )->rows(Result::RETURN_ASSOCIATIVE);
-
-    $insertCount = 0;
-    foreach ($rows as $row) {
-        printf('Inserted customer record with CustomerId: %d %s',
-            $row['customerid'],
-            PHP_EOL
-        );
-        $insertCount++;
-    }
-    $transaction->commit();
-
-    printf(sprintf(
-        'Number of customer records inserted is: %d %s',
-        $insertCount,
-        PHP_EOL
-    ));
 }
-// [END spanner_postgresql_create_sequence]
+// [END spanner_postgresql_drop_sequence]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

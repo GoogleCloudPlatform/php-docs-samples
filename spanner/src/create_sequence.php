@@ -49,7 +49,7 @@ function create_sequence(
     $operation = $database->updateDdlBatch([
         "CREATE SEQUENCE Seq OPTIONS (sequence_kind = 'bit_reversed_positive')",
         'CREATE TABLE Customers (CustomerId INT64 DEFAULT (GET_NEXT_SEQUENCE_VALUE(' .
-        "Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)"
+        'Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)'
     ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -61,24 +61,23 @@ function create_sequence(
         PHP_EOL
     );
 
-    $rows = $transaction->execute(
+    $res = $transaction->execute(
         'INSERT INTO Customers (CustomerName) VALUES ' .
         "('Alice'), ('David'), ('Marc') THEN RETURN CustomerId"
-    )->rows(Result::RETURN_ASSOCIATIVE);
+    );
+    $rows = $res->rows(Result::RETURN_ASSOCIATIVE);
 
-    $insertCount = 0;
     foreach ($rows as $row) {
         printf('Inserted customer record with CustomerId: %d %s',
             $row['CustomerId'],
             PHP_EOL
         );
-        $insertCount++;
     }
     $transaction->commit();
 
     printf(sprintf(
         'Number of customer records inserted is: %d %s',
-        $insertCount,
+        $res->stats()['rowCountExact'],
         PHP_EOL
     ));
 }
