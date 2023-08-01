@@ -17,10 +17,13 @@
 
 namespace Google\Cloud\Samples\Run\MCHelloPHPNginx;
 
+use Google\Auth\ApplicationDefaultCredentials;
 use Google\Cloud\TestUtils\DeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\GcloudWrapper\CloudRun;
 use Google\Cloud\TestUtils\TestTrait;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,20 +45,22 @@ class MCNginxTest extends TestCase
     private static $nginxImage;
     private static $appImage;
 
-
     /**
      * Execute given cmd
      *
-     * Note: The use of exec() outside of the usual CloudRun stub class deploy() pattern is intentional
-     * as the feature is in public preview. If more php multi-container samples get added, this should be
-     * refactored to make `gcloud run services replace ...` reusable across samples
+     * Note: Since this test requires more custom gcloud command executions,
+     * implemented this function outside of using the usual CloudRun stub class deploy() pattern.
+     * 
+     * If more php multi-container samples are added, this should be
+     * refactored to make `gcloud run services replace ...` reusable across samples.
      */
-    private static function execCmd($cmd = '', $output = null, $retvalue = 3)
+    private static function execCmd($cmd = '', $retvalue = null)
     {
-        if (false === exec($cmd, $output, $retvalue)) {
-            return false;
-        }
-        return true;
+        $output = null;
+        exec($cmd, $output, $retvalue);
+
+        // Returns the first resulting output of cmd
+        return $output[0];
     }
 
     /**
@@ -63,32 +68,39 @@ class MCNginxTest extends TestCase
      */
     public static function setUpDeploymentVars()
     {
-        $timestamp = time();
+        // Instantiate required private vars
         self::$projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         self::$region = getenv('REGION') ?: 'us-west1';
         self::$repoName = getenv('REPO_NAME') ?: 'cloud-run-source-deploy';
-        self::$mcServiceName = sprintf('hello-php-nginx-mc-%s', $timestamp);
-        $versionId = getenv('GOOGLE_VERSION_ID') ?: self::$mcServiceName;
+        self::$mcServiceName = sprintf('hello-php-nginx-mc-%s', time());
 
-        self::$mcService = new CloudRun(self::$projectId, ['service' => $versionId]);
+        // Declare CloudRun stub instance for multi-container service
+        self::$mcService = new CloudRun(self::$projectId, ['region' => self::$region, 'service' => self::$mcServiceName]);
 
         // Declaring Cloud Build image tags
         self::$nginxImage = sprintf('%s-docker.pkg.dev/%s/%s/nginx', self::$region, self::$projectId, self::$repoName);
         self::$appImage = sprintf('%s-docker.pkg.dev/%s/%s/php', self::$region, self::$projectId, self::$repoName);
     }
 
-    private static function beforeDeploy()
+    /**
+     * Execute yaml substitution 
+     */
+    private static function doYamlSubstitution()
     {
-        self::setUpDeploymentVars();
-        self::buildImages();
-        self::doYamlSubstitution();
+        $subCmd = sprintf(
+            'sed -i -e s/MC_SERVICE_NAME/%s/g -e s/REGION/%s/g -e s/REPO_NAME/%s/g -e s/PROJECT_ID/%s/g service.yaml',
+            self::$mcServiceName,
+            self::$region,
+            self::$repoName,
+            self::$projectId
+        );
 
-        // Suppress gcloud prompts during deployment.
-        putenv('CLOUDSDK_CORE_DISABLE_PROMPTS=1');
+        return self::execCmd($subCmd);
     }
 
     /**
-     * Build nginx + hello php container images
+     * Build both nginx + hello php container images
+     * Return true/false if image builds were successful
      */
     private static function buildImages()
     {
@@ -101,14 +113,17 @@ class MCNginxTest extends TestCase
     }
 
     /**
-     * Execute yaml substitution
+     * Instatiate and build necessary resources
+     * required before multi-container deployment
      */
-    private static function doYamlSubstitution()
+    private static function beforeDeploy()
     {
-        // Execute yaml substitution
-        $subCmd = sprintf('sed -i -e s/MC_SERVICE_NAME/%s/g -e s/REGION/%s/g -e s/REPO_NAME/%s/g -e s/PROJECT_ID/%s/g service.yaml', self::$mcServiceName, self::$region, self::$repoName, self::$projectId);
+        self::setUpDeploymentVars();
+        self::buildImages();
+        self::doYamlSubstitution();
 
-        return self::execCmd($subCmd);
+        // Suppress gcloud prompts during deployment.
+        putenv('CLOUDSDK_CORE_DISABLE_PROMPTS=1');
     }
 
     /**
@@ -138,38 +153,48 @@ class MCNginxTest extends TestCase
      */
     public function testService()
     {
-        $mcUrl = self::execCmd(sprintf('gcloud run services describe %s --region %s --format "value(status.url)"', self::$mcServiceName, self::$region));
-        $mcStatus = self::execCmd(sprintf('gcloud run services describe %s --region %s --format "value(status.conditions[0].type)"', self::$mcServiceName, self::$region));
+        $baseUri = self::getBaseUri();
+        $mcStatusCmd = sprintf(
+            'gcloud run services describe %s --region %s --format "value(status.conditions[0].type)"',
+            self::$mcServiceName,
+            self::$region
+        );
+        $mcStatus = self::execCmd($mcStatusCmd);
 
-        echo "=====url=====";
-        echo "${mcUrl}";
-        echo "${mcStatus}";
-        echo "==========";
-
-        if (empty($mcUrl) or empty($mcStatus)) {
+        if (empty($baseUri) or $mcStatus != 'Ready') {
             return false;
         }
 
-        # Checking that fpm (FastCGI Process Manager)
-        $mcNginxLog = exec('gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=%s AND labels.container_name=nginx" | grep -e "Default STARTUP TCP probe succeeded after 1 attempt for container nginx"', self::$mcServiceName);
-        # Check Cloud Run MC nginx & hellophp logs for signs of successful deployment and connection
-        $mcHelloPHPLog = exec('gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=%s AND labels.container_name=hellophp" | grep -e "NOTICE: fpm is running, pid 1"', self::$mcServiceName);
+        // create middleware
+        $middleware = ApplicationDefaultCredentials::getIdTokenMiddleware($baseUri);
+        $stack = HandlerStack::create();
+        $stack->push($middleware);
 
-        echo "=====log=====";
-        echo "${mcNginxLog}";
-        echo "${mcHelloPHPLog}";
-        echo "==========";
+        // create the HTTP client
+        $client = new Client([
+            'handler' => $stack,
+            'auth' => 'google_auth',
+            'base_uri' => $baseUri,
+        ]);
 
-        // Validate that the expected logs have been recovered
-        if (empty($mcNginxLog) or empty($mcHelloPHPLog)) {
-            return false;
-        }
-
-        return true;
+        // Check that the page renders default phpinfo html and indications it is the main php app
+        $resp = $client->get('/');
+        $this->assertEquals('200', $resp->getStatusCode());
+        $this->assertStringContainsString('This is main php app. Hello PHP World!', (string) $resp->getBody());
     }
 
+    /**
+     * Retrieve Cloud Run multi-container service url
+     */
     public function getBaseUri()
     {
-        return self::$mcService->getBaseUrl();
+        $mcUrlCmd = sprintf(
+            'gcloud run services describe %s --region %s --format "value(status.url)"',
+            self::$mcServiceName,
+            self::$region
+        );
+        $mcUrl = self::execCmd($mcUrlCmd);
+
+        return $mcUrl;
     }
 }
