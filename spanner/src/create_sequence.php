@@ -49,7 +49,7 @@ function create_sequence(
     $operation = $database->updateDdlBatch([
         "CREATE SEQUENCE Seq OPTIONS (sequence_kind = 'bit_reversed_positive')",
         'CREATE TABLE Customers (CustomerId INT64 DEFAULT (GET_NEXT_SEQUENCE_VALUE(' .
-        "'Seq')), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)"
+        "Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)"
     ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
