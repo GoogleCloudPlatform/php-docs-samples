@@ -32,8 +32,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $subscriptionName  The Pub/Sub subscription name.
- * @param string $tableName  The Cloud Storage bucket name.
- *        The bucket name must be without any prefix like "gs://".
+ * @param string $bucket The Cloud Storage bucket name without any prefix like "gs://".
  */
 function create_cloud_storage_subscription($projectId, $topicName, $subscriptionName, $bucket)
 {
