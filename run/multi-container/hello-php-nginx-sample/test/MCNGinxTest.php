@@ -46,11 +46,9 @@ class MCNginxTest extends TestCase
     private static $appImage;
 
     /**
-     * Execute given cmd
-     *
+     * Execute given bash cmd
      * Note: Since this test requires more custom gcloud command executions,
      * implemented this function outside of using the usual CloudRun stub class deploy() pattern.
-     * 
      * If more php multi-container samples are added, this should be
      * refactored to make `gcloud run services replace ...` reusable across samples.
      */
@@ -83,7 +81,7 @@ class MCNginxTest extends TestCase
     }
 
     /**
-     * Execute yaml substitution 
+     * Execute yaml substitution
      */
     private static function doYamlSubstitution()
     {
