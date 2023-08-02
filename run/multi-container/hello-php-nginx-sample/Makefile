@@ -1,6 +1,6 @@
-PROJECT_NAME  ?= ${PROJECT_ID}
-REPO_NAME     ?= ${REPO_NAME}
-REGISTRY      ?= ${REGION}-docker.pkg.dev
+PROJECT_NAME    ?= ${PROJECT_ID}
+REPO_NAME       ?= ${REPO_NAME}
+REGISTRY        ?= ${REGION}-docker.pkg.dev
 MC_SERVICE_NAME ?= ${MC_SERVICE_NAME}
 
 login: ## [project] Log-in to registry
