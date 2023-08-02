@@ -174,7 +174,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $createOutput);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         // Test Get method
@@ -216,7 +216,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -241,7 +241,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -273,7 +273,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -304,7 +304,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -329,7 +329,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -353,7 +353,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -377,7 +377,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
@@ -406,7 +406,7 @@ class transcoderTest extends TestCase
         $jobId = explode('/', $output);
         $jobId = trim($jobId[(count($jobId) - 1)]);
 
-        sleep(30);
+        sleep(10);
         $this->assertJobStateSucceeded($jobId);
 
         $this->runFunctionSnippet('delete_job', [
