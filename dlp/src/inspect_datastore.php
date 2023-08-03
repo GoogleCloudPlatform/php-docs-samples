@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2016 Google Inc.
  *
@@ -129,8 +128,10 @@ function inspect_datastore(
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
@@ -168,7 +169,7 @@ function inspect_datastore(
             printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            print('Unexpected job state.');
+            printf('Unexpected job state.');
     }
 }
 # [END dlp_inspect_datastore]

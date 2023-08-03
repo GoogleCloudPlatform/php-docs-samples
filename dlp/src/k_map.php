@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -64,12 +63,8 @@ function k_map(
     array $infoTypes
 ): void {
     // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
+    $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
     // Verify input
@@ -134,8 +129,10 @@ function k_map(
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
@@ -191,7 +188,7 @@ function k_map(
             printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            print('Unexpected job state. Most likely, the job is either running or has not yet started.');
+            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_k_map]

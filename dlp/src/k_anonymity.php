@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -57,12 +56,8 @@ function k_anonymity(
     array $quasiIdNames
 ): void {
     // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
+    $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config
@@ -113,8 +108,10 @@ function k_anonymity(
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
