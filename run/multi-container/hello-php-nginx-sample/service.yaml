@@ -29,10 +29,9 @@ spec:
       annotations:
         run.googleapis.com/execution-environment: gen2
         # Defines container startup order within multi-container service.
-        # Below requires nginx container to spin up before php container,
-        # which depends on nginx.
+        # Below requires side-car "hellophp" container to spin up before nginx proxy (entrypoint).
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
-        run.googleapis.com/container-dependencies: '{"hellophp":["nginx"]}'
+        run.googleapis.com/container-dependencies: '{"nginx":["hellophp"]}'
     spec:
       containers:
         - name: nginx
