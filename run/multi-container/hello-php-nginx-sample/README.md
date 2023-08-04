@@ -43,7 +43,7 @@ make deploy # deploys multi-container service with nginx/php containers
 Once deployed, the best place to start understanding how `nginx` is using [FastCGI](https://www.nginx.com/resources/wiki/start/topics/examples/fastcgiexample/) 
 is communicating with `hellophp` within the Cloud Run multi-container service context is to navigate and read through `./nginx/nginx.conf`.
 
-### Build & depoly manually
+### Build & deploy manually
 
 The following is what is happening within the `Makefile` of this sample.
 
