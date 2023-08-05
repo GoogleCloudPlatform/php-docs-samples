@@ -50,6 +50,14 @@ class livestreamTest extends TestCase
     private static $eventId;
     private static $eventName;
 
+    private static $assetIdPrefix = 'php-test-asset';
+    private static $assetId;
+    private static $assetName;
+    private static $assetUri = 'gs://cloud-samples-data/media/ForBiggerEscapes.mp4';
+
+    private static $poolId;
+    private static $poolName;
+
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
@@ -57,6 +65,7 @@ class livestreamTest extends TestCase
 
         self::deleteOldChannels();
         self::deleteOldInputs();
+        self::deleteOldAssets();
     }
 
     public function testCreateInput()
@@ -384,6 +393,88 @@ class livestreamTest extends TestCase
         ]);
     }
 
+    /** @depends testDeleteChannelWithEvents */
+    public function testCreateAsset()
+    {
+        self::$assetId = sprintf('%s-%s-%s', self::$assetIdPrefix, uniqid(), time());
+        self::$assetName = sprintf('projects/%s/locations/%s/assets/%s', self::$projectId, self::$location, self::$assetId);
+
+        $output = $this->runFunctionSnippet('create_asset', [
+            self::$projectId,
+            self::$location,
+            self::$assetId,
+            self::$assetUri
+        ]);
+        $this->assertStringContainsString(self::$assetName, $output);
+    }
+
+    /** @depends testCreateAsset */
+    public function testListAssets()
+    {
+        $output = $this->runFunctionSnippet('list_assets', [
+            self::$projectId,
+            self::$location
+        ]);
+        $this->assertStringContainsString(self::$assetName, $output);
+    }
+
+    /** @depends testListAssets */
+    public function testGetAsset()
+    {
+        $output = $this->runFunctionSnippet('get_asset', [
+            self::$projectId,
+            self::$location,
+            self::$assetId
+        ]);
+        $this->assertStringContainsString(self::$assetName, $output);
+    }
+
+    /** @depends testGetAsset */
+    public function testDeleteAsset()
+    {
+        $output = $this->runFunctionSnippet('delete_asset', [
+            self::$projectId,
+            self::$location,
+            self::$assetId
+        ]);
+        $this->assertStringContainsString('Deleted asset', $output);
+    }
+
+    /** @depends testDeleteAsset */
+    public function testGetPool()
+    {
+        self::$poolId = 'default'; # only 1 pool supported per location
+        self::$poolName = sprintf('projects/%s/locations/%s/pools/%s', self::$projectId, self::$location, self::$poolId);
+
+        $output = $this->runFunctionSnippet('get_pool', [
+            self::$projectId,
+            self::$location,
+            self::$poolId
+        ]);
+        $this->assertStringContainsString(self::$poolName, $output);
+    }
+
+    /** @depends testGetPool */
+    public function testUpdatePool()
+    {
+        $output = $this->runFunctionSnippet('update_pool', [
+            self::$projectId,
+            self::$location,
+            self::$poolId,
+            '' # update the pool with the same value or else the operation hangs
+        ]);
+        $this->assertStringContainsString(self::$poolName, $output);
+
+        $livestreamClient = new LivestreamServiceClient();
+        $formattedName = $livestreamClient->poolName(
+            self::$projectId,
+            self::$location,
+            self::$poolId
+        );
+        $pool = $livestreamClient->getPool($formattedName);
+        $this->assertEquals($pool->getNetworkConfig()->getPeeredNetwork(), '');
+    }
+
     private static function deleteOldInputs(): void
     {
         $livestreamClient = new LivestreamServiceClient();
@@ -464,6 +555,32 @@ class livestreamTest extends TestCase
                         continue;
                     }
                     throw $e;
+                }
+            }
+        }
+    }
+
+    private static function deleteOldAssets(): void
+    {
+        $livestreamClient = new LivestreamServiceClient();
+        $parent = $livestreamClient->locationName(self::$projectId, self::$location);
+        $response = $livestreamClient->listAssets($parent);
+        $assets = $response->iterateAllElements();
+
+        $currentTime = time();
+        $oneHourInSecs = 60 * 60 * 1;
+
+        foreach ($assets as $asset) {
+            $tmp = explode('/', $asset->getName());
+            $id = end($tmp);
+            $tmp = explode('-', $id);
+            $timestamp = intval(end($tmp));
+
+            if ($currentTime - $timestamp >= $oneHourInSecs) {
+                try {
+                    $livestreamClient->deleteAsset($asset->getName());
+                } catch (ApiException $e) {
+                    printf('Asset delete failed: %s.' . PHP_EOL, $e->getMessage());
                 }
             }
         }
