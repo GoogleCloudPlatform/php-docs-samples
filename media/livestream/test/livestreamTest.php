@@ -457,11 +457,16 @@ class livestreamTest extends TestCase
     /** @depends testGetPool */
     public function testUpdatePool()
     {
+        # You can't update a pool if any channels are running. Updating a pool
+        # takes a long time to complete. If tests are running in parallel for
+        # different versions of PHP, this test will fail.
+        $this->markTestSkipped('Cannot be run if tests run in parallel.');
+
         $output = $this->runFunctionSnippet('update_pool', [
             self::$projectId,
             self::$location,
             self::$poolId,
-            '' # update the pool with the same value or else the operation hangs
+            ''
         ]);
         $this->assertStringContainsString(self::$poolName, $output);
 
