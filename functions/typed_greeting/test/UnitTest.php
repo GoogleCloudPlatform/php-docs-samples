@@ -23,8 +23,6 @@ use PHPUnit\Framework\TestCase;
 use GreetingRequest;
 use GreetingResponse;
 
-require_once __DIR__ . '/TestCasesTrait.php';
-
 /**
  * Unit tests for the Cloud Function.
  */
