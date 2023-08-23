@@ -23,6 +23,7 @@ use Google\Cloud\Datastore\Entity;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,6 +43,7 @@ function generateRandomString($length = 10)
 class ConceptsTest extends TestCase
 {
     use EventuallyConsistentTestTrait;
+    use TestTrait;
 
     /* @var $hasCredentials boolean */
     protected static $hasCredentials;
@@ -98,14 +100,13 @@ class ConceptsTest extends TestCase
 
     public function testInsert()
     {
-        $task = insert(self::$datastore);
-        self::$keys[] = $task->key();
-        $task = self::$datastore->lookup($task->key());
-        $this->assertEquals('Personal', $task['category']);
-        $this->assertEquals(false, $task['done']);
-        $this->assertEquals(4, $task['priority']);
-        $this->assertEquals('Learn Cloud Datastore', $task['description']);
-        $this->assertArrayHasKey('id', $task->key()->pathEnd());
+        $output = $this->runFunctionSnippet('insert', [
+            self::$datastore
+        ]);
+        $this->assertStringContainsString(
+            sprintf("Added Entity with description '%s'", 'Learn Cloud Datastore'),
+            $output
+        );
     }
 
     public function testLookup()

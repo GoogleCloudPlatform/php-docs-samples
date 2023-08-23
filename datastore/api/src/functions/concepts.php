@@ -78,27 +78,6 @@ function upsert(DatastoreClient $datastore)
 }
 
 /**
- * Create a Datastore entity and insert it. It will fail if there is already
- * an entity with the same key.
- *
- * @param DatastoreClient $datastore
- * @return Entity
- */
-function insert(DatastoreClient $datastore)
-{
-    // [START datastore_insert]
-    $task = $datastore->entity('Task', [
-        'category' => 'Personal',
-        'done' => false,
-        'priority' => 4,
-        'description' => 'Learn Cloud Datastore'
-    ]);
-    $datastore->insert($task);
-    // [END datastore_insert]
-    return $task;
-}
-
-/**
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
