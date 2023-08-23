@@ -23,87 +23,76 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_datastore_send_to_scc]
+# [START dlp_inspect_send_data_to_hybrid_job_trigger]
+
+use Google\Cloud\Dlp\V2\Container;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
-use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action\PublishSummaryToCscc;
-use Google\Cloud\Dlp\V2\DatastoreOptions;
-use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\Dlp\V2\KindExpression;
-use Google\Cloud\Dlp\V2\PartitionId;
+use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\HybridContentItem;
+use Google\Cloud\Dlp\V2\HybridFindingDetails;
 
 /**
- * (DATASTORE) Send Cloud DLP scan results to Security Command Center.
- * Using Cloud Data Loss Prevention to scan specific Google Cloud resources and send data to Security Command Center.
+ * Inspect data hybrid job trigger.
+ * Send data to the hybrid job or hybrid job trigger.
  *
- * @param string $callingProjectId  The project ID to run the API call under.
- * @param string $datastorename     Datastore kind name to be inspected.
- * @param string $namespaceId       Namespace Id to be inspected.
+ * @param string $callingProjectId  The Google Cloud project id to use as a parent resource.
+ * @param string $string            The string to inspect (will be treated as text).
  */
-function inspect_datastore_send_to_scc(
+
+function inspect_send_data_to_hybrid_job_trigger(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $datastorename,
-    string $namespaceId
+    string $jobTriggerId,
+    string $string
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
-    // Construct the items to be inspected.
-    $datastoreOptions = (new DatastoreOptions())
-        ->setKind((new KindExpression())
-            ->setName($datastorename))
-        ->setPartitionId((new PartitionId())
-            ->setNamespaceId($namespaceId)
-            ->setProjectId($callingProjectId));
+    $content = (new ContentItem())
+        ->setValue($string);
 
-    $storageConfig = (new StorageConfig())
-        ->setDatastoreOptions(($datastoreOptions));
+    $container = (new Container())
+        ->setFullPath('10.0.0.2:logs1:app1')
+        ->setRelativePath('app1')
+        ->setRootPath('10.0.0.2:logs1')
+        ->setType('logging_sys')
+        ->setVersion('1.2');
 
-    // Specify the type of info the inspection will look for.
-    $infoTypes = [
-        (new InfoType())->setName('EMAIL_ADDRESS'),
-        (new InfoType())->setName('PERSON_NAME'),
-        (new InfoType())->setName('LOCATION'),
-        (new InfoType())->setName('PHONE_NUMBER')
-    ];
+    $findingDetails = (new HybridFindingDetails())
+        ->setContainerDetails($container)
+        ->setLabels([
+            'env' => 'prod',
+            'appointment-bookings-comments' => ''
+        ]);
 
-    // Specify how the content should be inspected.
-    $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood(likelihood::UNLIKELY)
-        ->setLimits((new FindingLimits())
-            ->setMaxFindingsPerRequest(100))
-        ->setInfoTypes($infoTypes)
-        ->setIncludeQuote(true);
+    $hybridItem = (new HybridContentItem())
+        ->setItem($content)
+        ->setFindingDetails($findingDetails);
 
-    // Specify the action that is triggered when the job completes.
-    $action = (new Action())
-        ->setPublishSummaryToCscc(new PublishSummaryToCscc());
-
-    // Construct inspect job config to run.
-    $inspectJobConfig = (new InspectJobConfig())
-        ->setInspectConfig($inspectConfig)
-        ->setStorageConfig($storageConfig)
-        ->setActions([$action]);
-
-    // Send the job creation request and process the response.
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJobConfig
+    $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerId;
+
+    $triggerJob = null;
+    try {
+        $triggerJob = $dlp->activateJobTrigger($name);
+    } catch (\InvalidArgumentException $e) {
+        $result = $dlp->listDlpJobs($parent, ['filter' => 'trigger_name=' . $name]);
+        foreach ($result as $job) {
+            $triggerJob = $job;
+        }
+    }
+
+    $dlp->hybridInspectJobTrigger($name, [
+        'hybridItem' => $hybridItem,
     ]);
 
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
         sleep(10);
-        $job = $dlp->getDlpJob($job->getName());
-        if ($job->getState() == JobState::DONE) {
+        $job = $dlp->getDlpJob($triggerJob->getName());
+        if ($job->getState() != JobState::RUNNING) {
             break;
         }
         $numOfAttempts--;
@@ -140,7 +129,8 @@ function inspect_datastore_send_to_scc(
             printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_datastore_send_to_scc]
-// The following 2 lines are only needed to run the samples
+# [END dlp_inspect_send_data_to_hybrid_job_trigger]
+
+// The following 2 lines are only needed to run the samples.
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
