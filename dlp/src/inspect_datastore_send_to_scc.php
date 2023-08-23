@@ -49,8 +49,8 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
 function inspect_datastore_send_to_scc(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $datastorename = 'demo',
-    string $namespaceId = 'demo'
+    string $datastorename ,
+    string $namespaceId 
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();

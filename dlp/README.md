@@ -106,11 +106,6 @@ See the [DLP Documentation](https://cloud.google.com/dlp/docs/inspecting-text) f
     export DLP_NAMESPACE_ID=YOUR_NAMESPACE_ID
     export DLP_DATASTORE_KIND=YOUR_DATASTORE_KIND
     ```
-### Run
-     ```
-    phpunit [options] UnitTest.php
-    phpunit [options] <directory>
-    ```
 
 ## Troubleshooting
 

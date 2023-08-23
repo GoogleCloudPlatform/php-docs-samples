@@ -42,12 +42,12 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
  * Using Cloud Data Loss Prevention to scan specific Google Cloud resources and send data to Security Command Center.
  *
  * @param string $callingProjectId  The project ID to run the API call under.
- * @param string $gcsPath           GCS file file to be inspected.
+ * @param string $gcsUri            GCS file to be inspected.
  */
 function inspect_gcs_send_to_scc(
     // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $gcsPath = 'gs://GOOGLE_STORAGE_BUCKET_NAME/dlp_sample.csv'
+    string $gcsUri = 'gs://GOOGLE_STORAGE_BUCKET_NAME/dlp_sample.csv'
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
@@ -55,7 +55,7 @@ function inspect_gcs_send_to_scc(
     // Construct the items to be inspected.
     $cloudStorageOptions = (new CloudStorageOptions())
         ->setFileSet((new FileSet())
-            ->setUrl($gcsPath));
+            ->setUrl($gcsUri));
 
     $storageConfig = (new StorageConfig())
         ->setCloudStorageOptions(($cloudStorageOptions));

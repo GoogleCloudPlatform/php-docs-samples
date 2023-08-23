@@ -159,6 +159,28 @@ class dlpLongRunningTest extends TestCase
             ->willReturn($messageMock->reveal());
 
         // Creating a temp file for testing.
+        //     $sampleFile = __DIR__ . '/../src/inspect_gcs.php';
+        //     $tmpFileName = "dlp_".basename($sampleFile, '.php');
+        //  echo   $tmpFilePath = sys_get_temp_dir() . "/".$tmpFileName.".php";
+        //     $fileContent = file_get_contents($sampleFile);
+        //     $replacements = [
+        //         '$dlp = new DlpServiceClient();' => 'global $dlp;',
+        //         '$pubsub = new PubSubClient();' => 'global $pubsub;',
+        //         'inspect_gcs' => $tmpFileName
+        //     ];
+        //     $fileContent = strtr($fileContent, $replacements);
+        //     file_put_contents(
+        //         $tmpFilePath,
+        //         $fileContent
+        //     );
+
+        // $contents = str_replace(
+        //     ['YOUR-GA4-PROPERTY-ID', '__DIR__'],
+        //     [$testPropertyId, sprintf('"%s/.."', __DIR__)],
+        //     $contents
+        // );
+        // file_put_contents($file, $contents);
+
         $sampleFile = __DIR__ . '/../src/inspect_gcs.php';
         $tmpFileName = basename($sampleFile, '.php') . '_temp';
         $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
@@ -182,12 +204,12 @@ class dlpLongRunningTest extends TestCase
 
         // Call the method under test
         $output = $this->runFunctionSnippet($tmpFileName, [
-                    self::$projectId,
-                    $topicId,
-                    $subscriptionId,
-                    $bucketName,
-                    $objectName,
-                ]);
+            self::$projectId,
+            $topicId,
+            $subscriptionId,
+            $bucketName,
+            $objectName,
+        ]);
 
         // delete topic , subscription , and temp file
         unlink($tmpFilePath);
