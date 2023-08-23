@@ -30,6 +30,20 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
+use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails;
+use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult;
+use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityEquivalenceClass;
+use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityHistogramBucket;
+use Google\Cloud\Dlp\V2\Value;
+use Google\Cloud\Dlp\V2\HybridInspectResponse;
+use Google\Cloud\Dlp\V2\HybridOptions;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\JobTrigger;
+use Google\Cloud\Dlp\V2\JobTrigger\Status;
+use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
+use Google\Cloud\Dlp\V2\Manual;
+use Google\Cloud\Dlp\V2\StorageConfig;
 
 /**
  * Unit Tests for dlp commands.
@@ -1081,5 +1095,232 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
         $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
+    }
+
+    public function testDeidentifyReplaceInfotype()
+    {
+        $inputString = 'Please call Steve Smith. His number is (555) 253-0000.';
+        $output = $this->runFunctionSnippet('deidentify_replace_infotype', [
+            self::$projectId,
+            $inputString
+        ]);
+        $this->assertStringContainsString('[PHONE_NUMBER]', $output);
+        $this->assertStringContainsString('[PERSON_NAME]', $output);
+    }
+
+    public function testKAnonymityWithEntityId()
+    {
+        $datasetId = $this->requireEnv('DLP_DATASET_ID');
+        $tableId = $this->requireEnv('DLP_TABLE_ID');
+
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
+
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
+            ->setState(JobState::PENDING);
+
+        $getDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
+            ->setState(JobState::DONE)
+            ->setRiskDetails((new AnalyzeDataSourceRiskDetails())
+                    ->setKAnonymityResult((new KAnonymityResult())
+                            ->setEquivalenceClassHistogramBuckets([(new KAnonymityHistogramBucket())
+                                ->setEquivalenceClassSizeLowerBound(1)
+                                ->setEquivalenceClassSizeUpperBound(1)
+                                ->setBucketValues([
+                                    (new KAnonymityEquivalenceClass())
+                                        ->setQuasiIdsValues([(new Value())
+                                            ->setStringValue('{"stringValue":"[\"19\",\"8291 3627 8250 1234\"]"}')])
+                                        ->setEquivalenceClassSize(1),
+                                    (new KAnonymityEquivalenceClass())
+                                        ->setQuasiIdsValues([(new Value())
+                                            ->setStringValue('{"stringValue":"[\"27\",\"4231 5555 6781 9876\"]"}')])
+                                        ->setEquivalenceClassSize(1)
+
+                                ])])
+                    )
+            );
+
+        $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createDlpJobResponse);
+
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($getDlpJobResponse);
+
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/k_anonymity_with_entity_id.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'k_anonymity_with_entity_id' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent,
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock->reveal();
+
+        // Call the method under test
+        $output = $this->runFunctionSnippet($tmpFileName, [
+            self::$projectId,
+            $datasetId,
+            $tableId,
+            ['Age', 'Mystery']
+        ]);
+        // delete temp file
+        unlink($tmpFilePath);
+
+        // Assert the expected behavior or outcome
+        $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
+        $this->assertStringContainsString('Bucket size range: [1, 1]', $output);
+    }
+
+    public function create_hybrid_job_trigger(
+        string $triggerId,
+        string $displayName,
+        string $description
+    ): string {
+        // Instantiate a client.
+        $dlp = new DlpServiceClient();
+
+        // Create the inspectConfig object.
+        $inspectConfig = (new InspectConfig())
+            ->setInfoTypes([
+                (new InfoType())
+                    ->setName('PERSON_NAME'),
+                (new InfoType())
+                    ->setName('PHONE_NUMBER')
+            ])
+            ->setIncludeQuote(true);
+
+        $storageConfig = (new StorageConfig())
+            ->setHybridOptions((new HybridOptions())
+                ->setRequiredFindingLabelKeys(
+                    ['appointment-bookings-comments']
+                )
+                ->setLabels([
+                    'env' => 'prod'
+                ]));
+
+        // Construct the insJobConfig object.
+        $inspectJobConfig = (new InspectJobConfig())
+            ->setInspectConfig($inspectConfig)
+            ->setStorageConfig($storageConfig);
+
+        // Create triggers
+        $triggerObject = (new Trigger())
+            ->setManual(new Manual());
+
+        // ----- Construct trigger object -----
+        $jobTriggerObject = (new JobTrigger())
+            ->setTriggers([$triggerObject])
+            ->setInspectJob($inspectJobConfig)
+            ->setStatus(Status::HEALTHY)
+            ->setDisplayName($displayName)
+            ->setDescription($description);
+
+        // Run trigger creation request
+        $parent = 'projects/' . self::$projectId . '/locations/global';
+        $trigger = $dlp->createJobTrigger($parent, $jobTriggerObject, [
+            'triggerId' => $triggerId
+        ]);
+
+        return $trigger->getName();
+    }
+
+    public function testInspectSendDataToHybridJobTrigger()
+    {
+        $displayName = uniqid('My trigger display name ');
+        $description = uniqid('My trigger description ');
+        $triggerId = uniqid('my-php-test-trigger-');
+        $string = 'My email is test@example.org';
+
+        $fullTriggerId = $this->create_hybrid_job_trigger(
+            $triggerId,
+            $displayName,
+            $description
+        );
+
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
+
+        $getDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812')
+            ->setState(JobState::DONE)
+            ->setInspectDetails((new InspectDataSourceDetails())
+                ->setResult((new Result())
+                    ->setInfoTypeStats([
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
+                            ->setCount(13),
+                        (new InfoTypeStats())
+                            ->setInfoType((new InfoType())->setName('PHONE_NUMBER'))
+                            ->setCount(5)
+                    ])));
+
+        $dlpServiceClientMock
+            ->activateJobTrigger($fullTriggerId)
+            ->shouldBeCalled()
+            ->willReturn($getDlpJobResponse);
+
+        $dlpServiceClientMock
+            ->listDlpJobs(Argument::any(), Argument::type('array'))
+            ->willReturn([$getDlpJobResponse]);
+
+        $dlpServiceClientMock
+            ->hybridInspectJobTrigger(Argument::any(), Argument::type('array'))
+            ->shouldBeCalledTimes(1)
+            ->willReturn(new HybridInspectResponse());
+
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($getDlpJobResponse);
+
+        // Creating a temp file for testing.
+        $sampleFile = __DIR__ . '/../src/inspect_send_data_to_hybrid_job_trigger.php';
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements = [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            'inspect_send_data_to_hybrid_job_trigger' => $tmpFileName
+        ];
+        $fileContent = strtr($fileContent, $replacements);
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock->reveal();
+
+        $output = $this->runFunctionSnippet($tmpFileName, [
+            self::$projectId,
+            $triggerId,
+            $string
+        ]);
+
+        // delete a temp file.
+        unlink($tmpFilePath);
+
+        $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+        $this->assertStringContainsString('infoType PHONE_NUMBER', $output);
+
+        $output = $this->runFunctionSnippet('delete_trigger', [
+            self::$projectId,
+            $triggerId
+        ]);
+        $this->assertStringContainsString('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 }
