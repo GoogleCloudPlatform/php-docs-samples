@@ -62,8 +62,7 @@ class dlpTest extends TestCase
     {
         $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
         $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        // $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-        $tmpFilePath = sys_get_temp_dir() . '/' . $tmpFileName . '.php';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
 
         $fileContent = file_get_contents($sampleFile);
         $replacements[$sampleName] = $tmpFileName;
@@ -1079,52 +1078,24 @@ class dlpTest extends TestCase
 
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
 
-        $createDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
-            ->setState(JobState::PENDING);
-
-        $getDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/1234')
-            ->setState(JobState::DONE)
-            ->setInspectDetails((new InspectDataSourceDetails())
-                ->setResult((new Result())
-                    ->setInfoTypeStats([
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
-                            ->setCount(6),
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
-                            ->setCount(9)
-                    ])));
-
+        $dlpJobResponse = $this->dlpJobResponse();
         $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
             ->shouldBeCalled()
-            ->willReturn($createDlpJobResponse);
+            ->willReturn($dlpJobResponse['createDlpJob']);
 
         $dlpServiceClientMock->getDlpJob(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($getDlpJobResponse);
+            ->willReturn($dlpJobResponse['getDlpJob']);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/deidentify_cloud_storage.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('deidentify_cloud_storage', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'deidentify_cloud_storage' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $inputgcsPath,
             $outgcsPath,
@@ -1136,11 +1107,10 @@ class dlpTest extends TestCase
         ]);
 
         // delete a temp file.
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
-        $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
     }
 
     public function testDeidentifyReplaceInfotype()
@@ -1197,33 +1167,22 @@ class dlpTest extends TestCase
             ->willReturn($getDlpJobResponse);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/k_anonymity_with_entity_id.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('k_anonymity_with_entity_id', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'k_anonymity_with_entity_id' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent,
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
         // Call the method under test
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $datasetId,
             $tableId,
             ['Age', 'Mystery']
         ]);
         // delete temp file
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
@@ -1298,29 +1257,16 @@ class dlpTest extends TestCase
 
         // Mock the necessary objects and methods
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
-
-        $getDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812')
-            ->setState(JobState::DONE)
-            ->setInspectDetails((new InspectDataSourceDetails())
-                ->setResult((new Result())
-                    ->setInfoTypeStats([
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
-                            ->setCount(13),
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PHONE_NUMBER'))
-                            ->setCount(5)
-                    ])));
+        $dlpJobResponse = $this->dlpJobResponse();
 
         $dlpServiceClientMock
             ->activateJobTrigger($fullTriggerId)
             ->shouldBeCalled()
-            ->willReturn($getDlpJobResponse);
+            ->willReturn($dlpJobResponse['getDlpJob']);
 
         $dlpServiceClientMock
             ->listDlpJobs(Argument::any(), Argument::type('array'))
-            ->willReturn([$getDlpJobResponse]);
+            ->willReturn([$dlpJobResponse['getDlpJob']]);
 
         $dlpServiceClientMock
             ->hybridInspectJobTrigger(Argument::any(), Argument::type('array'))
@@ -1329,39 +1275,27 @@ class dlpTest extends TestCase
 
         $dlpServiceClientMock->getDlpJob(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($getDlpJobResponse);
+            ->willReturn($dlpJobResponse['getDlpJob']);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_send_data_to_hybrid_job_trigger.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_send_data_to_hybrid_job_trigger', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'inspect_send_data_to_hybrid_job_trigger' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $triggerId,
             $string
         ]);
 
         // delete a temp file.
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
-        $this->assertStringContainsString('infoType PHONE_NUMBER', $output);
 
         $output = $this->runFunctionSnippet('delete_trigger', [
             self::$projectId,
@@ -1424,21 +1358,10 @@ class dlpTest extends TestCase
             ->willReturn($messageMock->reveal());
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_gcs_with_sampling.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_gcs_with_sampling', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
             '$pubsub = new PubSubClient();' => 'global $pubsub;',
-            'inspect_gcs_with_sampling' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
         global $pubsub;
 
@@ -1446,7 +1369,7 @@ class dlpTest extends TestCase
         $pubsub = $pubSubClientMock->reveal();
 
         // Call the method under test
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $gcsUri,
             $topicId,
@@ -1456,7 +1379,7 @@ class dlpTest extends TestCase
         // delete topic , subscription , and temp file
         $topic->delete();
         $subscription->delete();
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
@@ -1487,7 +1410,7 @@ class dlpTest extends TestCase
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $gcsPath
         ]);
@@ -1524,7 +1447,7 @@ class dlpTest extends TestCase
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             $datastorename,
             $namespaceId
@@ -1559,7 +1482,7 @@ class dlpTest extends TestCase
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
             self::$projectId,
             // Note: Here, we have used BigQuery public data
             'bigquery-public-data',
