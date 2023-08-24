@@ -13,7 +13,7 @@
 // limitations under the License.
 
 <?php
-// [START hello_mc_nginx_app_serving_index]
+// [START cloudrun_hello_mc_nginx_app_serving_index]
 echo "This is nginx. Let's start processing requests!";
 
-// [END hello_mc_nginx_app_serving_index]
+// [END cloudrun_hello_mc_nginx_app_serving_index]

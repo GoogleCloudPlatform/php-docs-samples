@@ -13,10 +13,10 @@
 // limitations under the License.
 
 <?php
-// [START hello_php_nginx_index]
+// [START cloudrun_hello_mc_nginx_index]
 
 echo 'This is main php app. Hello PHP World!';
 
 phpinfo();
 
-// [END hello_php_nginx_index]
+// [END cloudrun_hello_mc_nginx_index]

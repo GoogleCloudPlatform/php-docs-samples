@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START hello_mc_nginx_dockerfile]
+# [START cloudrun_hello_mc_nginx_dockerfile]
 
 # The Dockerfile will copy required assets
 # from the perspective of a particular directory location,
@@ -28,4 +28,4 @@ COPY ./nginx.conf /etc/nginx/conf.d
 
 COPY index.php /var/www/html/index.php
 
-# [END hello_mc_nginx_dockerfile]
+# [END cloudrun_hello_mc_nginx_dockerfile]

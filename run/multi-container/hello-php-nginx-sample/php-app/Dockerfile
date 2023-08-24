@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START hello_mc_nginx_app_dockerfile]
+# [START cloudrun_hello_mc_nginx_app_dockerfile]
 
 # The Dockerfile will copy required assets
 # from the perspective of a particular directory location,
@@ -34,4 +34,4 @@ COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY . /var/www/html/
 
-# [END hello_mc_nginx_app_dockerfile]
+# [END cloudrun_hello_mc_nginx_app_dockerfile]
