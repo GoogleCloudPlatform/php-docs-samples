@@ -51,5 +51,7 @@ spec:
           resources:
             limits:
               cpu: 1000m
-              memory: 512Mi
+              # Explore more how to set memory limits in Cloud Run
+              # https://cloud.google.com/run/docs/configuring/services/memory-limits#yaml
+              memory: 256Mi 
 # [END cloudrun_mc_hello_php_nginx_mc]
