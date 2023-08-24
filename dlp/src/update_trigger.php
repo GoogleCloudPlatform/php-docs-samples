@@ -40,7 +40,6 @@ use Google\Protobuf\FieldMask;
  *
  */
 function update_trigger(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
     string $jobTriggerName
 ): void {
@@ -69,7 +68,9 @@ function update_trigger(
         ]);
 
     // Send the update job trigger request and process the response.
-    $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerName;
+    // $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerName;
+    $name = $dlp->projectLocationJobTriggerName($callingProjectId, 'global', $jobTriggerName);
+
     $response = $dlp->updateJobTrigger($name, [
         'jobTrigger' => $jobTrigger,
         'updateMask' => $fieldMask

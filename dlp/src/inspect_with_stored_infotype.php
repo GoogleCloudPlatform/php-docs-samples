@@ -42,7 +42,6 @@ use Google\Cloud\Dlp\V2\StoredType;
  * @param string $textToInspect         The string to inspect.
  */
 function inspect_with_stored_infotype(
-    // TODO(developer): Replace sample parameters before running the code.
     string $projectId,
     string $storedInfoTypeName,
     string $textToInspect
@@ -50,7 +49,8 @@ function inspect_with_stored_infotype(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
-    $parent = "projects/$projectId/locations/global";
+    // $parent = "projects/$projectId/locations/global";
+    $parent = $dlp->locationName($projectId, 'global');
 
     // Specify the content to be inspected.
     $item = (new ContentItem())

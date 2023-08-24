@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_create_stored_infotype]
+# [START dlp_create_stored_infotype_temp]
 
 use Google\Cloud\Dlp\V2\BigQueryField;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -42,7 +42,7 @@ use Google\Cloud\Dlp\V2\StoredInfoTypeConfig;
  * @param string $displayName       The human-readable name to give the stored infoType.
  * @param string $description       A description for the stored infoType to be created.
  */
-function create_stored_infotype(
+function create_stored_infotype_temp(
     string $callingProjectId,
     string $outputgcsPath,
     string $storedInfoTypeId,
@@ -50,7 +50,7 @@ function create_stored_infotype(
     string $description
 ): void {
     // Instantiate a client.
-    $dlp = new DlpServiceClient();
+    global $dlp;
 
     // The reference to the table containing the GitHub usernames.
     // The reference to the BigQuery field that contains the GitHub usernames.
@@ -85,7 +85,7 @@ function create_stored_infotype(
     // Print results.
     printf('Successfully created Stored InfoType : %s', $response->getName());
 }
-# [END dlp_create_stored_infotype]
+# [END dlp_create_stored_infotype_temp]
 // The following 2 lines are only needed to run the samples.
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

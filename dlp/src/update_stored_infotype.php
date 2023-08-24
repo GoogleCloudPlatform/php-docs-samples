@@ -41,7 +41,6 @@ use Google\Protobuf\FieldMask;
  *
  */
 function update_stored_infotype(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
     string $gcsPath,
     string $outputgcsPath,
@@ -66,7 +65,8 @@ function update_stored_infotype(
 
     // Send the stored infoType creation request and process the response.
 
-    $name = "projects/$callingProjectId/locations/global/storedInfoTypes/" . $storedInfoTypeId;
+    // $name = "projects/$callingProjectId/locations/global/storedInfoTypes/" . $storedInfoTypeId;
+    $name = $dlp->projectLocationStoredInfoTypeName($callingProjectId, 'global', $storedInfoTypeId);
     // Set mask to control which fields get updated.
     // Refer https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask for constructing the field mask paths.
     $fieldMask = (new FieldMask())

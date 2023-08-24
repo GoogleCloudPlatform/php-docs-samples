@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,8 @@ function create_trigger(
         ->setDescription($description);
 
     // Run trigger creation request
-    $parent = "projects/$callingProjectId/locations/global";
+    // $parent = "projects/$callingProjectId/locations/global";
+    $parent = $dlp->locationName($callingProjectId, 'global');
     $trigger = $dlp->createJobTrigger($parent, $jobTriggerObject, [
         'triggerId' => $triggerId
     ]);

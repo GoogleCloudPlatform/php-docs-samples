@@ -29,10 +29,10 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
-use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\Topic;
-use Google\Cloud\PubSub\Subscription;
 use Google\Cloud\PubSub\Message;
+use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\Subscription;
+use Google\Cloud\PubSub\Topic;
 
 /**
  * Unit Tests for dlp commands.
