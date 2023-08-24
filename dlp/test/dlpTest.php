@@ -58,6 +58,48 @@ class dlpTest extends TestCase
     use RetryTrait;
     use ProphecyTrait;
 
+    private function writeTempSample(string $sampleName, array $replacements): array
+    {
+        $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        // $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+        $tmpFilePath = sys_get_temp_dir() . '/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements[$sampleName] = $tmpFileName;
+        $fileContent = strtr($fileContent, $replacements);
+
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+
+        return ['tmpFileName' => $tmpFileName, 'tmpFilePath' => $tmpFilePath];
+    }
+
+    public function dlpJobResponse()
+    {
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812')
+            ->setState(JobState::PENDING);
+
+        $result = $this->prophesize(Result::class);
+        $infoTypeStats1 = $this->prophesize(InfoTypeStats::class);
+        $infoTypeStats1->getInfoType()->shouldBeCalled()->willReturn((new InfoType())->setName('PERSON_NAME'));
+        $infoTypeStats1->getCount()->shouldBeCalled()->willReturn(5);
+        $result->getInfoTypeStats()->shouldBeCalled()->willReturn([$infoTypeStats1->reveal()]);
+
+        $inspectDetails = $this->prophesize(InspectDataSourceDetails::class);
+        $inspectDetails->getResult()->shouldBeCalled()->willReturn($result->reveal());
+
+        $getDlpJobResponse = $this->prophesize(DlpJob::class);
+        $getDlpJobResponse->getName()->shouldBeCalled()->willReturn('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812');
+        $getDlpJobResponse->getState()->shouldBeCalled()->willReturn(JobState::DONE);
+        $getDlpJobResponse->getInspectDetails()->shouldBeCalled()->willReturn($inspectDetails->reveal());
+
+        return ['createDlpJob' => $createDlpJobResponse, 'getDlpJob' => $getDlpJobResponse];
+    }
+
     public function testInspectImageFile()
     {
         $output = $this->runFunctionSnippet('inspect_image_file', [
@@ -1328,29 +1370,6 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 
-    public function dlpJobResponse()
-    {
-        $createDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812')
-            ->setState(JobState::PENDING);
-
-        $result = $this->prophesize(Result::class);
-        $infoTypeStats1 = $this->prophesize(InfoTypeStats::class);
-        $infoTypeStats1->getInfoType()->shouldBeCalled()->willReturn((new InfoType())->setName('PERSON_NAME'));
-        $infoTypeStats1->getCount()->shouldBeCalled()->willReturn(5);
-        $result->getInfoTypeStats()->shouldBeCalled()->willReturn([$infoTypeStats1->reveal()]);
-
-        $inspectDetails = $this->prophesize(InspectDataSourceDetails::class);
-        $inspectDetails->getResult()->shouldBeCalled()->willReturn($result->reveal());
-
-        $getDlpJobResponse = $this->prophesize(DlpJob::class);
-        $getDlpJobResponse->getName()->shouldBeCalled()->willReturn('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812');
-        $getDlpJobResponse->getState()->shouldBeCalled()->willReturn(JobState::DONE);
-        $getDlpJobResponse->getInspectDetails()->shouldBeCalled()->willReturn($inspectDetails->reveal());
-
-        return ['createDlpJob' => $createDlpJobResponse, 'getDlpJob' => $getDlpJobResponse];
-    }
-
     public function testInspectGcsWithSampling()
     {
         $gcsUri = $this->requireEnv('GCS_PATH');
@@ -1358,34 +1377,14 @@ class dlpTest extends TestCase
         // Mock the necessary objects and methods
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
 
-        $createDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
-            ->setState(JobState::PENDING);
-
-        $getDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
-            ->setState(JobState::DONE)
-            ->setInspectDetails((new InspectDataSourceDetails())
-                ->setResult((new Result())
-                    ->setInfoTypeStats([
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PHONE_NUMBER'))
-                            ->setCount(3),
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('EMAIL_ADDRESS'))
-                            ->setCount(3),
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('CREDIT_CARD_NUMBER'))
-                            ->setCount(3)
-                    ])));
-
+        $dlpJobResponse = $this->dlpJobResponse();
         $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
             ->shouldBeCalled()
-            ->willReturn($createDlpJobResponse);
+            ->willReturn($dlpJobResponse['createDlpJob']);
 
         $dlpServiceClientMock->getDlpJob(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($getDlpJobResponse);
+            ->willReturn($dlpJobResponse['getDlpJob']);
 
         $pubsubObj = new PubSubClient();
         $topic = $pubsubObj->createTopic('dlp-pubsub-topic-test');
@@ -1461,9 +1460,7 @@ class dlpTest extends TestCase
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
-        $this->assertStringContainsString('infoType PHONE_NUMBER', $output);
-        $this->assertStringContainsString('infoType EMAIL_ADDRESS', $output);
-        $this->assertStringContainsString('infoType CREDIT_CARD_NUMBER', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
     }
 
     public function testInspectGcsSendToScc()
@@ -1483,31 +1480,20 @@ class dlpTest extends TestCase
             ->willReturn($dlpJobResponse['getDlpJob']);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_gcs_send_to_scc.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_gcs_send_to_scc', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'inspect_gcs_send_to_scc' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
             self::$projectId,
             $gcsPath
         ]);
 
         // delete a temp file.
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
@@ -1531,32 +1517,21 @@ class dlpTest extends TestCase
             ->willReturn($dlpJobResponse['getDlpJob']);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_datastore_send_to_scc.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_datastore_send_to_scc', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'inspect_datastore_send_to_scc' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
             self::$projectId,
             $datastorename,
             $namespaceId
         ]);
 
         // delete a temp file.
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
@@ -1577,25 +1552,14 @@ class dlpTest extends TestCase
             ->willReturn($dlpJobResponse['getDlpJob']);
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_bigquery_send_to_scc.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_bigquery_send_to_scc', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'inspect_bigquery_send_to_scc' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock->reveal();
 
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $output = $this->runFunctionSnippet($tmpFile['tmpFilePath'], [
             self::$projectId,
             // Note: Here, we have used BigQuery public data
             'bigquery-public-data',
@@ -1604,7 +1568,7 @@ class dlpTest extends TestCase
         ]);
 
         // delete a temp file.
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
