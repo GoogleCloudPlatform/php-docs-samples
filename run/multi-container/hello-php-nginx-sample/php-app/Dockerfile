@@ -14,11 +14,9 @@
 
 # [START cloudrun_hello_mc_nginx_app_dockerfile]
 
-# The Dockerfile will copy required assets
-# from the perspective of a particular directory location,
-# which we will call "context".
-
 # Context: ../
+
+# Read more about context: https://docs.docker.com/build/building/context/
 # We assume here that required file paths are getting copied
 # from the perspective of this directory's parent.
 
