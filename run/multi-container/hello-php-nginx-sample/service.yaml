@@ -43,7 +43,7 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 256M
         - name: hellophp
           image: "REGION-docker.pkg.dev/PROJECT_ID/REPO_NAME/php"
           env:
@@ -55,5 +55,5 @@ spec:
               # Explore more how to set memory limits in Cloud Run
               # https://cloud.google.com/run/docs/tips/general#optimize_concurrency
               # https://cloud.google.com/run/docs/configuring/services/memory-limits#optimizing
-              memory: 320Mi 
+              memory: 335M 
 # [END cloudrun_mc_hello_php_nginx_mc]
