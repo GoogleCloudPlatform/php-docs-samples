@@ -33,6 +33,7 @@ spec:
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
         run.googleapis.com/container-dependencies: '{"nginx":["hellophp"]}'
     spec:
+      containerConcurrency: 1
       containers:
         - name: nginx
           image: "REGION-docker.pkg.dev/PROJECT_ID/REPO_NAME/nginx"
@@ -52,6 +53,7 @@ spec:
             limits:
               cpu: 1000m
               # Explore more how to set memory limits in Cloud Run
-              # https://cloud.google.com/run/docs/configuring/services/memory-limits#yaml
-              memory: 256Mi 
+              # https://cloud.google.com/run/docs/tips/general#optimize_concurrency
+              # https://cloud.google.com/run/docs/configuring/services/memory-limits#optimizing
+              memory: 320Mi 
 # [END cloudrun_mc_hello_php_nginx_mc]
