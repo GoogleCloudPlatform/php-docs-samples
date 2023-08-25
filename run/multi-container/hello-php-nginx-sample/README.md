@@ -33,13 +33,13 @@ export MC_SERVICE_NAME="mc-php-example"
 gcloud auth login
 ```
 
-1. Create a repository within [Artifact Registry](https://cloud.google.com/artifact-registry).
+2. Create a repository within [Artifact Registry](https://cloud.google.com/artifact-registry).
 
 ```bash
 gcloud artifacts repositories create ${REPO_NAME} --repository-format=docker
 ```
 
-1. Build the `nginx` and `hellophp` container images for our multi-container service.
+3. Build the `nginx` and `hellophp` container images for our multi-container service.
 
 ```bash
 # Creating image from the Dockerfile within nginx/ dir.
@@ -49,13 +49,13 @@ gcloud builds submit --tag=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/n
 gcloud builds submit --tag=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/php ./php-app
 ```
 
-1. Configure the service with the appropriate memory limit
+4. Configure the service with the appropriate memory limit.
 
 You will see as you read through `service.yaml`, that the memory limit has been explicitly
 set to `320Mi` due to container concurrency of `1` with a single `fpm` worker.
 See how we got [here](https://cloud.google.com/run/docs/configuring/services/memory-limits#optimizing) and read more about how to [optimize for concurrency](https://cloud.google.com/run/docs/tips/general#optimize_concurrency).
 
-1. Deploy the multi-container service
+5. Deploy the multi-container service.
 
 From within `service.yaml`, customize the `service.yaml` file with your own project values by replacing
 the following `PROJECT_ID`, `MC_SERVICE_NAME`, `REGION`, and `REPO_NAME`.
