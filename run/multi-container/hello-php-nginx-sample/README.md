@@ -51,7 +51,7 @@ gcloud builds submit --tag=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/p
 
 4. Configure the service with the appropriate memory limit.
 
-You will see as you read through `service.yaml`, that the memory limit has been explicitly set to `320Mi`. This leaves ~128M for PHP processes after allocating 192M for opcache. 
+You will see as you read through `service.yaml`, that the memory limit has been explicitly set to `335M`. This leaves ~143M for PHP processes after allocating 192M for opcache. 
 See how we got [here](https://cloud.google.com/run/docs/configuring/services/memory-limits#optimizing) and read more about how to [optimize for concurrency](https://cloud.google.com/run/docs/tips/general#optimize_concurrency).
 
 **Note:** This sample does not contain extra configuration to tune php-fpm settings to specify the number of workers to correlate with the container concurrency.
