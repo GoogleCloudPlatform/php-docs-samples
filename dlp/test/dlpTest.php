@@ -1306,7 +1306,7 @@ class dlpTest extends TestCase
 
         // Invoke file and capture output
         ob_start();
-        include $tmpFile['tmpFilePath'];
+        include $tmpFile;
         $output = ob_get_clean();
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
