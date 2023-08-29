@@ -63,11 +63,11 @@ class dlpLongRunningTest extends TestCase
         self::$subscription->delete();
     }
 
-    private function writeTempSample(string $sampleName, array $replacements): array
+    private function writeTempSample(string $sampleName, array $replacements): string
     {
         $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+        $tmpFileName = 'dlp_' . basename($sampleFile, '.php');
+        $tmpFilePath = sys_get_temp_dir() . '/' . $tmpFileName . '.php';
 
         $fileContent = file_get_contents($sampleFile);
         $replacements[$sampleName] = $tmpFileName;
@@ -78,7 +78,7 @@ class dlpLongRunningTest extends TestCase
             $fileContent
         );
 
-        return ['tmpFileName' => $tmpFileName, 'tmpFilePath' => $tmpFilePath];
+        return $tmpFilePath;
     }
 
     public function dlpJobResponse()
@@ -183,9 +183,20 @@ class dlpLongRunningTest extends TestCase
             ->willReturn($messageMock->reveal());
 
         // Creating a temp file for testing.
+        $callFunction = sprintf(
+            "dlp_inspect_gcs('%s','%s','%s','%s','%s');",
+            self::$projectId,
+            $topicId,
+            $subscriptionId,
+            $bucketName,
+            $objectName,
+        );
+
         $tmpFile = $this->writeTempSample('inspect_gcs', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
             '$pubsub = new PubSubClient();' => 'global $pubsub;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
         ]);
         global $dlp;
         global $pubsub;
@@ -193,17 +204,10 @@ class dlpLongRunningTest extends TestCase
         $dlp = $dlpServiceClientMock->reveal();
         $pubsub = $pubSubClientMock->reveal();
 
-        // Call the method under test
-        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
-            self::$projectId,
-            $topicId,
-            $subscriptionId,
-            $bucketName,
-            $objectName,
-        ]);
-
-        // delete topic , subscription , and temp file
-        unlink($tmpFile['tmpFilePath']);
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile;
+        $output = ob_get_clean();
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
