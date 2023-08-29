@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2023 Google Inc.
  *
@@ -41,22 +42,23 @@ use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Inspect BigQuery for sensitive data with sampling.
- * The following examples demonstrate using the Cloud Data Loss Prevention API to scan a 1000-row subset of a BigQuery table. The scan starts from a random row.
+ * The following examples demonstrate using the Cloud Data Loss Prevention
+ * API to scan a 1000-row subset of a BigQuery table. The scan starts from
+ * a random row.
  *
  * @param string $callingProjectId  The project ID to run the API call under.
- * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes.
- * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job.
- * @param string $projectId         The name of the Project ID.
- * @param string $datasetdId        The name of the BigQuery Dataset.
- * @param string $tableId           The name of the BigQuery Table to be inspected.
+ * @param string $topicId           The Pub/Sub topic ID to notify once the job is completed.
+ * @param string $subscriptionId    The Pub/Sub subscription ID to use when listening for job.
+ * @param string $projectId         The Google Cloud Project ID.
+ * @param string $datasetId        The BigQuery Dataset ID.
+ * @param string $tableId           The BigQuery Table ID to be inspected.
  */
 function inspect_bigquery_with_sampling(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
     string $topicId,
     string $subscriptionId,
     string $projectId,
-    string $datasetdId,
+    string $datasetId,
     string $tableId
 ): void {
     // Instantiate a client.
@@ -67,7 +69,7 @@ function inspect_bigquery_with_sampling(
     // Specify the BigQuery table to be inspected.
     $bigqueryTable = (new BigQueryTable())
         ->setProjectId($projectId)
-        ->setDatasetId($datasetdId)
+        ->setDatasetId($datasetId)
         ->setTableId($tableId);
 
     $bigQueryOptions = (new BigQueryOptions())

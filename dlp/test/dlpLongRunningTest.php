@@ -29,10 +29,10 @@ use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
-use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\Topic;
-use Google\Cloud\PubSub\Subscription;
 use Google\Cloud\PubSub\Message;
+use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\Subscription;
+use Google\Cloud\PubSub\Topic;
 
 /**
  * Unit Tests for dlp commands.
@@ -61,6 +61,47 @@ class dlpLongRunningTest extends TestCase
     {
         self::$topic->delete();
         self::$subscription->delete();
+    }
+
+    private function writeTempSample(string $sampleName, array $replacements): array
+    {
+        $sampleFile = sprintf('%s/../src/%s.php', __DIR__, $sampleName);
+        $tmpFileName = basename($sampleFile, '.php') . '_temp';
+        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+
+        $fileContent = file_get_contents($sampleFile);
+        $replacements[$sampleName] = $tmpFileName;
+        $fileContent = strtr($fileContent, $replacements);
+
+        $tmpFile = file_put_contents(
+            $tmpFilePath,
+            $fileContent
+        );
+
+        return ['tmpFileName' => $tmpFileName, 'tmpFilePath' => $tmpFilePath];
+    }
+
+    public function dlpJobResponse()
+    {
+        $createDlpJobResponse = (new DlpJob())
+            ->setName('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812')
+            ->setState(JobState::PENDING);
+
+        $result = $this->prophesize(Result::class);
+        $infoTypeStats1 = $this->prophesize(InfoTypeStats::class);
+        $infoTypeStats1->getInfoType()->shouldBeCalled()->willReturn((new InfoType())->setName('PERSON_NAME'));
+        $infoTypeStats1->getCount()->shouldBeCalled()->willReturn(5);
+        $result->getInfoTypeStats()->shouldBeCalled()->willReturn([$infoTypeStats1->reveal()]);
+
+        $inspectDetails = $this->prophesize(InspectDataSourceDetails::class);
+        $inspectDetails->getResult()->shouldBeCalled()->willReturn($result->reveal());
+
+        $getDlpJobResponse = $this->prophesize(DlpJob::class);
+        $getDlpJobResponse->getName()->shouldBeCalled()->willReturn('projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812');
+        $getDlpJobResponse->getState()->shouldBeCalled()->willReturn(JobState::DONE);
+        $getDlpJobResponse->getInspectDetails()->shouldBeCalled()->willReturn($inspectDetails->reveal());
+
+        return ['createDlpJob' => $createDlpJobResponse, 'getDlpJob' => $getDlpJobResponse];
     }
 
     public function testInspectDatastore()
@@ -102,31 +143,14 @@ class dlpLongRunningTest extends TestCase
         // Mock the necessary objects and methods
         $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
 
-        $createDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
-            ->setState(JobState::PENDING);
-
-        $getDlpJobResponse = (new DlpJob())
-            ->setName('projects/' . self::$projectId . '/dlpJobs/job-name-123')
-            ->setState(JobState::DONE)
-            ->setInspectDetails((new InspectDataSourceDetails())
-                ->setResult((new Result())
-                    ->setInfoTypeStats([
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('PERSON_NAME'))
-                            ->setCount(3),
-                        (new InfoTypeStats())
-                            ->setInfoType((new InfoType())->setName('CREDIT_CARD_NUMBER'))
-                            ->setCount(3)
-                    ])));
-
+        $dlpJobResponse = $this->dlpJobResponse();
         $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
             ->shouldBeCalled()
-            ->willReturn($createDlpJobResponse);
+            ->willReturn($dlpJobResponse['createDlpJob']);
 
         $dlpServiceClientMock->getDlpJob(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($getDlpJobResponse);
+            ->willReturn($dlpJobResponse['getDlpJob']);
 
         $pubSubClientMock = $this->prophesize(PubSubClient::class);
         $topicMock = $this->prophesize(Topic::class);
@@ -152,28 +176,17 @@ class dlpLongRunningTest extends TestCase
 
         $messageMock->attributes()
             ->shouldBeCalledTimes(2)
-            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/job-name-123']);
+            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812']);
 
         $subscriptionMock->acknowledge(Argument::any())
             ->shouldBeCalled()
             ->willReturn($messageMock->reveal());
 
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_gcs.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
+        $tmpFile = $this->writeTempSample('inspect_gcs', [
             '$dlp = new DlpServiceClient();' => 'global $dlp;',
             '$pubsub = new PubSubClient();' => 'global $pubsub;',
-            'inspect_gcs' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent
-        );
+        ]);
         global $dlp;
         global $pubsub;
 
@@ -181,21 +194,20 @@ class dlpLongRunningTest extends TestCase
         $pubsub = $pubSubClientMock->reveal();
 
         // Call the method under test
-        $output = $this->runFunctionSnippet($tmpFileName, [
-                    self::$projectId,
-                    $topicId,
-                    $subscriptionId,
-                    $bucketName,
-                    $objectName,
-                ]);
+        $output = $this->runFunctionSnippet($tmpFile['tmpFileName'], [
+            self::$projectId,
+            $topicId,
+            $subscriptionId,
+            $bucketName,
+            $objectName,
+        ]);
 
         // delete topic , subscription , and temp file
-        unlink($tmpFilePath);
+        unlink($tmpFile['tmpFilePath']);
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
-        $this->assertStringContainsString('infoType CREDIT_CARD_NUMBER', $output);
     }
 
     public function testNumericalStats()
