@@ -57,6 +57,24 @@ class dlpTest extends TestCase
     use TestTrait;
     use RetryTrait;
     use ProphecyTrait;
+    private static $topic;
+    private static $subscription;
+
+    public static function setUpBeforeClass(): void
+    {
+        $uniqueName = sprintf('dlp-%s', microtime(true));
+        $pubsub = new PubSubClient();
+        self::$topic = $pubsub->topic($uniqueName);
+        self::$topic->create();
+        self::$subscription = self::$topic->subscription($uniqueName);
+        self::$subscription->create();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$topic->delete();
+        self::$subscription->delete();
+    }
 
     private function writeTempSample(string $sampleName, array $replacements): string
     {
@@ -1333,12 +1351,8 @@ class dlpTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($dlpJobResponse['getDlpJob']);
 
-        $pubsubObj = new PubSubClient();
-        $topic = $pubsubObj->createTopic('dlp-pubsub-topic-test');
-        $topicId = $topic->name();
-        $subscriptionId = 'dlp-subcription-test';
-        $subscription = $topic->subscription($subscriptionId);
-        $subscription->create();
+        $topicId = self::$topic->name();
+        $subscriptionId = self::$subscription->name();
 
         $pubSubClientMock = $this->prophesize(PubSubClient::class);
         $topicMock = $this->prophesize(Topic::class);
@@ -1364,7 +1378,7 @@ class dlpTest extends TestCase
 
         $messageMock->attributes()
             ->shouldBeCalledTimes(2)
-            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/job-name-123']);
+            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812']);
 
         $subscriptionMock->acknowledge(Argument::any())
             ->shouldBeCalled()
@@ -1397,9 +1411,6 @@ class dlpTest extends TestCase
         ob_start();
         include $tmpFile;
         $output = ob_get_clean();
-        // delete topic and subscription
-        $topic->delete();
-        $subscription->delete();
 
         // Assert the expected behavior or outcome
         $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
