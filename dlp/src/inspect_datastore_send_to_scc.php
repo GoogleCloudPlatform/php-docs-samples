@@ -43,13 +43,12 @@ use Google\Cloud\Dlp\V2\DlpJob\JobState;
  * Using Cloud Data Loss Prevention to scan specific Google Cloud resources and send data to Security Command Center.
  *
  * @param string $callingProjectId  The project ID to run the API call under.
- * @param string $datastorename     Datastore kind name to be inspected.
+ * @param string $kindName          Datastore kind name to be inspected.
  * @param string $namespaceId       Namespace Id to be inspected.
  */
 function inspect_datastore_send_to_scc(
-    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $datastorename,
+    string $kindName,
     string $namespaceId
 ): void {
     // Instantiate a client.
@@ -58,7 +57,7 @@ function inspect_datastore_send_to_scc(
     // Construct the items to be inspected.
     $datastoreOptions = (new DatastoreOptions())
         ->setKind((new KindExpression())
-            ->setName($datastorename))
+            ->setName($kindName))
         ->setPartitionId((new PartitionId())
             ->setNamespaceId($namespaceId)
             ->setProjectId($callingProjectId));
