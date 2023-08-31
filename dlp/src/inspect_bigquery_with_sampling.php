@@ -50,7 +50,7 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicId           The Pub/Sub topic ID to notify once the job is completed.
  * @param string $subscriptionId    The Pub/Sub subscription ID to use when listening for job.
  * @param string $projectId         The Google Cloud Project ID.
- * @param string $datasetId        The BigQuery Dataset ID.
+ * @param string $datasetId         The BigQuery Dataset ID.
  * @param string $tableId           The BigQuery Table ID to be inspected.
  */
 function inspect_bigquery_with_sampling(
