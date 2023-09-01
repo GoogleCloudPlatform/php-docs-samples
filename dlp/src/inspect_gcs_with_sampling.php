@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2023 Google Inc.
  *
@@ -35,7 +34,6 @@ use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
 use Google\Cloud\Dlp\V2\BigQueryOptions\SampleMethod;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
-use Google\Cloud\Dlp\V2\FileType;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
@@ -47,8 +45,8 @@ use Google\Cloud\PubSub\PubSubClient;
  *
  * @param string $callingProjectId  The project ID to run the API call under.
  * @param string $gcsUri            Google Cloud Storage file url.
- * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes.
- * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job.
+ * @param string $topicId           The ID of the Pub/Sub topic to notify once the job completes.
+ * @param string $subscriptionId    The ID of the Pub/Sub subscription to use when listening for job.
  */
 function inspect_gcs_with_sampling(
     // TODO(developer): Replace sample parameters before running the code.
@@ -67,7 +65,6 @@ function inspect_gcs_with_sampling(
         ->setFileSet((new FileSet())
             ->setUrl($gcsUri))
         ->setBytesLimitPerFile(200)
-        ->setFileTypes([FileType::CSV])
         ->setFilesLimitPercent(90)
         ->setSampleMethod(SampleMethod::RANDOM_START);
 
