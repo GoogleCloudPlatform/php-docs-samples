@@ -1337,6 +1337,86 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Successfully deleted trigger ' . $fullTriggerId, $output);
     }
 
+    public function testInspectBigQueryWithSampling()
+    {
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock = $this->prophesize(DlpServiceClient::class);
+
+        $dlpJobResponse = $this->dlpJobResponse();
+        $dlpServiceClientMock->createDlpJob(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($dlpJobResponse['createDlpJob']);
+
+        $dlpServiceClientMock->getDlpJob(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($dlpJobResponse['getDlpJob']);
+
+        $topicId = self::$topic->name();
+        $subscriptionId = self::$subscription->name();
+
+        $pubSubClientMock = $this->prophesize(PubSubClient::class);
+        $topicMock = $this->prophesize(Topic::class);
+        $subscriptionMock = $this->prophesize(Subscription::class);
+        $messageMock = $this->prophesize(Message::class);
+
+        // Set up the mock expectations for the Pub/Sub functions
+        $pubSubClientMock->topic($topicId)
+            ->shouldBeCalled()
+            ->willReturn($topicMock->reveal());
+
+        $topicMock->name()
+            ->shouldBeCalled()
+            ->willReturn('projects/' . self::$projectId . '/topics/' . $topicId);
+
+        $topicMock->subscription($subscriptionId)
+            ->shouldBeCalled()
+            ->willReturn($subscriptionMock->reveal());
+
+        $subscriptionMock->pull()
+            ->shouldBeCalled()
+            ->willReturn([$messageMock->reveal()]);
+
+        $messageMock->attributes()
+            ->shouldBeCalledTimes(2)
+            ->willReturn(['DlpJobName' => 'projects/' . self::$projectId . '/dlpJobs/i-3208317104051988812']);
+
+        $subscriptionMock->acknowledge(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($messageMock->reveal());
+
+        // Creating a temp file for testing.
+        $callFunction = sprintf(
+            "dlp_inspect_bigquery_with_sampling('%s','%s','%s','%s','%s','%s');",
+            self::$projectId,
+            $topicId,
+            $subscriptionId,
+            'bigquery-public-data',
+            'usa_names',
+            'usa_1910_current'
+        );
+
+        $tmpFile = $this->writeTempSample('inspect_bigquery_with_sampling', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            '$pubsub = new PubSubClient();' => 'global $pubsub;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
+        ]);
+        global $dlp;
+        global $pubsub;
+
+        $dlp = $dlpServiceClientMock->reveal();
+        $pubsub = $pubSubClientMock->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile;
+        $output = ob_get_clean();
+
+        // Assert the expected behavior or outcome
+        $this->assertStringContainsString('Job projects/' . self::$projectId . '/dlpJobs/', $output);
+        $this->assertStringContainsString('infoType PERSON_NAME', $output);
+    }
+
     public function testInspectGcsWithSampling()
     {
         $gcsUri = $this->requireEnv('GCS_PATH');
