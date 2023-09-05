@@ -324,21 +324,33 @@ class dlpTest extends TestCase
      */
     public function testJobs()
     {
+        $gcsPath = $this->requireEnv('GCS_PATH');
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
         // Set filter to only go back a day, so that we do not pull every job.
         $filter = sprintf(
             'state=DONE AND end_time>"%sT00:00:00+00:00"',
             date('Y-m-d', strtotime('-1 day'))
         );
-        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
 
-        $output = $this->runFunctionSnippet('list_jobs', [
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertMatchesRegularExpression($jobIdRegex, $jobName);
+
+        $listOutput = $this->runFunctionSnippet('list_jobs', [
             self::$projectId,
             $filter,
         ]);
 
-        $this->assertMatchesRegularExpression($jobIdRegex, $output);
-        preg_match($jobIdRegex, $output, $jobIds);
+        $this->assertMatchesRegularExpression($jobIdRegex, $listOutput);
+        preg_match($jobIdRegex, $listOutput, $jobIds);
         $jobId = $jobIds[0];
+
+        $getJobOutput = $this->runFunctionSnippet('get_job', [
+            $jobId
+        ]);
+        $this->assertStringContainsString('Job ' . $jobId . ' status:', $getJobOutput);
 
         $output = $this->runFunctionSnippet(
             'delete_job',
@@ -858,44 +870,6 @@ class dlpTest extends TestCase
             $surrogateType,
         ]);
         $this->assertEquals($string, $reidOutput);
-    }
-
-    public function testGetJob()
-    {
-
-        // Set filter to only go back a day, so that we do not pull every job.
-        $filter = sprintf(
-            'state=DONE AND end_time>"%sT00:00:00+00:00"',
-            date('Y-m-d', strtotime('-1 day'))
-        );
-        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
-        $getJobName = $this->runFunctionSnippet('list_jobs', [
-            self::$projectId,
-            $filter,
-        ]);
-        preg_match($jobIdRegex, $getJobName, $jobIds);
-        $jobName = $jobIds[0];
-
-        $output = $this->runFunctionSnippet('get_job', [
-            $jobName
-        ]);
-        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
-    }
-
-    public function testCreateJob()
-    {
-        $gcsPath = $this->requireEnv('GCS_PATH');
-        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
-        $jobName = $this->runFunctionSnippet('create_job', [
-            self::$projectId,
-            $gcsPath
-        ]);
-        $this->assertRegExp($jobIdRegex, $jobName);
-        $output = $this->runFunctionSnippet(
-            'delete_job',
-            [$jobName]
-        );
-        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
     }
 
     public function testRedactImageListedInfotypes()
