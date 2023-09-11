@@ -35,7 +35,7 @@ use Google\Protobuf\FieldMask;
 /**
  * Update an existing job trigger.
  *
- * @param string $callingProjectId  The project ID to run the API call under.
+ * @param string $callingProjectId  The Google Cloud Project ID to run the API call under.
  * @param string $jobTriggerName    The job trigger name to update.
  *
  */
@@ -68,8 +68,7 @@ function update_trigger(
         ]);
 
     // Send the update job trigger request and process the response.
-    // $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerName;
-    $name = $dlp->projectLocationJobTriggerName($callingProjectId, 'global', $jobTriggerName);
+    $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerName;
 
     $response = $dlp->updateJobTrigger($name, [
         'jobTrigger' => $jobTrigger,

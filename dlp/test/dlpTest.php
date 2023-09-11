@@ -1680,64 +1680,57 @@ class dlpTest extends TestCase
 
         // Test create stored infotype.
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/create_stored_infotype.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
-            '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'create_stored_infotype' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent,
-        );
-        global $dlp;
-
-        $dlp = $dlpServiceClientMock1->reveal();
-
-        $output = $this->runFunctionSnippet($tmpFileName, [
+        $callFunction = sprintf(
+            "dlp_create_stored_infotype('%s','%s','%s','%s','%s');",
             self::$projectId,
             $outputgcsPath,
             $storedInfoTypeId,
             $displayName,
             $description
+        );
+
+        $tmpFile1 = $this->writeTempSample('create_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
         ]);
-        // delete temp file
-        unlink($tmpFilePath);
+
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile1;
+        $output = ob_get_clean();
+
         $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/', $output);
         $storedInfoTypeName = explode('Successfully created Stored InfoType : ', $output)[1];
 
         // Test inspect stored infotype.
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/inspect_with_stored_infotype.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
+        $textToInspect = 'The commit was made by test@gmail.com.';
 
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
-            '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'inspect_with_stored_infotype' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent,
+        $callFunction = sprintf(
+            "dlp_inspect_with_stored_infotype('%s','%s','%s');",
+            self::$projectId,
+            $storedInfoTypeName,
+            $textToInspect
         );
+
+        $tmpFile2 = $this->writeTempSample('inspect_with_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
+        ]);
         global $dlp;
 
         $dlp = $dlpServiceClientMock1->reveal();
 
-        $textToInspect = 'The commit was made by test@gmail.com.';
-        $inspectOutput = $this->runFunctionSnippet($tmpFileName, [
-            self::$projectId,
-            $storedInfoTypeName,
-            $textToInspect
-        ]);
-        // delete temp file
-        unlink($tmpFilePath);
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile2;
+        $inspectOutput = ob_get_clean();
 
         $this->assertStringContainsString('Quote: The', $inspectOutput);
         $this->assertStringContainsString('Info type: STORED_TYPE', $inspectOutput);
@@ -1745,32 +1738,28 @@ class dlpTest extends TestCase
 
         // Test update stored infotype.
         // Creating a temp file for testing.
-        $sampleFile = __DIR__ . '/../src/update_stored_infotype.php';
-        $tmpFileName = basename($sampleFile, '.php') . '_temp';
-        $tmpFilePath = __DIR__ . '/../src/' . $tmpFileName . '.php';
-
-        $fileContent = file_get_contents($sampleFile);
-        $replacements = [
-            '$dlp = new DlpServiceClient();' => 'global $dlp;',
-            'update_stored_infotype' => $tmpFileName
-        ];
-        $fileContent = strtr($fileContent, $replacements);
-        $tmpFile = file_put_contents(
-            $tmpFilePath,
-            $fileContent,
-        );
-        global $dlp;
-
-        $dlp = $dlpServiceClientMock1->reveal();
-
-        $updateOutput = $this->runFunctionSnippet($tmpFileName, [
+        $callFunction = sprintf(
+            "dlp_update_stored_infotype('%s','%s','%s','%s');",
             self::$projectId,
             $gcsPath,
             $outputgcsPath,
             $storedInfoTypeId
+        );
+
+        $tmpFile3 = $this->writeTempSample('update_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
         ]);
-        // delete temp file
-        unlink($tmpFilePath);
+
+        global $dlp;
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile3;
+        $updateOutput = ob_get_clean();
+
         $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId, $updateOutput);
     }
 }

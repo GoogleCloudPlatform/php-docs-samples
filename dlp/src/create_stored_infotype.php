@@ -76,8 +76,7 @@ function create_stored_infotype(
         ->setLargeCustomDictionary($largeCustomDictionaryConfig);
 
     // Send the stored infoType creation request and process the response.
-    // $parent = "projects/$callingProjectId/locations/global";
-    $parent = $dlp->locationName($callingProjectId, 'global');
+    $parent = "projects/$callingProjectId/locations/global";
     $response = $dlp->createStoredInfoType($parent, $storedInfoTypeConfig, [
         'storedInfoTypeId' => $storedInfoTypeId
     ]);

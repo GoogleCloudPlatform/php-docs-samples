@@ -34,7 +34,7 @@ use Google\Protobuf\FieldMask;
 /**
  * Rebuild/Update the stored infoType.
  *
- * @param string $callingProjectId  The project ID to run the API call under.
+ * @param string $callingProjectId  The Google Cloud Project ID to run the API call under.
  * @param string $gcsPath           The path to file in GCS bucket that holds a collection of words and phrases to be searched by the new infoType detector.
  * @param string $outputgcsPath     The path to the location in a Cloud Storage bucket to store the created dictionary.
  * @param string $storedInfoTypeId  The name of the stored InfoType which is to be updated.
@@ -65,8 +65,7 @@ function update_stored_infotype(
 
     // Send the stored infoType creation request and process the response.
 
-    // $name = "projects/$callingProjectId/locations/global/storedInfoTypes/" . $storedInfoTypeId;
-    $name = $dlp->projectLocationStoredInfoTypeName($callingProjectId, 'global', $storedInfoTypeId);
+    $name = "projects/$callingProjectId/locations/global/storedInfoTypes/" . $storedInfoTypeId;
     // Set mask to control which fields get updated.
     // Refer https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask for constructing the field mask paths.
     $fieldMask = (new FieldMask())

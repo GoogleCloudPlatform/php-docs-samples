@@ -36,7 +36,7 @@ use Google\Cloud\Dlp\V2\StoredType;
  * Inspect with stored infoType.
  * Scan content using a large custom dictionary detector.
  *
- * @param string $projectId             The project ID to run the API call under.
+ * @param string $projectId             The Google Cloud Project ID to run the API call under.
  * @param string $storedInfoTypeName    The name of the stored infotype whose This value must be in the format
  * projects/projectName/(locations/locationId)/storedInfoTypes/storedInfoTypeName.
  * @param string $textToInspect         The string to inspect.
@@ -49,8 +49,7 @@ function inspect_with_stored_infotype(
     // Instantiate a client.
     $dlp = new DlpServiceClient();
 
-    // $parent = "projects/$projectId/locations/global";
-    $parent = $dlp->locationName($projectId, 'global');
+    $parent = "projects/$projectId/locations/global";
 
     // Specify the content to be inspected.
     $item = (new ContentItem())
