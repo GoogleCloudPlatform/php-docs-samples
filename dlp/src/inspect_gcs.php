@@ -142,7 +142,7 @@ function inspect_gcs(
         case JobState::DONE:
             $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
             if (count($infoTypeStats) === 0) {
-                print('No findings.' . PHP_EOL);
+                printf('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
                     printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
@@ -160,7 +160,7 @@ function inspect_gcs(
             printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
+            print('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
 # [END dlp_inspect_gcs]

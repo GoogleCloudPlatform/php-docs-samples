@@ -169,7 +169,7 @@ function inspect_datastore(
             printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            printf('Unexpected job state.');
+            print('Unexpected job state.');
     }
 }
 # [END dlp_inspect_datastore]
