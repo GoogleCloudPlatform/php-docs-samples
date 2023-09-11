@@ -19,7 +19,7 @@
 .kokoro @GoogleCloudPlatform/php-admins
 
 /bigtable/**/*.php        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
-/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/php-samples-reviewers
+/cloud_sql/**/*.php       @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/php-samples-reviewers
 /datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /storage/                 @GoogleCloudPlatform/cloud-storage-dpe @GoogleCloudPlatform/php-samples-reviewers
