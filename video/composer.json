@@ -2,7 +2,8 @@
     "name": "google/video-sample",
     "type": "project",
     "require": {
-        "google/cloud-videointelligence": "^1.5"
+        "google/cloud-videointelligence": "^1.5",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "require-dev": {
         "google/cloud-core": "^1.23"

@@ -1,6 +1,7 @@
 {
     "require": {
-        "cboden/ratchet": "^0.4.1"
+        "cboden/ratchet": "^0.4.1",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "require-dev": {
     	"ratchet/pawl": "^0.3.4",

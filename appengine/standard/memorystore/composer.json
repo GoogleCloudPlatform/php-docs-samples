@@ -1,5 +1,8 @@
 {
     "require-dev": {
         "paragonie/random_compat": "^9.0.0"
+    },
+    "require": {
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

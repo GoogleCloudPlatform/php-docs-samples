@@ -1,7 +1,8 @@
 {
     "require": {
         "google/cloud-dialogflow": "^1.0",
-        "symfony/console": "^5.0"
+        "symfony/console": "^5.0",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "autoload": {
         "files": [

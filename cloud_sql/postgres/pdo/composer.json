@@ -11,6 +11,7 @@
         "slim/twig-view": "^3.1",
         "slim/http": "^1.0",
         "slim/psr7": "^1.0",
-        "pimple/pimple": "^3.3"
+        "pimple/pimple": "^3.3",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

@@ -3,6 +3,7 @@
     "type": "project",
     "require": {
         "google/cloud-vision": "^1.0.0",
-        "google/cloud-storage": "^1.20.1"
+        "google/cloud-storage": "^1.20.1",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

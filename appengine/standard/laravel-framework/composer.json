@@ -2,5 +2,8 @@
     "require-dev": {
         "monolog\/monolog": "^2.0",
         "google/cloud-logging": "^1.14"
+    },
+    "require": {
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

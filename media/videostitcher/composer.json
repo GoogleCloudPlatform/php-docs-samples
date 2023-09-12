@@ -2,6 +2,7 @@
     "name": "google/video-stitcher-sample",
     "type": "project",
     "require": {
-        "google/cloud-video-stitcher": "^0.7.0"
+        "google/cloud-video-stitcher": "^0.7.0",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

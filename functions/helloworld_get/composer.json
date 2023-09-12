@@ -1,6 +1,7 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^1.0"
+        "google/cloud-functions-framework": "^1.0",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "scripts": {
         "start": [

@@ -2,7 +2,8 @@
     "name": "google/translate-sample",
     "type": "project",
     "require": {
-        "google/cloud-translate": "^1.7.2"
+        "google/cloud-translate": "^1.7.2",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "require-dev": {
         "google/cloud-storage": "^1.14"

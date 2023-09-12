@@ -2,7 +2,8 @@
     "require": {
         "google/apiclient": "^2.1",
         "google/cloud-storage": "^1.3",
-        "google/auth":"^1.0"
+        "google/auth":"^1.0",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

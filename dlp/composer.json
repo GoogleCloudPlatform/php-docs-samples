@@ -2,7 +2,8 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^1.0.0",
-        "google/cloud-pubsub": "^1.11.1"
+        "google/cloud-dlp": "^1.10.1",
+        "google/cloud-pubsub": "^1.11.1",
+        "google/gax": "dev-add-options-classes as 1.30.0"
     }
 }

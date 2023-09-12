@@ -1,3 +1,6 @@
 {
 
+    "require": {
+        "google/gax": "dev-add-options-classes as 1.23.0"
+    }
 }

@@ -1,7 +1,8 @@
 {
     "require": {
         "google/cloud-functions-framework": "^1.0.0",
-        "google/cloud-firestore": "^1.25"
+        "google/cloud-firestore": "^1.25",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     },
     "scripts": {
         "start": [

@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud-recaptcha-enterprise": "^1.0"
+        "google/cloud-recaptcha-enterprise": "^1.0",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }

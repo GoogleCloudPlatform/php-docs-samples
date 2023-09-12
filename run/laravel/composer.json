@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "google/auth": "^1.24",
         "google/cloud-core": "^1.46",
+        "google/gax": "dev-add-options-classes as 1.23.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",

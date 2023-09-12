@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud-compute": "^1.6"
+        "google/cloud-compute": "^1.6",
+        "google/gax": "dev-add-options-classes as 1.23.0"
     }
 }
