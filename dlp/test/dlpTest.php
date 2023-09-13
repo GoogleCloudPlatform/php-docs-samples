@@ -26,8 +26,10 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use PHPUnitRetry\RetryTrait;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Finding;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
+use Google\Cloud\Dlp\V2\InspectContentResponse;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
 use Google\Cloud\PubSub\Message;
@@ -43,11 +45,16 @@ use Google\Cloud\Dlp\V2\HybridInspectResponse;
 use Google\Cloud\Dlp\V2\HybridOptions;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\InspectResult;
 use Google\Cloud\Dlp\V2\JobTrigger;
 use Google\Cloud\Dlp\V2\JobTrigger\Status;
 use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
+use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\Manual;
 use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\StoredInfoType;
+use Google\Cloud\Dlp\V2\StoredInfoTypeState;
+use Google\Cloud\Dlp\V2\StoredInfoTypeVersion;
 
 /**
  * Unit Tests for dlp commands.
@@ -266,6 +273,7 @@ class dlpTest extends TestCase
         $triggerId = uniqid('my-php-test-trigger-');
         $scanPeriod = 1;
         $autoPopulateTimespan = true;
+        $maxFindings = 10;
 
         $output = $this->runFunctionSnippet('create_trigger', [
             self::$projectId,
@@ -275,6 +283,7 @@ class dlpTest extends TestCase
             $description,
             $scanPeriod,
             $autoPopulateTimespan,
+            $maxFindings
         ]);
         $fullTriggerId = sprintf('projects/%s/locations/global/jobTriggers/%s', self::$projectId, $triggerId);
         $this->assertStringContainsString('Successfully created trigger ' . $fullTriggerId, $output);
@@ -284,6 +293,12 @@ class dlpTest extends TestCase
         $this->assertStringContainsString('Display Name: ' . $displayName, $output);
         $this->assertStringContainsString('Description: ' . $description, $output);
         $this->assertStringContainsString('Auto-populates timespan config: yes', $output);
+
+        $updateOutput = $this->runFunctionSnippet('update_trigger', [
+            self::$projectId,
+            $triggerId
+        ]);
+        $this->assertStringContainsString('Successfully update trigger ' . $fullTriggerId, $updateOutput);
 
         $output = $this->runFunctionSnippet('delete_trigger', [
             self::$projectId,
@@ -1595,5 +1610,130 @@ class dlpTest extends TestCase
 
         $this->assertStringContainsString('projects/' . self::$projectId . '/dlpJobs', $output);
         $this->assertStringContainsString('infoType PERSON_NAME', $output);
+    }
+
+    public function testStoredInfotype()
+    {
+        $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
+        $outputgcsPath = 'gs://' . $bucketName;
+        $storedInfoTypeId = uniqid('github-usernames-');
+        $gcsPath = 'gs://' . $bucketName . '/term-list.txt';
+        // Optionally set a display name and a description.
+        $description = 'Dictionary of GitHub usernames used in commits';
+        $displayName = 'GitHub usernames';
+
+        // Mock the necessary objects and methods
+        $dlpServiceClientMock1 = $this->prophesize(DlpServiceClient::class);
+
+        $createStoredInfoTypeResponse = (new StoredInfoType())
+            ->setName('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId)
+            ->setCurrentVersion((new StoredInfoTypeVersion())
+                    ->setState(StoredInfoTypeState::READY)
+            );
+
+        $inspectContentResponse = (new InspectContentResponse())
+            ->setResult((new InspectResult())
+                ->setFindings([
+                    (new Finding())
+                        ->setQuote('The')
+                        ->setInfoType((new InfoType())->setName('STORED_TYPE'))
+                        ->setLikelihood(Likelihood::VERY_LIKELY)
+                ]));
+
+        $dlpServiceClientMock1->createStoredInfoType(Argument::any(), Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createStoredInfoTypeResponse);
+
+        $dlpServiceClientMock1->inspectContent(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($inspectContentResponse);
+
+        $dlpServiceClientMock1->updateStoredInfoType(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($createStoredInfoTypeResponse);
+
+        // Test create stored infotype.
+        // Creating a temp file for testing.
+        $callFunction = sprintf(
+            "dlp_create_stored_infotype('%s','%s','%s','%s','%s');",
+            self::$projectId,
+            $outputgcsPath,
+            $storedInfoTypeId,
+            $displayName,
+            $description
+        );
+
+        $tmpFile1 = $this->writeTempSample('create_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
+        ]);
+
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile1;
+        $output = ob_get_clean();
+
+        $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/', $output);
+        $storedInfoTypeName = explode('Successfully created Stored InfoType : ', $output)[1];
+
+        // Test inspect stored infotype.
+        // Creating a temp file for testing.
+        $textToInspect = 'The commit was made by test@gmail.com.';
+
+        $callFunction = sprintf(
+            "dlp_inspect_with_stored_infotype('%s','%s','%s');",
+            self::$projectId,
+            $storedInfoTypeName,
+            $textToInspect
+        );
+
+        $tmpFile2 = $this->writeTempSample('inspect_with_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
+        ]);
+        global $dlp;
+
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile2;
+        $inspectOutput = ob_get_clean();
+
+        $this->assertStringContainsString('Quote: The', $inspectOutput);
+        $this->assertStringContainsString('Info type: STORED_TYPE', $inspectOutput);
+        $this->assertStringContainsString('Likelihood: VERY_LIKELY', $inspectOutput);
+
+        // Test update stored infotype.
+        // Creating a temp file for testing.
+        $callFunction = sprintf(
+            "dlp_update_stored_infotype('%s','%s','%s','%s');",
+            self::$projectId,
+            $gcsPath,
+            $outputgcsPath,
+            $storedInfoTypeId
+        );
+
+        $tmpFile3 = $this->writeTempSample('update_stored_infotype', [
+            '$dlp = new DlpServiceClient();' => 'global $dlp;',
+            "require_once __DIR__ . '/../../testing/sample_helpers.php';" => '',
+            '\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);' => $callFunction
+        ]);
+
+        global $dlp;
+        $dlp = $dlpServiceClientMock1->reveal();
+
+        // Invoke file and capture output
+        ob_start();
+        include $tmpFile3;
+        $updateOutput = ob_get_clean();
+
+        $this->assertStringContainsString('projects/' . self::$projectId . '/locations/global/storedInfoTypes/' . $storedInfoTypeId, $updateOutput);
     }
 }
