@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,82 +23,74 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_inspect_gcs]
+# [START dlp_inspect_gcs_with_sampling]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\CloudStorageOptions;
-use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
-use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\BigQueryOptions\SampleMethod;
+use Google\Cloud\Dlp\V2\CloudStorageOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Inspect a file stored on Google Cloud Storage , using Pub/Sub for job status notifications.
+ * Inspect storage with sampling.
+ * The following examples demonstrate using the Cloud DLP API to scan a 90% subset of a
+ * Cloud Storage bucket for person names. The scan starts from a random location in the dataset
+ * and only includes text files under 200 bytes.
  *
- * @param string $callingProjectId  The project ID to run the API call under
- * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes
- * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
- * @param string $bucketId          The name of the bucket where the file resides
- * @param string $file              The path to the file within the bucket to inspect. Can contain wildcards e.g. "my-image.*"
- * @param int    $maxFindings       (Optional) The maximum number of findings to report per request (0 = server maximum)
+ * @param string $callingProjectId  The project ID to run the API call under.
+ * @param string $gcsUri            Google Cloud Storage file url.
+ * @param string $topicId           The ID of the Pub/Sub topic to notify once the job completes.
+ * @param string $subscriptionId    The ID of the Pub/Sub subscription to use when listening for job.
  */
-function inspect_gcs(
+function inspect_gcs_with_sampling(
+    // TODO(developer): Replace sample parameters before running the code.
     string $callingProjectId,
-    string $topicId,
-    string $subscriptionId,
-    string $bucketId,
-    string $file,
-    int $maxFindings = 0
+    string $gcsUri = 'gs://GOOGLE_STORAGE_BUCKET_NAME/dlp_sample.csv',
+    string $topicId = 'dlp-pubsub-topic',
+    string $subscriptionId = 'dlp_subcription'
 ): void {
     // Instantiate a client.
     $dlp = new DlpServiceClient();
     $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
-    // The infoTypes of information to match
-    $personNameInfoType = (new InfoType())
-        ->setName('PERSON_NAME');
-    $creditCardNumberInfoType = (new InfoType())
-        ->setName('CREDIT_CARD_NUMBER');
-    $infoTypes = [$personNameInfoType, $creditCardNumberInfoType];
-
-    // The minimum likelihood required before returning a match
-    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
-
-    // Specify finding limits
-    $limits = (new FindingLimits())
-        ->setMaxFindingsPerRequest($maxFindings);
-
-    // Construct items to be inspected
-    $fileSet = (new FileSet())
-        ->setUrl('gs://' . $bucketId . '/' . $file);
-
+    // Construct the items to be inspected.
     $cloudStorageOptions = (new CloudStorageOptions())
-        ->setFileSet($fileSet);
+        ->setFileSet((new FileSet())
+            ->setUrl($gcsUri))
+        ->setBytesLimitPerFile(200)
+        ->setFilesLimitPercent(90)
+        ->setSampleMethod(SampleMethod::RANDOM_START);
 
     $storageConfig = (new StorageConfig())
         ->setCloudStorageOptions($cloudStorageOptions);
 
-    // Construct the inspect config object
+    // Specify the type of info the inspection will look for.
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $emailAddressInfoType = (new InfoType())
+        ->setName('EMAIL_ADDRESS');
+    $cardNumberInfoType = (new InfoType())
+        ->setName('CREDIT_CARD_NUMBER');
+    $infoTypes = [$phoneNumberInfoType, $emailAddressInfoType, $cardNumberInfoType];
+
+    // Specify how the content should be inspected.
     $inspectConfig = (new InspectConfig())
-        ->setMinLikelihood($minLikelihood)
-        ->setLimits($limits)
-        ->setInfoTypes($infoTypes);
+        ->setInfoTypes($infoTypes)
+        ->setIncludeQuote(true);
 
-    // Construct the action to run when job completes
-    $pubSubAction = (new PublishToPubSub())
-        ->setTopic($topic->name());
-
+    // Construct the action to run when job completes.
     $action = (new Action())
-        ->setPubSub($pubSubAction);
+        ->setPubSub((new PublishToPubSub())
+            ->setTopic($topic->name()));
 
-    // Construct inspect job config to run
+    // Construct inspect job config to run.
     $inspectJob = (new InspectJobConfig())
         ->setInspectConfig($inspectConfig)
         ->setStorageConfig($storageConfig)
@@ -107,43 +99,49 @@ function inspect_gcs(
     // Listen for job notifications via an existing topic/subscription.
     $subscription = $topic->subscription($subscriptionId);
 
-    // Submit request
+    // Submit request.
     $parent = "projects/$callingProjectId/locations/global";
     $job = $dlp->createDlpJob($parent, [
         'inspectJob' => $inspectJob
     ]);
 
-    // Poll Pub/Sub using exponential backoff until job finishes
-    // Consider using an asynchronous execution model such as Cloud Functions
+    // Poll Pub/Sub using exponential backoff until job finishes.
+    // Consider using an asynchronous execution model such as Cloud Functions.
     $attempt = 1;
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
                     $job = $dlp->getDlpJob($job->getName());
                 } while ($job->getState() == JobState::RUNNING);
-                break 2; // break from parent do while
+                break 2; // break from parent do while.
             }
         }
         printf('Waiting for job to complete' . PHP_EOL);
-        // Exponential backoff with max delay of 60 seconds
+        // Exponential backoff with max delay of 60 seconds.
         sleep(min(60, pow(2, ++$attempt)));
-    } while (time() - $startTime < 600); // 10 minute timeout
+    } while (time() - $startTime < 600); // 10 minute timeout.
 
-    // Print finding counts
+    // Print finding counts.
     printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
     switch ($job->getState()) {
         case JobState::DONE:
             $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
             if (count($infoTypeStats) === 0) {
-                print('No findings.' . PHP_EOL);
+                printf('No findings.' . PHP_EOL);
             } else {
                 foreach ($infoTypeStats as $infoTypeStat) {
-                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                    printf(
+                        '  Found %s instance(s) of infoType %s' . PHP_EOL,
+                        $infoTypeStat->getCount(),
+                        $infoTypeStat->getInfoType()->getName()
+                    );
                 }
             }
             break;
@@ -158,11 +156,11 @@ function inspect_gcs(
             printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            print('Unexpected job state. Most likely, the job is either running or has not yet started.');
+            printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_inspect_gcs]
+# [END dlp_inspect_gcs_with_sampling]
 
-// The following 2 lines are only needed to run the samples
+// The following 2 lines are only needed to run the samples.
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
