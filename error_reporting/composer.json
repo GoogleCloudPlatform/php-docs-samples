@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-error-reporting": "^0.20.2"
+        "google/cloud-error-reporting": "^0.21.0"
     }
 }
