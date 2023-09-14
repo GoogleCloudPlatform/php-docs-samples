@@ -1048,6 +1048,46 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Transaction complete.', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testCreateSequence()
+    {
+        $output = $this->runFunctionSnippet('create_sequence');
+        $this->assertStringContainsString(
+            'Created Seq sequence and Customers table, where ' .
+            'the key column CustomerId uses the sequence as a default value',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testCreateSequence
+     */
+    public function testAlterSequence()
+    {
+        $output = $this->runFunctionSnippet('alter_sequence');
+        $this->assertStringContainsString(
+            'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testAlterSequence
+     */
+    public function testDropSequence()
+    {
+        $output = $this->runFunctionSnippet('drop_sequence');
+        $this->assertStringContainsString(
+            'Altered Customers table to drop DEFAULT from CustomerId ' .
+            'column and dropped the Seq sequence',
+            $output
+        );
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
@@ -1188,5 +1228,44 @@ class spannerTest extends TestCase
         if (!is_null(self::$serviceAccountEmail)) {
             self::deleteServiceAccount(self::$serviceAccountEmail);
         }
+    }
+
+    public function testCreateTableForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('create_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Created Customers and ShoppingCarts table with FKShoppingCartsCustomerId ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateTableForeignKeyDeleteCascade
+     */
+    public function testAlterTableDropForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('drop_foreign_key_constraint_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table to drop FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
+    }
+
+    /**
+     * @depends testAlterTableDropForeignKeyDeleteCascade
+     */
+    public function testAlterTableAddForeignKeyDeleteCascade()
+    {
+        $output = $this->runFunctionSnippet('alter_table_with_foreign_key_delete_cascade');
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString(
+            'Altered ShoppingCarts table with FKShoppingCartsCustomerName ' .
+            'foreign key constraint on database',
+            $output
+        );
     }
 }
