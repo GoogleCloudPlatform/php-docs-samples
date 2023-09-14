@@ -26,7 +26,6 @@ namespace Google\Cloud\Samples\Dlp;
 // [START dlp_create_trigger]
 use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
-use Google\Cloud\Dlp\V2\CloudStorageOptions_FileSet;
 use Google\Cloud\Dlp\V2\CreateJobTriggerRequest;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
@@ -37,7 +36,6 @@ use Google\Cloud\Dlp\V2\JobTrigger\Status;
 use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
 use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\Schedule;
-use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
 use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\InfoType;
