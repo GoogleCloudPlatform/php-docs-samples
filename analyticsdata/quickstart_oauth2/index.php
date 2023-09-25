@@ -18,10 +18,11 @@
 // [START analyticsdata_quickstart_oauth2]
 require 'vendor/autoload.php';
 
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\ApiCore\ApiException;
 use Google\Auth\OAuth2;
 
@@ -56,27 +57,23 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']
     try {
         // Make an API call.
         $client = new BetaAnalyticsDataClient(['credentials' => $oauth]);
-        $response = $client->runReport([
-            'property' => 'properties/' . $property_id,
-            'dateRanges' => [
+        $request = (new RunReportRequest())
+            ->setProperty('properties/' . $property_id)
+            ->setDateRanges([
                 new DateRange([
                     'start_date' => '2020-03-31',
                     'end_date' => 'today',
                 ]),
-            ],
-            'dimensions' => [new Dimension(
-                [
+            ])
+            ->setDimensions([new Dimension([
                     'name' => 'city',
-                ]
-            ),
-            ],
-            'metrics' => [new Metric(
-                [
+                ]),
+            ])
+            ->setMetrics([new Metric([
                     'name' => 'activeUsers',
-                ]
-            )
-            ]
-        ]);
+                ])
+            ]);
+        $response = $client->runReport($request);
 
         // Print results of an API call.
         print 'Report result: <br />';

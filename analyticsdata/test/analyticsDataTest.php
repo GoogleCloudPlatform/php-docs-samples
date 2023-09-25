@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Analytics\Data\Tests;
 use Google\ApiCore\ValidationException;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 
 class analyticsDataTest extends TestCase
 {
@@ -49,6 +49,22 @@ class analyticsDataTest extends TestCase
         } catch (ValidationException $ex) {
             $this->assertStringContainsString('does-not-exist.json', $ex->getMessage());
         }
+    }
+
+    public function testGetCommonMetadata()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_common_metadata');
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
+    }
+
+    public function testGetMetadataByPropertyId()
+    {
+        $propertyId = self::requireEnv('GA_TEST_PROPERTY_ID');
+        $output = $this->runFunctionSnippet('get_metadata_by_property_id', [$propertyId]);
+
+        $this->assertStringContainsString('Dimensions and metrics', $output);
     }
 
     public function testRunRealtimeReport()

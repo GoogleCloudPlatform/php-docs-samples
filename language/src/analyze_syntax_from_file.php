@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START language_syntax_gcs]
+use Google\Cloud\Language\V1\AnalyzeSyntaxRequest;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
 /**
@@ -43,7 +44,9 @@ function analyze_syntax_from_file(string $uri): void
         ->setType(Type::PLAIN_TEXT);
 
     // Call the analyzeEntities function
-    $response = $languageServiceClient->analyzeSyntax($document, []);
+    $request = (new AnalyzeSyntaxRequest())
+        ->setDocument($document);
+    $response = $languageServiceClient->analyzeSyntax($request);
     $tokens = $response->getTokens();
     // Print out information about each entity
     foreach ($tokens as $token) {

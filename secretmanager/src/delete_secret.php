@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_delete_secret]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -41,8 +42,11 @@ function delete_secret(string $projectId, string $secretId): void
     // Build the resource name of the secret.
     $name = $client->secretName($projectId, $secretId);
 
+    // Build the request.
+    $request = DeleteSecretRequest::build($name);
+
     // Delete the secret.
-    $client->deleteSecret($name);
+    $client->deleteSecret($request);
     printf('Deleted secret %s', $secretId);
 }
 // [END secretmanager_delete_secret]

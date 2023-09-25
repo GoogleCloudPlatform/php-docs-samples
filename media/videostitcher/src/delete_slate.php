@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_delete_slate]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\DeleteSlateRequest;
 
 /**
  * Deletes a slate.
@@ -43,10 +44,17 @@ function delete_slate(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->slateName($callingProjectId, $location, $slateId);
-    $stitcherClient->deleteSlate($formattedName);
-
-    // Print status
-    printf('Deleted slate %s' . PHP_EOL, $slateId);
+    $request = (new DeleteSlateRequest())
+        ->setName($formattedName);
+    $operationResponse = $stitcherClient->deleteSlate($request);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        // Print status
+        printf('Deleted slate %s' . PHP_EOL, $slateId);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_delete_slate]
 

@@ -1,4 +1,6 @@
+# [START bigquery_simple_app_all]
 <?php
+# [START_EXCLUDE]
 /**
  * Copyright 2016 Google Inc.
  *
@@ -20,8 +22,8 @@
  *
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
+# [END_EXCLUDE]
 
-# [START bigquery_simple_app_all]
 require __DIR__ . '/vendor/autoload.php';
 
 # [START bigquery_simple_app_deps]
@@ -29,17 +31,8 @@ use Google\Cloud\BigQuery\BigQueryClient;
 
 # [END bigquery_simple_app_deps]
 
-// get the project ID as the first argument
-if (2 != count($argv)) {
-    die("Usage: php stackoverflow.php YOUR_PROJECT_ID\n");
-}
-
-$projectId = $argv[1];
-
 # [START bigquery_simple_app_client]
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
+$bigQuery = new BigQueryClient();
 # [END bigquery_simple_app_client]
 # [START bigquery_simple_app_query]
 $query = <<<ENDSQL

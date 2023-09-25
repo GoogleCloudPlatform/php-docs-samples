@@ -28,11 +28,12 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_multiple_dimensions]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -45,21 +46,21 @@ function run_report_with_multiple_dimensions(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([
             new Dimension(['name' => 'country']),
             new Dimension(['name' => 'region']),
             new Dimension(['name' => 'city']),
-        ],
-        'metrics' => [new Metric(['name' => 'activeUsers'])],
-        'dateRanges' => [
+        ])
+        ->setMetrics([new Metric(['name' => 'activeUsers'])])
+        ->setDateRanges([
             new DateRange([
                 'start_date' => '7daysAgo',
                 'end_date' => 'today',
             ])
-        ],
-    ]);
+        ]);
+    $response = $client->runReport($request);
 
     printRunReportResponseWithMultipleDimensions($response);
 }

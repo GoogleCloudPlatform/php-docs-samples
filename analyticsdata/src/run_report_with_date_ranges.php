@@ -28,11 +28,12 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_date_ranges]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
@@ -45,9 +46,9 @@ function run_report_with_date_ranges(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dateRanges' => [
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDateRanges([
             new DateRange([
                 'start_date' => '2019-08-01',
                 'end_date' => '2019-08-14',
@@ -56,10 +57,10 @@ function run_report_with_date_ranges(string $propertyId)
                 'start_date' => '2020-08-01',
                 'end_date' => '2020-08-14',
             ]),
-        ],
-        'dimensions' => [new Dimension(['name' => 'platform'])],
-        'metrics' => [new Metric(['name' => 'activeUsers'])],
-    ]);
+        ])
+        ->setDimensions([new Dimension(['name' => 'platform'])])
+        ->setMetrics([new Metric(['name' => 'activeUsers'])]);
+    $response = $client->runReport($request);
 
     printRunReportResponseWithDateRanges($response);
 }

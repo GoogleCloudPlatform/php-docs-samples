@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_live_session]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetLiveSessionRequest;
 
 /**
  * Gets a live session.
@@ -43,7 +44,9 @@ function get_live_session(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->liveSessionName($callingProjectId, $location, $sessionId);
-    $session = $stitcherClient->getLiveSession($formattedName);
+    $request = (new GetLiveSessionRequest())
+        ->setName($formattedName);
+    $session = $stitcherClient->getLiveSession($request);
 
     // Print results
     printf('Live session: %s' . PHP_EOL, $session->getName());

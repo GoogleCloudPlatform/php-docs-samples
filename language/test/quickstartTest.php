@@ -36,8 +36,8 @@ class quickstartTest extends TestCase
         // Invoke quickstart.php
         $output = $this->runSnippet($file);
 
-        $this->assertRegExp('/Text: Hello, world!/', $output);
-        $this->assertRegExp($p = '/Sentiment: (\\d.\\d+), (\\d.\\d+)/', $output);
+        $this->assertMatchesRegularExpression('/Text: Hello, world!/', $output);
+        $this->assertMatchesRegularExpression($p = '/Sentiment: (\\d.\\d+), (\\d.\\d+)/', $output);
 
         // Make sure it looks correct
         preg_match($p, $output, $matches);

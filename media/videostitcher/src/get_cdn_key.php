@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_cdn_key]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetCdnKeyRequest;
 
 /**
  * Gets a CDN key.
@@ -43,7 +44,9 @@ function get_cdn_key(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->cdnKeyName($callingProjectId, $location, $cdnKeyId);
-    $key = $stitcherClient->getCdnKey($formattedName);
+    $request = (new GetCdnKeyRequest())
+        ->setName($formattedName);
+    $key = $stitcherClient->getCdnKey($request);
 
     // Print results
     printf('CDN key: %s' . PHP_EOL, $key->getName());

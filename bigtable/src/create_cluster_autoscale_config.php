@@ -87,7 +87,7 @@ function create_cluster_autoscale_config(
         printf('Cluster created: %s' . PHP_EOL, $clusterId);
     } else {
         $error = $operationResponse->getError();
-        printf('Cluster not created: %s' . PHP_EOL, $error->getMessage());
+        printf('Cluster not created: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 // [END bigtable_api_cluster_create_autoscaling]

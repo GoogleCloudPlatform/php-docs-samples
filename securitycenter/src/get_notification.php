@@ -15,27 +15,29 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 2) {
-    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID\n', basename(__FILE__));
-}
-list($_, $organizationId, $notificationConfigId) = $argv;
+namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_get_notification_config]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
 
-/** Uncomment and populate these variables in your code */
-// $organizationId = '{your-org-id}';
-// $notificationConfigId = {'your-unique-id'};
+/**
+ * @param string $organizationId        Your org ID
+ * @param string $notificationConfigId  A unique identifier
+ */
+function get_notification(string $organizationId, string $notificationConfigId): void
+{
+    $securityCenterClient = new SecurityCenterClient();
+    $notificationConfigName = $securityCenterClient::notificationConfigName(
+        // You can also use 'projectId' or 'folderId' instead of the 'organizationId'.
+        $organizationId,
+        $notificationConfigId
+    );
 
-$securityCenterClient = new SecurityCenterClient();
-$notificationConfigName = $securityCenterClient::notificationConfigName(
-    $organizationId,
-    $notificationConfigId
-);
-
-$response = $securityCenterClient->getNotificationConfig($notificationConfigName);
-printf('Notification config was retrieved: %s' . PHP_EOL, $response->getName());
-
+    $response = $securityCenterClient->getNotificationConfig($notificationConfigName);
+    printf('Notification config was retrieved: %s' . PHP_EOL, $response->getName());
+}
 // [END securitycenter_get_notification_config]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

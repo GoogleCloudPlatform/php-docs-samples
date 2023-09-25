@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\ErrorReporting;
 
 # [START report_error]
-use Google\Cloud\ErrorReporting\V1beta1\ReportErrorsServiceClient;
+use Google\Cloud\ErrorReporting\V1beta1\Client\ReportErrorsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorContext;
 use Google\Cloud\ErrorReporting\V1beta1\ReportedErrorEvent;
+use Google\Cloud\ErrorReporting\V1beta1\ReportErrorEventRequest;
 use Google\Cloud\ErrorReporting\V1beta1\SourceLocation;
 
 /**
@@ -53,8 +54,11 @@ function report_error(string $projectId, string $message, string $user = '')
     $event = (new ReportedErrorEvent())
         ->setMessage($message)
         ->setContext($context);
+    $request = (new ReportErrorEventRequest())
+        ->setProjectName($projectName)
+        ->setEvent($event);
 
-    $errors->reportErrorEvent($projectName, $event);
+    $errors->reportErrorEvent($request);
     print('Reported an exception to Stackdriver' . PHP_EOL);
 }
 # [END report_error]

@@ -35,7 +35,7 @@ class DeployTest extends TestCase
         $resp = $this->client->request('GET', '/');
 
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertRegExp('/Visitor number: \d+/', (string) $resp->getBody());
+        $this->assertMatchesRegularExpression('/Visitor number: \d+/', (string) $resp->getBody());
     }
 
     public static function beforeDeploy()

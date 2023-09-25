@@ -15,12 +15,7 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 4) {
-    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n', basename(__FILE__));
-}
-list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
+namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_update_notification_config]
 use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
@@ -28,28 +23,39 @@ use Google\Cloud\SecurityCenter\V1\NotificationConfig;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig\StreamingConfig;
 use Google\Protobuf\FieldMask;
 
-/** Uncomment and populate these variables in your code */
-// $organizationId = '{your-org-id}';
-// $notificationConfigId = {'your-unique-id'};
-// $projectId = '{your-project}';
-// $topicName = '{your-topic}';
+/**
+ * @param string $organizationId        Your org ID
+ * @param string $notificationConfigId  A unique identifier
+ * @param string $projectId             Your Cloud Project ID
+ * @param string $topicName             Your topic name
+ */
+function update_notification(
+    string $organizationId,
+    string $notificationConfigId,
+    string $projectId,
+    string $topicName
+): void {
+    $securityCenterClient = new SecurityCenterClient();
 
-$securityCenterClient = new SecurityCenterClient();
+    // Ensure this ServiceAccount has the 'pubsub.topics.setIamPolicy' permission on the topic.
+    // https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics/setIamPolicy
+    $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
+    // You can also use 'projectId' or 'folderId' instead of the 'organizationId'.
+    $notificationConfigName = $securityCenterClient::notificationConfigName($organizationId, $notificationConfigId);
 
-// Ensure this ServiceAccount has the 'pubsub.topics.setIamPolicy' permission on the topic.
-// https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics/setIamPolicy
-$pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
-$notificationConfigName = $securityCenterClient::notificationConfigName($organizationId, $notificationConfigId);
+    $streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
+    $fieldMask = (new FieldMask())->setPaths(['description', 'pubsub_topic', 'streaming_config.filter']);
+    $notificationConfig = (new NotificationConfig())
+        ->setName($notificationConfigName)
+        ->setDescription('Updated description.')
+        ->setPubsubTopic($pubsubTopic)
+        ->setStreamingConfig($streamingConfig);
 
-$streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
-$fieldMask = (new FieldMask())->setPaths(['description', 'pubsub_topic', 'streaming_config.filter']);
-$notificationConfig = (new NotificationConfig())
-    ->setName($notificationConfigName)
-    ->setDescription('Updated description.')
-    ->setPubsubTopic($pubsubTopic)
-    ->setStreamingConfig($streamingConfig);
-
-$response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
-printf('Notification config was updated: %s' . PHP_EOL, $response->getName());
-
+    $response = $securityCenterClient->updateNotificationConfig($notificationConfig, [$fieldMask]);
+    printf('Notification config was updated: %s' . PHP_EOL, $response->getName());
+}
 // [END securitycenter_update_notification_config]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
