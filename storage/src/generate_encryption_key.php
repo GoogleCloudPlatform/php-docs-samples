@@ -28,7 +28,7 @@ namespace Google\Cloud\Samples\Storage;
 /**
  * Generate a base64 encoded encryption key for Google Cloud Storage.
  */
-function generate_encryption_key()
+function generate_encryption_key(): void
 {
     $key = random_bytes(32);
     $encodedKey = base64_encode($key);

@@ -29,7 +29,7 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List all Cloud Storage buckets for the current project.
  */
-function list_buckets()
+function list_buckets(): void
 {
     $storage = new StorageClient();
     foreach ($storage->buckets() as $bucket) {
