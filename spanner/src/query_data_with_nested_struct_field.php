@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,14 +40,14 @@ use Google\Cloud\Spanner\ArrayType;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function query_data_with_nested_struct_field($instanceId, $databaseId)
+function query_data_with_nested_struct_field(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
     $nameType = new ArrayType(
-       (new StructType)
+        (new StructType)
             ->add('FirstName', Database::TYPE_STRING)
             ->add('LastName', Database::TYPE_STRING)
     );
@@ -83,5 +83,6 @@ function query_data_with_nested_struct_field($instanceId, $databaseId)
 }
 // [END spanner_field_access_on_nested_struct_parameters]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

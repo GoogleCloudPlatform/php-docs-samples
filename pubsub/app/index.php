@@ -15,17 +15,16 @@
  * limitations under the License.
  */
 
-
 // composer autoloading
 require_once __DIR__ . '/vendor/autoload.php';
 
 $app = require_once __DIR__ . '/app.php';
+$container = $app->getContainer();
 
-$app['project_id'] = getenv('GOOGLE_PROJECT_ID') ?: getenv('GCLOUD_PROJECT');
+$container->set('project_id', getenv('GCLOUD_PROJECT'));
 # [START gae_flex_pubsub_env]
-$app['topic'] = 'php-example-topic';
-$app['subscription'] = 'php-example-subscription';
+$container->set('topic', 'php-example-topic');
+$container->set('subscription', 'php-example-subscription');
 # [END gae_flex_pubsub_env]
-$app['debug'] = true;
 
 $app->run();

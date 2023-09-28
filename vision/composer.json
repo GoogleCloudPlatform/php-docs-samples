@@ -3,58 +3,6 @@
     "type": "project",
     "require": {
         "google/cloud-vision": "^1.0.0",
-        "google/cloud-storage": "^1.20.1",
-        "symfony/console": "^3.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Google\\Cloud\\Samples\\Vision\\": "src/"
-        },
-        "files": [
-            "src/detect_label.php",
-            "src/detect_label_gcs.php",
-            "src/detect_text.php",
-            "src/detect_text_gcs.php",
-            "src/detect_face.php",
-            "src/detect_face_gcs.php",
-            "src/detect_landmark.php",
-            "src/detect_landmark_gcs.php",
-            "src/detect_logo.php",
-            "src/detect_logo_gcs.php",
-            "src/detect_safe_search.php",
-            "src/detect_safe_search_gcs.php",
-            "src/detect_image_property.php",
-            "src/detect_image_property_gcs.php",
-            "src/detect_document_text.php",
-            "src/detect_document_text_gcs.php",
-            "src/detect_web.php",
-            "src/detect_web_gcs.php",
-            "src/detect_object.php",
-            "src/detect_object_gcs.php",
-            "src/detect_web_with_geo_metadata.php",
-            "src/detect_web_with_geo_metadata_gcs.php",
-            "src/detect_pdf_gcs.php",
-            "src/product_create.php",
-            "src/product_delete.php",
-            "src/product_get.php",
-            "src/product_image_create.php",
-            "src/product_image_delete.php",
-            "src/product_image_get.php",
-            "src/product_image_list.php",
-            "src/product_list.php",
-            "src/product_search_similar.php",
-            "src/product_search_similar_gcs.php",
-            "src/product_set_add_product.php",
-            "src/product_set_create.php",
-            "src/product_set_delete.php",
-            "src/product_set_get.php",
-            "src/product_set_import.php",
-            "src/product_set_list.php",
-            "src/product_set_list_products.php",
-            "src/product_set_remove_product.php",
-            "src/product_update.php",
-            "src/product_purge_orphan_products.php",
-            "src/product_purge_products_in_product_set.php"
-        ]
+        "google/cloud-storage": "^1.20.1"
     }
 }

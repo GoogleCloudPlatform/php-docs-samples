@@ -33,12 +33,6 @@ class IntegrationTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    /** @var string */
-    private static $entryPoint = 'blurOffensiveImages';
-
-    /** @var string */
-    private static $functionSignatureType = 'cloudevent';
-
     /**
       * @dataProvider cases
       * @dataProvider integrationCases

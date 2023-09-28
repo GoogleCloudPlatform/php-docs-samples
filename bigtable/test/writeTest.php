@@ -29,6 +29,7 @@ final class WriteTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::requireGrpc();
         self::setUpBigtableVars();
         self::$instanceId = self::createDevInstance(self::INSTANCE_ID_PREFIX);
         self::$tableId = self::createTable(self::TABLE_ID_PREFIX);
@@ -46,7 +47,7 @@ final class WriteTest extends TestCase
 
     public function testWriteSimple()
     {
-        $output = $this->runSnippet('writes/write_simple', [
+        $output = $this->runFunctionSnippet('write_simple', [
             self::$projectId,
             self::$instanceId,
             self::$tableId
@@ -57,7 +58,7 @@ final class WriteTest extends TestCase
 
     public function testWriteConditional()
     {
-        $output = $this->runSnippet('writes/write_conditionally', [
+        $output = $this->runFunctionSnippet('write_conditionally', [
             self::$projectId,
             self::$instanceId,
             self::$tableId
@@ -68,7 +69,7 @@ final class WriteTest extends TestCase
 
     public function testWriteIncrement()
     {
-        $output = $this->runSnippet('writes/write_increment', [
+        $output = $this->runFunctionSnippet('write_increment', [
             self::$projectId,
             self::$instanceId,
             self::$tableId
@@ -79,9 +80,7 @@ final class WriteTest extends TestCase
 
     public function testWriteBatch()
     {
-        $this->requireGrpc();
-
-        $output = $this->runSnippet('writes/write_batch', [
+        $output = $this->runFunctionSnippet('write_batch', [
             self::$projectId,
             self::$instanceId,
             self::$tableId

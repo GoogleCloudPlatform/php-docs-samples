@@ -23,6 +23,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

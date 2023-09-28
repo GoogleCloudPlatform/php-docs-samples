@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,20 +29,23 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Add an entity and role to a bucket's default ACL.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $entity The entity to update access controls for.
- * @param string $role The permissions to add for the specified entity. May
- *        be one of 'OWNER', 'READER', or 'WRITER'.
- * @param array $options
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $entity The entity for which to update access controls.
+ *        (e.g. 'user-example@domain.com')
+ * @param string $role The permissions to add for the specified entity.
+ *        (e.g. 'OWNER')
  */
-function add_bucket_default_acl($bucketName, $entity, $role, $options = [])
+function add_bucket_default_acl(string $bucketName, string $entity, string $role): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $acl = $bucket->defaultAcl();
-    $acl->add($entity, $role, $options);
+    $acl->add($entity, $role);
     printf('Added %s (%s) to gs://%s default ACL' . PHP_EOL, $entity, $role, $bucketName);
 }
 # [END storage_add_bucket_default_owner]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

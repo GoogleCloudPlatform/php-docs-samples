@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,14 +29,18 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Create a Cloud Storage Bucket.
  *
- * @param string $bucketName name of the bucket to create.
- * @param string $options options for the new bucket.
- *
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function create_bucket($bucketName, $options = [])
+function create_bucket(string $bucketName): void
 {
     $storage = new StorageClient();
-    $bucket = $storage->createBucket($bucketName, $options);
+
+    $bucket = $storage->createBucket($bucketName);
     printf('Bucket created: %s' . PHP_EOL, $bucket->name());
 }
 # [END storage_create_bucket]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -36,7 +36,9 @@ use Google\Protobuf\FieldMask;
 
 class kmsTest extends TestCase
 {
-    use TestTrait;
+    use TestTrait {
+        TestTrait::runFunctionSnippet as traitRunFunctionSnippet;
+    }
 
     private static $locationId;
     private static $keyRingId;
@@ -44,6 +46,7 @@ class kmsTest extends TestCase
     private static $asymmetricSignEcKeyId;
     private static $asymmetricSignRsaKeyId;
     private static $hsmKeyId;
+    private static $macKeyId;
     private static $symmetricKeyId;
 
     public static function setUpBeforeClass(): void
@@ -64,6 +67,9 @@ class kmsTest extends TestCase
 
         self::$hsmKeyId = self::randomId();
         self::createHsmKey(self::$hsmKeyId);
+
+        self::$macKeyId = self::randomId();
+        self::createMacKey(self::$macKeyId);
 
         self::$symmetricKeyId = self::randomId();
         self::createSymmetricKey(self::$symmetricKeyId);
@@ -157,6 +163,19 @@ class kmsTest extends TestCase
         return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
     }
 
+    private static function createMacKey(string $id)
+    {
+        $client = new KeyManagementServiceClient();
+        $keyRingName = $client->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $key = (new CryptoKey())
+            ->setPurpose(CryptoKeyPurpose::MAC)
+            ->setVersionTemplate((new CryptoKeyVersionTemplate)
+                ->setProtectionLevel(ProtectionLevel::HSM)
+                ->setAlgorithm(CryptoKeyVersionAlgorithm::HMAC_SHA256))
+            ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
+        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+    }
+
     private static function createSymmetricKey(string $id)
     {
         $client = new KeyManagementServiceClient();
@@ -178,7 +197,7 @@ class kmsTest extends TestCase
         while ($version->getState() != CryptoKeyVersionState::ENABLED) {
             if ($attempts > 10) {
                 $msg = sprintf('key version %s was not ready after 10 attempts', $versionName);
-                throw new Exception($msg);
+                throw new \Exception($msg);
             }
             usleep(500);
             $version = $client->getCryptoKeyVersion($versionName);
@@ -187,35 +206,9 @@ class kmsTest extends TestCase
         return $key;
     }
 
-    private static function runSample($sampleName, $params = [])
-    {
-        $sampleFile = $sampleName . '.php';
-        $sampleName = str_replace('_sample', '', $sampleName);
-        return self::runSampleFile($sampleFile, $sampleName, $params);
-    }
-
-    private static function runSampleFile($sampleFile, $sampleName, $params = [])
-    {
-        $sampleFile = __DIR__ . sprintf('/../src/%s', $sampleFile);
-        $sampleName = str_replace('_sample', '', $sampleName) . '_sample';
-        $fn = function () use ($sampleFile, $sampleName, $params) {
-            try {
-                ob_start();
-                require $sampleFile;
-                $result = call_user_func_array($sampleName, $params);
-                return array($result, ob_get_clean());
-            } catch (\Exception $e) {
-                ob_get_clean();
-                throw $e;
-            }
-        };
-
-        return $fn();
-    }
-
     public function testCreateKeyAsymmetricDecrypt()
     {
-        list($key, $output) = $this->runSample('create_key_asymmetric_decrypt', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_asymmetric_decrypt', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -229,7 +222,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeyAsymmetricSign()
     {
-        list($key, $output) = $this->runSample('create_key_asymmetric_sign', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_asymmetric_sign', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -243,7 +236,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeyHsm()
     {
-        list($key, $output) = $this->runSample('create_key_hsm', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_hsm', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -256,7 +249,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeyLabels()
     {
-        list($key, $output) = $this->runSample('create_key_labels', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_labels', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -268,9 +261,23 @@ class kmsTest extends TestCase
         $this->assertEquals('cc1234', $key->getLabels()['cost_center']);
     }
 
+    public function testCreateKeyMac()
+    {
+        list($key, $output) = $this->runFunctionSnippet('create_key_mac', [
+          self::$projectId,
+          self::$locationId,
+          self::$keyRingId,
+          self::randomId()
+        ]);
+
+        $this->assertStringContainsString('Created mac key', $output);
+        $this->assertEquals(CryptoKeyPurpose::MAC, $key->getPurpose());
+        $this->assertEquals(CryptoKeyVersionAlgorithm::HMAC_SHA256, $key->getVersionTemplate()->getAlgorithm());
+    }
+
     public function testCreateKeyRing()
     {
-        list($keyRing, $output) = $this->runSample('create_key_ring', [
+        list($keyRing, $output) = $this->runFunctionSnippet('create_key_ring', [
           self::$projectId,
           self::$locationId,
           self::randomId()
@@ -282,7 +289,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeyRotationSchedule()
     {
-        list($key, $output) = $this->runSample('create_key_rotation_schedule', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_rotation_schedule', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -295,7 +302,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeySymmetricEncryptDecrypt()
     {
-        list($key, $output) = $this->runSample('create_key_symmetric_encrypt_decrypt', [
+        list($key, $output) = $this->runFunctionSnippet('create_key_symmetric_encrypt_decrypt', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -309,7 +316,7 @@ class kmsTest extends TestCase
 
     public function testCreateKeyVersion()
     {
-        list($version, $output) = $this->runSample('create_key_version', [
+        list($version, $output) = $this->runFunctionSnippet('create_key_version', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -335,7 +342,7 @@ class kmsTest extends TestCase
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$symmetricKeyId);
         $ciphertext = $client->encrypt($keyName, $plaintext)->getCiphertext();
 
-        list($response, $output) = $this->runSample('decrypt_symmetric', [
+        list($response, $output) = $this->runFunctionSnippet('decrypt_symmetric', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -349,7 +356,7 @@ class kmsTest extends TestCase
 
     public function testDestroyRestoreKeyVersion()
     {
-        list($version, $output) = $this->runSample('destroy_key_version', [
+        list($version, $output) = $this->runFunctionSnippet('destroy_key_version', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -363,7 +370,7 @@ class kmsTest extends TestCase
             CryptoKeyVersionState::DESTROY_SCHEDULED,
         ));
 
-        list($version, $output) = $this->runSample('restore_key_version', [
+        list($version, $output) = $this->runFunctionSnippet('restore_key_version', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -377,7 +384,7 @@ class kmsTest extends TestCase
 
     public function testDisableEnableKeyVersion()
     {
-        list($version, $output) = $this->runSample('disable_key_version', [
+        list($version, $output) = $this->runFunctionSnippet('disable_key_version', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -388,7 +395,7 @@ class kmsTest extends TestCase
         $this->assertStringContainsString('Disabled key version', $output);
         $this->assertEquals(CryptoKeyVersionState::DISABLED, $version->getState());
 
-        list($version, $output) = $this->runSample('enable_key_version', [
+        list($version, $output) = $this->runFunctionSnippet('enable_key_version', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -404,12 +411,12 @@ class kmsTest extends TestCase
     {
         $plaintext = 'my message';
 
-        list($response, $output) = $this->runSample('encrypt_asymmetric', [
+        list($response, $output) = $this->runFunctionSnippet('encrypt_asymmetric', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
             self::$asymmetricDecryptKeyId,
-            "1",
+            '1',
             $plaintext
         ]);
 
@@ -422,7 +429,7 @@ class kmsTest extends TestCase
     {
         $plaintext = 'my message';
 
-        list($response, $output) = $this->runSample('encrypt_symmetric', [
+        list($response, $output) = $this->runFunctionSnippet('encrypt_symmetric', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -438,9 +445,21 @@ class kmsTest extends TestCase
         $this->assertEquals($plaintext, $response->getPlaintext());
     }
 
+    public function testGenerateRandomBytes()
+    {
+        list($response, $output) = $this->runFunctionSnippet('generate_random_bytes', [
+            self::$projectId,
+            self::$locationId,
+            256
+        ]);
+
+        $this->assertStringContainsString('Random bytes', $output);
+        $this->assertEquals(256, strlen($response->getData()));
+    }
+
     public function testGetKeyLabels()
     {
-        list($key, $output) = $this->runSample('get_key_labels', [
+        list($key, $output) = $this->runFunctionSnippet('get_key_labels', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -454,7 +473,7 @@ class kmsTest extends TestCase
 
     public function testGetKeyVersionAttestation()
     {
-        list($attestation, $output) = $this->runSample('get_key_version_attestation', [
+        list($attestation, $output) = $this->runFunctionSnippet('get_key_version_attestation', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -468,7 +487,7 @@ class kmsTest extends TestCase
 
     public function testGetPublicKey()
     {
-        list($key, $output) = $this->runSample('get_public_key', [
+        list($key, $output) = $this->runFunctionSnippet('get_public_key', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -483,7 +502,7 @@ class kmsTest extends TestCase
 
     public function testIamAddMember()
     {
-        list($policy, $output) = $this->runSample('iam_add_member', [
+        list($policy, $output) = $this->runFunctionSnippet('iam_add_member', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -506,7 +525,7 @@ class kmsTest extends TestCase
 
     public function testIamGetPolicy()
     {
-        list($policy, $output) = $this->runSample('iam_get_policy', [
+        list($policy, $output) = $this->runFunctionSnippet('iam_get_policy', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -530,7 +549,7 @@ class kmsTest extends TestCase
         $policy->setBindings($bindings);
         $client->setIamPolicy($keyName, $policy);
 
-        list($policy, $output) = $this->runSample('iam_remove_member', [
+        list($policy, $output) = $this->runFunctionSnippet('iam_remove_member', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -554,7 +573,7 @@ class kmsTest extends TestCase
 
     public function testQuickstart()
     {
-        list($keyRings, $output) = $this->runSample('quickstart', [
+        list($keyRings, $output) = $this->runFunctionSnippet('quickstart', [
             self::$projectId,
             self::$locationId
         ]);
@@ -567,7 +586,7 @@ class kmsTest extends TestCase
     {
         $message = 'my message';
 
-        list($signResponse, $output) = $this->runSample('sign_asymmetric', [
+        list($signResponse, $output) = $this->runFunctionSnippet('sign_asymmetric', [
             self::$projectId,
             self::$locationId,
             self::$keyRingId,
@@ -586,9 +605,31 @@ class kmsTest extends TestCase
         $this->assertEquals(1, $verified);
     }
 
+    public function testSignMac()
+    {
+        $data = 'my data';
+
+        list($signResponse, $output) = $this->runFunctionSnippet('sign_mac', [
+            self::$projectId,
+            self::$locationId,
+            self::$keyRingId,
+            self::$macKeyId,
+            '1',
+            $data
+        ]);
+
+        $this->assertStringContainsString('Signature', $output);
+        $this->assertNotEmpty($signResponse->getMac());
+
+        $client = new KeyManagementServiceClient();
+        $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
+        $verifyResponse = $client->macVerify($keyVersionName, $data, $signResponse->getMac());
+        $this->assertTrue($verifyResponse->getSuccess());
+    }
+
     public function testUpdateKeyAddRotation()
     {
-        list($key, $output) = $this->runSample('update_key_add_rotation', [
+        list($key, $output) = $this->runFunctionSnippet('update_key_add_rotation', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -601,7 +642,7 @@ class kmsTest extends TestCase
 
     public function testUpdateKeyRemoveLabels()
     {
-        list($key, $output) = $this->runSample('update_key_remove_labels', [
+        list($key, $output) = $this->runFunctionSnippet('update_key_remove_labels', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -614,7 +655,7 @@ class kmsTest extends TestCase
 
     public function testUpdateKeyRemoveRotation()
     {
-        list($key, $output) = $this->runSample('update_key_remove_rotation', [
+        list($key, $output) = $this->runFunctionSnippet('update_key_remove_rotation', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -628,7 +669,7 @@ class kmsTest extends TestCase
 
     public function testUpdateKeySetPrimary()
     {
-        list($key, $output) = $this->runSample('update_key_set_primary', [
+        list($key, $output) = $this->runFunctionSnippet('update_key_set_primary', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -643,7 +684,7 @@ class kmsTest extends TestCase
 
     public function testUpdateKeyUpdateLabels()
     {
-        list($key, $output) = $this->runSample('update_key_update_labels', [
+        list($key, $output) = $this->runFunctionSnippet('update_key_update_labels', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -667,7 +708,7 @@ class kmsTest extends TestCase
 
         $signResponse = $client->asymmetricSign($keyVersionName, $digest);
 
-        list($verified, $output) = $this->runSample('verify_asymmetric_ec', [
+        list($verified, $output) = $this->runFunctionSnippet('verify_asymmetric_ec', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -684,7 +725,7 @@ class kmsTest extends TestCase
     public function testVerifyAsymmetricSignatureRsa()
     {
         $message = 'my message';
-        list($verified, $output) = $this->runSample('verify_asymmetric_rsa', [
+        list($verified, $output) = $this->runFunctionSnippet('verify_asymmetric_rsa', [
           self::$projectId,
           self::$locationId,
           self::$keyRingId,
@@ -697,5 +738,37 @@ class kmsTest extends TestCase
         // PHP does not currently support custom MGF, so this sample is just a
         // comment.
         $this->assertTrue(true);
+    }
+
+    public function testVerifyMac()
+    {
+        $data = 'my data';
+
+        $client = new KeyManagementServiceClient();
+        $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
+
+        $signResponse = $client->macSign($keyVersionName, $data);
+
+        list($verifyResponse, $output) = $this->runFunctionSnippet('verify_mac', [
+          self::$projectId,
+          self::$locationId,
+          self::$keyRingId,
+          self::$macKeyId,
+          '1',
+          $data,
+          $signResponse->getMac(),
+        ]);
+
+        $this->assertStringContainsString('Signature verified', $output);
+        $this->assertTrue($verifyResponse->getSuccess());
+    }
+
+    private static function runFunctionSnippet($sampleName, $params = [])
+    {
+        $output = self::traitRunFunctionSnippet($sampleName, $params);
+        return [
+            self::getLastReturnedSnippetValue(),
+            $output,
+        ];
     }
 }

@@ -15,44 +15,46 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 7) {
-    return printf("Usage: php %s SCOPE [QUERY] [ASSET_TYPES] [PAGE_SIZE] [PAGE_TOKEN] [ORDER_BY]\n", __FILE__);
-}
-list($_, $scope) = $argv;
-$query = isset($argv[2]) ? $argv[2] : '';
-$assetTypes = isset($argv[3]) ? $argv[3] : '';
-$pageSize = isset($argv[4]) ? (int) $argv[4] : 0;
-$pageToken = isset($argv[5]) ? $argv[5] : '';
-$orderBy = isset($argv[6]) ? $argv[6] : '';
+namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_search_all_resources]
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $scope = 'Scope of the search';
-// $query = '';      // (Optional) Query statement
-// $assetTypes = ''; // (Optional) Asset types to search for
-// $pageSize = 0;    // (Optional) Size of each result page
-// $pageToken = '';  // (Optional) Token produced by the preceding call
-// $orderBy = '';    // (Optional) Fields to sort the results
+/**
+ * @param string       $scope      Scope of the search
+ * @param string       $query      (Optional) Query statement
+ * @param string|array $assetTypes (Optional) Asset types to search for
+ * @param int          $pageSize   (Optional) Size of each result page
+ * @param string       $pageToken  (Optional) Token produced by the preceding call
+ * @param string       $orderBy    (Optional) Fields to sort the results
+ */
+function search_all_resources(
+    string $scope,
+    string $query = '',
+    array $assetTypes = [],
+    int $pageSize = 0,
+    string $pageToken = '',
+    string $orderBy = ''
+) {
+    // Instantiate a client.
+    $asset = new AssetServiceClient();
 
-// Instantiate a client.
-$asset = new AssetServiceClient();
+    // Run request
+    $response = $asset->searchAllResources($scope, [
+        'query' => $query,
+        'assetTypes' => $assetTypes,
+        'pageSize' => $pageSize,
+        'pageToken' => $pageToken,
+        'orderBy' => $orderBy
+    ]);
 
-// Run request
-$response = $asset->searchAllResources($scope, [
-    'query' => $query,
-    'assetTypes' => empty($assetTypes) ? [] : explode(',', $assetTypes),
-    'pageSize' => $pageSize,
-    'pageToken' => $pageToken,
-    'orderBy' => $orderBy
-]);
-
-// Print the resource names in the first page of the result
-foreach ($response->getPage() as $resource) {
-    print($resource->getName() . PHP_EOL);
+    // Print the resource names in the first page of the result
+    foreach ($response->getPage() as $resource) {
+        print($resource->getName() . PHP_EOL);
+    }
 }
 // [END asset_quickstart_search_all_resources]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

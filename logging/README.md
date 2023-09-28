@@ -8,9 +8,16 @@
 This directory contains samples for calling [Stackdriver Logging][logging]
 from PHP.
 
-`logging.php` is a simple command-line program to demonstrate writing to a log,
-listing its entries, deleting it, interacting with sinks to export logs to
-Google Cloud Storage.
+Execute the snippets in the [src/](src/) directory by running
+`php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+are provided:
+```sh
+$ php src/list_entries.php
+Usage: php src/list_entries.php PROJECT_ID LOGGER_NAME
+
+$ php src/list_entries.php your-project-id 'your-logger-name'
+[list of entries...]
+```
 
 To use logging sinks, you will also need a Google Cloud Storage Bucket.
 
@@ -18,7 +25,7 @@ To use logging sinks, you will also need a Google Cloud Storage Bucket.
 
 You must add Cloud Logging as an owner to the bucket. To do so, add
 `cloud-logs@google.com` as an owner to the bucket. See the
-[exportings logs](https://cloud.google.com/logging/docs/export/configure_export#configuring_log_sinks)
+[exporting logs](https://cloud.google.com/logging/docs/export/configure_export#configuring_log_sinks)
 docs for complete details.
 
 # Running locally
@@ -26,12 +33,5 @@ docs for complete details.
 Use the [Cloud SDK](https://cloud.google.com/sdk) to provide authentication:
 
     gcloud beta auth application-default login
-
-Run the samples:
-
-    ```
-    php logging.php list # For getting sub command list
-    php logging.php help write # For showing help for write sub command `write`
-    ```
 
 [logging]: https://cloud.google.com/logging/docs/reference/libraries

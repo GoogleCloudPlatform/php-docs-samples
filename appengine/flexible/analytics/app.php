@@ -16,19 +16,26 @@
  */
 
 use GuzzleHttp\Client;
-use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 
-// create the Silex application
-$app = new Application();
-$app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__ ];
+// Create App
+$app = AppFactory::create();
 
-$app->get('/', function (Application $app, Request $request) {
-    /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-    $trackingId = $app['GA_TRACKING_ID'];
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+// Create Twig
+$twig = Twig::create(__DIR__);
+
+// Add Twig-View Middleware
+$app->add(TwigMiddleware::create($app, $twig));
+
+$app->get('/', function (Request $request, Response $response) use ($twig) {
+    $trackingId = getenv('GA_TRACKING_ID');
     # [START gae_flex_analytics_track_event]
     $baseUri = 'http://www.google-analytics.com/';
     $client = new GuzzleHttp\Client(['base_uri' => $baseUri]);
@@ -44,12 +51,13 @@ $app->get('/', function (Application $app, Request $request) {
         'el' => 'Hearts',  # Event label.
         'ev' => 0,  # Event value, must be an integer
     ];
-    $response = $client->request('POST', 'collect', ['form_params' => $formData]);
+    $gaResponse = $client->request('POST', 'collect', ['form_params' => $formData]);
     # [END gae_flex_analytics_track_event]
-    return $twig->render('index.html.twig', [
-            'base_uri' => $baseUri,
-            'response_code' => $response->getStatusCode(),
-            'response_reason' => $response->getReasonPhrase()]);
+    return $twig->render($response, 'index.html.twig', [
+        'base_uri' => $baseUri,
+        'response_code' => $gaResponse->getStatusCode(),
+        'response_reason' => $gaResponse->getReasonPhrase()
+    ]);
 });
 
 return $app;

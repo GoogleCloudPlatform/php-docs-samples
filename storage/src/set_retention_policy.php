@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Sets a bucket's retention policy.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $retentionPeriod the number of seconds for your retention period.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param int $retentionPeriod The retention period for objects in bucket, in seconds.
+ *        (e.g. 3600)
  */
-function set_retention_policy($bucketName, $retentionPeriod)
+function set_retention_policy(string $bucketName, int $retentionPeriod): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -40,7 +42,11 @@ function set_retention_policy($bucketName, $retentionPeriod)
         'retentionPolicy' => [
             'retentionPeriod' => $retentionPeriod
         ]]);
-    printf('Bucket %s retention period set for %s seconds' . PHP_EOL, $bucketName,
+    printf('Bucket %s retention period set to %s seconds' . PHP_EOL, $bucketName,
         $retentionPeriod);
 }
 # [END storage_set_retention_policy]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

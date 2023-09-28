@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,24 +29,29 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Change the encryption key used to store an existing object.
  *
- * @param string $bucketName the name of your Google Cloud bucket.
- * @param string $objectName the name of your Google Cloud object.
- * @param string $base64EncryptionKey the base64 encoded encryption key.
- * @param string $newBase64EncryptionKey the new base64 encoded encryption key.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
+ * @param string $oldBase64EncryptionKey The Base64 encoded AES-256 encryption
+ *     key originally used to encrypt the object. See the documentation on
+ *     Customer-Supplied Encryption keys for more info:
+ *     https://cloud.google.com/storage/docs/encryption/using-customer-supplied-keys
+ *        (e.g. 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=')
+ * @param string $newBase64EncryptionKey The new base64 encoded encryption key.
+ *        (e.g. '0mMWhFvQOdS4AmxRpo8SJxXn5MjFhbz7DkKBUdUIef8=')
  */
 function rotate_encryption_key(
-    $bucketName,
-    $objectName,
-    $base64EncryptionKey,
-    $newBase64EncryptionKey
-) {
+    string $bucketName,
+    string $objectName,
+    string $oldBase64EncryptionKey,
+    string $newBase64EncryptionKey
+): void {
     $storage = new StorageClient();
     $object = $storage->bucket($bucketName)->object($objectName);
 
     $rewrittenObject = $object->rewrite($bucketName, [
-        'encryptionKey' => $base64EncryptionKey,
+        'encryptionKey' => $oldBase64EncryptionKey,
         'destinationEncryptionKey' => $newBase64EncryptionKey,
     ]);
 
@@ -54,3 +59,7 @@ function rotate_encryption_key(
         $bucketName, $objectName);
 }
 # [END storage_rotate_encryption_key]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

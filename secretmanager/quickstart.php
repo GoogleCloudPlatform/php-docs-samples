@@ -44,7 +44,7 @@ $parent = $client->projectName($projectId);
 
 // Create the parent secret.
 $secret = $client->createSecret($parent, $secretId,
-  new Secret([
+    new Secret([
         'replication' => new Replication([
             'automatic' => new Automatic(),
         ]),

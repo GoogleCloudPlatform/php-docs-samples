@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/iap/README.md
  */
 
 # [START iap_validate_jwt]
@@ -29,53 +29,58 @@ use Google\Auth\AccessToken;
 /**
  * Validate a JWT passed to your App Engine app by Identity-Aware Proxy.
  *
- * @param string $iap_jwt The contents of the X-Goog-IAP-JWT-Assertion header.
- * @param string $cloud_project_number The project *number* for your Google
+ * @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
+ * @param string $cloudProjectNumber The project *number* for your Google
  *     Cloud project. This is returned by 'gcloud projects describe $PROJECT_ID',
  *     or in the Project Info card in Cloud Console.
  * @param string $cloud_project Your Google Cloud Project ID.
  *
  * @return (user_id, user_email).
  */
-function validate_jwt_from_app_engine($iap_jwt, $cloud_project_number, $cloud_project_id)
+function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjectId)
 {
-    $expected_audience = sprintf(
+    $expectedAudience = sprintf(
         '/projects/%s/apps/%s',
-        $cloud_project_number,
-        $cloud_project_id
+        $cloudProjectNumber,
+        $cloudProjectId
     );
-    return validate_jwt($iap_jwt, $expected_audience);
+    return validate_jwt($iapJwt, $expectedAudience);
 }
 
 /**
  * Validate a JWT passed to your Compute / Container Engine app by Identity-Aware Proxy.
  *
- * @param string $iap_jwt The contents of the X-Goog-IAP-JWT-Assertion header.
- * @param string $cloud_project_number The project *number* for your Google
+ * @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
+ * @param string $cloudProjectNumber The project *number* for your Google
  *     Cloud project. This is returned by 'gcloud projects describe $PROJECT_ID',
  *     or in the Project Info card in Cloud Console.
- * @param string $backend_service_id The ID of the backend service used to access the
+ * @param string $backendServiceId The ID of the backend service used to access the
  *     application. See https://cloud.google.com/iap/docs/signed-headers-howto
  *     for details on how to get this value.
- *
- * @return (user_id, user_email).
  */
-function validate_jwt_from_compute_engine($iap_jwt, $cloud_project_number, $backend_service_id)
+function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backendServiceId)
 {
-    $expected_audience = sprintf(
+    $expectedAudience = sprintf(
         '/projects/%s/global/backendServices/%s',
-        $cloud_project_number,
-        $backend_service_id
+        $cloudProjectNumber,
+        $backendServiceId
     );
-    return validate_jwt($iap_jwt, $expected_audience);
+    validate_jwt($iapJwt, $expectedAudience);
 }
 
-
-function validate_jwt($iap_jwt, $expected_audience)
+/**
+ * Validate a JWT passed to your app by Identity-Aware Proxy.
+ *
+ * @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
+ * @param string $expectedAudience The expected audience of the JWT with the following formats:
+ *     App Engine:     /projects/{PROJECT_NUMBER}/apps/{PROJECT_ID}
+ *     Compute Engine: /projects/{PROJECT_NUMBER}/global/backendServices/{BACKEND_SERVICE_ID}
+ */
+function validate_jwt($iapJwt, $expectedAudience)
 {
     // Validate the signature using the IAP cert URL.
     $token = new AccessToken();
-    $jwt = $token->verify($iap_jwt, [
+    $jwt = $token->verify($iapJwt, [
         'certsLocation' => AccessToken::IAP_CERT_URL
     ]);
 
@@ -85,9 +90,14 @@ function validate_jwt($iap_jwt, $expected_audience)
 
     // Validate token by checking issuer and audience fields.
     assert($jwt['iss'] == 'https://cloud.google.com/iap');
-    assert($jwt['aud'] == $expected_audience);
+    assert($jwt['aud'] == $expectedAudience);
 
-    // Return the user identity (subject and user email) if JWT verification is successful.
-    return array('sub' => $jwt['sub'], 'email' => $jwt['email']);
+    print('Printing user identity information from ID token payload:');
+    printf('sub: %s', $jwt['sub']);
+    printf('email: %s', $jwt['email']);
 }
 # [END iap_validate_jwt]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

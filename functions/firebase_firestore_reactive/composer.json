@@ -1,13 +1,13 @@
 {
     "require": {
         "google/cloud-functions-framework": "^0.7.1",
-        "google/cloud-firestore": "^1.18",
+        "google/cloud-firestore": "^1.25",
         "grpc/grpc": "^v1.27.0"
     },
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseReactive php -S localhost:${PORT:-8080} vendor/bin/router.php"
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseReactive php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     },
     "require-dev": {

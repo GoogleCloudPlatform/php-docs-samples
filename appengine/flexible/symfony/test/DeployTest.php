@@ -61,7 +61,7 @@ class DeployTest extends TestCase
         ];
         foreach ($envVars as $envVar) {
             if (false === getenv($envVar)) {
-                self::fail("Please set the ${envVar} environment variable");
+                self::fail("Please set the {$envVar} environment variable");
             }
         }
     }
@@ -69,7 +69,7 @@ class DeployTest extends TestCase
     private static function createSymfonyProject($targetDir)
     {
         // install
-        $symfonyVersion = 'symfony/framework-standard-edition:^3.0';
+        $symfonyVersion = 'symfony/framework-standard-edition:^4.4';
         $cmd = sprintf('composer create-project --no-scripts %s %s', $symfonyVersion, $targetDir);
         $process = self::createProcess($cmd);
         $process->setTimeout(300); // 5 minutes
@@ -161,6 +161,7 @@ class DeployTest extends TestCase
                     }
                 }
                 $this->assertTrue($found, 'The log entry was not found');
-            });
+            }
+        );
     }
 }

@@ -27,12 +27,15 @@ class DeployTest extends TestCase
     use TestTrait;
     use AppEngineDeploymentTrait;
 
+    /**
+     * @group deploy
+     */
     public function testIndex()
     {
         $resp = $this->client->request('GET', '/');
 
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertRegExp('/Visitor number: \d+/', (string) $resp->getBody());
+        $this->assertMatchesRegularExpression('/Visitor number: \d+/', (string) $resp->getBody());
     }
 
     public static function beforeDeploy()

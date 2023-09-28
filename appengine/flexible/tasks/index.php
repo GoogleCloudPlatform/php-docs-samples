@@ -18,26 +18,32 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Symfony\Component\HttpFoundation\Request;
 use Google\Cloud\Logging\LoggingClient;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
 
-$app = new Silex\Application();
+// Create App
+$app = AppFactory::create();
 
-$app->get('/', function () use ($app) {
-    return 'Hello World';
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write('Hello World');
+    return $response;
 });
 
-$app->post('/example_task_handler', function (Request $request) use ($app) {
+$app->post('/example_task_handler', function (Request $request, Response $response) {
     $logging = new LoggingClient();
     $logName = 'my-log';
     $logger = $logging->logger($logName);
-    $loggingText = sprintf('Received task with payload: %s', $request->getContent());
+    $loggingText = sprintf('Received task with payload: %s', $request->getBody());
     $entry = $logger->entry($loggingText);
     $logger->write($entry);
-    return $loggingText;
+    $response->getBody()->write($loggingText);
+    return $response;
 });
-
-$app['debug'] = true;
 
 // for testing
 if (getenv('PHPUNIT_TESTS') === '1') {

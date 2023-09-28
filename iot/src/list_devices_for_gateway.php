@@ -17,23 +17,23 @@
  */
 namespace Google\Cloud\Samples\Iot;
 
-# [START iot_list_devices]
+# [START iot_list_devices_for_gateway]
 use Google\Cloud\Iot\V1\DeviceManagerClient;
 use Google\Cloud\Iot\V1\GatewayListOptions;
 
 /**
  * List all devices associated to the given gateway.
  *
- * @param string $projectId Google Cloud project ID
- * @param string $location (Optional) Google Cloud region
  * @param string $registryId IOT Device Registry ID
  * @param string $gatewayId The identifier for the gateway
+ * @param string $projectId Google Cloud project ID
+ * @param string $location (Optional) Google Cloud region
  */
 function list_devices_for_gateway(
-    $projectId,
-    $location = 'us-central1',
     $registryId,
-    $gatewayId
+    $gatewayId,
+    $projectId,
+    $location = 'us-central1'
 ) {
     print('Listing devices for gateway' . PHP_EOL);
 
@@ -48,7 +48,7 @@ function list_devices_for_gateway(
 
     // Call the API
     $devices = $deviceManager->listDevices($registryName,
-      ['gatewayListOptions' => $gatewayListOptions]
+        ['gatewayListOptions' => $gatewayListOptions]
     );
 
     // Print the result
@@ -57,3 +57,7 @@ function list_devices_for_gateway(
     }
 }
 # [END iot_list_devices_for_gateway]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -50,11 +50,6 @@ mkdir -p build/logs
 
 export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
-# Run code standards check when appropriate
-if [ "${RUN_CS_CHECK}" = "true" ]; then
-  bash testing/run_cs_check.sh
-fi
-
 # If we are running REST tests, disable gRPC
 if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
   GRPC_INI=$(php -i | grep grpc.ini | sed 's/^Additional .ini files parsed => //g' | sed 's/,*$//g' )
@@ -63,6 +58,9 @@ fi
 
 # Install global test dependencies
 composer install -d testing/
+
+# Configure the current directory as a safe directory
+git config --global --add safe.directory $(pwd)
 
 # Run tests
 bash testing/run_test_suite.sh

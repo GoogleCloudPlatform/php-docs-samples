@@ -10,20 +10,24 @@ these two steps:
    ```sh
    composer require google/cloud-error-reporting
    ```
-1. Create a [`php.ini`](php.ini) file in the root of your project and set
-   `auto_prepend_file` to the following:
-    ```ini
-    ; in php.ini
-    auto_prepend_file=/srv/vendor/google/cloud-error-reporting/src/prepend.php
+1. Add the command to autoload the "prepend.php" file at the beginning of every
+   request in `composer.json:
+    ```js
+    {
+        "autoload": {
+            "files": ["vendor/google/cloud-error-reporting/src/prepend.php"]
+        }
+    }
+
     ```
 
 The [`prepend.php`][prepend] file will be executed prior to each request, which
 registers the client library's error handler.
 
-[prepend]: https://github.com/GoogleCloudPlatform/google-cloud-php-errorreporting/blob/master/src/prepend.php
+[prepend]: https://github.com/GoogleCloudPlatform/google-cloud-php-errorreporting/blob/main/src/prepend.php
 
-If you cannot modify your `php.ini`, the `prepend.php` file can be manually
-included to register the error handler:
+Alternatively, the `prepend.php` file can be manually included to register the
+error handler:
 
 ```php
 # This works for files in the root of your project. Adjust __DIR__ accordingly.
@@ -56,13 +60,15 @@ in your browser. Browse to `/` to see a list of examples to execute.
 
 ### Run Locally
 
-Uncomment the `require_once` statement at the top of [`index.php`](index.php),
-or add the `auto_prepend_file` above to your local `php.ini`.
+The `prepend.php` file will be autoloaded on each request via composer. You
+can also uncomment the `require_once` statement at the top of
+[`index.php`](index.php), or load the file using `auto_prepend_file` in your
+local `php.ini`.
 
 Now run the sample locally using PHP's build-in web server:
 
 ```
-# export environemnt variables locally which are set by App Engine when deployed
+# export environment variables locally which are set by App Engine when deployed
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 export GAE_SERVICE=local

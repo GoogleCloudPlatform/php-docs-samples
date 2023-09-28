@@ -14,73 +14,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function createApplication()
+    use TestTrait;
+
+    private static $app;
+
+    public static function setUpBeforeClass(): void
     {
-        $app = require __DIR__ . '/../app.php';
+        self::$app = require __DIR__ . '/../app.php';
 
-        // set some parameters for testing
-        $app['session.test'] = true;
-        $app['debug'] = true;
-        $projectId = getenv('GOOGLE_PROJECT_ID');
-
-        // set your Mailjet API key and secret
-        $app['twilio.account_sid'] = getenv('TWILIO_ACCOUNT_SID');
-        $app['twilio.auth_token']  = getenv('TWILIO_AUTH_TOKEN');
-        $app['twilio.number'] = getenv('TWILIO_FROM_NUMBER');
-
-        if (empty($app['twilio.account_sid']) ||
-            empty($app['twilio.auth_token'])) {
-            $this->markTestSkipped(
-                'set the TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN ' .
-                'environment variables');
-        }
-
-        // prevent HTML error exceptions
-        unset($app['exception_handler']);
-
-        return $app;
+        // set your Twilio API key and secret
+        self::requireEnv('TWILIO_ACCOUNT_SID');
+        self::requireEnv('TWILIO_AUTH_TOKEN');
     }
 
     public function testReceiveCall()
     {
-        $client = $this->createClient();
-
-        $crawler = $client->request('POST', '/call/receive');
-        $response = $client->getResponse();
+        $request = (new RequestFactory)->createRequest('POST', '/call/receive');
+        $response = self::$app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString(
             '<Say>Hello from Twilio!</Say>',
-            $response->getContent()
+            (string) $response->getBody()
         );
     }
 
     public function testReceiveSms()
     {
-        $client = $this->createClient();
         $params = [
             'From' => '16505551212',
             'Body' => 'This is the best text message ever sent.'
         ];
-        $crawler = $client->request('POST', '/sms/receive', $params);
-        $response = $client->getResponse();
+        $request = (new RequestFactory)->createRequest('POST', '/sms/receive');
+        $request->getBody()->write(http_build_query($params));
+        $response = self::$app->handle($request);
+
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString($params['From'], $response->getContent());
-        $this->assertStringContainsString($params['Body'], $response->getContent());
+        $this->assertStringContainsString($params['From'], $response->getBody());
+        $this->assertStringContainsString($params['Body'], $response->getBody());
     }
 
     public function testSendSms()
     {
-        $client = $this->createClient();
         $params = [
             'to' => '16505551212',
         ];
-        $crawler = $client->request('POST', '/sms/send', $params);
-        $response = $client->getResponse();
+        $request = (new RequestFactory)->createRequest('POST', '/sms/send');
+        $request->getBody()->write(http_build_query($params));
+        $response = self::$app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Hello from Twilio!', $response->getContent());
+        $this->assertStringContainsString('Hello from Twilio!', $response->getBody());
     }
 }

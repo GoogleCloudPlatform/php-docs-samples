@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,14 +29,16 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Download file using specified project as requester
  *
- * @param string $projectId Your Google Cloud billable project ID.
- * @param string $bucketName A Google Cloud Storage bucket name.
- * @param string $objectName Name of object in Google Cloud Storage to download locally.
- * @param string $destination Path to local file to save.
- *
- * @return void
+ * @param string $projectId The ID of your Google Cloud Platform project.
+ *        (e.g. 'my-project-id')
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
+ * @param string $destination The local destination to save the object.
+ *        (e.g. '/path/to/your/file')
  */
-function download_file_requester_pays($projectId, $bucketName, $objectName, $destination)
+function download_file_requester_pays(string $projectId, string $bucketName, string $objectName, string $destination): void
 {
     $storage = new StorageClient([
         'projectId' => $projectId
@@ -49,3 +51,7 @@ function download_file_requester_pays($projectId, $bucketName, $objectName, $des
         $bucketName, $objectName, basename($destination));
 }
 # [END storage_download_file_requester_pays]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

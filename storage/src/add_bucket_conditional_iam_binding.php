@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,19 +29,22 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Adds a conditional IAM binding to a bucket's IAM policy.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $role the role that will be given to members in this binding.
- * @param string[] $members the member(s) that is associated to this binding.
- * @param string $title condition's title
- * @param string $description condition's description
- * @param string $expression the condition specified in CEL expression language.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $role The role that will be given to members in this binding.
+ *        (e.g. 'roles/storage.objectViewer')
+ * @param string[] $members The member(s) associated with this binding.
+ *        (e.g. ['group:example@google.com'])
+ * @param string $title The title of the condition. (e.g. 'Title')
+ * @param string $description The description of the condition.
+ *        (e.g. 'Condition Description')
+ * @param string $expression The condition specified in CEL expression language.
+ *        (e.g. 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")')
  *
  * To see how to express a condition in CEL, visit:
  * @see https://cloud.google.com/storage/docs/access-control/iam#conditions.
- *
- * @return void
  */
-function add_bucket_conditional_iam_binding($bucketName, $role, $members, $title, $description, $expression)
+function add_bucket_conditional_iam_binding(string $bucketName, string $role, array $members, string $title, string $description, string $expression): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -72,3 +75,7 @@ function add_bucket_conditional_iam_binding($bucketName, $role, $members, $title
     printf('    Expression: %s' . PHP_EOL, $expression);
 }
 # [END storage_add_bucket_conditional_iam_binding]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

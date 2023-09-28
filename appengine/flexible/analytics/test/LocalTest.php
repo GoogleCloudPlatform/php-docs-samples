@@ -16,30 +16,25 @@
  */
 namespace Google\Cloud\Samples\AppEngine\Analytics;
 
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../app.php';
-        $app['GA_TRACKING_ID'] = getenv('GA_TRACKING_ID');
-        return $app;
-    }
+    use TestTrait;
 
     public function testIndex()
     {
+        $this->requireEnv('GA_TRACKING_ID');
+
+        $app = require __DIR__ . '/../app.php';
+
         // Access the modules app top page.
-        $client = $this->client;
-        $crawler = $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertEquals(1, $crawler->filter(
-            'html:contains("returned 200")')->count());
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = $app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = (string) $response->getBody();
+        $this->assertStringContainsString('returned 200', $body);
     }
 }

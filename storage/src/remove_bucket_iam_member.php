@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,13 +29,14 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Removes a member / role IAM pair from a given Cloud Storage bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $role the role you want to remove a given member from.
- * @param string $member the member you want to remove from the given role.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $role The role from which the specified member should be removed.
+ *        (e.g. 'roles/storage.objectViewer')
+ * @param string $member The member to be removed from the specified role.
+ *        (e.g. 'group:example@google.com')
  */
-function remove_bucket_iam_member($bucketName, $role, $member)
+function remove_bucket_iam_member(string $bucketName, string $role, string $member): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -74,3 +75,7 @@ function remove_bucket_iam_member($bucketName, $role, $member)
     throw new \RuntimeException('No matching role-member group(s) found.');
 }
 # [END storage_remove_bucket_iam_member]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

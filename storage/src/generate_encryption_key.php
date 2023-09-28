@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -27,13 +27,15 @@ namespace Google\Cloud\Samples\Storage;
 
 /**
  * Generate a base64 encoded encryption key for Google Cloud Storage.
- *
- * @return void
  */
-function generate_encryption_key()
+function generate_encryption_key(): void
 {
     $key = random_bytes(32);
     $encodedKey = base64_encode($key);
     printf('Your encryption key: %s' . PHP_EOL, $encodedKey);
 }
 # [END storage_generate_encryption_key]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

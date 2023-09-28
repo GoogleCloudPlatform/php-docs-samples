@@ -1,7 +1,7 @@
-# Slim Framework on App Engine for PHP 7.2
+# Slim Framework on App Engine for PHP 7.4
 
 This sample demonstrates how to deploy a *very* basic [Slim][slim] application to
-[Google App Engine for PHP 7.2][appengine-php]. For a more complete guide, follow
+[Google App Engine for PHP 7.4][appengine-php]. For a more complete guide, follow
 the [Building an App][building-an-app] tutorial.
 
 ## Setup
@@ -29,12 +29,12 @@ in your browser.
 
 The application consists of three components:
 
- 1. An [`app.yaml`](app.yaml) which sets your application runtime to be `php72`.
+ 1. An [`app.yaml`](app.yaml) which sets your application runtime to be `php81`.
  2. A [`composer.json`](composer.json) which declares your application's dependencies.
  3. An [`index.php`](index.php) which handles all the requests which get routed to your app.
 
 The `index.php` file is the most important. All applications running on App Engine
-for PHP 7.2 require use of a [front controller][front-controller] file.
+for PHP 7.4 require use of a [front controller][front-controller] file.
 
 [console]: https://console.developers.google.com/project
 [slim]: https://www.slimframework.com/

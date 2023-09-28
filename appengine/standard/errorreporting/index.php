@@ -1,5 +1,8 @@
 <?php
 
+# This will register the error handler via autoload.files in composer.json.
+require __DIR__ . '/vendor/autoload.php';
+
 # [START gae_erroreporting_register_handler]
 # After running "composer require google/cloud-error-reporting", register the
 # error handler by including `prepend.php` in your application. This is most
@@ -11,7 +14,7 @@
 # [END gae_erroreporting_register_handler]
 
 # Uncomment this line if you'd like to include `prepend.php` manually instead of
-# using `php.ini`:
+# using composer autoloading or `php.ini`:
 #
 #    require_once 'vendor/google/cloud-error-reporting/src/prepend.php';
 #
@@ -43,7 +46,7 @@ if (isset($_GET['type'])) {
             print('Triggering a PHP Fatal Error by including a file with a syntax error.');
             print($linkText);
             $filename = tempnam(sys_get_temp_dir(), 'php_syntax_error');
-            file_put_contents($filename, "<?php syntax-error");
+            file_put_contents($filename, '<?php syntax-error');
             require($filename);
             break;
         default:

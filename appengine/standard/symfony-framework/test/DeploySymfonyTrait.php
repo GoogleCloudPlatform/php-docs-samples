@@ -31,8 +31,14 @@ trait DeploySymfonyTrait
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
 
         // install
-        $demoVersion = 'symfony/symfony-demo:^1.5';
-        $cmd = sprintf('composer create-project %s %s || true', $demoVersion, $tmpDir);
+        $demoPackage = 'symfony/symfony-demo';
+        $demoVersion = '^1.5';
+
+        $cmd = sprintf(
+            'composer create-project %s %s %s || true',
+            $demoPackage, $tmpDir, $demoVersion
+        );
+
         $process = self::createProcess($cmd);
         $process->setTimeout(300); // 5 minutes
 

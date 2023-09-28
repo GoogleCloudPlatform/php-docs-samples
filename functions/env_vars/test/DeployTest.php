@@ -31,6 +31,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -48,13 +49,13 @@ class DeployTest extends TestCase
     {
         // Use the first test case as the source of the deployed environment variable.
         $cases = self::cases();
-        $env = sprintf("%s=%s", $cases[0]['varName'], $cases[0]['varValue']);
+        $env = sprintf('%s=%s', $cases[0]['varName'], $cases[0]['varValue']);
         self::$fn->deploy(['--update-env-vars' => $env]);
     }
 
     /**
-      * @dataProvider cases
-      */
+     * @dataProvider cases
+     */
     public function testFunction(
         $statusCode,
         $varName,

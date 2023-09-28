@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\PubSub\Tests;
+namespace Google\Cloud\Samples\PubSub;
 
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
@@ -31,15 +31,20 @@ class PubSubTest extends TestCase
     use ExecuteCommandTrait;
     use EventuallyConsistentTestTrait;
 
-    private static $commandFile = __DIR__ . '/../pubsub.php';
+    private static $eodSubscriptionId;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$eodSubscriptionId = 'test-eod-subscription-' . rand();
+    }
 
     public function testSubscriptionPolicy()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
-        $output = $this->runCommand('iam', [
-            '--subscription' => $subscription,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('get_subscription_policy', [
+            self::$projectId,
+            $subscription,
         ]);
 
         $this->assertStringContainsString('etag', $output);
@@ -49,9 +54,9 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
-        $output = $this->runCommand('iam', [
-            '--topic' => $topic,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('get_topic_policy', [
+            self::$projectId,
+            $topic,
         ]);
 
         $this->assertStringContainsString('etag', $output);
@@ -62,10 +67,10 @@ class PubSubTest extends TestCase
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            '--subscription' => $subscription,
-            '--add-user' => $userEmail,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('set_subscription_policy', [
+            self::$projectId,
+            $subscription,
+            $userEmail,
         ]);
 
         $this->assertStringContainsString(
@@ -79,10 +84,10 @@ class PubSubTest extends TestCase
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $userEmail = 'betterbrent@google.com';
 
-        $output = $this->runCommand('iam', [
-            '--topic' => $topic,
-            '--add-user' => $userEmail,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('set_topic_policy', [
+            self::$projectId,
+            $topic,
+            $userEmail,
         ]);
 
         $this->assertStringContainsString(
@@ -95,10 +100,9 @@ class PubSubTest extends TestCase
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
-        $output = $this->runCommand('iam', [
-            '--subscription' => $subscription,
-            '--test' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('test_subscription_permissions', [
+            self::$projectId,
+            $subscription,
         ]);
 
         $this->assertStringContainsString(
@@ -111,10 +115,9 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
-        $output = $this->runCommand('iam', [
-            '--topic' => $topic,
-            '--test' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('test_topic_permissions', [
+            self::$projectId,
+            $topic,
         ]);
 
         $this->assertStringContainsString(
@@ -127,95 +130,133 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
-        $output = $this->runCommand('topic', [
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('list_topics', [
+            self::$projectId,
         ]);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
-    }
-
-    public function testGetTopicThrowsException()
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(
-            'Must provide "--create", "--delete" or "message" with topic name'
-        );
-
-        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
-
-        $output = $this->runCommand('topic', [
-            'topic' => $topic,
-            'project' => self::$projectId,
-        ]);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 
     public function testCreateAndDeleteTopic()
     {
         $topic = 'test-topic-' . rand();
-        $output = $this->runCommand('topic', [
-            'topic' => $topic,
-                '--create' => true,
-                'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('create_topic', [
+            self::$projectId,
+            $topic,
         ]);
 
-        $this->assertRegExp('/Topic created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
 
-        $output = $this->runCommand('topic', [
-            'topic' => $topic,
-            '--delete' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
         ]);
 
-        $this->assertRegExp('/Topic deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 
     public function testTopicMessage()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
 
-        $output = $this->runCommand('topic', [
-            'topic' => $topic,
-            'message' => 'This is a test message',
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
         ]);
 
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+    }
+
+    public function testTopicMessageWithRetrySettings()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_retry_settings', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->assertMatchesRegularExpression('/Message published with retry settings/', $output);
     }
 
     public function testListSubscriptions()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
-        $output = $this->runCommand('subscription', [
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('list_subscriptions', [
+            self::$projectId,
         ]);
 
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDeleteSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--topic' => $topic,
-            '--create' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('create_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--delete' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
+    public function testCreateAndDeleteSubscriptionWithFilter()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $filter = 'attributes.author="unknown"';
+        $output = $this->runFunctionSnippet('create_subscription_with_filter', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $filter
+        ]);
+        $this->assertStringContainsString(sprintf(
+            'Subscription created: projects/%s/subscriptions/%s',
+            self::$projectId,
+            $subscription
+        ), $output);
+        $this->assertStringContainsString('"filter":"attributes.author=\"unknown\""', $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertStringContainsString(sprintf(
+            'Subscription deleted: projects/%s/subscriptions/%s',
+            self::$projectId,
+            $subscription
+        ), $output);
+    }
+
+    public function testCreateSubscriptionWithExactlyOnceDelivery()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = self::$eodSubscriptionId;
+
+        $output = $this->runFunctionSnippet('create_subscription_with_exactly_once_delivery', [
+            self::$projectId,
+            $topic,
+            $subscription
+        ]);
+
+        $this->assertStringContainsString('Subscription created with exactly once delivery status: true', $output);
     }
 
     public function testCreateAndDeletePushSubscription()
@@ -223,59 +264,80 @@ class PubSubTest extends TestCase
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
         $fakeUrl = sprintf('https://%s.appspot.com/receive_message', self::$projectId);
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--topic' => $topic,
-            '--endpoint' => $fakeUrl,
-            '--create' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('create_push_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $fakeUrl,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--delete' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
+    public function testCreateAndDeleteBigQuerySubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $projectId = $this->requireEnv('GOOGLE_PROJECT_ID');
+        $table = $projectId . '.' . $this->requireEnv('GOOGLE_PUBSUB_BIGQUERY_TABLE');
+
+        $output = $this->runFunctionSnippet('create_bigquery_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $table,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDetachSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'testdetachsubsxyz-' . rand();
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--topic' => $topic,
-            '--create' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('create_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--detach' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('detach_subscription', [
+            self::$projectId,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription detached:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription detached:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         // delete test resource
-        $output = $this->runCommand('subscription', [
-            'subscription' => $subscription,
-            '--delete' => true,
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testPullMessages()
@@ -283,20 +345,20 @@ class PubSubTest extends TestCase
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
 
-        $output = $this->runCommand('topic', [
-            'topic' => $topic,
-            'message' => 'This is a test message',
-            'project' => self::$projectId,
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
         ]);
 
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
 
         $this->runEventuallyConsistentTest(function () use ($subscription) {
-            $output = $this->runCommand('subscription', [
-                'subscription' => $subscription,
-                'project' => self::$projectId,
+            $output = $this->runFunctionSnippet('pull_messages', [
+                self::$projectId,
+                $subscription,
             ]);
-            $this->assertRegExp('/This is a test message/', $output);
+            $this->assertMatchesRegularExpression('/This is a test message/', $output);
         });
     }
 
@@ -311,24 +373,74 @@ class PubSubTest extends TestCase
         );
         putenv('IS_BATCH_DAEMON_RUNNING=true');
 
-        $output = $this->runCommand('topic', [
-            'project' => self::$projectId,
-            'topic' => $topic,
-            'message' => $messageData,
-            '--batch' => true
+        $output = $this->runFunctionSnippet('publish_message_batch', [
+            self::$projectId,
+            $topic,
+            $messageData,
         ]);
 
-        $this->assertRegExp('/Messages enqueued for publication/', $output);
+        $this->assertMatchesRegularExpression('/Messages enqueued for publication/', $output);
 
         $this->runEventuallyConsistentTest(function () use ($subscription, $messageData) {
-            $output = $this->runCommand('subscription', [
-                'subscription' => $subscription,
-                'project' => self::$projectId,
+            $output = $this->runFunctionSnippet('pull_messages', [
+                self::$projectId,
+                $subscription,
             ]);
             $this->assertStringContainsString($messageData, $output);
         });
 
         shell_exec('kill -9 ' . $pid);
         putenv('IS_BATCH_DAEMON_RUNNING=');
+    }
+
+    /**
+     * @depends testCreateSubscriptionWithExactlyOnceDelivery
+     */
+    public function testSubscribeExactlyOnceDelivery()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = self::$eodSubscriptionId;
+
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->runEventuallyConsistentTest(function () use ($subscription) {
+            $output = $this->runFunctionSnippet('subscribe_exactly_once_delivery', [
+                self::$projectId,
+                $subscription,
+            ]);
+
+            // delete the subscription
+            $this->runFunctionSnippet('delete_subscription', [
+                self::$projectId,
+                $subscription,
+            ]);
+
+            // There should be at least one acked message
+            // pulled from the subscription.
+            $this->assertMatchesRegularExpression('/Acknowledged message:/', $output);
+        });
+    }
+
+    public function testPublishAndSubscribeWithOrderingKeys()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_ordering_keys', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertRegExp('/Message published/', $output);
+
+        $output = $this->runFunctionSnippet('enable_subscription_ordering', [
+            self::$projectId,
+            $topic,
+            'subscriberWithOrdering' . rand(),
+        ]);
+        $this->assertRegExp('/Created subscription with ordering/', $output);
+        $this->assertRegExp('/\"enableMessageOrdering\":true/', $output);
     }
 }

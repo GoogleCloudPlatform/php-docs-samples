@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -28,24 +28,27 @@ use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * List all create backup operations in an instance.
- * Example:
- * ```
- * list_backup_operations($instanceId, $databaseId);
- * ```
+ * Optionally passing the backupId will also list the
+ * copy backup operations on the backup.
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
+ * @param string $backupId The Spanner backup ID whose copy operations need to be listed.
  */
-function list_backup_operations($instanceId, $databaseId)
-{
+function list_backup_operations(
+    string $instanceId,
+    string $databaseId,
+    string $backupId = null
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
 
     // List the CreateBackup operations.
-    $filter = "(metadata.database:$databaseId) AND " .
-              "(metadata.@type:type.googleapis.com/" .
-              "google.spanner.admin.database.v1.CreateBackupMetadata)";
+    $filter = '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.CreateBackupMetadata) AND ' . "(metadata.database:$databaseId)";
 
+    // See https://cloud.google.com/spanner/docs/reference/rpc/google.spanner.admin.database.v1#listbackupoperationsrequest
+    // for the possible filter values
     $operations = $instance->backupOperations(['filter' => $filter]);
 
     foreach ($operations as $operation) {
@@ -57,8 +60,28 @@ function list_backup_operations($instanceId, $databaseId)
             printf('Backup %s on database %s is %d%% complete.' . PHP_EOL, $backupName, $dbName, $progress);
         }
     }
+
+    if (is_null($backupId)) {
+        return;
+    }
+
+    // List copy backup operations
+    $filter = '(metadata.@type:type.googleapis.com/' .
+              'google.spanner.admin.database.v1.CopyBackupMetadata) AND ' . "(metadata.source_backup:$backupId)";
+
+    $operations = $instance->backupOperations(['filter' => $filter]);
+
+    foreach ($operations as $operation) {
+        if (!$operation->done()) {
+            $meta = $operation->info()['metadata'];
+            $backupName = basename($meta['name']);
+            $progress = $meta['progress']['progressPercent'];
+            printf('Copy Backup %s on source backup %s is %d%% complete.' . PHP_EOL, $backupName, $backupId, $progress);
+        }
+    }
 }
 // [END spanner_list_backup_operations]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

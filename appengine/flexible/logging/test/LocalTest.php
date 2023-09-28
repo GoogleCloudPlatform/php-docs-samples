@@ -16,40 +16,33 @@
  */
 namespace Google\Cloud\Test;
 
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        if (!getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
-        }
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../app.php';
-        $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
-        $app['debug'] = true;
-        return $app;
-    }
+    use TestTrait;
 
     public function testSomeLogs()
     {
-        $this->client->request('GET', '/');
-        $response = $this->client->getResponse();
+        $app = require __DIR__ . '/../app.php';
+
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = $app->handle($request);
+
         $this->assertEquals(200, $response->getStatusCode());
-        $text = $response->getContent();
-        $this->assertStringContainsString("Logs:", $text);
+        $text = (string) $response->getBody();
+        $this->assertStringContainsString('Logs:', $text);
     }
 
     public function testAsyncLog()
     {
-        $this->client->request('GET', '/async_log');
-        $response = $this->client->getResponse();
-        $this->assertTrue($response->isOk());
+        $app = require __DIR__ . '/../app.php';
+
+        $request = (new RequestFactory)->createRequest('GET', '/async_log');
+        $response = $app->handle($request);
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

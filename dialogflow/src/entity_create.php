@@ -19,7 +19,7 @@
 namespace Google\Cloud\Samples\Dialogflow;
 
 use Google\Cloud\Dialogflow\V2\EntityTypesClient;
-use Google\Cloud\Dialogflow\V2\EntityType_Entity;
+use Google\Cloud\Dialogflow\V2\EntityType\Entity;
 
 /**
 * Create an entity of the given entity type.
@@ -37,7 +37,7 @@ function entity_create($projectId, $entityTypeId, $entityValue, $synonyms = [])
         $entityTypeId);
 
     // prepare entity
-    $entity = new EntityType_Entity();
+    $entity = new Entity();
     $entity->setValue($entityValue);
     $entity->setSynonyms($synonyms);
 

@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/iap/README.md
  */
 
 # [START iap_make_request]
@@ -33,8 +33,6 @@ use GuzzleHttp\HandlerStack;
  *
  * @param string $url The Identity-Aware Proxy-protected URL to fetch.
  * @param string $clientId The client ID used by Identity-Aware Proxy.
- *
- * @return The response body.
  */
 function make_iap_request($url, $clientId)
 {
@@ -50,6 +48,12 @@ function make_iap_request($url, $clientId)
     ]);
 
     // make the request
-    return $client->get($url);
+    $response = $client->get($url);
+    print('Printing out response body:');
+    print($response->getBody());
 }
 # [END iap_make_request]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

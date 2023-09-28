@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,14 +29,16 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Upload an encrypted file.
  *
- * @param string $bucketName the name of your Google Cloud bucket.
- * @param string $objectName the name of your Google Cloud object.
- * @param resource $source the path to the file to upload.
- * @param string $base64EncryptionKey the base64 encoded encryption key.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
+ * @param string $source The path to the file to upload.
+ *        (e.g. '/path/to/your/file')
+ * @param string $base64EncryptionKey The base64 encoded encryption key.
+ *        (e.g. 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=')
  */
-function upload_encrypted_object($bucketName, $objectName, $source, $base64EncryptionKey)
+function upload_encrypted_object(string $bucketName, string $objectName, string $source, string $base64EncryptionKey): void
 {
     $storage = new StorageClient();
     $file = fopen($source, 'r');
@@ -49,3 +51,7 @@ function upload_encrypted_object($bucketName, $objectName, $source, $base64Encry
         basename($source), $bucketName, $objectName);
 }
 # [END storage_upload_encrypted_file]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

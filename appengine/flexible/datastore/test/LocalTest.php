@@ -16,33 +16,23 @@
  */
 namespace Google\Cloud\Test;
 
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
-
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../app.php';
-        if (!$projectId = getenv('GCLOUD_PROJECT')) {
-            $this->markTestSkipped('Must set GCLOUD_PROJECT');
-        }
-        $app['project_id'] = $projectId;
-        return $app;
-    }
+    use TestTrait;
 
     public function testIndex()
     {
+        $app = require __DIR__ . '/../app.php';
+
         // Access the modules app top page.
-        $client = $this->client;
-        $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isOk());
-        $text = $client->getResponse()->getContent();
-        $this->assertStringContainsString("Last 10 visits:", $text);
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = $app->handle($request);
+        $this->assertEquals(200, $response->getStatusCode());
+        $text = (string) $response->getBody();
+        $this->assertStringContainsString('Last 10 visits:', $text);
     }
 }

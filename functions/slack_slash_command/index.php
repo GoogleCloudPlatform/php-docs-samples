@@ -38,8 +38,8 @@ function isValidSlackWebhook(ServerRequestInterface $request): bool
     }
 
     // Compute signature
-    $plaintext = 'v0:' . $timestamp . ':' . (string) $request->getBody();
-    $hash = 'v0=' . hash_hmac('sha256', $plaintext, $SLACK_SECRET);
+    $plaintext = sprintf('v0:%s:%s', $timestamp, $request->getBody());
+    $hash = sprintf('v0=%s', hash_hmac('sha256', $plaintext, $SLACK_SECRET));
 
     return $hash === $signature;
 }
@@ -83,7 +83,7 @@ function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, 
         ], $attachmentJson);
     }
 
-    if ($entity['image']) {
+    if (isset($entity['image'])) {
         $imageJson = $entity['image'];
         $attachmentJson['image_url'] = $imageJson['contentUrl'];
     }
@@ -100,7 +100,7 @@ function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, 
  */
 function searchKnowledgeGraph(string $query): Google_Service_Kgsearch_SearchResponse
 {
-    $API_KEY = getenv("KG_API_KEY");
+    $API_KEY = getenv('KG_API_KEY');
 
     $apiClient = new Google\Client();
     $apiClient->setDeveloperKey($API_KEY);

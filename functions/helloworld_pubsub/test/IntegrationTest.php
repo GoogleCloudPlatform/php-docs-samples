@@ -60,7 +60,9 @@ class IntegrationTest extends TestCase
                     'type' => 'google.cloud.pubsub.topic.v1.messagePublished',
                 ],
                 'data' => [
-                    'data' => base64_encode('John')
+                    'message' => [
+                        'data' => base64_encode('John')
+                    ]
                 ],
                 'statusCode' => 200,
                 'expected' => 'Hello, John!',

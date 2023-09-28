@@ -23,16 +23,16 @@ use Google\Cloud\Iot\V1\DeviceManagerClient;
 /**
  * Delete the gateway with the given id.
  *
- * @param string $projectId Google Cloud project ID
- * @param string $location (Optional) Google Cloud region
  * @param string $registryId IOT Device Registry ID
  * @param string $gatewayId ID for the gateway to delete
+ * @param string $projectId Google Cloud project ID
+ * @param string $location (Optional) Google Cloud region
  */
 function delete_gateway(
-    $projectId,
-    $location = 'us-central1',
     $registryId,
-    $gatewayId
+    $gatewayId,
+    $projectId,
+    $location = 'us-central1'
 ) {
     print('Deleting Gateway' . PHP_EOL);
 
@@ -47,3 +47,7 @@ function delete_gateway(
     printf('Deleted %s' . PHP_EOL, $gatewayName);
 }
 # [END iot_delete_gateway]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

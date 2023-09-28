@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,11 +29,10 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Enable uniform bucket-level access.
  *
- * @param string $bucketName Name of your Google Cloud Storage bucket.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function enable_uniform_bucket_level_access($bucketName)
+function enable_uniform_bucket_level_access(string $bucketName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -47,3 +46,7 @@ function enable_uniform_bucket_level_access($bucketName)
     printf('Uniform bucket-level access was enabled for %s' . PHP_EOL, $bucketName);
 }
 # [END storage_enable_uniform_bucket_level_access]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

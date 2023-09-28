@@ -15,16 +15,25 @@
  * limitations under the License.
  */
 
-use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use DI\Container;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
 
-// create the Silex application
-$app = new Application();
-$app->register(new TwigServiceProvider());
-$app['twig.path'] = [ __DIR__ ];
-$app['memcached'] = function () {
+// Create the container
+AppFactory::setContainer($container = new Container());
+$container->set('view', function () {
+    return Twig::create(__DIR__);
+});
+
+// Create App
+$app = AppFactory::create();
+
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$container->set('memcached', function () {
     # [START gae_flex_redislabs_memcache]
     $endpoint = getenv('MEMCACHE_ENDPOINT');
     $username = getenv('MEMCACHE_USERNAME');
@@ -40,78 +49,73 @@ $app['memcached'] = function () {
     }
     # [END gae_flex_redislabs_memcache]
     return $memcached;
-};
+});
 
-$app->get('/vars', function () {
-    $vars = array('MEMCACHE_PORT_11211_TCP_ADDR',
-        'MEMCACHE_PORT_11211_TCP_PORT');
+$app->get('/vars', function (Request $request, Response $response) {
+    $vars = [
+        'MEMCACHE_PORT_11211_TCP_ADDR',
+        'MEMCACHE_PORT_11211_TCP_PORT'
+    ];
     $lines = array();
     foreach ($vars as $var) {
         $val = getenv($var);
         array_push($lines, "$var = $val");
     }
-    return new Response(
-        implode("\n", $lines),
-        200,
-        ['Content-Type' => 'text/plain']);
+    $response->getBody()->write(implode("\n", $lines));
+    return $response->withHeader('Content-Type', 'text/plain');
 });
 
-$app->get('/', function (Application $app, Request $request) {
-    /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-    /** @var Memcached $memcached */
-    $memcached = $app['memcached'];
-    return $twig->render('memcache.html.twig', [
+$app->get('/', function (Request $request, Response $response) use ($container) {
+    $memcached = $container->get('memcached');
+    return $container->get('view')->render($response, 'memcache.html.twig', [
         'who' => $memcached->get('who'),
         'count' => $memcached->get('count'),
-        'host' => $request->getHttpHost(),
+        'host' => $request->getUri()->getHost(),
     ]);
 });
 
-$app->post('/reset', function (Application $app, Request $request) {
-    /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-    /** @var Memcached $memcached */
-    $memcached = $app['memcached'];
+$app->post('/reset', function (Request $request, Response $response) use ($container) {
+    $memcached = $container->get('memcached');
     $memcached->delete('who');
     $memcached->set('count', 0);
-    return $twig->render('memcache.html.twig', [
-        'host' => $request->getHttpHost(),
+    return $container->get('view')->render($response, 'memcache.html.twig', [
+        'host' => $request->getUri()->getHost(),
         'count' => 0,
         'who' => '',
     ]);
 });
 
-$app->post('/', function (Application $app, Request $request) {
-    /** @var Twig_Environment $twig */
-    $twig = $app['twig'];
-    /** @var Memcached $memcached */
-    $memcached = $app['memcached'];
-    $memcached->set('who', $request->get('who'));
+$app->post('/', function (Request $request, Response $response) use ($container) {
+    parse_str((string) $request->getBody(), $postData);
+    $who = $postData['who'] ?? '';
+    $memcached = $container->get('memcached');
+    $memcached->set('who', $who);
     $count = $memcached->increment('count');
     if (false === $count) {
         // Potential race condition.  Use binary protocol to avoid.
         $memcached->set('count', 0);
         $count = 0;
     }
-    return $twig->render('memcache.html.twig', [
-        'who' => $request->get('who'),
+    return $container->get('view')->render($response, 'memcache.html.twig', [
+        'who' => $who,
         'count' => $count,
-        'host' => $request->getHttpHost(),
+        'host' => $request->getUri()->getHost(),
     ]);
 });
 
-$app->get('/memcached/{key}', function (Application $app, $key) {
-    /** @var Memcached $memcached */
-    $memcached = $app['memcached'];
-    return $memcached->get($key);
+$app->get('/memcached/{key}', function (Request $request, Response $response, $args) use ($container) {
+    $memcached = $container->get('memcached');
+    $value = $memcached->get($args['key']);
+    $response->getBody()->write((string) $value);
+    return $response;
 });
 
-$app->put('/memcached/{key}', function (Application $app, $key, Request $request) {
-    /** @var Memcached $memcached */
-    $memcached = $app['memcached'];
-    $value = $request->getContent();
-    return $memcached->set($key, $value, time() + 600); // 10 minutes expiration
+$app->put('/memcached/{key}', function (Request $request, Response $response, $args) use ($container) {
+    $memcached = $container->get('memcached');
+    $value = (string) $request->getBody();
+    $success = $memcached->set($args['key'], $value, time() + 600); // 10 minutes expiration
+    $response->getBody()->write((string) $success);
+    return $response;
 });
 
 return $app;

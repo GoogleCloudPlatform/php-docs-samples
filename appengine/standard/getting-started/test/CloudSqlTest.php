@@ -17,6 +17,7 @@
 namespace Google\Cloud\Test\GettingStarted;
 
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use Google\Cloud\Samples\AppEngine\GettingStarted\CloudSqlDataModel;
 use PHPUnit\Framework\TestCase;
 use PDO;
@@ -24,21 +25,26 @@ use PDO;
 class CloudSqlTest extends TestCase
 {
     use TestTrait;
+    use CloudSqlProxyTrait;
 
     public function setUp(): void
     {
         $connection = $this->requireEnv('CLOUDSQL_CONNECTION_NAME');
+        $socketDir = $this->requireEnv('DB_SOCKET_DIR');
+
+        $this->startCloudSqlProxy($connection, $socketDir);
+
         $dbUser = $this->requireEnv('CLOUDSQL_USER');
         $dbPass = $this->requireEnv('CLOUDSQL_PASSWORD');
         $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
-        $socket = "/tmp/cloudsql/${connection}";
+        $socket = "{$socketDir}/{$connection}";
 
         if (!file_exists($socket)) {
             $this->markTestSkipped(
-                "You must run 'cloud_sql_proxy -instances=${connection} -dir=/cloudsql'"
+                "You must run 'cloud_sql_proxy -instances={$connection} -dir={$socketDir}'"
             );
         }
-        $dsn = "mysql:unix_socket=${socket};dbname=${dbName}";
+        $dsn = "mysql:unix_socket={$socket};dbname={$dbName}";
 
         $pdo = new Pdo($dsn, $dbUser, $dbPass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -144,11 +150,11 @@ class CloudSqlTest extends TestCase
 
         // Clean up.
         $result = $model->delete($breakfastId);
-        $this->assertTrue((bool)$result);
+        $this->assertTrue((bool) $result);
         $this->assertFalse($model->read($breakfastId));
-        $this->assertTrue((bool)$model->read($bellId));
+        $this->assertTrue((bool) $model->read($bellId));
         $result = $model->delete($bellId);
-        $this->assertTrue((bool)$result);
+        $this->assertTrue((bool) $result);
         $this->assertFalse($model->read($bellId));
     }
 }

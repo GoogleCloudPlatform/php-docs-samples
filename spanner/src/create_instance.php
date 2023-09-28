@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  */
-function create_instance($instanceId)
+function create_instance(string $instanceId): void
 {
     $spanner = new SpannerClient();
     $instanceConfig = $spanner->instanceConfiguration(
@@ -60,5 +60,6 @@ function create_instance($instanceId)
 }
 // [END spanner_create_instance]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

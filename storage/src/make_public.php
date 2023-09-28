@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,12 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Make an object publically accessible.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of your Cloud Storage object.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  */
-function make_public($bucketName, $objectName)
+function make_public(string $bucketName, string $objectName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -43,3 +43,7 @@ function make_public($bucketName, $objectName)
     printf('gs://%s/%s is now public' . PHP_EOL, $bucketName, $objectName);
 }
 # [END storage_make_public]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

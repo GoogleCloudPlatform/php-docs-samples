@@ -15,11 +15,9 @@
  * limitations under the License.
  */
 
-
 namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
 
@@ -32,14 +30,11 @@ class visionTest extends TestCase
 {
     use TestTrait;
     use RetryTrait;
-    use ExecuteCommandTrait;
-
-    private static $commandFile = __DIR__ . '/../vision.php';
 
     public function testLabelCommand()
     {
         $path = __DIR__ . '/data/cat.jpg';
-        $output = $this->runCommand('label', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_label', ['path' => $path]);
         $this->assertStringContainsString('cat', $output);
     }
 
@@ -48,14 +43,14 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/cat.jpg';
-        $output = $this->runCommand('label', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_label_gcs', ['path' => $path]);
         $this->assertStringContainsString('cat', $output);
     }
 
     public function testTextCommand()
     {
         $path = __DIR__ . '/data/sabertooth.gif';
-        $output = $this->runCommand('text', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_text', ['path' => $path]);
         $this->assertStringContainsString('extinct', $output);
     }
 
@@ -64,14 +59,14 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/sabertooth.gif';
-        $output = $this->runCommand('text', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_text_gcs', ['path' => $path]);
         $this->assertStringContainsString('extinct', $output);
     }
 
     public function testTextCommandWithImageLackingText()
     {
-        $path = __DIR__ . '/data/faulkner.jpg';
-        $output = $this->runCommand('text', ['path' => $path]);
+        $path = __DIR__ . '/data/cat.jpg';
+        $output = $this->runFunctionSnippet('detect_text', ['path' => $path]);
         $this->assertStringContainsString('0 texts found', $output);
     }
 
@@ -79,15 +74,15 @@ class visionTest extends TestCase
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
-        $path = 'gs://' . $bucketName . '/vision/faulkner.jpg';
-        $output = $this->runCommand('text', ['path' => $path]);
+        $path = 'gs://' . $bucketName . '/vision/cat.jpg';
+        $output = $this->runFunctionSnippet('detect_text_gcs', ['path' => $path]);
         $this->assertStringContainsString('0 texts found', $output);
     }
 
     public function testFaceCommand()
     {
         $path = __DIR__ . '/data/face.png';
-        $output = $this->runCommand('face', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_face', ['path' => $path]);
         $this->assertStringContainsString('Anger: ', $output);
         $this->assertStringContainsString('Joy: ', $output);
         $this->assertStringContainsString('Surprise: ', $output);
@@ -98,7 +93,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/face.png';
-        $output = $this->runCommand('face', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_face_gcs', ['path' => $path]);
         $this->assertStringContainsString('Anger: ', $output);
         $this->assertStringContainsString('Joy: ', $output);
         $this->assertStringContainsString('Surprise: ', $output);
@@ -107,7 +102,7 @@ class visionTest extends TestCase
     public function testFaceCommandWithImageLackingFaces()
     {
         $path = __DIR__ . '/data/tower.jpg';
-        $output = $this->runCommand('face', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_face', ['path' => $path]);
         $this->assertStringContainsString('0 faces found', $output);
     }
 
@@ -116,14 +111,14 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
-        $output = $this->runCommand('face', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_face_gcs', ['path' => $path]);
         $this->assertStringContainsString('0 faces found', $output);
     }
 
     public function testLandmarkCommand()
     {
         $path = __DIR__ . '/data/tower.jpg';
-        $output = $this->runCommand('landmark', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_landmark', ['path' => $path]);
         $this->assertRegexp(
             '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
             $output
@@ -135,7 +130,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
-        $output = $this->runCommand('landmark', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_landmark_gcs', ['path' => $path]);
         $this->assertRegexp(
             '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
             $output
@@ -145,7 +140,7 @@ class visionTest extends TestCase
     public function testLandmarkCommandWithImageLackingLandmarks()
     {
         $path = __DIR__ . '/data/faulkner.jpg';
-        $output = $this->runCommand('landmark', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_landmark', ['path' => $path]);
         $this->assertStringContainsString('0 landmark found', $output);
     }
 
@@ -154,14 +149,14 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/faulkner.jpg';
-        $output = $this->runCommand('landmark', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_landmark_gcs', ['path' => $path]);
         $this->assertStringContainsString('0 landmark found', $output);
     }
 
     public function testLogoCommand()
     {
         $path = __DIR__ . '/data/logo.jpg';
-        $output = $this->runCommand('logo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_logo', ['path' => $path]);
         $this->assertStringContainsString('Google', $output);
     }
 
@@ -170,30 +165,30 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/logo.jpg';
-        $output = $this->runCommand('logo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_logo_gcs', ['path' => $path]);
         $this->assertStringContainsString('Google', $output);
     }
 
-    public function testLocalizeObjectCommand()
+    public function testDetectObjectCommand()
     {
         $path = __DIR__ . '/data/puppies.jpg';
-        $output = $this->runCommand('localize-object', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_object', ['path' => $path]);
         $this->assertStringContainsString('Dog', $output);
     }
 
-    public function testLocalizeObjectCommandGcs()
+    public function testDetectObjectCommandGcs()
     {
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/puppies.jpg';
-        $output = $this->runCommand('localize-object', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_object_gcs', ['path' => $path]);
         $this->assertStringContainsString('Dog', $output);
     }
 
     public function testLogoCommandWithImageLackingLogo()
     {
         $path = __DIR__ . '/data/tower.jpg';
-        $output = $this->runCommand('logo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_logo', ['path' => $path]);
         $this->assertStringContainsString('0 logos found', $output);
     }
 
@@ -202,14 +197,14 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
-        $output = $this->runCommand('logo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_logo_gcs', ['path' => $path]);
         $this->assertStringContainsString('0 logos found', $output);
     }
 
     public function testSafeSearchCommand()
     {
         $path = __DIR__ . '/data/logo.jpg';
-        $output = $this->runCommand('safe-search', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_safe_search', ['path' => $path]);
         $this->assertStringContainsString('Adult:', $output);
         $this->assertStringContainsString('Racy:', $output);
     }
@@ -219,7 +214,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/logo.jpg';
-        $output = $this->runCommand('safe-search', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_safe_search_gcs', ['path' => $path]);
         $this->assertStringContainsString('Adult:', $output);
         $this->assertStringContainsString('Racy:', $output);
     }
@@ -227,7 +222,7 @@ class visionTest extends TestCase
     public function testImagePropertyCommand()
     {
         $path = __DIR__ . '/data/logo.jpg';
-        $output = $this->runCommand('property', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_image_property', ['path' => $path]);
         $this->assertStringContainsString('Red:', $output);
         $this->assertStringContainsString('Green:', $output);
         $this->assertStringContainsString('Blue:', $output);
@@ -238,7 +233,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/logo.jpg';
-        $output = $this->runCommand('property', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_image_property_gcs', ['path' => $path]);
         $this->assertStringContainsString('Red:', $output);
         $this->assertStringContainsString('Green:', $output);
         $this->assertStringContainsString('Blue:', $output);
@@ -249,7 +244,7 @@ class visionTest extends TestCase
     public function testDocumentTextCommand()
     {
         $path = __DIR__ . '/data/text.jpg';
-        $output = $this->runCommand('document-text', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_document_text', ['path' => $path]);
         $this->assertStringContainsString('the PS4 will automatically restart', $output);
         $this->assertStringContainsString('37 %', $output);
         $this->assertStringContainsString('Block content:', $output);
@@ -261,7 +256,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/text.jpg';
-        $output = $this->runCommand('document-text', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_document_text_gcs', ['path' => $path]);
         $this->assertStringContainsString('the PS4 will automatically restart', $output);
         $this->assertStringContainsString('37 %', $output);
         $this->assertStringContainsString('Block content:', $output);
@@ -274,7 +269,7 @@ class visionTest extends TestCase
 
         $source = 'gs://' . $bucketName . '/vision/HodgeConj.pdf';
         $destination = 'gs://' . $bucketName . '/OCR_PDF_TEST_OUTPUT/';
-        $output = $this->runCommand('pdf', [
+        $output = $this->runFunctionSnippet('detect_pdf_gcs', [
             'path' => $source,
             'output' => $destination,
         ]);
@@ -284,7 +279,7 @@ class visionTest extends TestCase
     public function testDetectWebNoGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';
-        $output = $this->runCommand('web', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_web', ['path' => $path]);
         $this->assertStringContainsString('web entities found', $output);
         $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
@@ -294,7 +289,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/geotagged.jpg';
-        $output = $this->runCommand('web', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_web_gcs', ['path' => $path]);
         $this->assertStringContainsString('web entities found', $output);
         $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
@@ -302,7 +297,7 @@ class visionTest extends TestCase
     public function testDetectWebGeoCommand()
     {
         $path = __DIR__ . '/data/geotagged.jpg';
-        $output = $this->runCommand('web-geo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_web_with_geo_metadata', ['path' => $path]);
         $this->assertStringContainsString('web entities found', $output);
         $this->assertNotRegExp('/^0 web entities found:/', $output);
     }
@@ -312,7 +307,7 @@ class visionTest extends TestCase
         $bucketName = $this->requireEnv('GOOGLE_STORAGE_BUCKET');
 
         $path = 'gs://' . $bucketName . '/vision/geotagged.jpg';
-        $output = $this->runCommand('web-geo', ['path' => $path]);
+        $output = $this->runFunctionSnippet('detect_web_with_geo_metadata_gcs', ['path' => $path]);
         $this->assertStringContainsString('web entities found', $output);
         $this->assertNotRegExp('/^0 web entities found:/', $output);
     }

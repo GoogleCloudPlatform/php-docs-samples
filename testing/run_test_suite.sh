@@ -23,28 +23,10 @@ fi
 FLAKES=(
     # Add directories here to run the tests but ignore them if they fail
     datastore/api
-    jobs
-    asset
 )
 
 # Directories we do not want to run tests in, even if they exist
 SKIP_TESTS=(
-    # Silex tests which aren't compatible with phpunit 8
-    # TODO: Move these tests off Silex
-    appengine/flexible/helloworld
-    appengine/flexible/analytics
-    appengine/flexible/twilio
-    appengine/flexible/datastore
-    appengine/flexible/tasks
-    appengine/flexible/storage
-    appengine/flexible/memcache
-    appengine/flexible/logging
-    endpoints/getting-started
-    pubsub/app
-    # PubSub batch is currently broken on PHP 8.0
-    # @see https://github.com/googleapis/google-cloud-php/issues/3749
-    # @TODO remove this once the above issue is fixed
-    pubsub/api
 )
 
 # tests to run with grpc.so disabled
@@ -57,6 +39,7 @@ REST_TESTS=(
     error_reporting
     iot
     monitoring
+    speech
     video
     vision
 )
@@ -78,10 +61,13 @@ ALT_PROJECT_TESTS=(
     logging
     monitoring
     pubsub/api
+    pubsub/quickstart
     storage
     spanner
     video
     vision
+    compute/cloud-client/instances
+    compute/cloud-client/firewall
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
@@ -91,20 +77,27 @@ FAILED_FILE=${TMP_REPORT_DIR}/failed
 FAILED_FLAKY_FILE=${TMP_REPORT_DIR}/failed_flaky
 
 # Determine all files changed on this branch
-# (will be empty if running from "master").
-FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD master))
+# (will be empty if running from "main").
+FILES_CHANGED=$(git diff --name-only HEAD $(git merge-base HEAD main))
 
 # If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
 # Request, run the whole test suite.
 if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
 else
+    labels=$(curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels")
+
     # Check to see if the repo includes the "kokoro:run-all" label
-    if curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels" \
-        | grep -q "kokoro:run-all"; then
+    if  grep -q "kokoro:run-all" <<< $labels; then
         RUN_ALL_TESTS=1
     else
         RUN_ALL_TESTS=0
+    fi
+
+    # Check to see if the repo includes the "spanner:run-backup-tests" label
+    # If we intend to run the backup tests in Spanner, we set the env variable
+    if grep -q "spanner:run-backup-tests" <<< $labels; then
+        export GOOGLE_SPANNER_RUN_BACKUP_TESTS=true
     fi
 
 fi
@@ -119,6 +112,12 @@ TESTCMD="$TESTDIR/vendor/bin/phpunit"
 if ! type $TESTCMD > /dev/null; then
   echo "run \"composer install -d testing/\" to install testing dependencies"
   exit 1
+fi
+
+if [ "${RUN_DEPLOYMENT_TESTS}" = "true" ]; then
+    TESTCMD="$TESTCMD --group deploy"
+else
+    TESTCMD="$TESTCMD --exclude-group deploy"
 fi
 
 run_tests()
@@ -176,8 +175,11 @@ do
         composer -q install
     fi
     if [ $? != 0 ]; then
+        # Generate the lock file (required for check-platform-reqs)
+        composer update --ignore-platform-reqs
         # If the PHP required version is too low, skip the test
-        if composer check-platform-reqs | grep "__root__ requires php" | grep failed ; then
+        EXPLICITLY_SKIPPED=$(php $TESTDIR/check_version.php "$(cat composer.json | jq -r .require.php)");
+        if composer check-platform-reqs | grep "requires php" | grep failed && [ "$EXPLICITLY_SKIPPED" -eq "1" ]; then
             echo "Skipping tests in $DIR (incompatible PHP version)"
         else
             # Run composer without "-q"

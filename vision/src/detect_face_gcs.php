@@ -20,9 +20,10 @@ namespace Google\Cloud\Samples\Vision;
 
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'gs://path/to/your/image.jpg'
-
-function detect_face_gcs($path)
+/**
+ * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"
+ */
+function detect_face_gcs(string $path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
 
@@ -34,16 +35,16 @@ function detect_face_gcs($path)
     $likelihoodName = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY',
     'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
 
-    printf("%d faces found:" . PHP_EOL, count($faces));
+    printf('%d faces found:' . PHP_EOL, count($faces));
     foreach ($faces as $face) {
         $anger = $face->getAngerLikelihood();
-        printf("Anger: %s" . PHP_EOL, $likelihoodName[$anger]);
+        printf('Anger: %s' . PHP_EOL, $likelihoodName[$anger]);
 
         $joy = $face->getJoyLikelihood();
-        printf("Joy: %s" . PHP_EOL, $likelihoodName[$joy]);
+        printf('Joy: %s' . PHP_EOL, $likelihoodName[$joy]);
 
         $surprise = $face->getSurpriseLikelihood();
-        printf("Surprise: %s" . PHP_EOL, $likelihoodName[$surprise]);
+        printf('Surprise: %s' . PHP_EOL, $likelihoodName[$surprise]);
 
         # get bounds
         $vertices = $face->getBoundingPoly()->getVertices();
@@ -58,3 +59,7 @@ function detect_face_gcs($path)
     $imageAnnotator->close();
 }
 // [END vision_face_detection_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

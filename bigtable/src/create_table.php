@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,56 +18,61 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id, $table_id) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_table]
-
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\ApiCore\ApiException;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+/**
+ * Create a new table in a Bigtable instance
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance where you need the table to reside
+ * @param string $tableId The ID of the table to be generated
+ */
+function create_table(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
+    $instanceAdminClient = new BigtableInstanceAdminClient();
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
-$tableAdminClient = new BigtableTableAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+    // Check whether table exists in an instance.
+    // Create table if it does not exists.
+    $table = new Table();
+    printf('Creating a Table : %s' . PHP_EOL, $tableId);
 
-// Check whether table exists in an instance.
-// Create table if it does not exists.
-$table = new Table();
-printf('Creating a Table : %s' . PHP_EOL, $table_id);
+    try {
+        $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+        printf('Table %s already exists' . PHP_EOL, $tableId);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Creating the %s table' . PHP_EOL, $tableId);
 
-try {
-    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
-    printf('Table %s already exists' . PHP_EOL, $table_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf('Creating the %s table' . PHP_EOL, $table_id);
-
-        $tableAdminClient->createtable(
-            $instanceName,
-            $table_id,
-            $table
-        );
-        printf('Created table %s' . PHP_EOL, $table_id);
-    } else {
-        throw $e;
+            $tableAdminClient->createtable(
+                $instanceName,
+                $tableId,
+                $table
+            );
+            printf('Created table %s' . PHP_EOL, $tableId);
+        } else {
+            throw $e;
+        }
     }
 }
 // [END bigtable_create_table]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

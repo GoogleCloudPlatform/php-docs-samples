@@ -22,6 +22,9 @@ use Google\Cloud\Bigtable\Mutations;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 final class FilterTest extends TestCase
 {
     use BigtableTestTrait;
@@ -46,33 +49,33 @@ final class FilterTest extends TestCase
         self::$timestampMicros = time() * 1000 * 1000;
         self::$timestampMicrosMinusHr = (time() - 60 * 60) * 1000 * 1000;
         self::$bigtableClient->table(self::$instanceId, self::$tableId)->mutateRows([
-            "phone#4c410523#20190501" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_01gb", true, self::$timestampMicrosMinusHr)
-                ->upsert('cell_plan', "data_plan_01gb", false, self::$timestampMicros)
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.003", self::$timestampMicros),
-            "phone#4c410523#20190502" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190405.004", self::$timestampMicros),
-            "phone#4c410523#20190505" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_05gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros),
-            "phone#5c10102#20190501" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_10gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190401.002", self::$timestampMicros),
-            "phone#5c10102#20190502" => (new Mutations())
-                ->upsert('cell_plan', "data_plan_10gb", true, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_cell", 1, self::$timestampMicros)
-                ->upsert('stats_summary', "connected_wifi", 0, self::$timestampMicros)
-                ->upsert('stats_summary', "os_build", "PQ2A.190406.000", self::$timestampMicros)
+            'phone#4c410523#20190501' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_01gb', true, self::$timestampMicrosMinusHr)
+                ->upsert('cell_plan', 'data_plan_01gb', false, self::$timestampMicros)
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.003', self::$timestampMicros),
+            'phone#4c410523#20190502' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190405.004', self::$timestampMicros),
+            'phone#4c410523#20190505' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_05gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros),
+            'phone#5c10102#20190501' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_10gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190401.002', self::$timestampMicros),
+            'phone#5c10102#20190502' => (new Mutations())
+                ->upsert('cell_plan', 'data_plan_10gb', true, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_cell', 1, self::$timestampMicros)
+                ->upsert('stats_summary', 'connected_wifi', 0, self::$timestampMicros)
+                ->upsert('stats_summary', 'os_build', 'PQ2A.190406.000', self::$timestampMicros)
         ]);
     }
 
@@ -92,23 +95,21 @@ final class FilterTest extends TestCase
      */
     public function testFilterLimitRowSample()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_row_sample', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_row_sample"
+            self::$tableId
         ]);
-        $result = "Reading data for row ";
+        $result = 'Reading data for row ';
         $this->assertStringContainsString($result, trim($output));
     }
 
     public function testFilterLimitRowRegex()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_row_regex', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_row_regex"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -134,11 +135,10 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerCol()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_cells_per_col', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_cells_per_col"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -188,11 +188,10 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerRow()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_cells_per_row', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_cells_per_row"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -229,11 +228,10 @@ Column Family stats_summary
 
     public function testFilterLimitCellsPerRowOffset()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_cells_per_row_offset', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_cells_per_row_offset"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -269,11 +267,10 @@ Column Family stats_summary
 
     public function testFilterLimitColFamilyRegex()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_col_family_regex', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_col_family_regex"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -311,11 +308,10 @@ Column Family stats_summary
 
     public function testFilterLimitColQualifierRegex()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_col_qualifier_regex', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_col_qualifier_regex"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -348,11 +344,10 @@ Column Family stats_summary
 
     public function testFilterLimitColRange()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_col_range', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_col_range"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -374,11 +369,10 @@ Column Family cell_plan
 
     public function testFilterLimitValueRange()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_value_range', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_value_range"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -394,11 +388,10 @@ Column Family stats_summary
 
     public function testFilterLimitValueRegex()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_value_regex', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_value_regex"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -424,17 +417,16 @@ Column Family stats_summary
         $this->assertEquals($result, trim($output));
     }
 
-    /**
-     * @retryAttempts 3
-     * @retryDelaySeconds 10
-     */
     public function testFilterLimitTimestampRange()
     {
-        $output = self::runSnippet('filter_snippets', [
+        // since we select the endTime as an open ended timestamp, we add a buffer to our expected timestamp
+        // we add 1000 since bigtable has a 1000 microseconds(1ms) granularity
+        $endTime = self::$timestampMicrosMinusHr + 1000;
+        $output = self::runFunctionSnippet('filter_limit_timestamp_range', [
             self::$projectId,
             self::$instanceId,
             self::$tableId,
-            "filter_limit_timestamp_range"
+            $endTime
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -446,25 +438,23 @@ Column Family cell_plan
 
     public function testFilterLimitBlockAll()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_block_all', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_block_all"
+            self::$tableId
         ]);
 
-        $result = "";
+        $result = '';
 
         $this->assertEquals($result, trim($output));
     }
 
     public function testFilterLimitPassAll()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_limit_pass_all', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_limit_pass_all"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -514,11 +504,10 @@ Column Family stats_summary
 
     public function testFilterModifyStripValue()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_modify_strip_value', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_modify_strip_value"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -568,11 +557,10 @@ Column Family stats_summary
 
     public function testFilterModifyApplyLabel()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_modify_apply_label', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_modify_apply_label"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -622,11 +610,10 @@ Column Family stats_summary
 
     public function testFilterComposingChain()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_composing_chain', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_composing_chain"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -655,11 +642,10 @@ Column Family cell_plan
 
     public function testFilterComposingInterleave()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_composing_interleave', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_composing_interleave"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501
@@ -706,11 +692,10 @@ Column Family stats_summary
 
     public function testFilterComposingCondition()
     {
-        $output = self::runSnippet('filter_snippets', [
+        $output = self::runFunctionSnippet('filter_composing_condition', [
             self::$projectId,
             self::$instanceId,
-            self::$tableId,
-            "filter_composing_condition"
+            self::$tableId
         ]);
 
         $result = sprintf('Reading data for row phone#4c410523#20190501

@@ -6,7 +6,7 @@ namespace AppBundle\EventSubscriber;
 
 use Google\Cloud\ErrorReporting\Bootstrap;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ExceptionSubscriber implements EventSubscriberInterface
@@ -19,9 +19,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ]];
     }
 
-    public function logException(GetResponseForExceptionEvent $event)
+    public function logException(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         Bootstrap::exceptionHandler($exception);
     }
 }

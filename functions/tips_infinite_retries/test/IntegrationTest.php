@@ -37,7 +37,6 @@ class IntegrationTest extends TestCase
     /** @var string */
     private static $functionSignatureType = 'cloudevent';
 
-
     public function dataProvider()
     {
         return [
@@ -103,6 +102,10 @@ class IntegrationTest extends TestCase
         );
 
         // Verify the function's behavior is correct.
-        $this->assertContains($expected, $actual, $label . ' contains');
+        $this->assertStringContainsString(
+            $expected,
+            $actual,
+            $label . ' contains'
+        );
     }
 }

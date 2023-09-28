@@ -18,23 +18,24 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
 
 # [START storage_disable_bucket_lifecycle_management]
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Storage\Bucket;
 
 /**
  * Disable bucket lifecycle management.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function disable_bucket_lifecycle_management($bucketName)
+function disable_bucket_lifecycle_management(string $bucketName): void
 {
     $storage = new StorageClient();
+
     $bucket = $storage->bucket($bucketName);
 
     $bucket->update([
@@ -44,3 +45,7 @@ function disable_bucket_lifecycle_management($bucketName)
     printf('Lifecycle management is disabled for bucket %s.' . PHP_EOL, $bucketName);
 }
 # [END storage_disable_bucket_lifecycle_management]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

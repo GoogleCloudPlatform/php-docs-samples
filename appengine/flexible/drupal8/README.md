@@ -74,7 +74,7 @@ env: flex
 
 For now, you need to disable the CSS and JS preprocessed caching that Drupal 8 enables by default.
 To do this, go to `/admin/config/development/performance` and deselect the two
-chechboxes (`Aggregate CSS files` and `Aggregate JS files`) under **Bandwidth Optimizations**.
+checkboxes (`Aggregate CSS files` and `Aggregate JS files`) under **Bandwidth Optimizations**.
 
 Alternatively, you can use [Drush][4] to change this config setting:
 

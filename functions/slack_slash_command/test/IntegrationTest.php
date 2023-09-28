@@ -32,8 +32,6 @@ class IntegrationTest extends TestCase
     use CloudFunctionLocalTestTrait;
     use TestCasesTrait;
 
-    private static $entryPoint = 'receiveRequest';
-
     /**
      * Run the PHP server locally for the defined function.
      *
@@ -42,8 +40,8 @@ class IntegrationTest extends TestCase
     private static function doRun()
     {
         self::$fn->run([
-            'SLACK_SECRET' => self::requireEnv('SLACK_SECRET'),
-            'KG_API_KEY' => self::requireEnv('KG_API_KEY'),
+            'SLACK_SECRET' => self::$slackSecret,
+            'KG_API_KEY' => self::$kgApiKey,
         ]);
     }
 
@@ -66,7 +64,7 @@ class IntegrationTest extends TestCase
         $this->assertEquals(
             $statusCode,
             $response->getStatusCode(),
-            $label . ": status code"
+            $label . ': status code'
         );
 
         if ($expected !== null) {

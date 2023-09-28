@@ -14,24 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../app.php';
-
-        // set some parameters for testing
-        $app['session.test'] = true;
-        $app['debug'] = true;
-
-        return $app;
-    }
-
     public function testEcho()
     {
-        $client = $this->createClient();
+        $app = require __DIR__ . '/../app.php';
 
         $message = <<<EOF
 So if you're lost and on your own
@@ -41,19 +31,17 @@ You can never surrender
 EOF;
 
         // create and send in JSON request
-        $crawler = $client->request(
-            'POST',
-            '/echo',
-            [],
-            [],
-            [ 'CONTENT_TYPE' => 'application/json' ],
-            json_encode([ 'message' => $message ])
-        );
+        $request = (new RequestFactory)->createRequest('POST', '/echo')
+            ->withHeader('Content-Type', 'application/json');
 
-        $response = $client->getResponse();
+        $request->getBody()->write(json_encode([
+            'message' => $message
+        ]));
+
+        $response = $app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = json_decode((string) $response->getContent(), true);
+        $json = json_decode((string) $response->getBody(), true);
         $this->assertNotNull($json);
         $this->assertArrayHasKey('message', $json);
         $this->assertEquals($message, $json['message']);

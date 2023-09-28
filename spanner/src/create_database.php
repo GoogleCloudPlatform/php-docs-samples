@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,7 +36,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_database($instanceId, $databaseId)
+function create_database(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -46,18 +46,20 @@ function create_database($instanceId, $databaseId)
     }
 
     $operation = $instance->createDatabase($databaseId, ['statements' => [
-        "CREATE TABLE Singers (
+        'CREATE TABLE Singers (
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
             LastName     STRING(1024),
-            SingerInfo   BYTES(MAX)
-        ) PRIMARY KEY (SingerId)",
-        "CREATE TABLE Albums (
+            SingerInfo   BYTES(MAX),
+            FullName     STRING(2048) AS
+            (ARRAY_TO_STRING([FirstName, LastName], " ")) STORED
+        ) PRIMARY KEY (SingerId)',
+        'CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,
             AlbumId      INT64 NOT NULL,
             AlbumTitle   STRING(MAX)
         ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE"
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
     ]]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
@@ -68,5 +70,6 @@ function create_database($instanceId, $databaseId)
 }
 // [END spanner_create_database]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

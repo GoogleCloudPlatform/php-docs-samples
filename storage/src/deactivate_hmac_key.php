@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,11 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Deactivate an HMAC key.
  *
+ * @param string $projectId The ID of your Google Cloud Platform project.
+ *        (e.g. 'my-project-id')
  * @param string $accessId Access ID for an inactive HMAC key.
- * @param string $projectId Google Cloud Project ID.
- *
+ *        (e.g. 'GOOG0234230X00')
  */
-function deactivate_hmac_key($accessId, $projectId)
+function deactivate_hmac_key(string $projectId, string $accessId): void
 {
     $storage = new StorageClient();
     // By default hmacKey will use the projectId used by StorageClient().
@@ -45,3 +46,7 @@ function deactivate_hmac_key($accessId, $projectId)
     printf('HMAC key Metadata: %s' . PHP_EOL, print_r($hmacKey->info(), true));
 }
 # [END storage_deactivate_hmac_key]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

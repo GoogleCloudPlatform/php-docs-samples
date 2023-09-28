@@ -14,25 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Factory\AppFactory;
+use Twilio\Rest\Client as TwilioClient;
+use Twilio\TwiML\VoiceResponse;
+use Twilio\TwiML\MessagingResponse;
 
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+// Create App
+$app = AppFactory::create();
 
-$app = new Application();
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$twilioAccountSid = getenv('TWILIO_ACCOUNT_SID');
+$twilioAuthToken = getenv('TWILIO_AUTH_TOKEN');
+$twilioNumber = getenv('TWILIO_FROM_NUMBER');
 
 # [START gae_flex_twilio_receive_call]
 /***
  * Answers a call and replies with a simple greeting.
  */
-$app->post('/call/receive', function () use ($app) {
-    $response = new Services_Twilio_Twiml();
-    $response->say('Hello from Twilio!');
-    return new Response(
-        (string)$response,
-        200,
-        ['Content-Type' => 'application/xml']
-    );
+$app->post('/call/receive', function (Request $request, Response $response) {
+    $twiml = new VoiceResponse();
+    $twiml->say('Hello from Twilio!');
+    $response->getBody()->write((string) $twiml);
+    return $response
+        ->withHeader('Content-Type', 'application/xml');
 });
 # [END gae_flex_twilio_receive_call]
 
@@ -40,17 +48,26 @@ $app->post('/call/receive', function () use ($app) {
 /***
  * Send an sms.
  */
-$app->post('/sms/send', function (Request $request) use ($app) {
-    $twilio = new Services_Twilio(
-        $app['twilio.account_sid'], // Your Twilio Account SID
-        $app['twilio.auth_token']   // Your Twilio Auth Token
+$app->post('/sms/send', function (
+    Request $request,
+    Response $response
+) use ($twilioAccountSid, $twilioAuthToken, $twilioNumber) {
+    $twilio = new TwilioClient(
+        $twilioAccountSid, // Your Twilio Account SID
+        $twilioAuthToken   // Your Twilio Auth Token
     );
-    $sms = $twilio->account->messages->sendMessage(
-        $app['twilio.number'], // From this number
-        $request->get('to'),   // Send to this number
-        'Hello from Twilio!'
+    parse_str((string) $request->getBody(), $postData);
+    $sms = $twilio->messages->create(
+        $postData['to'] ?? '', // to this number
+        [
+            'from' => $twilioNumber,   // from this number
+            'body' => 'Hello from Twilio!',
+        ]
     );
-    return sprintf('Message ID: %s, Message Body: %s', $sms->sid, $sms->body);
+    $response->getBody()->write(
+        sprintf('Message ID: %s, Message Body: %s', $sms->sid, $sms->body)
+    );
+    return $response;
 });
 # [END gae_flex_twilio_send_sms]
 
@@ -58,17 +75,16 @@ $app->post('/sms/send', function (Request $request) use ($app) {
 /***
  * Receive an sms.
  */
-$app->post('/sms/receive', function (Request $request) use ($app) {
-    $sender = $request->get('From');
-    $body = $request->get('Body');
+$app->post('/sms/receive', function (Request $request, Response $response) {
+    parse_str((string) $request->getBody(), $postData);
+    $sender = $postData['From'] ?? '';
+    $body = $postData['Body'] ?? '';
     $message = "Hello, $sender, you said: $body";
-    $response = new Services_Twilio_Twiml();
-    $response->message($message);
-    return new Response(
-        (string) $response,
-        200,
-        ['Content-Type' => 'application/xml']
-    );
+    $twiml = new MessagingResponse();
+    $twiml->message($message);
+    $response->getBody()->write((string) $twiml);
+    return $response
+        ->withHeader('Content-Type', 'application/xml');
 });
 # [END gae_flex_twilio_receive_sms]
 

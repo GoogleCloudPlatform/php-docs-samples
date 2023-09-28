@@ -30,20 +30,20 @@ use Google\Cloud\Iot\V1\PublicKeyFormat;
 /**
  * Create a new gateway with the given id and certificate file.
  *
- * @param string $projectId (optional) Google Cloud project ID
- * @param string $location (Optional) Google Cloud region
  * @param string $registryId IOT Gateway Registry ID
  * @param string $gatewayId IOT Gateway ID
  * @param string $certificateFile Path to certificate file.
  * @param string $algorithm the algorithm used for JWT (ES256 or RS256).
+ * @param string $projectId Google Cloud project ID
+ * @param string $location (optional) Google Cloud region
  */
 function create_gateway(
-    $projectId,
-    $location = 'us-central1',
     $registryId,
     $gatewayId,
     $certificateFile,
-    $algorithm
+    $algorithm,
+    $projectId,
+    $location = 'us-central1'
 ) {
     print('Creating new Gateway' . PHP_EOL);
 
@@ -79,3 +79,7 @@ function create_gateway(
         $gateway->getId());
 }
 # [END iot_create_gateway]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

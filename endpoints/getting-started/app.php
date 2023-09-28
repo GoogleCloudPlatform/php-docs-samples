@@ -22,44 +22,59 @@
  * various authentication methods.
  */
 
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
 
-// create the Silex application
-$app = new Application();
+// Create App
+$app = AppFactory::create();
 
-$app->get('/', function () use ($app) {
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+$app->get('/', function (Request $request, Response $response) {
     // Simple echo service.
-    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/endpoints/getting-started/README.md';
+    $url = 'https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/endpoints/getting-started/README.md';
 
-    $welcome = sprintf(
+    $response->getBody()->write(sprintf(
         '<h1>Welcome to the Endpoints getting started tutorial!</h1>' .
         '<p>Please see the <a href="%s">README</a> for instructions</p>',
         $url
-    );
-    return $welcome;
+    ));
+
+    return $response;
 });
 
-$app->post('/echo', function (Request $request) use ($app) {
+$app->post('/echo', function (Request $request, Response $response) use ($app) {
     // Simple echo service.
-    $message = $request->get('message');
-    return $app->json(['message' => $message]);
+    $json = json_decode((string) $request->getBody(), true);
+    $response->getBody()->write(json_encode([
+        'message' => $json['message'] ?? '',
+    ]));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
 });
 
-$app->get('/auth/info/googlejwt', function () use ($app) {
+$app->get('/auth/info/googlejwt', function (Request $request, Response $response) {
     // Auth info with Google signed JWT.
-    return $app->json($app['auth_info']);
+    $userInfo = get_user_info($request);
+    $response->getBody()->write(json_encode($userInfo));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
 });
 
-
-$app->get('/auth/info/googleidtoken', function () use ($app) {
+$app->get('/auth/info/googleidtoken', function (Request $request, Response $response) {
     // Auth info with Google ID token.
-    return $app->json($app['auth_info']);
+    $userInfo = get_user_info($request);
+    $response->getBody()->write(json_encode($userInfo));
+    return $response
+        ->withHeader('Content-Type', 'application/json');
 });
 
-$app['auth_info'] = function (Request $request) use ($app) {
+function get_user_info(Request $request)
+{
     // Retrieves the authenication information from Google Cloud Endpoints.
-    $encoded_info = $request->headers->get('X-Endpoint-API-UserInfo');
+    $encoded_info = $request->getHeaderLine('X-Endpoint-API-UserInfo');
 
     if ($encoded_info) {
         $info_json = utf8_decode(base64_decode($encoded_info));
@@ -69,14 +84,6 @@ $app['auth_info'] = function (Request $request) use ($app) {
     }
 
     return $user_info;
-};
-
-// Accept JSON requests
-$app->before(function (Request $request) {
-    if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace(is_array($data) ? $data : array());
-    }
-});
+}
 
 return $app;

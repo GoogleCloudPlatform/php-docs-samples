@@ -18,27 +18,26 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\SlackSlashCommand\Test;
 
-function _valid_headers($body): array
-{
-    // Calculate test case signature
-    $key = getenv('SLACK_SECRET');
-    $plaintext = 'v0:0:' . $body;
-    //var_dump($plaintext);
-    $hash = 'v0=' . hash_hmac('sha256', $plaintext, $key);
-    //var_dump($hash);
-
-    // Return new test case
-    return [
-        'plaintext' => $plaintext,
-        'X-Slack-Request-Timestamp' => '0',
-        'X-Slack-Signature' => $hash,
-    ];
-}
+use Google\Cloud\TestUtils\TestTrait;
 
 trait TestCasesTrait
 {
+    use TestTrait;
+
+    private static $entryPoint = 'receiveRequest';
+    private static $slackSecret;
+    private static $kgApiKey;
+
+    public static function getEnvVars()
+    {
+        self::$slackSecret = self::requireEnv('SLACK_SECRET');
+        self::$kgApiKey = self::requireEnv('KG_API_KEY');
+    }
+
     public static function cases(): array
     {
+        self::getEnvVars();
+
         return [
             [
                 'label' => 'Only allows POST',
@@ -46,7 +45,7 @@ trait TestCasesTrait
                 'method' => 'GET',
                 'expected' => null,
                 'statusCode' => '405',
-                'headers' => _valid_headers('')
+                'headers' => self::validHeaders('')
             ],
             [
                 'label' => 'Requires valid auth headers',
@@ -62,7 +61,7 @@ trait TestCasesTrait
                 'method' => 'POST',
                 'expected' => null,
                 'statusCode' => '400',
-                'headers' => _valid_headers(''),
+                'headers' => self::validHeaders(''),
             ],
             [
                 'label' => 'Prohibits invalid signature',
@@ -71,7 +70,7 @@ trait TestCasesTrait
                 'expected' => null,
                 'statusCode' => '403',
                 'headers' => [
-                    'X-Slack-Request-Timestamp' => '0',
+                    'X-Slack-Request-Timestamp' => '1',
                     'X-Slack-Signature' =>
                     'bad_signature'
                 ],
@@ -82,24 +81,40 @@ trait TestCasesTrait
                 'method' => 'POST',
                 'expected' => 'No results match your query',
                 'statusCode' => '200',
-                'headers' => _valid_headers('text=asdfjkl13579'),
+                'headers' => self::validHeaders('text=asdfjkl13579'),
             ],
             [
                 'label' => 'Handles query with results',
                 'body' => 'text=lion',
                 'method' => 'POST',
-                'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',
+                'expected' => 'en.wikipedia.org',
                 'statusCode' => '200',
-                'headers' => _valid_headers('text=lion'),
+                'headers' => self::validHeaders('text=lion'),
             ],
             [
                 'label' => 'Ignores extra URL parameters',
                 'body' => 'unused=foo&text=lion',
                 'method' => 'POST',
-                'expected' => 'https:\/\/en.wikipedia.org\/wiki\/Lion',
+                'expected' => 'en.wikipedia.org',
                 'statusCode' => '200',
-                'headers' => _valid_headers('unused=foo&text=lion'),
+                'headers' => self::validHeaders('unused=foo&text=lion'),
             ],
+        ];
+    }
+
+    private static function validHeaders($body): array
+    {
+        // Calculate test case signature
+        $timestamp = date('U');
+        $plaintext = sprintf('v0:%s:%s', $timestamp, $body);
+        $hash = hash_hmac('sha256', $plaintext, self::$slackSecret);
+        $signature = sprintf('v0=%s', $hash);
+
+        // Return new test case
+        return [
+            'plaintext' => $plaintext,
+            'X-Slack-Request-Timestamp' => $timestamp,
+            'X-Slack-Signature' => $signature,
         ];
     }
 }

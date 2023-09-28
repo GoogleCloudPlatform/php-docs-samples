@@ -20,6 +20,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;
@@ -32,11 +35,8 @@ class DeployTest extends TestCase
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->fail($e->getResponse()->getBody());
         }
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
-        $this->assertStringContainsString(
-            'Spanner',
-            $resp->getBody()->getContents());
+        $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
+        $this->assertStringContainsString('Spanner', $resp->getBody()->getContents());
     }
 
     public static function beforeDeploy()
@@ -74,11 +74,8 @@ class DeployTest extends TestCase
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->fail($e->getResponse()->getBody());
         }
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
-        $this->assertStringContainsString(
-            'Hello World',
-            $resp->getBody()->getContents());
+        $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
+        $this->assertStringContainsString('Hello World', $resp->getBody()->getContents());
     }
 
     public function testMonitoring()
@@ -89,11 +86,11 @@ class DeployTest extends TestCase
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->fail($e->getResponse()->getBody());
         }
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
+        $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
         $this->assertStringContainsString(
             'Successfully submitted a time series',
-            $resp->getBody()->getContents());
+            $resp->getBody()->getContents()
+        );
     }
 
     public function testSpeech()
@@ -104,10 +101,10 @@ class DeployTest extends TestCase
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $this->fail($e->getResponse()->getBody());
         }
-        $this->assertEquals('200', $resp->getStatusCode(),
-                            'top page status code');
+        $this->assertEquals('200', $resp->getStatusCode(), 'top page status code');
         $this->assertStringContainsString(
             'Transcription: how old is the Brooklyn Bridge',
-            $resp->getBody()->getContents());
+            $resp->getBody()->getContents()
+        );
     }
 }

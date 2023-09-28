@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,16 +18,10 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id, $table_id) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_intersection]
 use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
@@ -38,35 +31,47 @@ use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
 use Google\Protobuf\Duration;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+/**
+ * Create a new column family with an intersection GC rule
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance where the table resides
+ * @param string $tableId The ID of the table in which the rule needs to be created
+ */
+function create_family_gc_intersection(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$tableAdminClient = new BigtableTableAdminClient();
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+    print('Creating column family cf4 with Intersection GC rule...' . PHP_EOL);
+    $columnFamily4 = new ColumnFamily();
 
-print('Creating column family cf4 with Intersection GC rule...' . PHP_EOL);
-$columnFamily4 = new ColumnFamily();
+    $intersectionRule = new GcRuleIntersection();
+    $intersectionArray = [
+        (new GcRule())->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5)),
+        (new GcRule())->setMaxNumVersions(2)
+    ];
+    $intersectionRule->setRules($intersectionArray);
 
-$intersection_rule = new GcRuleIntersection();
-$intersection_array = [
-    (new GcRule)->setMaxAge((new Duration())->setSeconds(3600 * 24 * 5)),
-    (new GcRule)->setMaxNumVersions(2)
-];
-$intersection_rule->setRules($intersection_array);
+    $intersection = new GcRule();
+    $intersection->setIntersection($intersectionRule);
 
-$intersection = new GcRule();
-$intersection->setIntersection($intersection_rule);
+    $columnFamily4->setGCRule($intersection);
 
-$columnFamily4->setGCRule($intersection);
+    $columnModification = new Modification();
+    $columnModification->setId('cf4');
+    $columnModification->setCreate($columnFamily4);
+    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
 
-$columnModification = new Modification();
-$columnModification->setId('cf4');
-$columnModification->setCreate($columnFamily4);
-$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-
-print('Created column family cf4 with Union GC rule' . PHP_EOL);
+    print('Created column family cf4 with Union GC rule' . PHP_EOL);
+}
 
 // [END bigtable_create_family_gc_intersection]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

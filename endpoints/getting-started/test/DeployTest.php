@@ -20,6 +20,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group deploy
+ */
 class DeployTest extends TestCase
 {
     use AppEngineDeploymentTrait;

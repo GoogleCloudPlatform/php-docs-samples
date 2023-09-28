@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,16 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Get a bucket's requesterpays metadata.
  *
- * @param string $projectId Your Google Cloud project ID.
- * @param string $bucketName Name of your Google Cloud Storage bucket.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function get_requester_pays_status($projectId, $bucketName)
+function get_requester_pays_status(string $bucketName): void
 {
-    $storage = new StorageClient([
-        'projectId' => $projectId
-    ]);
+    $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $bucketInformation = $bucket->info();
     $requesterPaysStatus = $bucketInformation['billing']['requesterPays'];
@@ -49,3 +45,7 @@ function get_requester_pays_status($projectId, $bucketName)
     }
 }
 # [END storage_get_requester_pays_status]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

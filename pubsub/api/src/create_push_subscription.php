@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 
 namespace Google\Cloud\Samples\PubSub;
@@ -48,3 +48,5 @@ function create_push_subscription($projectId, $topicName, $subscriptionName, $en
     printf('Subscription created: %s' . PHP_EOL, $subscription->name());
 }
 # [END pubsub_create_push_subscription]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

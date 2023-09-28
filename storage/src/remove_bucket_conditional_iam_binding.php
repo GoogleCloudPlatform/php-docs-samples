@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,18 +29,20 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Removes a conditional IAM binding from a bucket's IAM policy.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $role the role that will be given to members in this binding.
- * @param string $title condition's title
- * @param string $description condition's description
- * @param string $expression the condition specified in CEL expression language.
- *
  * To see how to express a condition in CEL, visit:
  * @see https://cloud.google.com/storage/docs/access-control/iam#conditions.
  *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $role the role that will be given to members in this binding.
+ *        (e.g. 'roles/storage.objectViewer')
+ * @param string $title The title of the condition. (e.g. 'Title')
+ * @param string $description The description of the condition.
+ *        (e.g. 'Condition Description')
+ * @param string $expression Te condition specified in CEL expression language.
+ *        (e.g. 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")')
  */
-function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $description, $expression)
+function remove_bucket_conditional_iam_binding(string $bucketName, string $role, string $title, string $description, string $expression): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -74,3 +76,7 @@ function remove_bucket_conditional_iam_binding($bucketName, $role, $title, $desc
     }
 }
 # [END storage_remove_bucket_conditional_iam_binding]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

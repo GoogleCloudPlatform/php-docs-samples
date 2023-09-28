@@ -15,38 +15,40 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 5) {
-    return printf("Usage: php %s SCOPE [QUERY] [PAGE_SIZE] [PAGE_TOKEN]\n", __FILE__);
-}
-list($_, $scope) = $argv;
-$query = isset($argv[2]) ? $argv[2] : '';
-$pageSize = isset($argv[3]) ? (int) $argv[3] : 0;
-$pageToken = isset($argv[4]) ? $argv[4] : '';
+namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_search_all_iam_policies]
 use Google\Cloud\Asset\V1\AssetServiceClient;
 
-/** Uncomment and populate these variables in your code */
-// $scope = 'Scope of the search';
-// $query = '';      // (Optional) Query statement
-// $pageSize = 0;    // (Optional) Size of each result page
-// $pageToken = '';  // (Optional) Token produced by the preceding call
+/**
+ * @param string $scope      Scope of the search
+ * @param string $query      (Optional) Query statement
+ * @param int    $pageSize   (Optional) Size of each result page
+ * @param string $pageToken  (Optional) Token produced by the preceding call
+ */
+function search_all_iam_policies(
+    string $scope,
+    string $query = '',
+    int $pageSize = 0,
+    string $pageToken = ''
+) {
+    // Instantiate a client.
+    $asset = new AssetServiceClient();
 
-// Instantiate a client.
-$asset = new AssetServiceClient();
+    // Run request
+    $response = $asset->searchAllIamPolicies($scope, [
+        'query' => $query,
+        'pageSize' => $pageSize,
+        'pageToken' => $pageToken
+    ]);
 
-// Run request
-$response = $asset->searchAllIamPolicies($scope, [
-    'query' => $query,
-    'pageSize' => $pageSize,
-    'pageToken' => $pageToken
-]);
-
-// Print the resources that the policies are set on
-foreach ($response->getPage() as $policy) {
-    print($policy->getResource() . PHP_EOL);
+    // Print the resources that the policies are set on
+    foreach ($response->getPage() as $policy) {
+        print($policy->getResource() . PHP_EOL);
+    }
 }
 // [END asset_quickstart_search_all_iam_policies]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

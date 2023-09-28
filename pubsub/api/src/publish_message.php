@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 
 namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_publish]
 # [START pubsub_quickstart_publisher]
+use Google\Cloud\PubSub\MessageBuilder;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -39,9 +40,13 @@ function publish_message($projectId, $topicName, $message)
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
+
     $topic = $pubsub->topic($topicName);
-    $topic->publish(['data' => $message]);
+    $topic->publish((new MessageBuilder)->setData($message)->build());
+
     print('Message published' . PHP_EOL);
 }
 # [END pubsub_publish]
 # [END pubsub_quickstart_publisher]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

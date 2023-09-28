@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\Transaction;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_data_with_dml_timestamp($instanceId, $databaseId)
+function update_data_with_dml_timestamp(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -48,13 +48,14 @@ function update_data_with_dml_timestamp($instanceId, $databaseId)
 
     $database->runTransaction(function (Transaction $t) use ($spanner) {
         $rowCount = $t->executeUpdate(
-            "UPDATE Albums "
-            . "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() WHERE SingerId = 1");
+            'UPDATE Albums '
+            . 'SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() WHERE SingerId = 1');
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });
 }
 // [END spanner_dml_standard_update_with_timestamp]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

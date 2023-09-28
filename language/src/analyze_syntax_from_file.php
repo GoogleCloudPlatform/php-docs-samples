@@ -18,37 +18,35 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/language/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/language/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s FILE\n", __FILE__);
-}
-list($_, $uri) = $argv;
+namespace Google\Cloud\Samples\Language;
 
 # [START language_syntax_gcs]
+use Google\Cloud\Language\V1\AnalyzeSyntaxRequest;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\PartOfSpeech\Tag;
 
-/** Uncomment and populate these variables in your code */
-// $uri = 'The cloud storage object to analyze (gs://your-bucket-name/your-object-name)';
+/**
+ * @param string $uri The cloud storage object to analyze (gs://your-bucket-name/your-object-name)
+ */
+function analyze_syntax_from_file(string $uri): void
+{
+    // Create the Natural Language client
+    $languageServiceClient = new LanguageServiceClient();
 
-// Create the Natural Language client
-$languageServiceClient = new LanguageServiceClient();
-
-try {
     // Create a new Document, pass GCS URI and set type to PLAIN_TEXT
     $document = (new Document())
         ->setGcsContentUri($uri)
         ->setType(Type::PLAIN_TEXT);
 
     // Call the analyzeEntities function
-    $response = $languageServiceClient->analyzeSyntax($document, []);
+    $request = (new AnalyzeSyntaxRequest())
+        ->setDocument($document);
+    $response = $languageServiceClient->analyzeSyntax($request);
     $tokens = $response->getTokens();
     // Print out information about each entity
     foreach ($tokens as $token) {
@@ -56,7 +54,9 @@ try {
         printf('Token part of speech: %s' . PHP_EOL, Tag::name($token->getPartOfSpeech()->getTag()));
         print(PHP_EOL);
     }
-} finally {
-    $languageServiceClient->close();
 }
 # [END language_syntax_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

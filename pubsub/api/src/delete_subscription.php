@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 
 namespace Google\Cloud\Samples\PubSub;
@@ -43,3 +43,5 @@ function delete_subscription($projectId, $subscriptionName)
     printf('Subscription deleted: %s' . PHP_EOL, $subscription->name());
 }
 # [END pubsub_delete_subscription]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

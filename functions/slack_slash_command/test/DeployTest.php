@@ -31,17 +31,16 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    private static $entryPoint = 'receiveRequest';
-
     /**
-      * @dataProvider cases
-      */
+     * @dataProvider cases
+     */
     public function testFunction(
         $label,
         $body,
@@ -75,8 +74,11 @@ class DeployTest extends TestCase
     private static function doDeploy()
     {
         // Forward required env variables to Cloud Functions.
-        $envVars = 'SLACK_SECRET=' . self::requireEnv('SLACK_SECRET') . ',';
-        $envVars .= 'KG_API_KEY=' . self::requireEnv('KG_API_KEY');
+        $envVars = sprintf(
+            'SLACK_SECRET=%s,KG_API_KEY=%s',
+            self::$slackSecret,
+            self::$kgApiKey
+        );
 
         self::$fn->deploy(['--update-env-vars' => $envVars]);
     }

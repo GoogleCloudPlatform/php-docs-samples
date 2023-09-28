@@ -11,7 +11,7 @@ use Google\Cloud\Core\Report\SimpleMetadataProvider;
 
 // These variables are set by the App Engine environment. To test locally,
 // ensure these are set or manually change their values.
-$projectId = getenv('GCLOUD_PROJECT') ?: 'YOUR_PROJECT_ID';
+$projectId = getenv('GOOGLE_CLOUD_PROJECT') ?: 'YOUR_PROJECT_ID';
 $service = getenv('GAE_SERVICE') ?: 'error_reporting_quickstart';
 $version = getenv('GAE_VERSION') ?: 'test';
 
@@ -29,6 +29,6 @@ $psrLogger = $logging->psrLogger('error-log', [
 // exception hander. This will ensure all exceptions are logged to Stackdriver.
 Bootstrap::init($psrLogger);
 
-print("Throwing a test exception. You can view the message at https://console.cloud.google.com/errors." . PHP_EOL);
-throw new Exception('quickstart.php test exception');
+print('Throwing a test exception. You can view the message at https://console.cloud.google.com/errors.' . PHP_EOL);
+throw new Exception('Something went wrong');
 # [END error_reporting_quickstart]

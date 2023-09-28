@@ -1,36 +1,5 @@
 {
     "require": {
-        "symfony/console": "^3.3",
         "google/cloud-monitoring": "^1.0.0"
-    },
-    "autoload": {
-        "files": [
-            "src/alert_backup_policies.php",
-            "src/alert_create_channel.php",
-            "src/alert_create_policy.php",
-            "src/alert_delete_channel.php",
-            "src/alert_enable_policies.php",
-            "src/alert_list_channels.php",
-            "src/alert_list_policies.php",
-            "src/alert_replace_channels.php",
-            "src/alert_restore_policies.php",
-            "src/create_metric.php",
-            "src/create_uptime_check.php",
-            "src/delete_metric.php",
-            "src/delete_uptime_check.php",
-            "src/get_descriptor.php",
-            "src/get_resource.php",
-            "src/get_uptime_check.php",
-            "src/list_descriptors.php",
-            "src/list_resources.php",
-            "src/list_uptime_check_ips.php",
-            "src/list_uptime_checks.php",
-            "src/read_timeseries_align.php",
-            "src/read_timeseries_fields.php",
-            "src/read_timeseries_reduce.php",
-            "src/read_timeseries_simple.php",
-            "src/update_uptime_check.php",
-            "src/write_timeseries.php"
-        ]
     }
 }

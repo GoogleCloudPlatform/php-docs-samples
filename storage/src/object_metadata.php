@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,12 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * List object metadata.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $objectName the name of your Cloud Storage object.
- *
- * @return void
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  */
-function object_metadata($bucketName, $objectName)
+function object_metadata(string $bucketName, string $objectName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -93,3 +93,7 @@ function object_metadata($bucketName, $objectName)
     }
 }
 # [END storage_get_metadata]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

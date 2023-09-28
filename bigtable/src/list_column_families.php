@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,37 +18,41 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id, $table_id) = $argv;
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_column_families]
-
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+/**
+ * List column families of a table
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
+ * @param string $tableId The ID of the table for which the families need to be displayed
+ */
+function list_column_families(
+    string $projectId,
+    string $instanceId,
+    string $tableId
+): void {
+    $tableAdminClient = new BigtableTableAdminClient();
 
-$tableAdminClient = new BigtableTableAdminClient();
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+    $table = $tableAdminClient->getTable($tableName);
+    $columnFamilies = $table->getColumnFamilies()->getIterator();
 
-
-$table = $tableAdminClient->getTable($tableName);
-$columnFamilies = $table->getColumnFamilies()->getIterator();
-
-foreach ($columnFamilies as $k => $columnFamily) {
-    printf('Column Family: %s' . PHP_EOL, $k);
-    print('GC Rule:' . PHP_EOL);
-    printf('%s' . PHP_EOL, $columnFamily->serializeToJsonString());
+    foreach ($columnFamilies as $k => $columnFamily) {
+        printf('Column Family: %s' . PHP_EOL, $k);
+        print('GC Rule:' . PHP_EOL);
+        printf('%s' . PHP_EOL, $columnFamily->serializeToJsonString());
+    }
 }
 // [END bigtable_list_column_families]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

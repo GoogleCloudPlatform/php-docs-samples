@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,44 +18,59 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID TABLE_ID [FAMILY_ID]" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id, $table_id) = $argv;
-$family_id = isset($argv[4]) ? $argv[4] : 'cf3';
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_gc_rule]
-
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\ApiCore\ApiException;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $table_id = 'The Bigtable table ID';
+/**
+ * Update the GC Rule for an existing column family in the table
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance
+ * @param string $tableId The ID of the table where the rule needs to be updated
+ * @param string $familyId The ID of the column family
+ */
+function update_gc_rule(
+    string $projectId,
+    string $instanceId,
+    string $tableId,
+    string $familyId = 'cf3'
+): void {
+    $tableAdminClient = new BigtableTableAdminClient();
+    $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
+    $columnFamily1 = new ColumnFamily();
 
-$tableAdminClient = new BigtableTableAdminClient();
+    printf('Updating column family %s GC rule...' . PHP_EOL, $familyId);
+    $columnFamily1->setGcRule((new GcRule())->setMaxNumVersions(1));
+    // Update the column family with ID $familyId to update the GC rule
+    $columnModification = new Modification();
+    $columnModification->setId($familyId);
+    $columnModification->setUpdate($columnFamily1);
 
-$tableName = $tableAdminClient->tableName($project_id, $instance_id, $table_id);
+    try {
+        $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Column family %s does not exist.' . PHP_EOL, $familyId);
+            return;
+        }
+        throw $e;
+    }
 
-$columnFamily1 = new ColumnFamily();
-print('Updating column family cf3 GC rule...' . PHP_EOL);
-$columnFamily1->setGcRule((new GcRule)->setMaxNumVersions(1));
-// Update the column family cf1 to update the GC rule
-$columnModification = new Modification();
-$columnModification->setId('cf3');
-$columnModification->setUpdate($columnFamily1);
-$tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
-
-print('Print column family cf3 GC rule after update...' . PHP_EOL);
-printf('Column Family: cf3');
-printf('%s' . PHP_EOL, $columnFamily1->serializeToJsonString());
+    printf('Print column family %s GC rule after update...' . PHP_EOL, $familyId);
+    printf('Column Family: ' . $familyId . PHP_EOL);
+    printf('%s' . PHP_EOL, $columnFamily1->serializeToJsonString());
+}
 // [END bigtable_update_gc_rule]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -53,7 +53,7 @@ authentication:
 
 These samples require you to first set up a [Spanner Instance][create-instance].
 Once you've finished with the samples, you can [delete your instance][delete-instance]
-to prevent incuring any additional charges.
+to prevent incurring any additional charges.
 
 [create-instance]: https://cloud.google.com/spanner/docs/create-manage-instances
 [delete-instance]: https://cloud.google.com/spanner/docs/create-manage-instances#delete-instance
@@ -97,12 +97,12 @@ No project ID was provided, and we were unable to detect a default project ID.
 
 ## The client library
 
-This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+This sample uses the [Spanner Client Library for PHP][google-cloud-php-spanner].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
 
 [php_grpc]: http://cloud.google.com/php/grpc
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-spanner]: https://cloud.google.com/php/docs/reference/cloud-spanner/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 [google-cloud-sdk]: https://cloud.google.com/sdk/

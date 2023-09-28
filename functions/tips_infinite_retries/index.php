@@ -27,14 +27,14 @@
 
 use Google\CloudFunctions\CloudEvent;
 
-function avoidInfiniteRetries(CloudEvent $event): string
+function avoidInfiniteRetries(CloudEvent $event): void
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 
     $eventId = $event->getId();
 
     // The maximum age of events to process.
-    $maxAge = 60 * 3; // 3 minutes, in seconds
+    $maxAge = 10; // 10 seconds
 
     // The age of the event being processed.
     $eventAge = time() - strtotime($event->getTime());
@@ -42,7 +42,7 @@ function avoidInfiniteRetries(CloudEvent $event): string
     // Ignore events that are too old
     if ($eventAge > $maxAge) {
         fwrite($log, 'Dropping event ' . $eventId . ' with age ' . $eventAge . ' seconds' . PHP_EOL);
-        return '';
+        return;
     }
 
     // Do what the function is supposed to do
@@ -53,7 +53,5 @@ function avoidInfiniteRetries(CloudEvent $event): string
     if ($failed) {
         throw new Exception('Event ' . $eventId . ' failed; retrying...');
     }
-
-    return '';
 }
 // [END functions_tips_infinite_retries]

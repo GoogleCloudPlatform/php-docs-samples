@@ -28,55 +28,18 @@ This simple command-line application demonstrates how to invoke
     Run `php composer.phar install` (if composer is installed locally) or `composer install`
     (if composer is installed globally).
 5.  For a basic demonstration of the Cloud Vision API, run `php quickstart.php`.
-6.  Run `php vision.php` or `php product_search.php`. For `vision.php`, the following commands are available:
-```
-  face            Detect faces in an image using Google Cloud Vision API
-  help            Displays help for a command
-  label           Detect labels in an image using Google Cloud Vision API
-  landmark        Detect landmarks in an image using Google Cloud Vision API
-  list            Lists commands
-  localize-object Detect objects in an image using Google Cloud Vision API
-  logo            Detect logos in an image using Google Cloud Vision API
-  property        Detect image proerties in an image using Google Cloud Vision API
-  safe-search     Detect adult content in an image using Google Cloud Vision API
-  text            Detect text in an image using Google Cloud Vision API
-  crop-hints      Detect crop hints in an image using Google Cloud Vision API
-  document-text   Detect document text in an image using Google Cloud Vision API
-  pdf             Detect text in a PDF/TIFF using Google Cloud Vision API
-  web             Detect web entities in an image using Google Cloud Vision API
-  web-geo         Detect web entities in an image with geo metadata using
-                  Google Cloud Vision API
-```
-   For `product_search.php`, the following commands are available:
-```
-  product-create                        Create a product
-  product-delete                        Delete a product
-  product-get                           Get information of a product
-  product-list                          List information for all products
-  product-update                        Update information for a product
-  product-image-create                  Create reference image
-  product-image-delete                  Delete reference image
-  product-image-get                     Get reference image information for a product
-  product-image-list                    List all reference image information for a product
-  product-search-similar                Search for similar products to local image
-  product-search-similar-gcs            Search for similar products to GCS image
-  product-set-create                    Create a product set
-  product-set-delete                    Delete a product set
-  product-set-get                       Get information for a product set
-  product-set-import                    Import a product set
-  product-set-list                      List information for all product sets
-  product-set-add-product               Add product to a product set
-  product-set-list-products             List products in a product set
-  product-set-remove-product            Remove product from a product set
-  product-purge-orphan                  Delete all products not in any product sets
-  product-purge-products-in-product-set Delete all products not in any product set
-```
+6.  Execute the snippets in the [src/](src/) directory by running
+    `php src/SNIPPET_NAME.php`. The usage will print for each if no arguments
+    are provided:
+    ```sh
+    $ php src/detext_face.php
+    Usage: php src/detext_face.php <PATH>
 
-7. Run `php vision.php COMMAND --help` or `php product_search.php COMMAND --help` to print information about the usage of each command.
-
+    $ php src/detect_face.php 'path/to/your/image.jpg'
+    ```
 ## The client library
 
-This sample uses the [Google Cloud Client Library for PHP][google-cloud-php].
+This sample uses the [Cloud Vision Client Library for PHP][google-cloud-php-vision].
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and [report issues][google-cloud-php-issues].
 
@@ -96,7 +59,7 @@ If you have not set a timezone you may get an error from php. This can be resolv
   1. Editing the php.ini file (or creating one if it doesn't exist)
   1. Adding the timezone to the php.ini file e.g., adding the following line: `date.timezone = "America/Los_Angeles"`
 
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php
+[google-cloud-php-vision]: https://cloud.google.com/php/docs/reference/cloud-vision/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 

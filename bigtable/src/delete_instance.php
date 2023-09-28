@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,40 +18,42 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace Google\Cloud\Samples\Bigtable;
 
-if (count($argv) != 3) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id) = $argv;
-
+// [START bigtable_delete_instance]
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
+/**
+ * Delete a bigtable instance
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance to be deleted
+ */
+function delete_instance(
+    string $projectId,
+    string $instanceId
+): void {
+    $instanceAdminClient = new BigtableInstanceAdminClient();
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-
-$instanceAdminClient = new BigtableInstanceAdminClient();
-
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
-
-
-// [START bigtable_delete_instance]
-printf("Deleting Instance" . PHP_EOL);
-try {
-    $instanceAdminClient->deleteInstance($instanceName);
-    printf("Deleted Instance: %s." . PHP_EOL, $instance_id);
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Instance %s does not exists." . PHP_EOL, $instance_id);
-    } else {
-        throw $e;
+    printf('Deleting Instance' . PHP_EOL);
+    try {
+        $instanceAdminClient->deleteInstance($instanceName);
+        printf('Deleted Instance: %s.' . PHP_EOL, $instanceId);
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
+        } else {
+            throw $e;
+        }
     }
 }
 // [END bigtable_delete_instance]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

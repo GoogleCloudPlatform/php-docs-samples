@@ -24,5 +24,4 @@ $app = require __DIR__ . '/app.php';
 // Run the app!
 // use "gcloud app deploy" or run "php -S localhost:8080"
 // and browse to "/"
-$app['debug'] = true;
 $app->run();

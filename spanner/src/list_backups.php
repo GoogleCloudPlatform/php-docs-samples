@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -35,7 +35,7 @@ use Google\Cloud\Spanner\SpannerClient;
  *
  * @param string $instanceId The Spanner instance ID.
  */
-function list_backups($instanceId)
+function list_backups(string $instanceId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -65,7 +65,7 @@ function list_backups($instanceId)
     // List all backups that expire before a timestamp.
     $expireTime = $spanner->timestamp(new \DateTime('+30 days'));
     print("All backups that expire before $expireTime:" . PHP_EOL);
-    $filter ="expire_time < \"$expireTime\"";
+    $filter = "expire_time < \"$expireTime\"";
     foreach ($instance->backups(['filter' => $filter]) as $backup) {
         print('  ' . basename($backup->name()) . PHP_EOL);
     }
@@ -98,5 +98,6 @@ function list_backups($instanceId)
 }
 // [END spanner_list_backups]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

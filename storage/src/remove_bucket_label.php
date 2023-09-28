@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -29,10 +29,12 @@ use Google\Cloud\Storage\StorageClient;
 /**
  * Removes a label from a bucket.
  *
- * @param string $bucketName the name of your Cloud Storage bucket.
- * @param string $labelName the name of the label to remove.
+ * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
+ * @param string $labelName The name of the label to remove.
+ *        (e.g. 'label-key-to-remove')
  */
-function remove_bucket_label($bucketName, $labelName)
+function remove_bucket_label(string $bucketName, string $labelName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -41,3 +43,7 @@ function remove_bucket_label($bucketName, $labelName)
     printf('Removed label %s from %s' . PHP_EOL, $labelName, $bucketName);
 }
 # [END storage_remove_bucket_label]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

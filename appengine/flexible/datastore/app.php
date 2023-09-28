@@ -16,29 +16,34 @@
  */
 
 use Google\Cloud\Datastore\DatastoreClient;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use RKA\Middleware\IpAddress;
+use Slim\Factory\AppFactory;
 
-// create the Silex application
-$app = new Application();
+// Create App
+$app = AppFactory::create();
 
-$app['datastore'] = function () use ($app) {
-    $projectId = $app['project_id'];
+// Display errors
+$app->addErrorMiddleware(true, true, true);
+
+// Add IP address middleware
+$checkProxyHeaders = true;
+$trustedProxies = ['10.0.0.1', '10.0.0.2'];
+$app->add(new IpAddress($checkProxyHeaders, $trustedProxies));
+
+$app->get('/', function (Request $request, Response $response) {
+    $projectId = getenv('GCLOUD_PROJECT');
+    if (empty($projectId)) {
+        $response->getBody()->write('Set the GCLOUD_PROJECT environment variable to run locally');
+        return $response;
+    }
+
     # [START gae_flex_datastore_client]
     $datastore = new DatastoreClient([
         'projectId' => $projectId
     ]);
     # [END gae_flex_datastore_client]
-    return $datastore;
-};
-
-$app->get('/', function (Application $app, Request $request) {
-    if (empty($app['project_id'])) {
-        return 'Set the GCLOUD_PROJECT environment variable to run locally';
-    }
-    /** @var \Google_Service_Datastore $datastore */
-    $datastore = $app['datastore'];
 
     // determine the user's IP
     $user_ip = get_user_ip($request);
@@ -67,14 +72,17 @@ $app->get('/', function (Application $app, Request $request) {
             $entity['user_ip']);
     }
     # [END gae_flex_datastore_query]
-    array_unshift($visits, "Last 10 visits:");
-    return new Response(implode("\n", $visits), 200,
-        ['Content-Type' => 'text/plain']);
+    array_unshift($visits, 'Last 10 visits:');
+    $response->getBody()->write(implode("\n", $visits));
+
+    return $response
+        ->withStatus(200)
+        ->withHeader('Content-Type', 'text/plain');
 });
 
 function get_user_ip(Request $request)
 {
-    $ip = $request->GetClientIp();
+    $ip = $request->getAttribute('ip_address');
     // Keep only the first two octets of the IP address.
     $octets = explode($separator = ':', $ip);
     if (count($octets) < 2) {  // Must be ip4 address

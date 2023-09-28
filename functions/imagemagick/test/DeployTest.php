@@ -20,7 +20,6 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Functions\ImageMagick\Test;
 
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -33,40 +32,25 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
     use CloudFunctionDeploymentTrait;
     use TestCasesTrait;
 
-    /** @var string */
-    private static $entryPoint = 'blurOffensiveImages';
-
-    /** @var string */
-    private static $functionSignatureType = 'cloudevent';
-
-    /** @var string */
-    // The test starts by copying images from this bucket.
+    // The test uses this bucket to copy images.
     private const FIXTURE_SOURCE_BUCKET = 'cloud-devrel-public';
 
-    /** @var string */
-    // This is the bucket the deployed function monitors.
-    // The test copies image from FIXTURE_SOURCE_BUCKET to this one.
+    /**
+     * This is the bucket the deployed function monitors.
+     * The test copies image from FIXTURE_SOURCE_BUCKET to this one.
+     */
     private static $monitoredBucket;
 
-    /** @var string */
-    // The function saves any blurred images to this bucket.
-    private static $blurredBucket;
-
-    /** @var StorageClient */
-    private static $storageClient;
-
-    /** @var LoggingClient */
-    private static $loggingClient;
-
     /**
-      * @dataProvider cases
-      */
+     * @dataProvider cases
+     */
     public function testFunction(
         $cloudevent,
         $label,
@@ -74,15 +58,12 @@ class DeployTest extends TestCase
         $expected,
         $statusCode
     ): void {
-        // Upload target file.
-        $fixtureBucket = self::$storageClient->bucket(self::FIXTURE_SOURCE_BUCKET);
+        // Trigger the cloud storage event by copying the image over
+        $storageClient = new StorageClient();
+        $fixtureBucket = $storageClient->bucket(self::FIXTURE_SOURCE_BUCKET);
+
         $object = $fixtureBucket->object($fileName);
-
         $object->copy(self::$monitoredBucket, ['name' => $fileName]);
-
-        // Give event and log systems a head start.
-        // If log retrieval fails to find logs for our function within retry limit, increase sleep time.
-        sleep(5);
 
         $fiveMinAgo = date(\DateTime::RFC3339, strtotime('-5 minutes'));
         $this->processFunctionLogs($fiveMinAgo, function (\Iterator $logs) use ($expected, $label) {
@@ -96,7 +77,7 @@ class DeployTest extends TestCase
             // Only testing one property to decrease odds the expected logs are
             // split between log requests.
             $this->assertStringContainsString($expected, $actual, $label . ':');
-        });
+        }, 6, 30);
     }
 
     /**
@@ -107,20 +88,11 @@ class DeployTest extends TestCase
     private static function doDeploy()
     {
         // Initialize variables
-        if (empty(self::$monitoredBucket)) {
-            self::$monitoredBucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
-        }
-        if (empty(self::$blurredBucket)) {
-            self::$blurredBucket = self::requireEnv('BLURRED_BUCKET_NAME');
-        }
-
-        if (empty(self::$storageClient)) {
-            self::$storageClient = new StorageClient();
-        }
+        self::$monitoredBucket = self::requireEnv('GOOGLE_STORAGE_BUCKET');
+        $blurredBucket = self::requireEnv('BLURRED_BUCKET_NAME');
 
         // Forward required env variables to Cloud Functions.
-        $envVars = 'GOOGLE_STORAGE_BUCKET=' . self::$monitoredBucket . ',';
-        $envVars .= 'BLURRED_BUCKET_NAME=' . self::$blurredBucket;
+        $envVars = sprintf('BLURRED_BUCKET_NAME=%s', $blurredBucket);
 
         self::$fn->deploy(
             ['--update-env-vars' => $envVars],

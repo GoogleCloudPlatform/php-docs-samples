@@ -41,6 +41,11 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->singleton(
+    Illuminate\Foundation\Exceptions\Handler::class,
+    App\Exceptions\Handler::class
+);
+
 # [START] Set the storage path to the environment variable APP_STORAGE
 /*
 |--------------------------------------------------------------------------

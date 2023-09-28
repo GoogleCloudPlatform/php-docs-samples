@@ -25,14 +25,14 @@ use Google\Protobuf\FieldMask;
 /**
  * List gateways in the registry.
  *
+ * @param string $registryId IOT Device Registry ID
  * @param string $projectId Google Cloud project ID
  * @param string $location (Optional) Google Cloud region
- * @param string $registryId IOT Device Registry ID
  */
 function list_gateways(
+    $registryId,
     $projectId,
-    $location = 'us-central1',
-    $registryId
+    $location = 'us-central1'
 ) {
     print('Listing gateways' . PHP_EOL);
 
@@ -71,3 +71,7 @@ function list_gateways(
     }
 }
 # [END iot_list_gateways]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

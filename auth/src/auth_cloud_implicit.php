@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
 namespace Google\Cloud\Samples\Auth;
@@ -26,6 +26,11 @@ namespace Google\Cloud\Samples\Auth;
 // Imports the Cloud Storage client library.
 use Google\Cloud\Storage\StorageClient;
 
+/**
+ * Authenticate to a cloud client library using a service account implicitly.
+ *
+ * @param string $projectId The Google project ID.
+ */
 function auth_cloud_implicit($projectId)
 {
     $config = [
@@ -42,3 +47,7 @@ function auth_cloud_implicit($projectId)
     }
 }
 # [END auth_cloud_implicit]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

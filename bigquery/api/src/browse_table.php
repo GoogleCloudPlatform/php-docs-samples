@@ -18,46 +18,49 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 4 || count($argv) > 5) {
-    return printf("Usage: php %s PROJECT_ID DATASET_ID TABLE_ID [START_INDEX]\n", __FILE__);
-}
-list($_, $projectId, $datasetId, $tableId) = $argv;
-$startIndex = isset($argv[4]) ? $argv[4] : 0;
-
+namespace Google\Cloud\Samples\BigQuery;
 
 # [START bigquery_browse_table]
 use Google\Cloud\BigQuery\BigQueryClient;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = 'The Google project ID';
-// $datasetId = 'The BigQuery dataset ID';
-// $tableId   = 'The BigQuery table ID';
-// $startIndex = 0;
+/**
+ * Browses the given table for data
+ *
+ * @param string $projectId The project Id of your Google Cloud Project.
+ * @param string $datasetId The BigQuery dataset ID.
+ * @param string $tableId The BigQuery table ID.
+ * @param int $startIndex Zero-based index of the starting row.
+ */
+function browse_table(
+    string $projectId,
+    string $datasetId,
+    string $tableId,
+    int $startIndex = 0
+): void {
+    // Query options
+    $maxResults = 10;
+    $options = [
+      'maxResults' => $maxResults,
+      'startIndex' => $startIndex
+    ];
 
-$maxResults = 10;
-
-$options = [
-    'maxResults' => $maxResults,
-    'startIndex' => $startIndex
-];
-$bigQuery = new BigQueryClient([
-    'projectId' => $projectId,
-]);
-$dataset = $bigQuery->dataset($datasetId);
-$table = $dataset->table($tableId);
-$numRows = 0;
-foreach ($table->rows($options) as $row) {
-    print('---');
-    foreach ($row as $column => $value) {
-        printf('%s: %s' . PHP_EOL, $column, $value);
+    $bigQuery = new BigQueryClient([
+      'projectId' => $projectId,
+    ]);
+    $dataset = $bigQuery->dataset($datasetId);
+    $table = $dataset->table($tableId);
+    $numRows = 0;
+    foreach ($table->rows($options) as $row) {
+        print('---');
+        foreach ($row as $column => $value) {
+            printf('%s: %s' . PHP_EOL, $column, $value);
+        }
+        $numRows++;
     }
-    $numRows++;
 }
 # [END bigquery_browse_table]
-return $numRows;
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

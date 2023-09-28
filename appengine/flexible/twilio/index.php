@@ -21,11 +21,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = require __DIR__ . '/app.php';
 
-$app['twilio.account_sid'] = getenv('TWILIO_ACCOUNT_SID');
-$app['twilio.auth_token']  = getenv('TWILIO_AUTH_TOKEN');
-$app['twilio.number'] = getenv('TWILIO_FROM_NUMBER');
-
 // Run the app!
 // use "gcloud app deploy" or run "php -S localhost:8000"
-$app['debug'] = true;
 $app->run();

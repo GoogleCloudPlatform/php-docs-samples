@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 
 namespace Google\Cloud\Samples\PubSub;
@@ -46,8 +46,12 @@ function set_topic_policy($projectId, $topicName, $userEmail)
     ];
     $topic->iam()->setPolicy($policy);
 
-    printf('User %s added to policy for %s' . PHP_EOL,
+    printf(
+        'User %s added to policy for %s' . PHP_EOL,
         $userEmail,
-        $topicName);
+        $topicName
+    );
 }
 # [END pubsub_set_topic_policy]
+require_once __DIR__ . '/../../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

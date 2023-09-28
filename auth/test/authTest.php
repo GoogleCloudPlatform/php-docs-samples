@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Auth;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,9 +25,8 @@ use PHPUnit\Framework\TestCase;
  */
 class authTest extends TestCase
 {
-    use TestTrait, ExecuteCommandTrait;
+    use TestTrait;
 
-    private static $commandFile = __DIR__ . '/../auth.php';
     private static $bucketName;
     private static $serviceAccountPath;
 
@@ -40,7 +38,7 @@ class authTest extends TestCase
 
     public function testAuthCloudImplicitCommand()
     {
-        $output = $this->runCommand('auth-cloud-implicit', [
+        $output = $this->runFunctionSnippet('auth_cloud_implicit', [
             'projectId' => self::$projectId,
         ]);
         $this->assertStringContainsString(self::$bucketName, $output);
@@ -48,7 +46,7 @@ class authTest extends TestCase
 
     public function testAuthCloudExplicitCommand()
     {
-        $output = $this->runCommand('auth-cloud-explicit', [
+        $output = $this->runFunctionSnippet('auth_cloud_explicit', [
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath,
         ]);
@@ -57,7 +55,7 @@ class authTest extends TestCase
 
     public function testAuthApiImplicitCommand()
     {
-        $output = $this->runCommand('auth-api-implicit', [
+        $output = $this->runFunctionSnippet('auth_api_implicit', [
             'projectId' => self::$projectId,
         ]);
         $this->assertStringContainsString(self::$bucketName, $output);
@@ -65,7 +63,7 @@ class authTest extends TestCase
 
     public function testAuthApiExplicitCommand()
     {
-        $output = $this->runCommand('auth-api-explicit', [
+        $output = $this->runFunctionSnippet('auth_api_explicit', [
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath,
         ]);
@@ -74,7 +72,7 @@ class authTest extends TestCase
 
     public function testAuthHttpImplicitCommand()
     {
-        $output = $this->runCommand('auth-http-implicit', [
+        $output = $this->runFunctionSnippet('auth_http_implicit', [
             'projectId' => self::$projectId,
         ]);
         $this->assertStringContainsString(self::$bucketName, $output);
@@ -82,7 +80,7 @@ class authTest extends TestCase
 
     public function testAuthHttpExplicitCommand()
     {
-        $output = $this->runCommand('auth-http-explicit', [
+        $output = $this->runFunctionSnippet('auth_http_explicit', [
             'projectId' => self::$projectId,
             'serviceAccountPath' => self::$serviceAccountPath
         ]);

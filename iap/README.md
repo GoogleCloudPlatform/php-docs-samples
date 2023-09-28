@@ -25,42 +25,29 @@ You can also learn more by reading the [Cloud IAP conceptual overview][iap-conce
 
 ## Samples
 
-To run the Cloud Identity Aware Proxy Samples:
+To run the IAP Samples, run any of the files in `src/` on the CLI:
 
-    $ php iap.php
-    Cloud Identity Aware Proxy
+```
+$ php src/make_iap_request.php
 
-    Usage:
-      command [options] [arguments]
+Usage: make_iap_request.php $url $clientId
 
-    Options:
-      -h, --help            Display this help message
-      -q, --quiet           Do not output any message
-      -V, --version         Display this application version
-          --ansi            Force ANSI output
-          --no-ansi         Disable ANSI output
-      -n, --no-interaction  Do not ask any interactive question
-      -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+  @param string $url The Identity-Aware Proxy-protected URL to fetch.
+  @param string $clientId The client ID used by Identity-Aware Proxy.
+```
 
-    Available commands:
-      request    Make a request to an IAP-protected resource using a service account.
-      validate   Validates the JWT in the X-Goog-Iap-Jwt-Assertion header of an IAP-protected resource.
+```
+$ php src/validate_jwt.php
 
-### Run Request
+Usage: validate_jwt.php $iapJwt $expectedAudience
 
-To run the Request sample:
-
-    $ php iap.php request [YOUR_CLOUD_IAP_URL] [YOUR_CLIENT_ID] [PATH_TO_YOUR_SERVICE_ACCOUNT]
-
-### Run Validate
-
-To run the Analyze Sentiment sample:
-
-    $ php iap.php validate [YOUR_IAP_JWT] [YOUR_PROJECT_NUMBER] [YOUR_PROJECT_ID]
+  @param string $iapJwt The contents of the X-Goog-IAP-JWT-Assertion header.
+  @param string $expectedAudience The expected audience of the JWT with the following formats:
+```
 
 [iap]: http://cloud.google.com/iap
 [iap-quickstart]: https://cloud.google.com/iap/docs/app-engine-quickstart
-[iap-app-engine]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/iap/app_engine_app
+[iap-app-engine]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/iap/app_engine_app
 [iap-enable]: https://cloud.google.com/iap/docs/app-engine-quickstart#enabling_iap
 [create-service-account]: https://console.cloud.google.com/iam-admin/serviceaccounts?_ga=2.249998854.-1228762175.1480648951
 [iap-manage-access]: https://cloud.google.com/iap/docs/managing-access

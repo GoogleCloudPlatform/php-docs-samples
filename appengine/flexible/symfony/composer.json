@@ -6,6 +6,6 @@
         "symfony/process": "^3.0",
         "symfony/yaml": "^3.0",
         "google/cloud-logging": "^1.9",
-        "paragonie/random_compat": " ^2.0"
+        "paragonie/random_compat": " ^9.0"
     }
 }

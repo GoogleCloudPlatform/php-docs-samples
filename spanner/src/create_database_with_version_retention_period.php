@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $retentionPeriod The data retention period for the database.
  */
-function create_database_with_version_retention_period($instanceId, $databaseId, $retentionPeriod)
+function create_database_with_version_retention_period(string $instanceId, string $databaseId, string $retentionPeriod): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -47,18 +47,18 @@ function create_database_with_version_retention_period($instanceId, $databaseId,
     }
 
     $operation = $instance->createDatabase($databaseId, ['statements' => [
-        "CREATE TABLE Singers (
+        'CREATE TABLE Singers (
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
             LastName     STRING(1024),
             SingerInfo   BYTES(MAX)
-        ) PRIMARY KEY (SingerId)",
-        "CREATE TABLE Albums (
+        ) PRIMARY KEY (SingerId)',
+        'CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,
             AlbumId      INT64 NOT NULL,
             AlbumTitle   STRING(MAX)
         ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE",
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
         "ALTER DATABASE `$databaseId` SET OPTIONS (
         version_retention_period = '$retentionPeriod')"
     ]]);
@@ -74,5 +74,6 @@ function create_database_with_version_retention_period($instanceId, $databaseId,
 }
 // [END spanner_create_database_with_version_retention_period]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -31,6 +31,7 @@ require_once __DIR__ . '/TestCasesTrait.php';
  *
  * To skip deployment of a new function, run with "GOOGLE_SKIP_DEPLOYMENT=true".
  * To skip deletion of the tested function, run with "GOOGLE_KEEP_DEPLOYMENT=true".
+ * @group deploy
  */
 class DeployTest extends TestCase
 {
@@ -65,13 +66,13 @@ class DeployTest extends TestCase
         // Assert headers.
         $header_names = array_keys($response->getHeaders());
         if ($containsHeader) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $containsHeader,
                 $header_names
             );
         }
         if ($notContainsHeader) {
-            $this->assertStringNotContainsString(
+            $this->assertNotContains(
                 $notContainsHeader,
                 $header_names
             );

@@ -17,69 +17,56 @@
 
 namespace Google\Cloud\Samples\PubSub\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
-use Silex\WebTestCase;
-use Symfony\Component\HttpKernel\Client;
+use Slim\Psr7\Factory\RequestFactory;
 
-class appTest extends WebTestCase
+class appTest extends TestCase
 {
     use TestTrait;
 
-    public function createApplication()
+    private static $app;
+
+    public static function setUpBeforeClass(): void
     {
         // pull the app and set parameters for testing
-        $app = require __DIR__ . '/../app.php';
+        self::$app = require __DIR__ . '/../app.php';
 
-        $app['session.test'] = true;
-        $app['debug'] = true;
-        $app['project_id'] = self::$projectId;
-        $app['topic'] = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
-        $app['subscription'] = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
-
-        // prevent HTML error exceptions
-        unset($app['exception_handler']);
-
-        return $app;
+        $container = self::$app->getContainer();
+        $container->set('project_id', self::$projectId);
+        $container->set('topic', self::requireEnv('GOOGLE_PUBSUB_TOPIC'));
+        $container->set('subscription', self::requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION'));
     }
 
     public function testInitialPage()
     {
-        // create the application
-        $client = $this->createClient();
-
         // make the request
-        $crawler = $client->request('GET', '/');
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = self::$app->handle($request);
 
         // test the response
-        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testFetchMessages()
     {
-        // create the application
-        $app = $this->createApplication();
-        $client = new Client($app);
-
         // make the request
-        $crawler = $client->request('GET', '/fetch_messages');
+        $request = (new RequestFactory)->createRequest('GET', '/fetch_messages');
+        $response = self::$app->handle($request);
 
         // test the response
-        $response = $client->getResponse();
-        $this->assertTrue($response->isOk());
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertTrue(is_array(json_decode($response->getContent())));
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue(is_array(json_decode($response->getBody())));
     }
 
     public function testSendMessage()
-    {   // create the application
-        $app = $this->createApplication();
-        $client = new Client($app);
-
+    {
         // make the request
-        $crawler = $client->request('POST', '/send_message', ['message' => 'foo']);
+        $request = (new RequestFactory)->createRequest('POST', '/send_message');
+        $request->getBody()->write(http_build_query(['message' => 'foo']));
+        $response = self::$app->handle($request);
 
         // test the response
-        $response = $client->getResponse();
         $this->assertEquals(204, $response->getStatusCode());
     }
 }

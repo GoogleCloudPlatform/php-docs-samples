@@ -14,65 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use Silex\WebTestCase;
+use PHPUnit\Framework\TestCase;
+use Google\Cloud\TestUtils\TestTrait;
+use Slim\Psr7\Factory\RequestFactory;
 
-class LocalTest extends WebTestCase
+class LocalTest extends TestCase
 {
-    public function setUp(): void
-    {
-        if (!getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Must set GOOGLE_PROJECT_ID');
-        }
-        if (!getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Must set GOOGLE_STORAGE_BUCKET');
-        }
-        parent::setUp();
-        $this->client = $this->createClient();
-    }
+    use TestTrait;
 
-    public function createApplication()
+    private static $app;
+
+    public static function setUpBeforeClass(): void
     {
+        self::requireEnv('GOOGLE_STORAGE_BUCKET');
+
         $app = require __DIR__ . '/../app.php';
 
-        // set some parameters for testing
-        $app['session.test'] = true;
-        $app['debug'] = true;
-
-        // prevent HTML error exceptions
-        unset($app['exception_handler']);
-
         // the bucket name doesn't matter because we mock the stream wrapper
-        $app['project_id'] = getenv('GOOGLE_PROJECT_ID');
-        $app['bucket_name'] = getenv('GOOGLE_STORAGE_BUCKET');
-        $app['object_name'] = 'appengine/hello_flex.txt';
+        $container = $app->getContainer();
+        $container->set('project_id', getenv('GOOGLE_PROJECT_ID'));
+        $container->set('bucket_name', getenv('GOOGLE_STORAGE_BUCKET'));
+        $container->set('object_name', 'appengine/hello_flex.txt');
 
-        return $app;
+        self::$app = $app;
     }
 
     public function testHome()
     {
-        $client = $this->createClient();
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = self::$app->handle($request);
 
-        $crawler = $client->request('GET', '/');
-
-        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testWrite()
     {
-        $client = $this->createClient();
-
         $time = date('Y-m-d H:i:s');
-        $crawler = $client->request('POST', '/write', [
+        $request = (new RequestFactory)->createRequest('POST', '/write');
+        $request->getBody()->write(http_build_query([
             'content' => sprintf('doot doot (%s)', $time),
-        ]);
+        ]));
 
-        $response = $client->getResponse();
+        $response = self::$app->handle($request);
+
         $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/', $response->getHeaderLine('Location'));
 
-        $crawler = $client->followRedirect();
-        $response = $client->getResponse();
+        $request = (new RequestFactory)->createRequest('GET', '/');
+        $response = self::$app->handle($request);
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString($time, $response->getContent());
+        $this->assertStringContainsString($time, (string) $response->getBody());
     }
 }

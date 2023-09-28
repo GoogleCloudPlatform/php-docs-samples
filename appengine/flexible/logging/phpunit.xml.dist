@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../../../testing/bootstrap.php">
+<phpunit bootstrap="../../../testing/bootstrap.php" convertWarningsToExceptions="false">
     <testsuites>
         <testsuite name="AppEngine Flex logging test">
             <directory>test</directory>

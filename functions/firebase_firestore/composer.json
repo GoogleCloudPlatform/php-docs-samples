@@ -1,12 +1,12 @@
 {
     "require": {
-        "google/cloud-functions-framework": "^0.7.1",
-        "google/cloud-firestore": "^1.18"
+        "google/cloud-functions-framework": "^1.0.0",
+        "google/cloud-firestore": "^1.25"
     },
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseFirestore php -S localhost:${PORT:-8080} vendor/bin/router.php"
+            "FUNCTION_SIGNATURE_TYPE=cloudevent FUNCTION_TARGET=firebaseFirestore php -S localhost:${PORT:-8080} vendor/google/cloud-functions-framework/router.php"
         ]
     },
     "require-dev": {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2019 Google LLC.
  *
@@ -19,78 +18,84 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
-// Include Google Cloud dependencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 4) {
-    return printf("Usage: php %s PROJECT_ID INSTANCE_ID CLUSTER_ID [LOCATION_ID]" . PHP_EOL, __FILE__);
-}
-list($_, $project_id, $instance_id, $cluster_id) = $argv;
-$location_id = isset($argv[4]) ? $argv[4] : 'us-east1-b';
+namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_prod_instance]
-
 use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\Cloud\Bigtable\Admin\V2\Instance;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
 use Google\ApiCore\ApiException;
+use Exception;
 
-/** Uncomment and populate these variables in your code */
-// $project_id = 'The Google project ID';
-// $instance_id = 'The Bigtable instance ID';
-// $cluster_id = 'The Bigtable table ID';
-// $location_id = 'The Bigtable region ID';
+/**
+ * Create a production Bigtable instance
+ *
+ * @param string $projectId The Google Cloud project ID
+ * @param string $instanceId The ID of the Bigtable instance to be generated
+ * @param string $clusterId The ID of the cluster to be generated
+ * @param string $locationId The Bigtable region ID where you want your instance to reside
+ */
+function create_production_instance(
+    string $projectId,
+    string $instanceId,
+    string $clusterId,
+    string $locationId = 'us-east1-b'
+): void {
+    $instanceAdminClient = new BigtableInstanceAdminClient();
 
-$instanceAdminClient = new BigtableInstanceAdminClient();
+    $projectName = $instanceAdminClient->projectName($projectId);
+    $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
-$projectName = $instanceAdminClient->projectName($project_id);
-$instanceName = $instanceAdminClient->instanceName($project_id, $instance_id);
+    $serveNodes = 3;
+    $storageType = StorageType::SSD;
+    $production = InstanceType::PRODUCTION;
+    $labels = ['prod-label' => 'prod-label'];
 
-$serve_nodes = 3;
-$storage_type = StorageType::SSD;
-$production = InstanceType::PRODUCTION;
-$labels = ['prod-label' => 'prod-label'];
+    $instance = new Instance();
+    $instance->setDisplayName($instanceId);
 
-$instance = new Instance();
-$instance->setDisplayName($instance_id);
+    $instance->setLabels($labels);
+    $instance->setType($production);
 
-$instance->setLabels($labels);
-$instance->setType($production);
-
-$cluster = new Cluster();
-$cluster->setDefaultStorageType($storage_type);
-$locationName = $instanceAdminClient->locationName($project_id, $location_id);
-$cluster->setLocation($locationName);
-$cluster->setServeNodes($serve_nodes);
-$clusters = [
-    $cluster_id => $cluster
-];
-try {
-    $instanceAdminClient->getInstance($instanceName);
-    printf("Instance %s already exists." . PHP_EOL, $instance_id);
-    throw new Exception(sprintf("Instance %s already exists." . PHP_EOL, $instance_id));
-} catch (ApiException $e) {
-    if ($e->getStatus() === 'NOT_FOUND') {
-        printf("Creating an Instance: %s" . PHP_EOL, $instance_id);
-        $operationResponse = $instanceAdminClient->createInstance(
-            $projectName,
-            $instance_id,
-            $instance,
-            $clusters
-        );
-        $operationResponse->pollUntilComplete();
-        if (!$operationResponse->operationSucceeded()) {
-            print('Error: ' . $operationResponse->getError()->getMessage());
+    $cluster = new Cluster();
+    $cluster->setDefaultStorageType($storageType);
+    $locationName = $instanceAdminClient->locationName($projectId, $locationId);
+    $cluster->setLocation($locationName);
+    $cluster->setServeNodes($serveNodes);
+    $clusters = [
+        $clusterId => $cluster
+    ];
+    try {
+        $instanceAdminClient->getInstance($instanceName);
+        printf('Instance %s already exists.' . PHP_EOL, $instanceId);
+        throw new Exception(sprintf('Instance %s already exists.' . PHP_EOL, $instanceId));
+    } catch (ApiException $e) {
+        if ($e->getStatus() === 'NOT_FOUND') {
+            printf('Creating an Instance: %s' . PHP_EOL, $instanceId);
+            $operationResponse = $instanceAdminClient->createInstance(
+                $projectName,
+                $instanceId,
+                $instance,
+                $clusters
+            );
+            $operationResponse->pollUntilComplete();
+            if (!$operationResponse->operationSucceeded()) {
+                print('Error: ' . $operationResponse->getError()->getMessage());
+            } else {
+                printf('Instance %s created.', $instanceId);
+            }
         } else {
-            printf("Instance %s created.", $instance_id);
+            throw $e;
         }
-    } else {
-        throw $e;
     }
 }
 // [END bigtable_create_prod_instance]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
