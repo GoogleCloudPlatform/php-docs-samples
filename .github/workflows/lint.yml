@@ -14,10 +14,8 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
-
     - name: Run Script
       run: testing/run_cs_check.sh
-
   staticanalysis:
     runs-on: ubuntu-latest
     steps:
@@ -25,6 +23,7 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.ref }}
         fetch-depth: 5
+    - run:  git branch --track main origin/main
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -36,7 +35,6 @@ jobs:
     - name: Run Script
       run: |
         composer install -d testing/
-        git fetch --no-tags --prune --depth=5 origin main
         bash testing/run_staticanalysis_check.sh
       env:
         PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}

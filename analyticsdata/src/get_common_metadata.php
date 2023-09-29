@@ -56,6 +56,7 @@ function get_common_metadata(): void
         $response = $client->getMetadata($request);
     } catch (ApiException $ex) {
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+        return;
     }
 
     print('Dimensions and metrics available for all Google Analytics 4 properties:');

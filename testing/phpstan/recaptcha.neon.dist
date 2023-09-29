@@ -1,6 +1,0 @@
-parameters:
-    level: 5
-    treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-    - '#expects Google\\Protobuf\\Internal\\RepeatedField&#'
-

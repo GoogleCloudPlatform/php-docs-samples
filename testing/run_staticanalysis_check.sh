@@ -29,6 +29,7 @@ SKIP_DIRS=(
 TMP_REPORT_DIR=$(mktemp -d)
 SUCCEEDED_FILE=${TMP_REPORT_DIR}/succeeded
 FAILED_FILE=${TMP_REPORT_DIR}/failed
+SKIPPED_FILE=${TMP_REPORT_DIR}/skipped
 
 # Determine all files changed on this branch
 # (will be empty if running from "main").
@@ -55,11 +56,13 @@ do
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$dir <<< "$FILES_CHANGED" ; then
             echo "Skipping tests in $dir (unchanged)"
+            echo "$dir: skipped" >> "${SKIPPED_FILE}"
             continue
         fi
     fi
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
         printf "Skipping $dir (explicitly flagged to be skipped)\n\n"
+        echo "$dir: skipped" >> "${SKIPPED_FILE}"
         continue
     fi
     composer update --working-dir=$dir --ignore-platform-reqs -q
@@ -84,13 +87,20 @@ set +x
 if [ -f "${SUCCEEDED_FILE}" ]; then
     echo "--------- Succeeded -----------"
     cat "${SUCCEEDED_FILE}"
-    echo "-------------------------------------"
+    echo "-------------------------------"
+fi
+
+if [ -f "${SKIPPED_FILE}" ]; then
+    echo "--------- SKIPPED --------------"
+    cat "${SKIPPED_FILE}"
+    echo "--------------------------------"
+    # Report any skips
 fi
 
 if [ -f "${FAILED_FILE}" ]; then
     echo "--------- Failed --------------"
     cat "${FAILED_FILE}"
-    echo "-------------------------------------"
+    echo "-------------------------------"
     # Report any failure
     exit 1
 fi
