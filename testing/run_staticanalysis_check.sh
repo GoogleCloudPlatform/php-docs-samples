@@ -35,7 +35,7 @@ SKIPPED_FILE=${TMP_REPORT_DIR}/skipped
 # (will be empty if running from "main").
 FILES_CHANGED=$(git diff --name-only HEAD origin/main)
 
-# If the file RUN_ALL_TESTS is modified, or if we were not triggered from a Pull
+# If the label `kokoro:run-all` is added, or if we were not triggered from a Pull
 # Request, run the whole test suite.
 if [ -z "$PULL_REQUEST_NUMBER" ]; then
     RUN_ALL_TESTS=1
