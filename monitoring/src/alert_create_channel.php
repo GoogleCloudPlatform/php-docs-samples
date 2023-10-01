@@ -30,7 +30,7 @@ use Google\Cloud\Monitoring\V3\NotificationChannel;
 /**
  * @param string $projectId Your project ID
  */
-function alert_create_channel($projectId)
+function alert_create_channel(string $projectId): void
 {
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,

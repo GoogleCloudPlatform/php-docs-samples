@@ -48,7 +48,7 @@ use Google\Cloud\Dlp\V2\CryptoKey;
  * @param string $kmsKeyName        The name of the Cloud KMS key used to encrypt ('wrap') the AES-256 key.
  * Example: key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'.
  * @param string $infoTypeName      The Info type name to be inspect.
- * @param string $surrogateType     The name of the surrogate custom info type to use.
+ * @param string $surrogateTypeName The name of the surrogate custom info type to use.
  * Only necessary if you want to reverse the deidentification process. Can be essentially any arbitrary
  * string, as long as it doesn't appear in your dataset otherwise.
  * @param string $wrappedAesKey     The encrypted ('wrapped') AES-256 key to use.

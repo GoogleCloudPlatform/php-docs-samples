@@ -21,19 +21,23 @@ jobs:
   staticanalysis:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        fetch-depth: 5
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
-
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        state: open
     - name: Run Script
       run: |
-        composer global require phpstan/phpstan
-        for dir in $(find * -type d -name src -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
-        do
-          echo -e "\n RUNNING for => $dir\n"
-          composer install --working-dir=$dir --ignore-platform-reqs
-          echo "<?php require_once 'testing/sample_helpers.php';require_once '$dir/vendor/autoload.php';" > autoload.php
-          ~/.composer/vendor/bin/phpstan analyse $dir/src --autoload-file=autoload.php
-        done
+        composer install -d testing/
+        git fetch --no-tags --prune --depth=5 origin main
+        bash testing/run_staticanalysis_check.sh
+      env:
+        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
+

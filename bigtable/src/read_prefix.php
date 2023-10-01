@@ -67,7 +67,7 @@ function read_prefix(
 // [END bigtable_reads_prefix]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {
