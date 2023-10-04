@@ -17,10 +17,6 @@ if [ "${BASH_DEBUG}" = "true" ]; then
     set -x
 fi
 
-if [ "${TEST_DIRECTORIES}" = "" ]; then
-  TEST_DIRECTORIES="*"
-fi
-
 SKIP_DIRS=(
   dialogflow
   iot
@@ -29,11 +25,15 @@ SKIP_DIRS=(
 TMP_REPORT_DIR=$(mktemp -d)
 SUCCEEDED_FILE=${TMP_REPORT_DIR}/succeeded
 FAILED_FILE=${TMP_REPORT_DIR}/failed
-SKIPPED_FILE=${TMP_REPORT_DIR}/skipped
 
-# Determine all files changed on this branch
-# (will be empty if running from "main").
-FILES_CHANGED=$(git diff --name-only HEAD origin/main)
+if [ "${TEST_DIRECTORIES}" = "" ]; then
+  TEST_DIRECTORIES="*"
+fi
+
+if [ "${FILES_CHANGED}" = "" ]; then
+  FILES_CHANGED=""
+fi
+FILES_CHANGED=$(echo $FILES_CHANGED | tr " " "\n")
 
 # If the label `kokoro:run-all` is added, or if we were not triggered from a Pull
 # Request, run the whole test suite.
@@ -56,13 +56,11 @@ do
     if [ "$RUN_ALL_TESTS" -ne "1" ]; then
         if ! grep -q ^$dir <<< "$FILES_CHANGED" ; then
             echo "Skipping tests in $dir (unchanged)"
-            echo "$dir: skipped" >> "${SKIPPED_FILE}"
             continue
         fi
     fi
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
         printf "Skipping $dir (explicitly flagged to be skipped)\n\n"
-        echo "$dir: skipped" >> "${SKIPPED_FILE}"
         continue
     fi
     composer update --working-dir=$dir --ignore-platform-reqs -q
@@ -88,13 +86,6 @@ if [ -f "${SUCCEEDED_FILE}" ]; then
     echo "--------- Succeeded -----------"
     cat "${SUCCEEDED_FILE}"
     echo "-------------------------------"
-fi
-
-if [ -f "${SKIPPED_FILE}" ]; then
-    echo "--------- SKIPPED --------------"
-    cat "${SKIPPED_FILE}"
-    echo "--------------------------------"
-    # Report any skips
 fi
 
 if [ -f "${FAILED_FILE}" ]; then
