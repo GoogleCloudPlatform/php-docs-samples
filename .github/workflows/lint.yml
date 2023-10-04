@@ -22,22 +22,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-        fetch-depth: 5
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
-    - uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-      with:
-        state: open
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v39
     - name: Run Script
       run: |
         composer install -d testing/
         git fetch --no-tags --prune --depth=5 origin main
         bash testing/run_staticanalysis_check.sh
       env:
-        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
-
+        TEST_DIRECTORIES={{ steps.changed-files.outputs.dir_names }}
