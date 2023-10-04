@@ -33,7 +33,7 @@ function create_key_rotation_schedule(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-key-with-rotation-schedule'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

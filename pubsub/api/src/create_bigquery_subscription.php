@@ -33,7 +33,7 @@ use Google\Cloud\PubSub\V1\BigQueryConfig;
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $subscriptionName  The Pub/Sub subscription name.
- * @param string $tableName  The BigQuery table to which to write.
+ * @param string $table      The BigQuery table to which to write.
  */
 function create_bigquery_subscription($projectId, $topicName, $subscriptionName, $table)
 {

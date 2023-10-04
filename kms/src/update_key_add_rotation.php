@@ -31,7 +31,7 @@ function update_key_add_rotation(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

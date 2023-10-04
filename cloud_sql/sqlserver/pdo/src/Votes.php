@@ -72,7 +72,7 @@ class Votes
     /**
      * Returns a list of the last five votes
      *
-     * @return array
+     * @return array<mixed>
      */
     public function listVotes(): array
     {
@@ -86,7 +86,7 @@ class Votes
      * Get the number of votes cast for a given value.
      *
      * @param string $value
-     * @param int
+     * @return int
      */
     public function getCountByValue(string $value): int
     {
@@ -102,7 +102,7 @@ class Votes
      * Insert a new vote into the database
      *
      * @param string $value The value to vote for.
-     * @return boolean
+     * @return bool
      */
     public function insertVote(string $value): bool
     {
