@@ -34,6 +34,7 @@ fi
 if [ "${FILES_CHANGED}" = "" ]; then
   FILES_CHANGED=""
 fi
+FILES_CHANGED=$(echo $FILES_CHANGED | tr " " "\n")
 
 # If the label `kokoro:run-all` is added, or if we were not triggered from a Pull
 # Request, run the whole test suite.
@@ -49,9 +50,6 @@ else
         RUN_ALL_TESTS=0
     fi
 fi
-
-echo "FILES CHANGED: "
-echo $FILES_CHANGED
 
 for dir in $(find $TEST_DIRECTORIES -type d -name src -not -path '/*'  -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
 do
