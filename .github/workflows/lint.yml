@@ -35,4 +35,4 @@ jobs:
         git fetch --no-tags --prune --depth=5 origin main
         bash testing/run_staticanalysis_check.sh
       env:
-        TEST_DIRECTORIES={{ steps.changed-files.outputs.dir_names }}
+        TEST_DIRECTORIES: ${{ steps.changed-files.outputs.dir_names }}
