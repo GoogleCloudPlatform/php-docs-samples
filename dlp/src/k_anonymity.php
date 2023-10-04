@@ -24,7 +24,7 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
-# [START dlp_k_anomymity]
+# [START dlp_k_anonymity]
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\Dlp\V2\BigQueryTable;
@@ -172,7 +172,7 @@ function k_anonymity(
             printf('Unexpected job state. Most likely, the job is either running or has not yet started.');
     }
 }
-# [END dlp_k_anomymity]
+# [END dlp_k_anonymity]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
