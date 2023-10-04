@@ -50,6 +50,9 @@ else
     fi
 fi
 
+echo "FILES CHANGED: "
+echo $FILES_CHANGED
+
 for dir in $(find $TEST_DIRECTORIES -type d -name src -not -path '/*'  -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
 do
     # Only run tests for samples that have changed.
