@@ -31,9 +31,35 @@ if [ "${TEST_DIRECTORIES}" = "" ]; then
   TEST_DIRECTORIES="*"
 fi
 
+if [ "${FILES_CHANGED}" = "" ]; then
+  FILES_CHANGED=""
+fi
+
+# If the label `kokoro:run-all` is added, or if we were not triggered from a Pull
+# Request, run the whole test suite.
+if [ -z "$PULL_REQUEST_NUMBER" ]; then
+    RUN_ALL_TESTS=1
+else
+    labels=$(curl "https://api.github.com/repos/GoogleCloudPlatform/php-docs-samples/issues/$PULL_REQUEST_NUMBER/labels")
+
+    # Check to see if the repo includes the "kokoro:run-all" label
+    if  grep -q "kokoro:run-all" <<< $labels; then
+        RUN_ALL_TESTS=1
+    else
+        RUN_ALL_TESTS=0
+    fi
+fi
+
 for dir in $(find $TEST_DIRECTORIES -type d -name src -not -path '/*'  -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
 do
     # Only run tests for samples that have changed.
+    if [ "$RUN_ALL_TESTS" -ne "1" ]; then
+        if ! grep -q ^$dir <<< "$FILES_CHANGED" ; then
+            echo "Skipping tests in $dir (unchanged)"
+            echo "$dir: skipped" >> "${SKIPPED_FILE}"
+            continue
+        fi
+    fi
     if [[ " ${SKIP_DIRS[@]} " =~ " ${dir} " ]]; then
         printf "Skipping $dir (explicitly flagged to be skipped)\n\n"
         echo "$dir: skipped" >> "${SKIPPED_FILE}"
