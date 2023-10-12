@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
@@ -30,6 +31,7 @@ use PHPUnitRetry\RetryTrait;
  */
 class assetTest extends TestCase
 {
+    use EventuallyConsistentTestTrait;
     use RetryTrait;
     use TestTrait;
 
@@ -53,36 +55,50 @@ class assetTest extends TestCase
     {
         $fileName = 'my-assets.txt';
         $dumpFilePath = 'gs://' . self::$bucketName . '/' . $fileName;
-        $output = $this->runFunctionSnippet('export_assets', [
-            'projectId' => self::$projectId,
-            'dumpFilePath' => $dumpFilePath,
-        ]);
-        $assetFile = self::$bucket->object($fileName);
-        $this->assertEquals($assetFile->name(), $fileName);
-        $assetFile->delete();
+
+        $this->runEventuallyConsistentTest(
+            function () use ($fileName, $dumpFilePath) {
+                $output = $this->runFunctionSnippet('export_assets', [
+                    'projectId' => self::$projectId,
+                    'dumpFilePath' => $dumpFilePath,
+                ]);
+                $assetFile = self::$bucket->object($fileName);
+                $this->assertEquals($assetFile->name(), $fileName);
+                $assetFile->delete();
+            }
+        );
     }
 
     public function testListAssets()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
-        $output = $this->runFunctionSnippet('list_assets', [
-            'projectId' => self::$projectId,
-            'assetTypes' => ['storage.googleapis.com/Bucket'],
-            'pageSize' => 1000,
-        ]);
 
-        $this->assertStringContainsString($assetName, $output);
+        $this->runEventuallyConsistentTest(
+            function () use ($assetName) {
+                $output = $this->runFunctionSnippet('list_assets', [
+                    'projectId' => self::$projectId,
+                    'assetTypes' => ['storage.googleapis.com/Bucket'],
+                    'pageSize' => 1000,
+                ]);
+
+                $this->assertStringContainsString($assetName, $output);
+            }
+        );
     }
 
     public function testBatchGetAssetsHistory()
     {
         $assetName = '//storage.googleapis.com/' . self::$bucketName;
 
-        $output = $this->runFunctionSnippet('batch_get_assets_history', [
-            'projectId' => self::$projectId,
-            'assetNames' => [$assetName],
-        ]);
+        $this->runEventuallyConsistentTest(
+            function () use ($assetName) {
+                $output = $this->runFunctionSnippet('batch_get_assets_history', [
+                    'projectId' => self::$projectId,
+                    'assetNames' => [$assetName],
+                ]);
 
-        $this->assertStringContainsString($assetName, $output);
+                $this->assertStringContainsString($assetName, $output);
+            }
+        );
     }
 }

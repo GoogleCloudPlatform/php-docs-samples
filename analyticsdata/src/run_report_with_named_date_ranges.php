@@ -37,7 +37,7 @@ use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
+ * @param string $propertyId Your GA-4 Property ID
  * Runs a report using named date ranges.
  */
 function run_report_with_named_date_ranges(string $propertyId)
