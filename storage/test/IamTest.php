@@ -165,7 +165,7 @@ Members:(.*)
   %s
 
 /', self::$user);
-        $this->assertRegexp($binding, $output);
+        $this->assertMatchesRegularExpression($binding, $output);
 
         $bindingWithCondition = sprintf(
             'Role: roles/storage.objectViewer
