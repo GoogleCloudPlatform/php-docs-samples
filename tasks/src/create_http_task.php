@@ -27,7 +27,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if ($argc < 5 || $argc > 6) {
     return printf("Usage: php %s PROJECT_ID LOCATION_ID QUEUE_ID URL [PAYLOAD]\n", __FILE__);
 }
-list($_, $projectId, $locationId, $queueId, $url, $payload) = $argv;
+list($_, $projectId, $locationId, $queueId, $url) = $argv;
+$payload = $argv[5] ?? '';
 
 # [START cloud_tasks_create_http_task]
 use Google\Cloud\Tasks\V2\CloudTasksClient;
@@ -53,7 +54,7 @@ $httpRequest->setUrl($url);
 // POST is the default HTTP method, but any HTTP method can be used.
 $httpRequest->setHttpMethod(HttpMethod::POST);
 // Setting a body value is only compatible with HTTP POST and PUT requests.
-if (isset($payload)) {
+if (!empty($payload)) {
     $httpRequest->setBody($payload);
 }
 

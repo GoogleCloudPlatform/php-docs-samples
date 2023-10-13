@@ -32,7 +32,7 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * @param string $projectId The project Id of your Google Cloud Project.
  * @param string $datasetId The BigQuery dataset ID.
  * @param string $tableId The BigQuery table ID.
- * @param array $data Json encoded data For eg,
+ * @param string $data Json encoded data For eg,
  *    $data = json_encode([
  *       "field1" => "value1",
  *       "field2" => "value2",

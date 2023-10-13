@@ -1,0 +1,5 @@
+parameters:
+    level: 5
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+    - '#Google\\Cloud\\Compute\\V1\\Gapic\\ProjectsGapicClient::setUsageExportBucket\(\) expects Google\\Cloud\\Compute\\V1\\UsageExportLocation#'
