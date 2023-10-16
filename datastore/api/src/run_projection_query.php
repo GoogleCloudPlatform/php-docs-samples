@@ -43,6 +43,9 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
         $priorities[] = $task['priority'];
         $percentCompletes[] = $task['percent_complete'];
     }
+    // [END datastore_run_query_projection]
+    return array($priorities, $percentCompletes);
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

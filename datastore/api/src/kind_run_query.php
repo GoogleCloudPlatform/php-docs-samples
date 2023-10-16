@@ -25,9 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_namespace_run_query]
-    return $namespaces;
-}
 /**
  * Create and run a query to list all kinds in Datastore.
  *
@@ -46,6 +43,9 @@ function kind_run_query(DatastoreClient $datastore)
     foreach ($result as $kind) {
         $kinds[] = $kind->key()->pathEnd()['name'];
     }
+    // [END datastore_kind_run_query]
+    return $kinds;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

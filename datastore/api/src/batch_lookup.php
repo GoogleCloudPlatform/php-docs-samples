@@ -41,6 +41,9 @@ function batch_lookup(DatastoreClient $datastore, array $keys)
     } else {
         // No entities found.
     }
+    // [END datastore_batch_lookup]
+    return $result;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

@@ -25,9 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_kind_run_query]
-    return $kinds;
-}
 /**
  * Create and run a property query.
  *
@@ -49,6 +46,9 @@ function property_run_query(DatastoreClient $datastore)
         $propertyName = $entity->key()->path()[1]['name'];
         $properties[] = "$kind.$propertyName";
     }
+    // [END datastore_property_run_query]
+    return $properties;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

@@ -25,13 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    $fromAccount = $result['found'][0];
-    $toAccount = $result['found'][1];
-    $fromAccount['balance'] -= $amount;
-    $toAccount['balance'] += $amount;
-    $transaction->updateBatch([$fromAccount, $toAccount]);
-    $transaction->commit();
-}
 // [END datastore_transactional_update]
 /**
  * Call a function and retry upon conflicts for several times.
@@ -54,6 +47,11 @@ function transactional_retry(
             // if $i >= $retries, the failure is final
             continue;
         }
+        // Succeeded!
+        break;
+    }
+    // [END datastore_transactional_retry]
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

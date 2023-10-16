@@ -25,11 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    return array(
-        'nextPageCursor' => $nextPageCursor,
-        'entities' => $entities
-    );
-}
 // [END datastore_cursor_paging]
 /**
  * Create a query with inequality range filters on the same property.

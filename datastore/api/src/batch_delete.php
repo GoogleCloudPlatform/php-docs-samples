@@ -25,9 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_batch_lookup]
-    return $result;
-}
 /**
  * Delete multiple Datastore entities with the given keys.
  *

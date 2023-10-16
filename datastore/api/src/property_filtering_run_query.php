@@ -25,10 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // Example values of $properties: ['description' => ['STRING']]
-    // [END datastore_property_by_kind_run_query]
-    return $properties;
-}
 /**
  * Create and run a property query with property filtering.
  *
@@ -53,6 +49,9 @@ function property_filtering_run_query(DatastoreClient $datastore)
         $propertyName = $entity->key()->path()[1]['name'];
         $properties[] = "$kind.$propertyName";
     }
+    // [END datastore_property_filtering_run_query]
+    return $properties;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

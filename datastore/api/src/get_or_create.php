@@ -25,11 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-        // Succeeded!
-        break;
-    }
-    // [END datastore_transactional_retry]
-}
 /**
  * Insert an entity only if there is no entity with the same key.
  *
@@ -45,6 +40,8 @@ function get_or_create(DatastoreClient $datastore, EntityInterface $task)
         $transaction->insert($task);
         $transaction->commit();
     }
+    // [END datastore_transactional_get_or_create]
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

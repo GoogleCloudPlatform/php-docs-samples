@@ -47,6 +47,13 @@ function transfer_funds(
     if (count($result['found']) != 2) {
         $transaction->rollback();
     }
+    $fromAccount = $result['found'][0];
+    $toAccount = $result['found'][1];
+    $fromAccount['balance'] -= $amount;
+    $toAccount['balance'] += $amount;
+    $transaction->updateBatch([$fromAccount, $toAccount]);
+    $transaction->commit();
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

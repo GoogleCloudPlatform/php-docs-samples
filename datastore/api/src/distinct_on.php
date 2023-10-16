@@ -25,9 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_run_query_projection]
-    return array($priorities, $percentCompletes);
-}
 /**
  * Create a query with distinctOn.
  *

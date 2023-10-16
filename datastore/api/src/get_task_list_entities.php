@@ -25,8 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_transactional_get_or_create]
-}
 /**
  * Run a query with an ancestor inside a transaction.
  *
@@ -47,6 +45,9 @@ function get_task_list_entities(DatastoreClient $datastore)
     foreach ($result as $task) {
         $taskListEntities[] = $task;
     }
+    // [END datastore_transactional_single_entity_group_read_only]
+    return $taskListEntities;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

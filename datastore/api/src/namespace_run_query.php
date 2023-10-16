@@ -47,6 +47,9 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end)
     foreach ($result as $namespace) {
         $namespaces[] = $namespace->key()->pathEnd()['name'];
     }
+    // [END datastore_namespace_run_query]
+    return $namespaces;
+}
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

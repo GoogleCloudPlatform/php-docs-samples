@@ -25,9 +25,6 @@ use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
-    // [END datastore_transactional_single_entity_group_read_only]
-    return $taskListEntities;
-}
 /**
  * Create and run a query with readConsistency option.
  *
