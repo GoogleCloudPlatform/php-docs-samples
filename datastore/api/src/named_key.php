@@ -36,7 +36,7 @@ function named_key(DatastoreClient $datastore)
     // [START datastore_named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
     // [END datastore_named_key]
-    return $taskKey;
+    print($taskKey);
 }
 
 // The following 2 lines are only needed to run the samples

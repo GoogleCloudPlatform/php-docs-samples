@@ -29,15 +29,18 @@ use Google\Cloud\Datastore\Query\Query;
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
+ * @param Key $taskKey
  * @return EntityInterface|null
  */
-function lookup(DatastoreClient $datastore)
+function lookup(DatastoreClient $datastore, Key $key = null)
 {
+    if(!isset($key))
+        $key = $datastore->key('Task', 'sampleTask');
     // [START datastore_lookup]
-    $key = $datastore->key('Task', 'sampleTask');
+    // $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
     // [END datastore_lookup]
-    printf("Found Entity with key '%s' & description '%s'", $task->key()->pathEnd()['name'], $task['description']);
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples

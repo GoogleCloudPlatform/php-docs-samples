@@ -79,13 +79,11 @@ class ConceptsTest extends TestCase
 
     public function testBasicEntity()
     {
-        $output = $this->runFunctionSnippet('basic_entity', [
-            self::$datastore
-        ]);
-        $this->assertStringContainsString(
-            sprintf("Basic Entity with description '%s'", 'Learn Cloud Datastore'),
-            $output
-        );
+        $output = $this->runFunctionSnippet('basic_entity', [self::$datastore]);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
     }
 
     public function testUpsert()
@@ -93,10 +91,12 @@ class ConceptsTest extends TestCase
         $output = $this->runFunctionSnippet('upsert', [
             self::$datastore
         ]);
-        $this->assertStringContainsString(
-          sprintf("Upserted Entity with key '%s' & description '%s'", 'sampleTask', 'Learn Cloud Datastore'),
-          $output
-      );
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => sampleTask', $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
     }
 
     public function testInsert()
@@ -104,47 +104,49 @@ class ConceptsTest extends TestCase
         $output = $this->runFunctionSnippet('insert', [
             self::$datastore
         ]);
-        $this->assertStringContainsString(
-            sprintf("Added Entity with description '%s'", 'Learn Cloud Datastore'),
-            $output
-        );
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
     }
 
     public function testLookup()
     {
         $this->runFunctionSnippet('upsert', [self::$datastore]);
-        $output = $this->runFunctionSnippet('lookup', [
-          self::$datastore
-        ]);
-        $this->assertStringContainsString(
-          sprintf("Found Entity with key '%s' & description '%s'", 'sampleTask', 'Learn Cloud Datastore'),
-          $output
-        );
+
+        $output = $this->runFunctionSnippet('lookup', [self::$datastore]);
+
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => sampleTask', $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
     }
 
     public function testUpdate()
     {
-        self::$keys[] = self::$datastore->key('Task', 'sampleTask');
-        upsert(self::$datastore);
-        update(self::$datastore);
-        $task = lookup(self::$datastore);
-        $this->assertEquals('Personal', $task['category']);
-        $this->assertEquals(false, $task['done']);
-        $this->assertEquals(5, $task['priority']);
-        $this->assertEquals('Learn Cloud Datastore', $task['description']);
-        $this->assertEquals('sampleTask', $task->key()->pathEnd()['name']);
+        $output = $this->runFunctionSnippet('upsert', [self::$datastore]);
+        $this->assertStringContainsString('[priority] => 4', $output);
+
+        $output = $this->runFunctionSnippet('update', [self::$datastore]);
+
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => sampleTask', $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 5', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
     }
 
     public function testDelete()
     {
-        $taskKey = self::$datastore->key('Task', generateRandomString());
-        self::$keys[] = $taskKey;
-        $task = self::$datastore->entity($taskKey);
-        $task['category'] = 'Personal';
-        $task['done'] = false;
-        $task['priority'] = 4;
-        $task['description'] = 'Learn Cloud Datastore';
-        delete(self::$datastore, $taskKey);
+        $taskKey = self::$datastore->key('Task', 'sampleTask');
+        $output = $this->runFunctionSnippet('upsert', [self::$datastore]);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
+
+        $this->runFunctionSnippet('delete', [self::$datastore, $taskKey]);
         $task = self::$datastore->lookup($taskKey);
         $this->assertNull($task);
     }
@@ -168,21 +170,26 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key1;
         self::$keys[] = $key2;
 
-        batch_upsert(self::$datastore, [$task1, $task2]);
-        $task1 = self::$datastore->lookup($key1);
-        $task2 = self::$datastore->lookup($key2);
+        $this->runFunctionSnippet('batch_upsert', [
+            self::$datastore, [$task1, $task2]
+        ]);
 
-        $this->assertEquals('Personal', $task1['category']);
-        $this->assertEquals(false, $task1['done']);
-        $this->assertEquals(4, $task1['priority']);
-        $this->assertEquals('Learn Cloud Datastore', $task1['description']);
-        $this->assertEquals($path1, $task1->key()->pathEnd()['name']);
-
-        $this->assertEquals('Work', $task2['category']);
-        $this->assertEquals(true, $task2['done']);
-        $this->assertEquals(0, $task2['priority']);
-        $this->assertEquals('Finish writing sample', $task2['description']);
-        $this->assertEquals($path2, $task2->key()->pathEnd()['name']);
+        print($path1);
+        $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key1]);        
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => '.$path1, $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => Learn Cloud Datastore', $output);
+        
+        $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key2]);
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => '.$path2, $output);
+        $this->assertStringContainsString('[category] => Work', $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 0', $output);
+        $this->assertStringContainsString('[description] => Finish writing sample', $output);
     }
 
     public function testBatchLookup()
@@ -267,9 +274,9 @@ class ConceptsTest extends TestCase
 
     public function testNamedKey()
     {
-        $key = named_key(self::$datastore);
-        $this->assertEquals('Task', $key->pathEnd()['kind']);
-        $this->assertEquals('sampleTask', $key->pathEnd()['name']);
+        $output = $this->runFunctionSnippet('named_key', [self::$datastore]);
+        $this->assertStringContainsString("Task", $output);
+        $this->assertStringContainsString("sampleTask", $output);
     }
 
     public function testIncompleteKey()

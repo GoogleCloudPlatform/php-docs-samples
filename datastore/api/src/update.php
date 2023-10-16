@@ -41,7 +41,7 @@ function update(DatastoreClient $datastore)
     $transaction->update($task);
     $transaction->commit();
     // [END datastore_update]
-    return $task;
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples

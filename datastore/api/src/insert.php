@@ -45,7 +45,7 @@ function insert(DatastoreClient $datastore)
     $datastore->insert($task);
     // [END datastore_insert]
     // return $task;
-    printf("Added Entity with description '%s'", $task['description']);
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples
