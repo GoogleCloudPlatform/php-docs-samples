@@ -48,7 +48,7 @@ function properties(DatastoreClient $datastore, Key $key)
         ['excludeFromIndexes' => ['description']]
     );
     // [END datastore_properties]
-    return $task;
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples

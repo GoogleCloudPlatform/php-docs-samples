@@ -36,7 +36,7 @@ function incomplete_key(DatastoreClient $datastore)
     // [START datastore_incomplete_key]
     $taskKey = $datastore->key('Task');
     // [END datastore_incomplete_key]
-    return $taskKey;
+    print($taskKey);
 }
 
 // The following 2 lines are only needed to run the samples

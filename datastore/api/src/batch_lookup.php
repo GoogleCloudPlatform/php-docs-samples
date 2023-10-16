@@ -42,7 +42,7 @@ function batch_lookup(DatastoreClient $datastore, array $keys)
         // No entities found.
     }
     // [END datastore_batch_lookup]
-    return $result;
+    print_r($result);
 }
 
 // The following 2 lines are only needed to run the samples

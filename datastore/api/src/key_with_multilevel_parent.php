@@ -38,7 +38,7 @@ function key_with_multilevel_parent(DatastoreClient $datastore)
         ->pathElement('TaskList', 'default')
         ->pathElement('Task', 'sampleTask');
     // [END datastore_key_with_multilevel_parent]
-    return $taskKey;
+    print_r($taskKey);
 }
 
 // The following 2 lines are only needed to run the samples

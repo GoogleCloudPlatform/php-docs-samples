@@ -174,7 +174,6 @@ class ConceptsTest extends TestCase
             self::$datastore, [$task1, $task2]
         ]);
 
-        print($path1);
         $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key1]);        
         $this->assertStringContainsString('[kind] => Task', $output);
         $this->assertStringContainsString('[name] => '.$path1, $output);
@@ -211,39 +210,22 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key1;
         self::$keys[] = $key2;
 
-        batch_upsert(self::$datastore, [$task1, $task2]);
-        $result = batch_lookup(self::$datastore, [$key1, $key2]);
+        $this->runFunctionSnippet('batch_upsert', [self::$datastore, [$task1, $task2]]);
+        $output = $this->runFunctionSnippet('batch_lookup',[self::$datastore, [$key1, $key2]]);
 
-        $this->assertArrayHasKey('found', $result);
-        $tasks = $result['found'];
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => '.$path1, $output);
+        $this->assertStringContainsString('[category] => '.$task1['category'], $output);
+        $this->assertStringContainsString('[done] =>', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
+        $this->assertStringContainsString('[description] => '.$task1['description'], $output);
 
-        $this->assertEquals(2, count($tasks));
-        /* @var Entity $task */
-        foreach ($tasks as $task) {
-            if ($task->key()->pathEnd()['name'] === $path1) {
-                $task1 = $task;
-            } elseif ($task->key()->pathEnd()['name'] === $path2) {
-                $task2 = $task;
-            } else {
-                $this->fail(
-                    sprintf(
-                        'Got an unexpected entity with the path:%s',
-                        $task->key()->pathEnd()['name']
-                    )
-                );
-            }
-        }
-        $this->assertEquals('Personal', $task1['category']);
-        $this->assertEquals(false, $task1['done']);
-        $this->assertEquals(4, $task1['priority']);
-        $this->assertEquals('Learn Cloud Datastore', $task1['description']);
-        $this->assertEquals($path1, $task1->key()->pathEnd()['name']);
-
-        $this->assertEquals('Work', $task2['category']);
-        $this->assertEquals(true, $task2['done']);
-        $this->assertEquals(0, $task2['priority']);
-        $this->assertEquals('Finish writing sample', $task2['description']);
-        $this->assertEquals($path2, $task2->key()->pathEnd()['name']);
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[name] => '.$path2, $output);
+        $this->assertStringContainsString('[category] => '.$task2['category'], $output);
+        $this->assertStringContainsString('[done]', $output);
+        $this->assertStringContainsString('[priority] => 0', $output);
+        $this->assertStringContainsString('[description] => '.$task2['description'], $output);
     }
 
     public function testBatchDelete()
@@ -265,11 +247,13 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key1;
         self::$keys[] = $key2;
 
-        batch_upsert(self::$datastore, [$task1, $task2]);
-        batch_delete(self::$datastore, [$key1, $key2]);
+        $this->runFunctionSnippet('batch_upsert', [self::$datastore, [$task1, $task2]]);
+        $this->runFunctionSnippet('batch_delete', [self::$datastore, [$key1, $key2]]);
 
-        $result = batch_lookup(self::$datastore, [$key1, $key2]);
-        $this->assertArrayNotHasKey('found', $result);
+        $output = $this->runFunctionSnippet('batch_lookup', [self::$datastore, [$key1, $key2]]);
+        
+        $this->assertStringContainsString('[missing] => ', $output);
+        $this->assertStringNotContainsString('[found] => ', $output);
     }
 
     public function testNamedKey()
@@ -281,46 +265,43 @@ class ConceptsTest extends TestCase
 
     public function testIncompleteKey()
     {
-        $key = incomplete_key(self::$datastore);
-        $this->assertEquals('Task', $key->pathEnd()['kind']);
-        $this->assertArrayNotHasKey('name', $key->pathEnd());
-        $this->assertArrayNotHasKey('id', $key->pathEnd());
+        $output = $this->runFunctionSnippet('incomplete_key', [self::$datastore]);
+        $this->assertStringContainsString('Task', $output);
+        $this->assertStringNotContainsString('name', $output);
+        $this->assertStringNotContainsString('id', $output);
     }
 
     public function testKeyWithParent()
     {
-        $key = key_with_parent(self::$datastore);
-        $this->assertEquals('Task', $key->path()[1]['kind']);
-        $this->assertEquals('sampleTask', $key->path()[1]['name']);
-        $this->assertEquals('TaskList', $key->path()[0]['kind']);
-        $this->assertEquals('default', $key->path()[0]['name']);
+        $output = $this->runFunctionSnippet('key_with_parent', [self::$datastore]);
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString("[name] => sampleTask", $output);
+        $this->assertStringContainsString('[kind] => TaskList', $output);
+        $this->assertStringContainsString("[name] => default", $output);
     }
 
     public function testKeyWithMultilevelParent()
     {
-        $key = key_with_multilevel_parent(self::$datastore);
-        $this->assertEquals('Task', $key->path()[2]['kind']);
-        $this->assertEquals('sampleTask', $key->path()[2]['name']);
-        $this->assertEquals('TaskList', $key->path()[1]['kind']);
-        $this->assertEquals('default', $key->path()[1]['name']);
-        $this->assertEquals('User', $key->path()[0]['kind']);
-        $this->assertEquals('alice', $key->path()[0]['name']);
+        $output = $this->runFunctionSnippet('key_with_multilevel_parent', [self::$datastore]);
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString("[name] => sampleTask", $output);
+        $this->assertStringContainsString('[kind] => TaskList', $output);
+        $this->assertStringContainsString("[name] => default", $output);
+        $this->assertStringContainsString('[kind] => User', $output);
+        $this->assertStringContainsString("[name] => alice", $output);
     }
 
     public function testProperties()
     {
         $key = self::$datastore->key('Task', generateRandomString());
-        self::$keys[] = $key;
-        $task = properties(self::$datastore, $key);
-        self::$datastore->upsert($task);
-        $task = self::$datastore->lookup($key);
-        $this->assertEquals('Personal', $task['category']);
-        $this->assertInstanceOf(\DateTimeInterface::class, $task['created']);
-        $this->assertGreaterThanOrEqual($task['created'], new \DateTime());
-        $this->assertEquals(false, $task['done']);
-        $this->assertEquals(10.0, $task['percent_complete']);
-        $this->assertEquals(4, $task['priority']);
-        $this->assertEquals('Learn Cloud Datastore', $task['description']);
+        $output = $this->runFunctionSnippet('properties', [self::$datastore, $key]);
+        $this->assertStringContainsString('[kind] => Task', $output);
+        $this->assertStringContainsString('[category] => Personal', $output);
+        $this->assertStringContainsString('[created] => DateTime Object', $output);
+        $this->assertStringContainsString('[date] => ', $output);
+        $this->assertStringContainsString('[percent_complete] => 10', $output);
+        $this->assertStringContainsString('[done] =>', $output);
+        $this->assertStringContainsString('[priority] => 4', $output);
     }
 
     public function testArrayValue()
