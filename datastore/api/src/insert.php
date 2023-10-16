@@ -17,13 +17,14 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-use DateTime;
+// use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\EntityInterface;
-use Google\Cloud\Datastore\EntityIterator;
-use Google\Cloud\Datastore\Key;
-use Google\Cloud\Datastore\Query\GqlQuery;
-use Google\Cloud\Datastore\Query\Query;
+use Google\Cloud\Datastore\Entity;
+// use Google\Cloud\Datastore\EntityInterface;
+// use Google\Cloud\Datastore\EntityIterator;
+// use Google\Cloud\Datastore\Key;
+// use Google\Cloud\Datastore\Query\GqlQuery;
+// use Google\Cloud\Datastore\Query\Query;
 
 /**
  * Create a Datastore entity and insert it. It will fail if there is already
@@ -43,7 +44,8 @@ function insert(DatastoreClient $datastore)
     ]);
     $datastore->insert($task);
     // [END datastore_insert]
-    return $task;
+    // return $task;
+    printf("Added Entity with description '%s'", $task['description']);
 }
 
 // The following 2 lines are only needed to run the samples
