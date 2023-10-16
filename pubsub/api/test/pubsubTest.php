@@ -458,14 +458,14 @@ class PubSubTest extends TestCase
             self::$projectId,
             $topic,
         ]);
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
 
         $output = $this->runFunctionSnippet('enable_subscription_ordering', [
             self::$projectId,
             $topic,
             'subscriberWithOrdering' . rand(),
         ]);
-        $this->assertRegExp('/Created subscription with ordering/', $output);
-        $this->assertRegExp('/\"enableMessageOrdering\":true/', $output);
+        $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
+        $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
 }
