@@ -41,7 +41,7 @@ function basic_entity(DatastoreClient $datastore)
         'description' => 'Learn Cloud Datastore'
     ]);
     // [END datastore_basic_entity]
-    return $task;
+    printf("Basic Entity with description '%s'", $task['description']);
 }
 
 // The following 2 lines are only needed to run the samples

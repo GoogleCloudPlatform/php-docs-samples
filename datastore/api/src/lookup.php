@@ -37,7 +37,7 @@ function lookup(DatastoreClient $datastore)
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
     // [END datastore_lookup]
-    return $task;
+    printf("Found Entity with key '%s' & description '%s'", $task->key()->pathEnd()['name'], $task['description']);
 }
 
 // The following 2 lines are only needed to run the samples

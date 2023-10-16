@@ -43,7 +43,7 @@ function upsert(DatastoreClient $datastore)
     ]);
     $datastore->upsert($task);
     // [END datastore_upsert]
-    return $task;
+    printf("Upserted Entity with key '%s' & description '%s'", $task->key()->pathEnd()['name'], $task['description']);
 }
 
 // The following 2 lines are only needed to run the samples
