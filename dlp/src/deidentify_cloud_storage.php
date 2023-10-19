@@ -37,7 +37,6 @@ use Google\Cloud\Dlp\V2\FileType;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\TransformationConfig;
 use Google\Cloud\Dlp\V2\TransformationDetailsStorageConfig;
-use Google\Cloud\Dlp\V2\Client\BaseClient\DlpServiceBaseClient;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 
 /**
@@ -104,13 +103,13 @@ function deidentify_cloud_storage(
     // Specify the de-identify template used for the transformation.
     $transformationConfig = (new TransformationConfig())
         ->setDeidentifyTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $deidentifyTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $deidentifyTemplateName)
         )
         ->setStructuredDeidentifyTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $structuredDeidentifyTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $structuredDeidentifyTemplateName)
         )
         ->setImageRedactTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $imageRedactTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $imageRedactTemplateName)
         );
 
     $deidentify = (new Deidentify())
