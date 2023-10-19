@@ -57,7 +57,7 @@ function set_bucket_autoclass(
     );
     printf(
         'Autoclass terminal storage class is %s.' . PHP_EOL,
-        $info['autoclass']['$terminalStorageClass']
+        $info['autoclass']['terminalStorageClass']
     );
 }
 # [END storage_set_autoclass]
