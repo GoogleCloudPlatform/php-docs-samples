@@ -19,7 +19,6 @@ fi
 
 SKIP_DIRS=(
   dialogflow
-  iot
 )
 
 TMP_REPORT_DIR=$(mktemp -d)
