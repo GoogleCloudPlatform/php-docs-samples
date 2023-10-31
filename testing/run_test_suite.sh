@@ -37,7 +37,6 @@ REST_TESTS=(
     dialogflow
     dlp
     error_reporting
-    iot
     monitoring
     speech
     video
@@ -56,7 +55,6 @@ ALT_PROJECT_TESTS=(
     dialogflow
     dlp
     error_reporting
-    iot
     kms
     logging
     monitoring
