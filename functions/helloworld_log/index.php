@@ -34,8 +34,8 @@ function helloLogging(ServerRequestInterface $request): string
       'severity' => 'error'
     ]) . PHP_EOL);
 
-    // This doesn't log anything
-    error_log('error_log does not log in Cloud Functions!');
+    // This will log to standard error, which will be picked up by Cloud Logging
+    error_log('error_log logs in Cloud Functions!');
 
     // This will log an error message and immediately terminate the function execution
     // trigger_error('fatal errors are logged!');
