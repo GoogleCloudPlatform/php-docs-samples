@@ -139,31 +139,30 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString('Listed schema revisions', $listOutput);
 
-        $this->runFunctionSnippet('delete_schema', [
+        $listOutput = $this->runFunctionSnippet('delete_schema', [
             self::$projectId,
-            $schemaId,
+            $schemaId
         ]);
+        $this->assertStringContainsString(sprintf('Schema %s deleted', $schemaName), $listOutput);
     }
 
     /**
-     * @dataProvider definitions
+     * @dataProvider definitionsWithEncoding
      */
-    public function testCreateTopicWithSchemaBinaryEncoding($type, $definitionFile)
+    public function testCreateUpdateTopic($type, $definitionFile, $encoding)
     {
+        $typeApiFormat = $type == 'avro' ? 'AVRO' : 'PROTOCOL_BUFFER';
         $pubsub = new PubSubClient([
             'projectId' => self::$projectId,
         ]);
 
-        $encoding = 'BINARY';
         $schemaId = uniqid('samples-test-' . $type . '-');
         $topicId = uniqid('samples-test-' . $type . '-' . $encoding . '-');
 
-        $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
-            self::$projectId,
-            $schemaId,
-            $definitionFile,
-        ]);
+        $definition = (string) file_get_contents($definitionFile);
+        $schema = $pubsub->createSchema($schemaId, $typeApiFormat, $definition);
 
+        // Test create topic with schema
         $output = $this->runFunctionSnippet('create_topic_with_schema', [
             self::$projectId,
             $topicId,
@@ -176,42 +175,49 @@ class SchemaTest extends TestCase
             $output
         );
 
-        $pubsub->topic($topicId)->delete();
-        $pubsub->schema($schemaId)->delete();
-    }
-
-    /**
-     * @dataProvider definitions
-     */
-    public function testCreateTopicWithSchemaJsonEncoding($type, $definitionFile)
-    {
-        $pubsub = new PubSubClient([
-            'projectId' => self::$projectId,
-        ]);
-
-        $encoding = 'JSON';
-        $schemaId = uniqid('samples-test-' . $type . '-');
-        $topicId = uniqid('samples-test-' . $type . '-' . $encoding . '-');
-
-        $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
+        // Create a schema revision
+        $listOutput = $this->runFunctionSnippet(sprintf('commit_%s_schema', $type), [
             self::$projectId,
             $schemaId,
             $definitionFile,
         ]);
+        $schemaRevisionId = trim(explode('@', $listOutput)[1]);
 
-        $output = $this->runFunctionSnippet('create_topic_with_schema', [
+        // Test create topic with schema revisions listed
+        $newTopicId = uniqid('samples-test-' . $type . '-' . $encoding . '-');
+        $output = $this->runFunctionSnippet(
+            sprintf(
+                'create_topic_with_schema_revisions'
+            ), [
+                self::$projectId,
+                $newTopicId,
+                $schemaId,
+                $encoding,
+                $firstRevisionId = $schema->info()['revisionId'],
+                $lastRevisionId = $schemaRevisionId
+            ]
+        );
+
+        $this->assertEquals(
+            sprintf('Created topic with schema: %s', PublisherClient::topicName(self::$projectId, $newTopicId)),
+            $output
+        );
+
+        // Test update topic with schema attached
+        $output = $this->runFunctionSnippet(sprintf('update_topic_schema'), [
             self::$projectId,
             $topicId,
-            $schemaId,
-            $encoding,
+            $schema->info()['revisionId'],
+            $schemaRevisionId
         ]);
 
         $this->assertEquals(
-            sprintf('Topic %s created', PublisherClient::topicName(self::$projectId, $topicId)),
+            sprintf('Updated topic with schema: %s', PublisherClient::topicName(self::$projectId, $topicId)),
             $output
         );
 
         $pubsub->topic($topicId)->delete();
+        $pubsub->topic($newTopicId)->delete();
         $pubsub->schema($schemaId)->delete();
     }
 
@@ -225,6 +231,29 @@ class SchemaTest extends TestCase
                 'proto',
                 self::PROTOBUF_DEFINITION,
             ]
+        ];
+    }
+
+    public function definitionsWithEncoding()
+    {
+        return [
+            [
+                'avro',
+                self::AVRO_DEFINITION,
+                'JSON'
+            ], [
+                'proto',
+                self::PROTOBUF_DEFINITION,
+                'JSON'
+            ], [
+                'avro',
+                self::AVRO_DEFINITION,
+                'BINARY'
+            ], [
+                'proto',
+                self::PROTOBUF_DEFINITION,
+                'BINARY'
+            ],
         ];
     }
 
