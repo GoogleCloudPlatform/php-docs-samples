@@ -5,7 +5,7 @@
     "slim/psr7": "^1.0",
     "slim/twig-view": "^3.0",
     "php-di/slim-bridge": "^3.1",
-    "symfony/yaml": "^5.2"
+    "symfony/yaml": "^7.0"
   },
   "autoload": {
      "psr-4": {
