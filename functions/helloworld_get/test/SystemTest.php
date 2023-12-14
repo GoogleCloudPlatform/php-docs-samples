@@ -24,7 +24,7 @@ use Google\Cloud\TestUtils\CloudFunctionLocalTestTrait;
 require_once __DIR__ . '/TestCasesTrait.php';
 
 /**
- * Class SystemTest.
+ * Class SystemTest!
  */
 class SystemTest extends TestCase
 {
