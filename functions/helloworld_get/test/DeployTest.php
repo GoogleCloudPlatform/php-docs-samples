@@ -48,7 +48,7 @@ class DeployTest extends TestCase
         // Send a request to the function.
         $resp = $this->client->get('', [
             // Uncomment and CURLOPT_VERBOSE debug content will be sent to stdout.
-            // 'debug' => true
+            // 'debug' => true 
         ]);
 
         // Assert status code.
