@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Functions\HelloLogging\Test;
 
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Cloud\TestUtils\DeploymentTrait;
-use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -42,7 +41,6 @@ class DeployTest extends TestCase
 {
     use DeploymentTrait;
     use TestCasesTrait;
-    use CloudFunctionDeploymentTrait;
     use TestTrait;
 
     private static $entryPoint = 'helloLogging';
@@ -50,7 +48,6 @@ class DeployTest extends TestCase
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
-
             $targetAudience = self::getBaseUri();
             // create middleware
             $middleware = ApplicationDefaultCredentials::getIdTokenMiddleware($targetAudience);
