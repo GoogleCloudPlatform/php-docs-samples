@@ -61,9 +61,7 @@ class DeployTest extends TestCase
                 'base_uri' => $targetAudience,
             ]);
 
-
-
-            // Send a request to the function.
+            // Send a request to the function..
             $resp = $this->client->get('');
 
             // Assert status code.
