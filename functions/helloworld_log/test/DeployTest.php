@@ -19,7 +19,12 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Functions\HelloLogging\Test;
 
+use Google\Auth\ApplicationDefaultCredentials;
+use Google\Cloud\TestUtils\DeploymentTrait;
 use Google\Cloud\TestUtils\CloudFunctionDeploymentTrait;
+use Google\Cloud\TestUtils\TestTrait;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/TestCasesTrait.php';
@@ -35,14 +40,32 @@ require_once __DIR__ . '/TestCasesTrait.php';
  */
 class DeployTest extends TestCase
 {
-    use CloudFunctionDeploymentTrait;
+    use DeploymentTrait;
     use TestCasesTrait;
+    use CloudFunctionDeploymentTrait;
+    use TestTrait;
 
     private static $entryPoint = 'helloLogging';
 
     public function testFunction(): void
     {
         foreach (self::cases() as $test) {
+
+            $targetAudience = self::getBaseUri();
+            // create middleware
+            $middleware = ApplicationDefaultCredentials::getIdTokenMiddleware($targetAudience);
+            $stack = HandlerStack::create();
+            $stack->push($middleware);
+
+            // create the HTTP client
+            $client = new Client([
+                'handler' => $stack,
+                'auth' => 'google_auth',
+                'base_uri' => $targetAudience,
+            ]);
+
+
+
             // Send a request to the function.
             $resp = $this->client->get('');
 
