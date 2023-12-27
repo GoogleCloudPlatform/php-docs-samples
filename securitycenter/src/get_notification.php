@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_get_notification_config]
-use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\Client\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\GetNotificationConfigRequest;
 
 /**
  * @param string $organizationId        Your org ID
@@ -32,8 +33,10 @@ function get_notification(string $organizationId, string $notificationConfigId):
         $organizationId,
         $notificationConfigId
     );
+    $getNotificationConfigRequest = (new GetNotificationConfigRequest())
+        ->setName($notificationConfigName);
 
-    $response = $securityCenterClient->getNotificationConfig($notificationConfigName);
+    $response = $securityCenterClient->getNotificationConfig($getNotificationConfigRequest);
     printf('Notification config was retrieved: %s' . PHP_EOL, $response->getName());
 }
 // [END securitycenter_get_notification_config]
