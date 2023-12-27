@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-secret-manager": "^1.12.2"
+        "google/cloud-secret-manager": "^1.12"
     }
 }
