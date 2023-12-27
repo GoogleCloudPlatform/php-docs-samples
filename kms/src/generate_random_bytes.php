@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_generate_random_bytes]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GenerateRandomBytesRequest;
 use Google\Cloud\Kms\V1\ProtectionLevel;
 
 function generate_random_bytes(
@@ -35,11 +36,8 @@ function generate_random_bytes(
     $locationName = $client->locationName($projectId, $locationId);
 
     // Call the API.
-    $randomBytesResponse = $client->generateRandomBytes(array(
-      'location' => $locationName,
-      'lengthBytes' => $numBytes,
-      'protectionLevel' => ProtectionLevel::HSM
-    ));
+    $generateRandomBytesRequest = new GenerateRandomBytesRequest();
+    $randomBytesResponse = $client->generateRandomBytes($generateRandomBytesRequest);
 
     // The data comes back as raw bytes, which may include non-printable
     // characters. This base64-encodes the result so it can be printed below.

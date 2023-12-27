@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_sign_asymmetric]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\AsymmetricSignRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\Digest;
 
 function sign_asymmetric(
@@ -48,7 +49,10 @@ function sign_asymmetric(
         ->setSha256($hash);
 
     // Call the API.
-    $signResponse = $client->asymmetricSign($keyVersionName, $digest);
+    $asymmetricSignRequest = (new AsymmetricSignRequest())
+        ->setName($keyVersionName)
+        ->setDigest($digest);
+    $signResponse = $client->asymmetricSign($asymmetricSignRequest);
     printf('Signature: %s' . PHP_EOL, $signResponse->getSignature());
 
     return $signResponse;

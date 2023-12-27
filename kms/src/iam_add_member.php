@@ -21,7 +21,9 @@ namespace Google\Cloud\Samples\Kms;
 
 // [START kms_iam_add_member]
 use Google\Cloud\Iam\V1\Binding;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 
 function iam_add_member(
     string $projectId = 'my-project',
@@ -40,7 +42,9 @@ function iam_add_member(
     // $resourceName = $client->keyRingName($projectId, $locationId, $keyRingId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($resourceName);
+    $getIamPolicyRequest = (new GetIamPolicyRequest())
+        ->setResource($resourceName);
+    $policy = $client->getIamPolicy($getIamPolicyRequest);
 
     // Add the member to the policy.
     $bindings = $policy->getBindings();
@@ -50,7 +54,10 @@ function iam_add_member(
     $policy->setBindings($bindings);
 
     // Save the updated IAM policy.
-    $updatedPolicy = $client->setIamPolicy($resourceName, $policy);
+    $setIamPolicyRequest = (new SetIamPolicyRequest())
+        ->setResource($resourceName)
+        ->setPolicy($policy);
+    $updatedPolicy = $client->setIamPolicy($setIamPolicyRequest);
     printf('Added %s' . PHP_EOL, $member);
 
     return $updatedPolicy;

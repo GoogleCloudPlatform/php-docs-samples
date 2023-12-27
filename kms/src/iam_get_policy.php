@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_iam_get_policy]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 
 function iam_get_policy(
     string $projectId = 'my-project',
@@ -38,7 +39,9 @@ function iam_get_policy(
     // $resourceName = $client->keyRingName($projectId, $locationId, $keyRingId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($resourceName);
+    $getIamPolicyRequest = (new GetIamPolicyRequest())
+        ->setResource($resourceName);
+    $policy = $client->getIamPolicy($getIamPolicyRequest);
 
     // Print the policy.
     printf('IAM policy for %s' . PHP_EOL, $resourceName);
