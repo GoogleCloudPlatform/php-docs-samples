@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_list_resources]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListMonitoredResourceDescriptorsRequest;
 
 /**
  * Example:
@@ -40,7 +41,9 @@ function list_resources($projectId)
         'projectId' => $projectId,
     ]);
     $projectName = $metrics->projectName($projectId);
-    $descriptors = $metrics->listMonitoredResourceDescriptors($projectName);
+    $listMonitoredResourceDescriptorsRequest = (new ListMonitoredResourceDescriptorsRequest())
+        ->setName($projectName);
+    $descriptors = $metrics->listMonitoredResourceDescriptors($listMonitoredResourceDescriptorsRequest);
     foreach ($descriptors->iterateAllElements() as $descriptor) {
         print($descriptor->getType() . PHP_EOL);
     }

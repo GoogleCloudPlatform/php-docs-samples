@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_list_channels]
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\ListNotificationChannelsRequest;
 
 /**
  * @param string $projectId Your project ID
@@ -34,10 +35,10 @@ function alert_list_channels($projectId)
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
+    $listNotificationChannelsRequest = (new ListNotificationChannelsRequest())
+        ->setName($channelClient->projectName($projectId));
 
-    $channels = $channelClient->listNotificationChannels(
-        $channelClient->projectName($projectId)
-    );
+    $channels = $channelClient->listNotificationChannels($listNotificationChannelsRequest);
     foreach ($channels->iterateAllElements() as $channel) {
         printf('Name: %s (%s)' . PHP_EOL, $channel->getDisplayName(), $channel->getName());
     }

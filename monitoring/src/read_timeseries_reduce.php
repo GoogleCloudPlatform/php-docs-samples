@@ -24,10 +24,11 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_reduce]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Cloud\Monitoring\V3\Aggregation;
-use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
+use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 
@@ -65,13 +66,14 @@ function read_timeseries_reduce(string $projectId, int $minutesAgo = 20): void
     $aggregation->setPerSeriesAligner(Aggregation\Aligner::ALIGN_MEAN);
 
     $view = TimeSeriesView::FULL;
+    $listTimeSeriesRequest = (new ListTimeSeriesRequest())
+        ->setName($projectName)
+        ->setFilter($filter)
+        ->setInterval($interval)
+        ->setView($view)
+        ->setAggregation($aggregation);
 
-    $result = $metrics->listTimeSeries(
-        $projectName,
-        $filter,
-        $interval,
-        $view,
-        ['aggregation' => $aggregation]);
+    $result = $metrics->listTimeSeries($listTimeSeriesRequest);
 
     printf('Average CPU utilization across all GCE instances:' . PHP_EOL);
     if ($timeSeries = $result->iterateAllElements()->current()) {

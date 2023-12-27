@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_create]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
-use Google\Cloud\Monitoring\V3\UptimeCheckConfig;
 use Google\Api\MonitoredResource;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\CreateUptimeCheckConfigRequest;
+use Google\Cloud\Monitoring\V3\UptimeCheckConfig;
 
 /**
  * Example:
@@ -51,11 +52,11 @@ function create_uptime_check($projectId, $hostName = 'example.com', $displayName
     $uptimeCheckConfig = new UptimeCheckConfig();
     $uptimeCheckConfig->setDisplayName($displayName);
     $uptimeCheckConfig->setMonitoredResource($monitoredResource);
+    $createUptimeCheckConfigRequest = (new CreateUptimeCheckConfigRequest())
+        ->setParent($uptimeCheckClient->projectName($projectId))
+        ->setUptimeCheckConfig($uptimeCheckConfig);
 
-    $uptimeCheckConfig = $uptimeCheckClient->createUptimeCheckConfig(
-        $uptimeCheckClient->projectName($projectId),
-        $uptimeCheckConfig
-    );
+    $uptimeCheckConfig = $uptimeCheckClient->createUptimeCheckConfig($createUptimeCheckConfigRequest);
 
     printf('Created an uptime check: %s' . PHP_EOL, $uptimeCheckConfig->getName());
 }

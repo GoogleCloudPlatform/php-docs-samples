@@ -24,7 +24,9 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_enable_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
+use Google\Cloud\Monitoring\V3\UpdateAlertPolicyRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -41,10 +43,11 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
         'projectId' => $projectId,
     ]);
     $projectName = $alertClient->projectName($projectId);
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($projectName)
+        ->setFilter($filter);
 
-    $policies = $alertClient->listAlertPolicies($projectName, [
-        'filter' => $filter
-    ]);
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         $isEnabled = $policy->getEnabled()->getValue();
         if ($enable == $isEnabled) {
@@ -56,9 +59,10 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
             $policy->getEnabled()->setValue((bool) $enable);
             $mask = new FieldMask();
             $mask->setPaths(['enabled']);
-            $alertClient->updateAlertPolicy($policy, [
-                'updateMask' => $mask
-            ]);
+            $updateAlertPolicyRequest = (new UpdateAlertPolicyRequest())
+                ->setAlertPolicy($policy)
+                ->setUpdateMask($mask);
+            $alertClient->updateAlertPolicy($updateAlertPolicyRequest);
             printf('%s %s' . PHP_EOL,
                 $enable ? 'Enabled' : 'Disabled',
                 $policy->getName()

@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_delete_metric]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\DeleteMetricDescriptorRequest;
 
 /**
  * Example:
@@ -42,7 +43,9 @@ function delete_metric($projectId, $metricId)
     ]);
 
     $metricPath = $metrics->metricDescriptorName($projectId, $metricId);
-    $ret = $metrics->deleteMetricDescriptor($metricPath);
+    $deleteMetricDescriptorRequest = (new DeleteMetricDescriptorRequest())
+        ->setName($metricPath);
+    $ret = $metrics->deleteMetricDescriptor($deleteMetricDescriptorRequest);
 
     printf('Deleted a metric: ' . $metricPath . PHP_EOL);
 }

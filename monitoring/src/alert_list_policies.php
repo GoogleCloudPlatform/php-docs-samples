@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_list_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
 
 /**
  * Adds a new column to the Albums table in the example database.
@@ -40,10 +41,10 @@ function alert_list_policies($projectId)
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($alertClient->projectName($projectId));
 
-    $policies = $alertClient->listAlertPolicies(
-        $alertClient->projectName($projectId)
-    );
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         printf('Name: %s (%s)' . PHP_EOL, $policy->getDisplayName(), $policy->getName());
     }
