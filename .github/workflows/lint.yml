@@ -28,7 +28,7 @@ jobs:
         php-version: '8.0'
     - name: Get changed files
       id: changedFiles
-      uses: tj-actions/changed-files@v39
+      uses: tj-actions/changed-files@v40
     - uses: jwalton/gh-find-current-pr@v1
       id: findPr
       with:
