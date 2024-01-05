@@ -28,7 +28,7 @@ function create_key_version(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key'
-) {
+): CryptoKeyVersion {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

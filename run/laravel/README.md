@@ -235,7 +235,7 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
 1. Create a Cloud Run job to apply database migrations:
 
     ```
-    gcloud beta run jobs create migrate \
+    gcloud run jobs create migrate \
         --image=${REGISTRY_NAME}/laravel \
         --region=${REGION} \
         --set-cloudsql-instances ${PROJECT_ID}:${REGION}:${INSTANCE_NAME} \
@@ -247,7 +247,7 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
 1. Execute the job:
 
     ```
-    gcloud beta run jobs execute migrate --region ${REGION} --wait
+    gcloud run jobs execute migrate --region ${REGION} --wait
     ```
 
 * Confirm the application of database migrations by clicking the "See logs for this execution" link. 
@@ -323,7 +323,7 @@ To apply application code changes, update the Cloud Run service with this new co
 To apply database migrations, run the Cloud Run job using the newly built container:
 
     ```bash
-    gcloud beta run jobs execute migrate --region ${REGION}
+    gcloud run jobs execute migrate --region ${REGION}
     ```
 
     Note: To generate new migrations to apply, you will need to run `php artisan make:migration` in a local development environment.
