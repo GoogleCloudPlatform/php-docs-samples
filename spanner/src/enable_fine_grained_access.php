@@ -24,9 +24,11 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_enable_fine_grained_access]
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseAdminClient;
 use \Google\Cloud\Iam\V1\Binding;
 use \Google\Type\Expr;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 
 /**
  * Enable Fine Grained Access.
@@ -54,7 +56,9 @@ function enable_fine_grained_access(
 ): void {
     $adminClient = new DatabaseAdminClient();
     $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
-    $policy = $adminClient->getIamPolicy($resource);
+    $getIamPolicyRequest = (new GetIamPolicyRequest())
+        ->setResource($resource);
+    $policy = $adminClient->getIamPolicy($getIamPolicyRequest);
 
     // IAM conditions need at least version 3
     if ($policy->getVersion() != 3) {
@@ -70,7 +74,10 @@ function enable_fine_grained_access(
         ])
     ]);
     $policy->setBindings([$binding]);
-    $adminClient->setIamPolicy($resource, $policy);
+    $setIamPolicyRequest = (new SetIamPolicyRequest())
+        ->setResource($resource)
+        ->setPolicy($policy);
+    $adminClient->setIamPolicy($setIamPolicyRequest);
 
     printf('Enabled fine-grained access in IAM' . PHP_EOL);
 }

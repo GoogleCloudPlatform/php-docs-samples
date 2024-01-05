@@ -18,14 +18,17 @@
 // [START dialogflow_list_entity_types]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\Client\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\ListEntityTypesRequest;
 
 function entity_type_list($projectId)
 {
     // get entity types
     $entityTypesClient = new EntityTypesClient();
     $parent = $entityTypesClient->agentName($projectId);
-    $entityTypes = $entityTypesClient->listEntityTypes($parent);
+    $listEntityTypesRequest = (new ListEntityTypesRequest())
+        ->setParent($parent);
+    $entityTypes = $entityTypesClient->listEntityTypes($listEntityTypesRequest);
 
     foreach ($entityTypes->iterateAllElements() as $entityType) {
         // print relevant info
