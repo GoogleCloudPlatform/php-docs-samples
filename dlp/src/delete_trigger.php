@@ -44,7 +44,7 @@ function delete_trigger(string $callingProjectId, string $triggerId): void
     $triggerName = "projects/$callingProjectId/locations/global/jobTriggers/$triggerId";
     $deleteJobTriggerRequest = (new DeleteJobTriggerRequest())
         ->setName($triggerName);
-    $response = $dlp->deleteJobTrigger($deleteJobTriggerRequest);
+    $dlp->deleteJobTrigger($deleteJobTriggerRequest);
 
     // Print the results
     printf('Successfully deleted trigger %s' . PHP_EOL, $triggerName);

@@ -40,7 +40,6 @@ use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\TransformationConfig;
 use Google\Cloud\Dlp\V2\TransformationDetailsStorageConfig;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 
 /**
  * De-identify sensitive data stored in Cloud Storage using the API.
