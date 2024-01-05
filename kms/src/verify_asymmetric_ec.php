@@ -30,7 +30,7 @@ function verify_asymmetric_ec(
     string $versionId = '123',
     string $message = '...',
     string $signature = '...'
-) {
+): bool {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

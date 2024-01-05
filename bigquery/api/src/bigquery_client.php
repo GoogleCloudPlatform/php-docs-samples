@@ -24,6 +24,7 @@
 if (isset($argv)) {
     return print("This file is for example only and cannot be executed\n");
 }
+$projectId = '';
 
 /**
  * This file is to be used as an example only!

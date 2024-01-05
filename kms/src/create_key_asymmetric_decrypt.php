@@ -32,7 +32,7 @@ function create_key_asymmetric_decrypt(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-asymmetric-decrypt-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

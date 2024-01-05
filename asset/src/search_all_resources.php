@@ -22,12 +22,12 @@ use Google\Cloud\Asset\V1\Client\AssetServiceClient;
 use Google\Cloud\Asset\V1\SearchAllResourcesRequest;
 
 /**
- * @param string       $scope      Scope of the search
- * @param string       $query      (Optional) Query statement
- * @param string|array $assetTypes (Optional) Asset types to search for
- * @param int          $pageSize   (Optional) Size of each result page
- * @param string       $pageToken  (Optional) Token produced by the preceding call
- * @param string       $orderBy    (Optional) Fields to sort the results
+ * @param string   $scope      Scope of the search
+ * @param string   $query      (Optional) Query statement
+ * @param string[] $assetTypes (Optional) Asset types to search for
+ * @param int      $pageSize   (Optional) Size of each result page
+ * @param string   $pageToken  (Optional) Token produced by the preceding call
+ * @param string   $orderBy    (Optional) Fields to sort the results
  */
 function search_all_resources(
     string $scope,
@@ -36,7 +36,7 @@ function search_all_resources(
     int $pageSize = 0,
     string $pageToken = '',
     string $orderBy = ''
-) {
+): void {
     // Instantiate a client.
     $asset = new AssetServiceClient();
 

@@ -24,7 +24,7 @@ use Google\Cloud\Datastore\DatastoreClient;
  * Delete a task with a given id.
  *
  * @param string $projectId The Google Cloud project ID.
- * @param $taskId
+ * @param string $taskId
  */
 function delete_task(string $projectId, string $taskId)
 {

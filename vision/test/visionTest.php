@@ -119,7 +119,7 @@ class visionTest extends TestCase
     {
         $path = __DIR__ . '/data/tower.jpg';
         $output = $this->runFunctionSnippet('detect_landmark', ['path' => $path]);
-        $this->assertRegexp(
+        $this->assertMatchesRegularExpression(
             '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
             $output
         );
@@ -131,7 +131,7 @@ class visionTest extends TestCase
 
         $path = 'gs://' . $bucketName . '/vision/tower.jpg';
         $output = $this->runFunctionSnippet('detect_landmark_gcs', ['path' => $path]);
-        $this->assertRegexp(
+        $this->assertMatchesRegularExpression(
             '/Eiffel Tower|Champ de Mars|Trocadéro Gardens/',
             $output
         );
