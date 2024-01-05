@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_images_list]
-use Google\Cloud\Compute\V1\ImagesClient;
+use Google\Cloud\Compute\V1\Client\ImagesClient;
+use Google\Cloud\Compute\V1\ListImagesRequest;
 
 /**
  * Prints a list of all non-deprecated image names available in given project.
@@ -44,7 +45,11 @@ function list_all_images(string $projectId)
      * hides the pagination mechanic. The library makes multiple requests to the API for you,
      * so you can simply iterate over all the images.
      */
-    $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
+    $request = (new ListImagesRequest())
+        ->setProject($projectId)
+        ->setMaxResults($optionalArgs['maxResults'])
+        ->setFilter($optionalArgs['filter']);
+    $pagedResponse = $imagesClient->list($request);
     print('=================== Flat list of images ===================' . PHP_EOL);
     foreach ($pagedResponse->iterateAllElements() as $element) {
         printf(' - %s' . PHP_EOL, $element->getName());

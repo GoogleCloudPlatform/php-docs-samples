@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_search_all_iam_policies]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\SearchAllIamPoliciesRequest;
 
 /**
  * @param string $scope      Scope of the search
@@ -36,11 +37,12 @@ function search_all_iam_policies(
     $asset = new AssetServiceClient();
 
     // Run request
-    $response = $asset->searchAllIamPolicies($scope, [
-        'query' => $query,
-        'pageSize' => $pageSize,
-        'pageToken' => $pageToken
-    ]);
+    $request = (new SearchAllIamPoliciesRequest())
+        ->setScope($scope)
+        ->setQuery($query)
+        ->setPageSize($pageSize)
+        ->setPageToken($pageToken);
+    $response = $asset->searchAllIamPolicies($request);
 
     // Print the resources that the policies are set on
     foreach ($response->getPage() as $policy) {

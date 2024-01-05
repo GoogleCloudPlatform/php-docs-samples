@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_search_all_resources]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\SearchAllResourcesRequest;
 
 /**
  * @param string   $scope      Scope of the search
@@ -40,13 +41,14 @@ function search_all_resources(
     $asset = new AssetServiceClient();
 
     // Run request
-    $response = $asset->searchAllResources($scope, [
-        'query' => $query,
-        'assetTypes' => $assetTypes,
-        'pageSize' => $pageSize,
-        'pageToken' => $pageToken,
-        'orderBy' => $orderBy
-    ]);
+    $request = (new SearchAllResourcesRequest())
+        ->setScope($scope)
+        ->setQuery($query)
+        ->setAssetTypes($assetTypes)
+        ->setPageSize($pageSize)
+        ->setPageToken($pageToken)
+        ->setOrderBy($orderBy);
+    $response = $asset->searchAllResources($request);
 
     // Print the resource names in the first page of the result
     foreach ($response->getPage() as $resource) {
