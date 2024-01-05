@@ -18,11 +18,12 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_create_glossary]
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\CreateGlossaryRequest;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\Glossary;
-use Google\Cloud\Translate\V3\GlossaryInputConfig;
 use Google\Cloud\Translate\V3\Glossary\LanguageCodesSet;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GlossaryInputConfig;
 
 /**
  * @param string $projectId     Your Google Cloud project ID.
@@ -60,10 +61,10 @@ function v3_create_glossary(
         ->setInputConfig($inputConfig);
 
     try {
-        $operationResponse = $translationServiceClient->createGlossary(
-            $formattedParent,
-            $glossary
-        );
+        $request = (new CreateGlossaryRequest())
+            ->setParent($formattedParent)
+            ->setGlossary($glossary);
+        $operationResponse = $translationServiceClient->createGlossary($request);
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();
