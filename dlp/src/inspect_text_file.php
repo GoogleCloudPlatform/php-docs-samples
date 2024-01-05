@@ -82,7 +82,7 @@ function inspect_text_file(string $projectId, string $filepath): void
         }
     }
 }
-// [END dlp_inspect_text_file]
+// [END dlp_inspect_file]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

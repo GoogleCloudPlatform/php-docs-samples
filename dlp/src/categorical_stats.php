@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -59,12 +58,8 @@ function categorical_stats(
     string $columnName
 ): void {
     // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
+    $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config
@@ -112,8 +107,10 @@ function categorical_stats(
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
@@ -124,7 +121,7 @@ function categorical_stats(
                 break 2; // break from parent do while
             }
         }
-        printf('Waiting for job to complete' . PHP_EOL);
+        print('Waiting for job to complete' . PHP_EOL);
         // Exponential backoff with max delay of 60 seconds
         sleep(min(60, pow(2, ++$attempt)));
     } while (time() - $startTime < 600); // 10 minute timeout
@@ -161,10 +158,10 @@ function categorical_stats(
             }
             break;
         case JobState::PENDING:
-            printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
+            print('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            printf('Unexpected job state.');
+            print('Unexpected job state.');
     }
 }
 # [END dlp_categorical_stats]
