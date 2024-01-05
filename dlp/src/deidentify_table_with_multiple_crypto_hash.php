@@ -24,23 +24,24 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_table_with_multiple_crypto_hash]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoHashConfig;
 use Google\Cloud\Dlp\V2\CryptoKey;
-use Google\Cloud\Dlp\V2\Value;
-use Google\Cloud\Dlp\V2\Table;
-use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\FieldTransformation;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\RecordTransformations;
+use Google\Cloud\Dlp\V2\Table;
+use Google\Cloud\Dlp\V2\Table\Row;
 use Google\Cloud\Dlp\V2\TransientCryptoKey;
+use Google\Cloud\Dlp\V2\Value;
 
 /**
  * De-identify table data with multiple crypto hash.
@@ -158,12 +159,12 @@ function deidentify_table_with_multiple_crypto_hash(
         ->setRecordTransformations($recordtransformations);
 
     // Send the request and receive response from the service.
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'inspectConfig' => $inspectConfig,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setInspectConfig($inspectConfig)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results.
     $csvRef = fopen($outputCsvFile, 'w');
