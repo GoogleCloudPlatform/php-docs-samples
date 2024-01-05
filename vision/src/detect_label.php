@@ -32,7 +32,7 @@ function detect_label(string $path)
     $response = $imageAnnotator->labelDetection($image);
     $labels = $response->getLabelAnnotations();
 
-    if ($labels) {
+    if ($labels->count()) {
         print('Labels:' . PHP_EOL);
         foreach ($labels as $label) {
             print($label->getDescription() . PHP_EOL);

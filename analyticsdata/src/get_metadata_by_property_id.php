@@ -52,6 +52,7 @@ function get_metadata_by_property_id(string $propertyId)
         $response = $client->getMetadata($request);
     } catch (ApiException $ex) {
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+        return;
     }
 
     printf(

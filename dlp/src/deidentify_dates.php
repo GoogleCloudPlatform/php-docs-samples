@@ -51,8 +51,8 @@ use Google\Type\Date;
  * @param string $inputCsvFile      The path to the CSV file to deidentify
  * @param string $outputCsvFile     The path to save the date-shifted CSV file to
  * @param string $dateFieldNames    The comma-separated list of (date) fields in the CSV file to date shift
- * @param string $lowerBoundDays    The maximum number of days to shift a date backward
- * @param string $upperBoundDays    The maximum number of days to shift a date forward
+ * @param int    $lowerBoundDays    The maximum number of days to shift a date backward
+ * @param int    $upperBoundDays    The maximum number of days to shift a date forward
  * @param string $contextFieldName  (Optional) The column to determine date shift amount based on
  * @param string $keyName           (Optional) The encrypted ('wrapped') AES-256 key to use when shifting dates
  * @param string $wrappedKey        (Optional) The name of the Cloud KMS key used to encrypt (wrap) the AES-256 key
@@ -62,8 +62,8 @@ function deidentify_dates(
     string $inputCsvFile,
     string $outputCsvFile,
     string $dateFieldNames,
-    string $lowerBoundDays,
-    string $upperBoundDays,
+    int $lowerBoundDays,
+    int $upperBoundDays,
     string $contextFieldName = '',
     string $keyName = '',
     string $wrappedKey = ''

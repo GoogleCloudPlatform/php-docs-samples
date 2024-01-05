@@ -309,6 +309,31 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
+    public function testCreateAndDeleteStorageSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $bucket = $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET');
+
+        $output = $this->runFunctionSnippet('create_cloud_storage_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $bucket,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
     public function testCreateAndDetachSubscription()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
@@ -433,14 +458,14 @@ class PubSubTest extends TestCase
             self::$projectId,
             $topic,
         ]);
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
 
         $output = $this->runFunctionSnippet('enable_subscription_ordering', [
             self::$projectId,
             $topic,
             'subscriberWithOrdering' . rand(),
         ]);
-        $this->assertRegExp('/Created subscription with ordering/', $output);
-        $this->assertRegExp('/\"enableMessageOrdering\":true/', $output);
+        $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
+        $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
 }

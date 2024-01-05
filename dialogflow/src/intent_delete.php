@@ -18,7 +18,8 @@
 // [START dialogflow_delete_intent]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\IntentsClient;
+use Google\Cloud\Dialogflow\V2\Client\IntentsClient;
+use Google\Cloud\Dialogflow\V2\DeleteIntentRequest;
 
 /**
 * Delete intent with the given intent type and intent value.
@@ -27,8 +28,10 @@ function intent_delete($projectId, $intentId)
 {
     $intentsClient = new IntentsClient();
     $intentName = $intentsClient->intentName($projectId, $intentId);
+    $deleteIntentRequest = (new DeleteIntentRequest())
+        ->setName($intentName);
 
-    $intentsClient->deleteIntent($intentName);
+    $intentsClient->deleteIntent($deleteIntentRequest);
     printf('Intent deleted: %s' . PHP_EOL, $intentName);
 
     $intentsClient->close();
