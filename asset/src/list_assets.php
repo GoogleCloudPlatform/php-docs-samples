@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_list_assets]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\ListAssetsRequest;
 
 /**
  * @param string   $projectId  Tthe project Id for list assets.
@@ -34,10 +35,11 @@ function list_assets(
     $client = new AssetServiceClient();
 
     // Run request
-    $response = $client->listAssets("projects/$projectId", [
-        'assetTypes' => $assetTypes,
-        'pageSize' => $pageSize,
-    ]);
+    $request = (new ListAssetsRequest())
+        ->setParent("projects/$projectId")
+        ->setAssetTypes($assetTypes)
+        ->setPageSize($pageSize);
+    $response = $client->listAssets($request);
 
     // Print the asset names in the result
     foreach ($response->getPage() as $asset) {
