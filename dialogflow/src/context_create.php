@@ -18,8 +18,9 @@
 // [START dialogflow_create_context]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\ContextsClient;
+use Google\Cloud\Dialogflow\V2\Client\ContextsClient;
 use Google\Cloud\Dialogflow\V2\Context;
+use Google\Cloud\Dialogflow\V2\CreateContextRequest;
 
 function context_create($projectId, $contextId, $sessionId, $lifespan = 1)
 {
@@ -33,7 +34,10 @@ function context_create($projectId, $contextId, $sessionId, $lifespan = 1)
     $context->setLifespanCount($lifespan);
 
     // create context
-    $response = $contextsClient->createContext($parent, $context);
+    $createContextRequest = (new CreateContextRequest())
+        ->setParent($parent)
+        ->setContext($context);
+    $response = $contextsClient->createContext($createContextRequest);
     printf('Context created: %s' . PHP_EOL, $response->getName());
 
     $contextsClient->close();

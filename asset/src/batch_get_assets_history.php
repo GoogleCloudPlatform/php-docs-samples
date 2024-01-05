@@ -24,7 +24,11 @@ use Google\Cloud\Asset\V1\ContentType;
 use Google\Cloud\Asset\V1\TimeWindow;
 use Google\Protobuf\Timestamp;
 
-function batch_get_assets_history(string $projectId, array $assetNames)
+/**
+ * @param string   $projectId  Tthe project Id for list assets.
+ * @param string[] $assetNames (Optional) Asset types to list for.
+ */
+function batch_get_assets_history(string $projectId, array $assetNames): void
 {
     $client = new AssetServiceClient();
     $formattedParent = $client->projectName($projectId);

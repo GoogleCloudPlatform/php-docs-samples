@@ -54,7 +54,7 @@ function read_row_partial(
 // [END bigtable_reads_row_partial]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

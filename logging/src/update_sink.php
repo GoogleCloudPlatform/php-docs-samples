@@ -24,7 +24,7 @@ use Google\Cloud\Logging\LoggingClient;
  * Update a log sink.
  *
  * @param string $projectId
- * @param string sinkName
+ * @param string $sinkName
  * @param string $filterString
  */
 function update_sink($projectId, $sinkName, $filterString)

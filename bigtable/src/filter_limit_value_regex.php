@@ -59,7 +59,7 @@ function filter_limit_value_regex(
 // [END bigtable_filters_limit_value_regex]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

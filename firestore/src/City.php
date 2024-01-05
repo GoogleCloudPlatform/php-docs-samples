@@ -26,19 +26,22 @@ namespace Google\Cloud\Samples\Firestore;
 # [START firestore_data_custom_type_definition]
 class City
 {
-    /* var string */
+    /** @var string */
     public $name;
-    /* var string */
+    /** @var string */
     public $state;
-    /* var string */
+    /** @var string */
     public $country;
-    /* var bool */
+    /** @var bool */
     public $capital;
-    /* var int */
+    /** @var int */
     public $population;
-    /* var array */
+    /** @var array<string> */
     public $regions;
 
+    /**
+     * @param array<string> $regions
+     */
     public function __construct(
         string $name,
         string $state,
@@ -55,6 +58,9 @@ class City
         $this->regions = $regions;
     }
 
+    /**
+     * @param array<mixed> $source
+     */
     public static function fromArray(array $source): City
     {
         // implementation of fromArray is excluded for brevity
@@ -72,6 +78,9 @@ class City
         # [END_EXCLUDE]
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         // implementation of toArray is excluded for brevity
