@@ -29,15 +29,12 @@ use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
-use Google\Cloud\Dlp\V2\BigQueryTable;
 use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\GetDlpJobRequest;
 use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\PrivacyMetric\KAnonymityConfig;
-use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
