@@ -18,13 +18,16 @@
 // [START dialogflow_list_session_entity_types]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
+use Google\Cloud\Dialogflow\V2\Client\SessionEntityTypesClient;
+use Google\Cloud\Dialogflow\V2\ListSessionEntityTypesRequest;
 
 function session_entity_type_list($projectId, $sessionId)
 {
     $sessionEntityTypesClient = new SessionEntityTypesClient();
     $parent = $sessionEntityTypesClient->sessionName($projectId, $sessionId);
-    $sessionEntityTypes = $sessionEntityTypesClient->listSessionEntityTypes($parent);
+    $listSessionEntityTypesRequest = (new ListSessionEntityTypesRequest())
+        ->setParent($parent);
+    $sessionEntityTypes = $sessionEntityTypesClient->listSessionEntityTypes($listSessionEntityTypesRequest);
     print('Session entity types:' . PHP_EOL);
     foreach ($sessionEntityTypes->iterateAllElements() as $sessionEntityType) {
         printf('Session entity type name: %s' . PHP_EOL, $sessionEntityType->getName());

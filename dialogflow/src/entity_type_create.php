@@ -18,7 +18,8 @@
 // [START dialogflow_create_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\Client\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\CreateEntityTypeRequest;
 use Google\Cloud\Dialogflow\V2\EntityType;
 use Google\Cloud\Dialogflow\V2\EntityType\Kind;
 
@@ -36,7 +37,10 @@ function entity_type_create($projectId, $displayName, $kind = Kind::KIND_MAP)
     $entityType->setKind($kind);
 
     // create entity type
-    $response = $entityTypesClient->createEntityType($parent, $entityType);
+    $createEntityTypeRequest = (new CreateEntityTypeRequest())
+        ->setParent($parent)
+        ->setEntityType($entityType);
+    $response = $entityTypesClient->createEntityType($createEntityTypeRequest);
     printf('Entity type created: %s' . PHP_EOL, $response->getName());
 
     $entityTypesClient->close();
