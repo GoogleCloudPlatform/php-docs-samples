@@ -25,6 +25,7 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_send_data_to_hybrid_job_trigger]
 
+use Google\ApiCore\ApiException;
 use Google\Cloud\Dlp\V2\Container;
 use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
@@ -76,7 +77,7 @@ function inspect_send_data_to_hybrid_job_trigger(
     $triggerJob = null;
     try {
         $triggerJob = $dlp->activateJobTrigger($name);
-    } catch (\InvalidArgumentException $e) {
+    } catch (ApiException $e) {
         $result = $dlp->listDlpJobs($parent, ['filter' => 'trigger_name=' . $name]);
         foreach ($result as $job) {
             $triggerJob = $job;

@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Asset;
 
 use Google\Cloud\BigQuery\BigQueryClient;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
@@ -30,6 +31,7 @@ use PHPUnitRetry\RetryTrait;
  */
 class assetSearchTest extends TestCase
 {
+    use EventuallyConsistentTestTrait;
     use RetryTrait;
     use TestTrait;
 
@@ -55,12 +57,16 @@ class assetSearchTest extends TestCase
         $scope = 'projects/' . self::$projectId;
         $query = 'name:' . self::$datasetId;
 
-        $output = $this->runFunctionSnippet('search_all_resources', [
-            $scope,
-            $query
-        ]);
+        $this->runEventuallyConsistentTest(
+            function () use ($scope, $query) {
+                $output = $this->runFunctionSnippet('search_all_resources', [
+                    $scope,
+                    $query
+                ]);
 
-        $this->assertStringContainsString(self::$datasetId, $output);
+                $this->assertStringContainsString(self::$datasetId, $output);
+            }
+        );
     }
 
     public function testSearchAllIamPolicies()
@@ -68,10 +74,14 @@ class assetSearchTest extends TestCase
         $scope = 'projects/' . self::$projectId;
         $query = 'policy:roles/owner';
 
-        $output = $this->runFunctionSnippet('search_all_iam_policies', [
-            $scope,
-            $query
-        ]);
-        $this->assertStringContainsString(self::$projectId, $output);
+        $this->runEventuallyConsistentTest(
+            function () use ($scope, $query) {
+                $output = $this->runFunctionSnippet('search_all_iam_policies', [
+                    $scope,
+                    $query
+                ]);
+                $this->assertStringContainsString(self::$projectId, $output);
+            }
+        );
     }
 }

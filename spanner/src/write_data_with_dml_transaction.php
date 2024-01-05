@@ -51,7 +51,7 @@ function write_data_with_dml_transaction(string $instanceId, string $databaseId)
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         // Transfer marketing budget from one album to another. We do it in a transaction to
         // ensure that the transfer is atomic.
         $transferAmount = 200000;

@@ -71,7 +71,7 @@ function pg_numeric_data_type(string $instanceId, string $databaseId, string $ta
         printf('Inserted %d venue(s).' . PHP_EOL, $count);
     });
 
-    $database->runTransaction(function (Transaction $t) use ($spanner, $sql) {
+    $database->runTransaction(function (Transaction $t) use ($sql) {
         $count = $t->executeUpdate($sql, [
                 'parameters' => [
                     'p1' => 2,

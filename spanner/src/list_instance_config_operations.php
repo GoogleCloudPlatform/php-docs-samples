@@ -33,7 +33,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * list_instance_config_operations();
  * ```
  */
-function list_instance_config_operations()
+function list_instance_config_operations(): void
 {
     $spanner = new SpannerClient();
 

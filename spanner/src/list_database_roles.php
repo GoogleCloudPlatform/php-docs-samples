@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_list_database_roles]
-use Google\Cloud\Spanner\Admin\Database\V1\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\ListDatabaseRolesRequest;
 
 /**
  * List Database roles in the given database.
@@ -44,8 +45,10 @@ function list_database_roles(
 ): void {
     $adminClient = new DatabaseAdminClient();
     $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
+    $listDatabaseRolesRequest = (new ListDatabaseRolesRequest())
+        ->setParent($resource);
 
-    $roles = $adminClient->listDatabaseRoles($resource);
+    $roles = $adminClient->listDatabaseRoles($listDatabaseRolesRequest);
     printf('List of Database roles:' . PHP_EOL);
     foreach ($roles as $role) {
         printf($role->getName() . PHP_EOL);

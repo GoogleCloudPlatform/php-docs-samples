@@ -27,6 +27,8 @@ use Psr\Log\LogLevel;
  * @param string $projectId The Google project ID.
  * @param string $loggerName The name of the logger.
  * @param string $message The log message.
+ * @param string $level The log level.
+ * @phpstan-param LogLevel::* $level
  */
 function write_with_psr_logger(
     string $projectId,
