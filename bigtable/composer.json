@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-bigtable": "^1.26.2"
+        "google/cloud-bigtable": "^1.30"
     },
     "autoload-dev": {
         "psr-4": {
