@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Logging;
 
 // [START logging_write_log_entry]
 use Google\Cloud\Logging\LoggingClient;
+use Google\Cloud\Logging\Logger;
 
 /** Write a log message via the Stackdriver Logging API.
  *
@@ -37,7 +38,9 @@ function write_log($projectId, $loggerName, $message)
             ]
         ]
     ]);
-    $entry = $logger->entry($message);
+    $entry = $logger->entry($message, [
+        'severity' => Logger::INFO
+    ]);
     $logger->write($entry);
     printf("Wrote a log to a logger '%s'." . PHP_EOL, $loggerName);
 }
