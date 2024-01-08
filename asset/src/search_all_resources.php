@@ -18,15 +18,16 @@
 namespace Google\Cloud\Samples\Asset;
 
 // [START asset_quickstart_search_all_resources]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\SearchAllResourcesRequest;
 
 /**
- * @param string       $scope      Scope of the search
- * @param string       $query      (Optional) Query statement
- * @param string|array $assetTypes (Optional) Asset types to search for
- * @param int          $pageSize   (Optional) Size of each result page
- * @param string       $pageToken  (Optional) Token produced by the preceding call
- * @param string       $orderBy    (Optional) Fields to sort the results
+ * @param string   $scope      Scope of the search
+ * @param string   $query      (Optional) Query statement
+ * @param string[] $assetTypes (Optional) Asset types to search for
+ * @param int      $pageSize   (Optional) Size of each result page
+ * @param string   $pageToken  (Optional) Token produced by the preceding call
+ * @param string   $orderBy    (Optional) Fields to sort the results
  */
 function search_all_resources(
     string $scope,
@@ -35,18 +36,19 @@ function search_all_resources(
     int $pageSize = 0,
     string $pageToken = '',
     string $orderBy = ''
-) {
+): void {
     // Instantiate a client.
     $asset = new AssetServiceClient();
 
     // Run request
-    $response = $asset->searchAllResources($scope, [
-        'query' => $query,
-        'assetTypes' => $assetTypes,
-        'pageSize' => $pageSize,
-        'pageToken' => $pageToken,
-        'orderBy' => $orderBy
-    ]);
+    $request = (new SearchAllResourcesRequest())
+        ->setScope($scope)
+        ->setQuery($query)
+        ->setAssetTypes($assetTypes)
+        ->setPageSize($pageSize)
+        ->setPageToken($pageToken)
+        ->setOrderBy($orderBy);
+    $response = $asset->searchAllResources($request);
 
     // Print the resource names in the first page of the result
     foreach ($response->getPage() as $resource) {

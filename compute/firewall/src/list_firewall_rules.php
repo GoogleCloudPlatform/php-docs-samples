@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_firewall_list]
-use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
+use Google\Cloud\Compute\V1\ListFirewallsRequest;
 
 /**
  * Return a list of all the firewall rules in specified project. Also prints the
@@ -38,7 +39,9 @@ function list_firewall_rules(string $projectId)
 {
     // List all firewall rules defined for the project using Firewalls Client.
     $firewallClient = new FirewallsClient();
-    $firewallList = $firewallClient->list($projectId);
+    $request = (new ListFirewallsRequest())
+        ->setProject($projectId);
+    $firewallList = $firewallClient->list($request);
 
     print('--- Firewall Rules ---' . PHP_EOL);
     foreach ($firewallList->iterateAllElements() as $firewall) {

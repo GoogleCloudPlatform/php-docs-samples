@@ -39,7 +39,9 @@ use Google\Cloud\Storage\StorageClient;
 function upload_object(string $bucketName, string $objectName, string $source): void
 {
     $storage = new StorageClient();
-    $file = fopen($source, 'r');
+    if (!$file = fopen($source, 'r')) {
+        throw new \InvalidArgumentException('Unable to open file for reading');
+    }
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->upload($file, [
         'name' => $objectName

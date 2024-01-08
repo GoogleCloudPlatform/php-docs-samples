@@ -25,20 +25,21 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_table_row_suppress]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\Value;
-use Google\Cloud\Dlp\V2\Table;
-use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\Dlp\V2\RecordTransformations;
-use Google\Cloud\Dlp\V2\RelationalOperator;
 use Google\Cloud\Dlp\V2\RecordCondition;
 use Google\Cloud\Dlp\V2\RecordCondition\Condition;
 use Google\Cloud\Dlp\V2\RecordCondition\Conditions;
 use Google\Cloud\Dlp\V2\RecordCondition\Expressions;
 use Google\Cloud\Dlp\V2\RecordSuppression;
+use Google\Cloud\Dlp\V2\RecordTransformations;
+use Google\Cloud\Dlp\V2\RelationalOperator;
+use Google\Cloud\Dlp\V2\Table;
+use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\Value;
 
 /**
  * De-identify table data: Suppress a row based on the content of a column
@@ -115,11 +116,11 @@ function deidentify_table_row_suppress(
         ->setRecordTransformations($recordtransformations);
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results
     $csvRef = fopen($outputCsvFile, 'w');

@@ -1048,6 +1048,46 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Transaction complete.', $output);
     }
 
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testCreateSequence()
+    {
+        $output = $this->runFunctionSnippet('create_sequence');
+        $this->assertStringContainsString(
+            'Created Seq sequence and Customers table, where ' .
+            'the key column CustomerId uses the sequence as a default value',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testCreateSequence
+     */
+    public function testAlterSequence()
+    {
+        $output = $this->runFunctionSnippet('alter_sequence');
+        $this->assertStringContainsString(
+            'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testAlterSequence
+     */
+    public function testDropSequence()
+    {
+        $output = $this->runFunctionSnippet('drop_sequence');
+        $this->assertStringContainsString(
+            'Altered Customers table to drop DEFAULT from CustomerId ' .
+            'column and dropped the Seq sequence',
+            $output
+        );
+    }
+
     private function testGetInstanceConfig()
     {
         $output = $this->runFunctionSnippet('get_instance_config', [
@@ -1227,5 +1267,18 @@ class spannerTest extends TestCase
             'foreign key constraint on database',
             $output
         );
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testDirectedRead()
+    {
+        $output = $this->runFunctionSnippet('directed_read');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 }

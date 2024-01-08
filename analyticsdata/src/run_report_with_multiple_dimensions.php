@@ -37,7 +37,7 @@ use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
+ * @param string $propertyId Your GA-4 Property ID
  * Runs a report of active users grouped by three dimensions.
  */
 function run_report_with_multiple_dimensions(string $propertyId)

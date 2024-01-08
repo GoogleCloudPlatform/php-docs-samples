@@ -21,8 +21,10 @@ namespace Google\Cloud\Samples\Kms;
 
 // [START kms_iam_remove_member]
 use Google\Cloud\Iam\V1\Binding;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
 use Google\Cloud\Iam\V1\Policy;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 
 function iam_remove_member(
     string $projectId = 'my-project',
@@ -30,7 +32,7 @@ function iam_remove_member(
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $member = 'user:foo@example.com'
-) {
+): Policy {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -41,7 +43,9 @@ function iam_remove_member(
     // $resourceName = $client->keyRingName($projectId, $locationId, $keyRingId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($resourceName);
+    $getIamPolicyRequest = (new GetIamPolicyRequest())
+        ->setResource($resourceName);
+    $policy = $client->getIamPolicy($getIamPolicyRequest);
 
     // Remove the member from the policy by creating a new policy with everyone
     // but the member to remove.
@@ -67,7 +71,10 @@ function iam_remove_member(
     }
 
     // Save the updated IAM policy.
-    $updatedPolicy = $client->setIamPolicy($resourceName, $newPolicy);
+    $setIamPolicyRequest = (new SetIamPolicyRequest())
+        ->setResource($resourceName)
+        ->setPolicy($newPolicy);
+    $updatedPolicy = $client->setIamPolicy($setIamPolicyRequest);
     printf('Removed %s' . PHP_EOL, $member);
 
     return $updatedPolicy;

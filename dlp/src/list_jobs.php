@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_jobs]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\DlpJobType;
+use Google\Cloud\Dlp\V2\ListDlpJobsRequest;
 
 /**
  * List Data Loss Prevention API jobs corresponding to a given filter.
@@ -47,10 +48,11 @@ function list_jobs(string $callingProjectId, string $filter): void
     // For more information and filter syntax,
     // @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
     $parent = "projects/$callingProjectId/locations/global";
-    $response = $dlp->listDlpJobs($parent, [
-    'filter' => $filter,
-    'type' => $jobType
-    ]);
+    $listDlpJobsRequest = (new ListDlpJobsRequest())
+        ->setParent($parent)
+        ->setFilter($filter)
+        ->setType($jobType);
+    $response = $dlp->listDlpJobs($listDlpJobsRequest);
 
     // Print job list
     $jobs = $response->iterateAllElements();

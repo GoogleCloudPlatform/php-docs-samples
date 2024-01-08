@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_verify_asymmetric_signature_ec]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetPublicKeyRequest;
 
 function verify_asymmetric_ec(
     string $projectId = 'my-project',
@@ -30,7 +31,7 @@ function verify_asymmetric_ec(
     string $versionId = '123',
     string $message = '...',
     string $signature = '...'
-) {
+): bool {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -38,7 +39,9 @@ function verify_asymmetric_ec(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Get the public key.
-    $publicKey = $client->getPublicKey($keyVersionName);
+    $getPublicKeyRequest = (new GetPublicKeyRequest())
+        ->setName($keyVersionName);
+    $publicKey = $client->getPublicKey($getPublicKeyRequest);
 
     // Verify the signature. The hash algorithm must correspond to the key
     // algorithm. The openssl_verify command returns 1 on success, 0 on falure.

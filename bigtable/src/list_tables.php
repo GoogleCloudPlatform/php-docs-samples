@@ -47,6 +47,7 @@ function list_tables(
     $listTablesRequest = (new ListTablesRequest())
         ->setParent($instanceName);
     $tables = $tableAdminClient->listTables($listTablesRequest)->iterateAllElements();
+    $tables = iterator_to_array($tables);
     if (empty($tables)) {
         print('No table exists.' . PHP_EOL);
         return;
