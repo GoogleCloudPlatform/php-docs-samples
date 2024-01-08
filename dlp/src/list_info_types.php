@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_info_types]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ListInfoTypesRequest;
 
 /**
  * Lists all Info Types for the Data Loss Prevention (DLP) API.
@@ -39,10 +40,10 @@ function list_info_types(string $filter = '', string $languageCode = ''): void
     $dlp = new DlpServiceClient();
 
     // Run request
-    $response = $dlp->listInfoTypes([
-        'languageCode' => $languageCode,
-        'filter' => $filter
-    ]);
+    $listInfoTypesRequest = (new ListInfoTypesRequest())
+        ->setLanguageCode($languageCode)
+        ->setFilter($filter);
+    $response = $dlp->listInfoTypes($listInfoTypesRequest);
 
     // Print the results
     print('Info Types:' . PHP_EOL);

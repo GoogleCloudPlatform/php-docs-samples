@@ -1,0 +1,8 @@
+parameters:
+    level: 5
+    treatPhpDocTypesAsCertain: false
+    excludePaths:
+    - ../../../pubsub/api/src/data
+    ignoreErrors:
+    - '#Utilities\\StateProto#'
+

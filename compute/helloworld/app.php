@@ -17,14 +17,22 @@
 
 require_once 'vendor/autoload.php';
 
-use Google\Cloud\Compute\V1\InstancesClient;
-use Google\Cloud\Compute\V1\ZonesClient;
-use Google\Cloud\Compute\V1\MachineTypesClient;
-use Google\Cloud\Compute\V1\ImagesClient;
-use Google\Cloud\Compute\V1\FirewallsClient;
-use Google\Cloud\Compute\V1\NetworksClient;
-use Google\Cloud\Compute\V1\DisksClient;
-use Google\Cloud\Compute\V1\GlobalOperationsClient;
+use Google\Cloud\Compute\V1\Client\DisksClient;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
+use Google\Cloud\Compute\V1\Client\GlobalOperationsClient;
+use Google\Cloud\Compute\V1\Client\ImagesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\Client\MachineTypesClient;
+use Google\Cloud\Compute\V1\Client\NetworksClient;
+use Google\Cloud\Compute\V1\Client\ZonesClient;
+use Google\Cloud\Compute\V1\ListDisksRequest;
+use Google\Cloud\Compute\V1\ListFirewallsRequest;
+use Google\Cloud\Compute\V1\ListGlobalOperationsRequest;
+use Google\Cloud\Compute\V1\ListImagesRequest;
+use Google\Cloud\Compute\V1\ListInstancesRequest;
+use Google\Cloud\Compute\V1\ListMachineTypesRequest;
+use Google\Cloud\Compute\V1\ListNetworksRequest;
+use Google\Cloud\Compute\V1\ListZonesRequest;
 use Google\Protobuf\Internal\Message;
 
 /**
@@ -53,6 +61,26 @@ function print_message(Message $message)
         JSON_PRETTY_PRINT
     );
 }
+
+$request = (new ListInstancesRequest())
+    ->setProject($projectId)
+    ->setZone($zoneName);
+$request2 = (new ListZonesRequest())
+    ->setProject($projectId);
+$request3 = (new ListDisksRequest())
+    ->setProject($projectId)
+    ->setZone($zoneName);
+$request4 = (new ListMachineTypesRequest())
+    ->setProject($projectId)
+    ->setZone($zoneName);
+$request5 = (new ListImagesRequest())
+    ->setProject($projectId);
+$request6 = (new ListFirewallsRequest())
+    ->setProject($projectId);
+$request7 = (new ListNetworksRequest())
+    ->setProject($projectId);
+$request8 = (new ListGlobalOperationsRequest())
+    ->setProject($projectId);
 ?>
 <!doctype html>
 <html>
@@ -62,56 +90,56 @@ function print_message(Message $message)
         <div class="main-content">
             <h2 class="collapsible">List Instances</h2>
             <div id="listInstances" class="collapsible-content">
-                <?php foreach ($instancesClient->list($projectId, $zoneName) as $instance): ?>
+                <?php foreach ($instancesClient->list($request) as $instance): ?>
                     <pre><?= print_message($instance) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Zones</h2>
             <div id="listZones" class="collapsible-content">
-                <?php foreach ($zonesClient->list($projectId) as $zone): ?>
+                <?php foreach ($zonesClient->list($request2) as $zone): ?>
                     <pre><?= print_message($zone) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Disks</h2>
             <div id="listDisks" class="collapsible-content">
-                <?php foreach ($disksClient->list($projectId, $zoneName) as $disk): ?>
+                <?php foreach ($disksClient->list($request3) as $disk): ?>
                     <pre><?= print_message($disk) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Machine Types</h2>
             <div id="listMachineTypes" class="collapsible-content">
-                <?php foreach ($machineTypesClient->list($projectId, $zoneName) as $machineType): ?>
+                <?php foreach ($machineTypesClient->list($request4) as $machineType): ?>
                     <pre><?= print_message($machineType) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Images</h2>
             <div id="listImages" class="collapsible-content">
-                <?php foreach ($imagesClient->list($projectId) as $image): ?>
+                <?php foreach ($imagesClient->list($request5) as $image): ?>
                     <pre><?= print_message($image) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Firewalls</h2>
             <div id="listFirewalls" class="collapsible-content">
-                <?php foreach ($firewalls = $firewallsClient->list($projectId) as $firewall): ?>
+                <?php foreach ($firewalls = $firewallsClient->list($request6) as $firewall): ?>
                     <pre><?= print_message($firewall) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Networks</h2>
             <div id="listNetworks" class="collapsible-content">
-                <?php foreach ($networksClient->list($projectId) as $network): ?>
+                <?php foreach ($networksClient->list($request7) as $network): ?>
                     <pre><?= print_message($network) ?></pre>
                 <?php endforeach ?>
             </div>
 
             <h2 class="collapsible">List Operations</h2>
             <div id="listGlobalOperations" class="collapsible-content">
-                <?php foreach ($globalOperationsClient->list($projectId) as $operation): ?>
+                <?php foreach ($globalOperationsClient->list($request8) as $operation): ?>
                     <pre><?= print_message($operation) ?></pre>
                 <?php endforeach ?>
             </div>

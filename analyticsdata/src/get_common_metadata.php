@@ -36,7 +36,7 @@ use Google\ApiCore\ApiException;
 /**
  * Retrieves dimensions and metrics available for all Google Analytics 4 properties.
  */
-function get_common_metadata()
+function get_common_metadata(): void
 {
     // Create an instance of the Google Analytics Data API client library.
     $client = new BetaAnalyticsDataClient();
@@ -56,6 +56,7 @@ function get_common_metadata()
         $response = $client->getMetadata($request);
     } catch (ApiException $ex) {
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+        return;
     }
 
     print('Dimensions and metrics available for all Google Analytics 4 properties:');

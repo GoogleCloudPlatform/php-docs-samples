@@ -1268,4 +1268,17 @@ class spannerTest extends TestCase
             $output
         );
     }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testDirectedRead()
+    {
+        $output = $this->runFunctionSnippet('directed_read');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
+    }
 }

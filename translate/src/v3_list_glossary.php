@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_list_glossary]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\ListGlossariesRequest;
 
 /**
  * @param string $projectId Your Google Cloud project ID.
@@ -34,7 +35,9 @@ function v3_list_glossary(string $projectId): void
 
     try {
         // Iterate through all elements
-        $pagedResponse = $translationServiceClient->listGlossaries($formattedParent);
+        $request = (new ListGlossariesRequest())
+            ->setParent($formattedParent);
+        $pagedResponse = $translationServiceClient->listGlossaries($request);
         foreach ($pagedResponse->iterateAllElements() as $responseItem) {
             printf('Glossary name: %s' . PHP_EOL, $responseItem->getName());
             printf('Entry count: %s' . PHP_EOL, $responseItem->getEntryCount());

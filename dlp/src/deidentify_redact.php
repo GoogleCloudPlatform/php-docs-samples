@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_redact]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
@@ -78,12 +79,12 @@ function deidentify_redact(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'inspectConfig' => $inspectConfig,
-        'item' => $contentItem
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setInspectConfig($inspectConfig)
+        ->setItem($contentItem);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print results
     printf('Text after redaction: %s', $response->getItem()->getValue());

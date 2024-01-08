@@ -26,9 +26,10 @@ namespace Google\Cloud\Samples\TextToSpeech;
 // [START tts_synthesize_ssml_file]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\Client\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\SynthesizeSpeechRequest;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 /**
@@ -52,8 +53,12 @@ function synthesize_ssml_file(string $path): void
 
     $audioConfig = (new AudioConfig())
         ->setAudioEncoding(AudioEncoding::MP3);
+    $request = (new SynthesizeSpeechRequest())
+        ->setInput($input_text)
+        ->setVoice($voice)
+        ->setAudioConfig($audioConfig);
 
-    $response = $client->synthesizeSpeech($input_text, $voice, $audioConfig);
+    $response = $client->synthesizeSpeech($request);
     $audioContent = $response->getAudioContent();
 
     file_put_contents('output.mp3', $audioContent);

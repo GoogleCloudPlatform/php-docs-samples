@@ -836,6 +836,7 @@ class storageTest extends TestCase
         $bucket = self::$storage->createBucket($bucketName, [
             'autoclass' => [
                 'enabled' => true,
+                'terminalStorageClass' => 'ARCHIVE',
             ],
             'location' => 'US',
         ]);
@@ -849,30 +850,38 @@ class storageTest extends TestCase
             sprintf('Bucket %s has autoclass enabled: %s', $bucketName, true),
             $output
         );
+        $this->assertStringContainsString(
+            sprintf('Autoclass terminal storage class is set to %s', 'ARCHIVE'),
+            $output
+        );
     }
 
     public function testSetBucketWithAutoclass()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'), [
-            'autoclass' => [
-                'enabled' => true,
-            ],
             'location' => 'US',
         ]);
-        $info = $bucket->reload();
-        $this->assertArrayHasKey('autoclass', $info);
-        $this->assertTrue($info['autoclass']['enabled']);
 
+        $terminalStorageClass = 'ARCHIVE';
         $output = self::runFunctionSnippet('set_bucket_autoclass', [
             $bucket->name(),
-            false
+            true,
+            $terminalStorageClass
         ]);
         $bucket->delete();
 
         $this->assertStringContainsString(
             sprintf(
-                'Updated bucket %s with autoclass set to false.',
-                $bucket->name(),
+                'Updated bucket %s with autoclass set to true.',
+                $bucket->name()
+            ),
+            $output
+        );
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Autoclass terminal storage class is %s.' . PHP_EOL,
+                $terminalStorageClass
             ),
             $output
         );

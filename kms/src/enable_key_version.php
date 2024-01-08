@@ -31,7 +31,7 @@ function enable_key_version(
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $versionId = '123'
-) {
+): CryptoKeyVersion {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

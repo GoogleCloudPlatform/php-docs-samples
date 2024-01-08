@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_images_list_page]
-use Google\Cloud\Compute\V1\ImagesClient;
+use Google\Cloud\Compute\V1\Client\ImagesClient;
+use Google\Cloud\Compute\V1\ListImagesRequest;
 
 /**
  * Prints a list of all non-deprecated image names available in a given project,
@@ -47,7 +48,11 @@ function list_images_by_page(string $projectId, int $pageSize = 10)
      * paginated results from the API. Each time you want to access the next page, the library retrieves
      * that page from the API.
      */
-    $pagedResponse = $imagesClient->list($projectId, $optionalArgs);
+    $request = (new ListImagesRequest())
+        ->setProject($projectId)
+        ->setMaxResults($optionalArgs['maxResults'])
+        ->setFilter($optionalArgs['filter']);
+    $pagedResponse = $imagesClient->list($request);
     print('=================== Paginated list of images ===================' . PHP_EOL);
     foreach ($pagedResponse->iteratePages() as $page) {
         printf('Page %s:' . PHP_EOL, $pageNum);

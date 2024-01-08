@@ -33,7 +33,7 @@ function create_key_hsm(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-hsm-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

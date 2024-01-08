@@ -31,7 +31,7 @@ function detect_label_gcs(string $path)
     $response = $imageAnnotator->labelDetection($path);
     $labels = $response->getLabelAnnotations();
 
-    if ($labels) {
+    if ($labels->count()) {
         print('Labels:' . PHP_EOL);
         foreach ($labels as $label) {
             print($label->getDescription() . PHP_EOL);

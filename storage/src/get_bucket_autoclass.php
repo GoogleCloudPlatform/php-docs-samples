@@ -47,6 +47,12 @@ function get_bucket_autoclass(string $bucketName): void
             $bucketName,
             $info['autoclass']['toggleTime']
         );
+        printf(
+            'Autoclass terminal storage class is set to %s for %s at %s.' . PHP_EOL,
+            $info['autoclass']['terminalStorageClass'],
+            $info['name'],
+            $info['autoclass']['terminalStorageClassUpdateTime'],
+        );
     }
 }
 # [END storage_get_autoclass]
