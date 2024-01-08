@@ -24,8 +24,15 @@ use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\GenerateRandomBytesRequest;
 use Google\Cloud\Kms\V1\ProtectionLevel;
 
+/**
+ * Generate a random byte string using Cloud KMS.
+ *
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $locationId The location ID (e.g. us-east1).
+ * @param int $numBytes The number of bytes to generate.
+ */
 function generate_random_bytes(
-    string $projectId = 'my-project',
+    string $projectId,
     string $locationId = 'us-east1',
     int $numBytes = 256
 ) {
@@ -36,7 +43,10 @@ function generate_random_bytes(
     $locationName = $client->locationName($projectId, $locationId);
 
     // Call the API.
-    $generateRandomBytesRequest = new GenerateRandomBytesRequest();
+    $generateRandomBytesRequest = (new GenerateRandomBytesRequest())
+        ->setLocation($locationName)
+        ->setLengthBytes($numBytes)
+        ->setProtectionLevel(ProtectionLevel::HSM);
     $randomBytesResponse = $client->generateRandomBytes($generateRandomBytesRequest);
 
     // The data comes back as raw bytes, which may include non-printable
