@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_delete_glossary]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\DeleteGlossaryRequest;
 
 /**
  * @param string $projectId     Your Google Cloud project ID.
@@ -35,7 +36,9 @@ function v3_delete_glossary(string $projectId, string $glossaryId): void
     );
 
     try {
-        $operationResponse = $translationServiceClient->deleteGlossary($formattedName);
+        $request = (new DeleteGlossaryRequest())
+            ->setName($formattedName);
+        $operationResponse = $translationServiceClient->deleteGlossary($request);
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();

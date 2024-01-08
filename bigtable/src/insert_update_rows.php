@@ -102,7 +102,7 @@ function insert_update_rows(
     printf('Data inserted successfully!' . PHP_EOL);
 }
 
-function time_in_microseconds()
+function time_in_microseconds(): float
 {
     $mt = microtime(true);
     $mt = sprintf('%.03f', $mt);

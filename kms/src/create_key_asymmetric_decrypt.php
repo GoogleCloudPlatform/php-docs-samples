@@ -20,11 +20,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_create_key_asymmetric_decrypt]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateCryptoKeyRequest;
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 use Google\Protobuf\Duration;
 
 function create_key_asymmetric_decrypt(
@@ -32,7 +33,7 @@ function create_key_asymmetric_decrypt(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-asymmetric-decrypt-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -52,7 +53,11 @@ function create_key_asymmetric_decrypt(
         );
 
     // Call the API.
-    $createdKey = $client->createCryptoKey($keyRingName, $id, $key);
+    $createCryptoKeyRequest = (new CreateCryptoKeyRequest())
+        ->setParent($keyRingName)
+        ->setCryptoKeyId($id)
+        ->setCryptoKey($key);
+    $createdKey = $client->createCryptoKey($createCryptoKeyRequest);
     printf('Created asymmetric decryption key: %s' . PHP_EOL, $createdKey->getName());
 
     return $createdKey;

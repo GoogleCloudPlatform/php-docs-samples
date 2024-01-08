@@ -26,10 +26,13 @@ list($_, $projectId, $secretId) = $argv;
 
 // [START secretmanager_quickstart]
 // Import the Secret Manager client library.
+use Google\Cloud\SecretManager\V1\AccessSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 
 /** Uncomment and populate these variables in your code */
@@ -43,21 +46,28 @@ $client = new SecretManagerServiceClient();
 $parent = $client->projectName($projectId);
 
 // Create the parent secret.
-$secret = $client->createSecret($parent, $secretId,
-    new Secret([
+$createSecretRequest = (new CreateSecretRequest())
+    ->setParent($parent)
+    ->setSecretId($secretId)
+    ->setSecret(new Secret([
         'replication' => new Replication([
             'automatic' => new Automatic(),
         ]),
-    ])
-);
+    ]));
+$secret = $client->createSecret($createSecretRequest);
 
 // Add the secret version.
-$version = $client->addSecretVersion($secret->getName(), new SecretPayload([
+$addSecretVersionRequest = (new AddSecretVersionRequest())
+    ->setParent($secret->getName())
+    ->setPayload(new SecretPayload([
     'data' => 'hello world',
 ]));
+$version = $client->addSecretVersion($addSecretVersionRequest);
 
 // Access the secret version.
-$response = $client->accessSecretVersion($version->getName());
+$accessSecretVersionRequest = (new AccessSecretVersionRequest())
+    ->setName($version->getName());
+$response = $client->accessSecretVersion($accessSecretVersionRequest);
 
 // Print the secret payload.
 //

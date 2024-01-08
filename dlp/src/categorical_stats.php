@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2018 Google Inc.
  *
@@ -25,15 +24,17 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_categorical_stats]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
-use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
-use Google\Cloud\Dlp\V2\PrivacyMetric\CategoricalStatsConfig;
-use Google\Cloud\Dlp\V2\PrivacyMetric;
+use Google\Cloud\Dlp\V2\BigQueryTable;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
+use Google\Cloud\Dlp\V2\PrivacyMetric;
+use Google\Cloud\Dlp\V2\PrivacyMetric\CategoricalStatsConfig;
+use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -57,12 +58,8 @@ function categorical_stats(
     string $columnName
 ): void {
     // Instantiate a client.
-    $dlp = new DlpServiceClient([
-        'projectId' => $callingProjectId,
-    ]);
-    $pubsub = new PubSubClient([
-        'projectId' => $callingProjectId,
-    ]);
+    $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
     $topic = $pubsub->topic($topicId);
 
     // Construct risk analysis config
@@ -96,9 +93,10 @@ function categorical_stats(
 
     // Submit request
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'riskJob' => $riskJob
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setRiskJob($riskJob);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     // Listen for job notifications via an existing topic/subscription.
     $subscription = $topic->subscription($subscriptionId);
@@ -109,17 +107,21 @@ function categorical_stats(
     $startTime = time();
     do {
         foreach ($subscription->pull() as $message) {
-            if (isset($message->attributes()['DlpJobName']) &&
-                $message->attributes()['DlpJobName'] === $job->getName()) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
-                    $job = $dlp->getDlpJob($job->getName());
+                    $getDlpJobRequest = (new GetDlpJobRequest())
+                        ->setName($job->getName());
+                    $job = $dlp->getDlpJob($getDlpJobRequest);
                 } while ($job->getState() == JobState::RUNNING);
                 break 2; // break from parent do while
             }
         }
-        printf('Waiting for job to complete' . PHP_EOL);
+        print('Waiting for job to complete' . PHP_EOL);
         // Exponential backoff with max delay of 60 seconds
         sleep(min(60, pow(2, ++$attempt)));
     } while (time() - $startTime < 600); // 10 minute timeout
@@ -156,10 +158,10 @@ function categorical_stats(
             }
             break;
         case JobState::PENDING:
-            printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
+            print('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
             break;
         default:
-            printf('Unexpected job state.');
+            print('Unexpected job state.');
     }
 }
 # [END dlp_categorical_stats]

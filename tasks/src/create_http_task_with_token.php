@@ -25,11 +25,12 @@ list($_, $projectId, $locationId, $queueId, $url, $serviceAccountEmail) = $argv;
 $payload = isset($payload[6]) ? $payload[6] : null;
 
 # [START cloud_tasks_create_http_task_with_token]
-use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Google\Cloud\Tasks\V2\Client\CloudTasksClient;
+use Google\Cloud\Tasks\V2\CreateTaskRequest;
 use Google\Cloud\Tasks\V2\HttpMethod;
 use Google\Cloud\Tasks\V2\HttpRequest;
-use Google\Cloud\Tasks\V2\Task;
 use Google\Cloud\Tasks\V2\OidcToken;
+use Google\Cloud\Tasks\V2\Task;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = 'The Google project ID';
@@ -66,7 +67,10 @@ $task = new Task();
 $task->setHttpRequest($httpRequest);
 
 // Send request and print the task name.
-$response = $client->createTask($queueName, $task);
+$request = (new CreateTaskRequest())
+    ->setParent($queueName)
+    ->setTask($task);
+$response = $client->createTask($request);
 printf('Created task %s' . PHP_EOL, $response->getName());
 
 # [END cloud_tasks_create_http_task_with_token]

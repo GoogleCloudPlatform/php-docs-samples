@@ -36,7 +36,7 @@ use Google\ApiCore\ApiException;
 /**
  * @param string $projectId Your project ID
  */
-function alert_restore_policies($projectId)
+function alert_restore_policies(string $projectId): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
@@ -48,14 +48,14 @@ function alert_restore_policies($projectId)
 
     print('Loading alert policies and notification channels from backup.json.' . PHP_EOL);
     $projectName = $alertClient->projectName($projectId);
-    $record = json_decode(file_get_contents('backup.json'), true);
+    $record = json_decode((string) file_get_contents('backup.json'), true);
     $isSameProject = $projectName == $record['project_name'];
 
     # Convert dicts to AlertPolicies.
     $policies = [];
     foreach ($record['policies'] as $policyArray) {
         $policy = new AlertPolicy();
-        $policy->mergeFromJsonString(json_encode($policyArray));
+        $policy->mergeFromJsonString((string) json_encode($policyArray));
         $policies[] = $policy;
     }
 
@@ -63,7 +63,7 @@ function alert_restore_policies($projectId)
     $channels = [];
     foreach (array_filter($record['channels']) as $channelArray) {
         $channel = new NotificationChannel();
-        $channel->mergeFromJsonString(json_encode($channelArray));
+        $channel->mergeFromJsonString((string) json_encode($channelArray));
         $channels[] = $channel;
     }
 
@@ -108,8 +108,8 @@ function alert_restore_policies($projectId)
     foreach ($policies as $policy) {
         printf('Updating policy %s' . PHP_EOL, $policy->getDisplayName());
         # These two fields cannot be set directly, so clear them.
-        $policy->setCreationRecord(null);
-        $policy->setMutationRecord(null);
+        $policy->clearCreationRecord();
+        $policy->clearMutationRecord();
 
         $notificationChannels = $policy->getNotificationChannels();
 
