@@ -41,6 +41,7 @@ use Google\Cloud\Monitoring\V3\UptimeCheckConfig;
  */
 function create_uptime_check($projectId, $hostName = 'example.com', $displayName = 'New uptime check')
 {
+    $projectName = 'projects/' . $projectId;
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
@@ -53,7 +54,7 @@ function create_uptime_check($projectId, $hostName = 'example.com', $displayName
     $uptimeCheckConfig->setDisplayName($displayName);
     $uptimeCheckConfig->setMonitoredResource($monitoredResource);
     $createUptimeCheckConfigRequest = (new CreateUptimeCheckConfigRequest())
-        ->setParent($uptimeCheckClient->projectName($projectId))
+        ->setParent($projectName)
         ->setUptimeCheckConfig($uptimeCheckConfig);
 
     $uptimeCheckConfig = $uptimeCheckClient->createUptimeCheckConfig($createUptimeCheckConfigRequest);

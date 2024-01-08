@@ -38,11 +38,12 @@ use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
  */
 function alert_list_policies($projectId)
 {
+    $projectName = 'projects/' . $projectId;
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
     $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
-        ->setName($alertClient->projectName($projectId));
+        ->setName($projectName);
 
     $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {

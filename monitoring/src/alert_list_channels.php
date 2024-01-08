@@ -32,11 +32,12 @@ use Google\Cloud\Monitoring\V3\ListNotificationChannelsRequest;
  */
 function alert_list_channels($projectId)
 {
+    $projectName = 'projects/' . $projectId;
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
     $listNotificationChannelsRequest = (new ListNotificationChannelsRequest())
-        ->setName($channelClient->projectName($projectId));
+        ->setName($projectName);
 
     $channels = $channelClient->listNotificationChannels($listNotificationChannelsRequest);
     foreach ($channels->iterateAllElements() as $channel) {

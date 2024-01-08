@@ -35,11 +35,12 @@ use Google\Cloud\Monitoring\V3\ListUptimeCheckConfigsRequest;
  */
 function list_uptime_checks(string $projectId): void
 {
+    $projectName = 'projects/' . $projectId;
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
     $listUptimeCheckConfigsRequest = (new ListUptimeCheckConfigsRequest())
-        ->setParent($uptimeCheckClient->projectName($projectId));
+        ->setParent($projectName);
 
     $pages = $uptimeCheckClient->listUptimeCheckConfigs($listUptimeCheckConfigsRequest);
 
