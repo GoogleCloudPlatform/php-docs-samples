@@ -25,7 +25,7 @@
 namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_inspect_column_values_w_custom_hotwords]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CustomInfoType\DetectionRule\HotwordRule;
 use Google\Cloud\Dlp\V2\CustomInfoType\DetectionRule\LikelihoodAdjustment;
@@ -34,6 +34,7 @@ use Google\Cloud\Dlp\V2\CustomInfoType\Regex;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectContentRequest;
 use Google\Cloud\Dlp\V2\InspectionRule;
 use Google\Cloud\Dlp\V2\InspectionRuleSet;
 use Google\Cloud\Dlp\V2\Likelihood;
@@ -112,11 +113,11 @@ function inspect_column_values_w_custom_hotwords(string $projectId): void
         ->setMinLikelihood(Likelihood::POSSIBLE);
 
     // Run request.
-    $response = $dlp->inspectContent([
-        'parent' => $parent,
-        'inspectConfig' => $inspectConfig,
-        'item' => $item
-    ]);
+    $inspectContentRequest = (new InspectContentRequest())
+        ->setParent($parent)
+        ->setInspectConfig($inspectConfig)
+        ->setItem($item);
+    $response = $dlp->inspectContent($inspectContentRequest);
 
     // Print the results.
     $findings = $response->getResult()->getFindings();

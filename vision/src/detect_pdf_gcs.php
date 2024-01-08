@@ -32,7 +32,7 @@ use Google\Cloud\Vision\V1\OutputConfig;
 
 /**
  * @param string $path    GCS path to the document, e.g. "gs://path/to/your/document.pdf"
- * @param string $outFile GCS path to store the results, e.g. "gs://path/to/store/results/"
+ * @param string $output  GCS path to store the results, e.g. "gs://path/to/store/results/"
  */
 function detect_pdf_gcs(string $path, string $output)
 {

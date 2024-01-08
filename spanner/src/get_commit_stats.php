@@ -43,7 +43,7 @@ function get_commit_stats(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $commitStats = $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $commitStats = $database->runTransaction(function (Transaction $t) {
         $t->updateBatch('Albums', [
             [
                 'SingerId' => 1,

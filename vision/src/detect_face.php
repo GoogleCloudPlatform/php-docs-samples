@@ -68,7 +68,7 @@ function detect_face(string $path, string $outFile = null)
 
     # [START vision_face_detection_tutorial_process_response]
     # draw box around faces
-    if ($faces && $outFile) {
+    if ($faces->count() && $outFile) {
         $imageCreateFunc = [
             'png' => 'imagecreatefrompng',
             'gd' => 'imagecreatefromgd',

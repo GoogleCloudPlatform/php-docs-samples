@@ -32,7 +32,7 @@ function create_key_mac(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $id = 'my-mac-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 

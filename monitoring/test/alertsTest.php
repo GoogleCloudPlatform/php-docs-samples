@@ -37,7 +37,7 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_policy', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
 
         // Save the policy ID for later
         preg_match($regexp, $output, $matches);
@@ -93,7 +93,7 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
 
         // Save the channel ID for later
         preg_match($regexp, $output, $matches);
@@ -111,14 +111,14 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId1 = $matches[1];
 
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId2 = $matches[1];
 

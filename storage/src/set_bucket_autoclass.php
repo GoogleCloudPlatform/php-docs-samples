@@ -27,29 +27,37 @@ namespace Google\Cloud\Samples\Storage;
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Updates an existing bucket with provided autoclass toggle.
- *
- * Note: Only patch requests that disable autoclass are currently supported.
- * To enable autoclass, it must be set at bucket creation time.
+ * Updates an existing bucket with provided autoclass config.
  *
  * @param string $bucketName The name of your Cloud Storage bucket (e.g. 'my-bucket').
  * @param bool $autoclassStatus If true, enables Autoclass. Disables otherwise.
+ * @param string $terminalStorageClass This field is optional and defaults to `NEARLINE`.
+ *        Valid values are `NEARLINE` and `ARCHIVE`.
  */
-function set_bucket_autoclass(string $bucketName, bool $autoclassStatus): void
-{
+function set_bucket_autoclass(
+    string $bucketName,
+    bool $autoclassStatus,
+    string $terminalStorageClass
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
     $bucket->update([
         'autoclass' => [
             'enabled' => $autoclassStatus,
+            'terminalStorageClass' => $terminalStorageClass
         ],
     ]);
 
+    $info = $bucket->info();
     printf(
         'Updated bucket %s with autoclass set to %s.' . PHP_EOL,
-        $bucketName,
+        $info['name'],
         $autoclassStatus ? 'true' : 'false'
+    );
+    printf(
+        'Autoclass terminal storage class is %s.' . PHP_EOL,
+        $info['autoclass']['terminalStorageClass']
     );
 }
 # [END storage_set_autoclass]

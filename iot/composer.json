@@ -1,7 +1,0 @@
-{
-    "name": "google/iot-sample",
-    "type": "project",
-    "require": {
-        "google/cloud-iot": "^1.0.0"
-    }
-}

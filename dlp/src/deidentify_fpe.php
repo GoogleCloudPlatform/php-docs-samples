@@ -25,17 +25,18 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_fpe]
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
-use Google\Cloud\Dlp\V2\CryptoKey;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
+use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
-use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 
 /**
  * Deidentify a string using Format-Preserving Encryption (FPE).
@@ -106,11 +107,11 @@ function deidentify_fpe(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results
     $deidentifiedValue = $response->getItem()->getValue();
