@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_delete_inspect_template]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DeleteInspectTemplateRequest;
 
 /**
  * Delete a DLP inspection configuration template.
@@ -42,7 +43,9 @@ function delete_inspect_template(
 
     // Run template deletion request
     $templateName = "projects/$callingProjectId/locations/global/inspectTemplates/$templateId";
-    $dlp->deleteInspectTemplate($templateName);
+    $deleteInspectTemplateRequest = (new DeleteInspectTemplateRequest())
+        ->setName($templateName);
+    $dlp->deleteInspectTemplate($deleteInspectTemplateRequest);
 
     // Print results
     printf('Successfully deleted template %s' . PHP_EOL, $templateName);

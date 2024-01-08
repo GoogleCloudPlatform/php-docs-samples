@@ -26,9 +26,10 @@ namespace Google\Cloud\Samples\TextToSpeech;
 // [START tts_synthesize_text_audio_profile]
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
 use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\Client\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\SynthesisInput;
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\SynthesizeSpeechRequest;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 /**
@@ -53,8 +54,12 @@ function synthesize_text_effects_profile(string $text, string $effectsProfileId)
     $audioConfig = (new AudioConfig())
         ->setAudioEncoding(AudioEncoding::MP3)
         ->setEffectsProfileId(array($effectsProfileId));
+    $request = (new SynthesizeSpeechRequest())
+        ->setInput($inputText)
+        ->setVoice($voice)
+        ->setAudioConfig($audioConfig);
 
-    $response = $client->synthesizeSpeech($inputText, $voice, $audioConfig);
+    $response = $client->synthesizeSpeech($request);
     $audioContent = $response->getAudioContent();
 
     file_put_contents('output.mp3', $audioContent);

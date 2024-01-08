@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_instances_delete]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\DeleteInstanceRequest;
 
 /**
  * Delete an instance.
@@ -43,7 +44,11 @@ function delete_instance(
 ) {
     // Delete the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->delete($instanceName, $projectId, $zone);
+    $request = (new DeleteInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->delete($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

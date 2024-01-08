@@ -18,14 +18,17 @@
 // [START dialogflow_list_intents]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\IntentsClient;
+use Google\Cloud\Dialogflow\V2\Client\IntentsClient;
+use Google\Cloud\Dialogflow\V2\ListIntentsRequest;
 
 function intent_list($projectId)
 {
     // get intents
     $intentsClient = new IntentsClient();
     $parent = $intentsClient->agentName($projectId);
-    $intents = $intentsClient->listIntents($parent);
+    $listIntentsRequest = (new ListIntentsRequest())
+        ->setParent($parent);
+    $intents = $intentsClient->listIntents($listIntentsRequest);
 
     foreach ($intents->iterateAllElements() as $intent) {
         // print relevant info
