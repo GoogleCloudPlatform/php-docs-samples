@@ -25,12 +25,13 @@
 namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_create_inspect_template]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateInspectTemplateRequest;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\Dlp\V2\InspectTemplate;
 use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 
 /**
  * Create a new DLP inspection configuration template.
@@ -84,9 +85,11 @@ function create_inspect_template(
 
     // Run request
     $parent = "projects/$callingProjectId/locations/global";
-    $template = $dlp->createInspectTemplate($parent, $inspectTemplate, [
-        'templateId' => $templateId
-    ]);
+    $createInspectTemplateRequest = (new CreateInspectTemplateRequest())
+        ->setParent($parent)
+        ->setInspectTemplate($inspectTemplate)
+        ->setTemplateId($templateId);
+    $template = $dlp->createInspectTemplate($createInspectTemplateRequest);
 
     // Print results
     printf('Successfully created template %s' . PHP_EOL, $template->getName());

@@ -18,11 +18,12 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_batch_translate_text_with_model]
+use Google\Cloud\Translate\V3\BatchTranslateTextRequest;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
 use Google\Cloud\Translate\V3\OutputConfig;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 /**
  * @param string $inputUri      Path to to source input (e.g. "gs://cloud-samples-data/text.txt").
@@ -68,14 +69,14 @@ function v3_batch_translate_text_with_model(
     $models = ['ja' => $modelPath];
 
     try {
-        $operationResponse = $translationServiceClient->batchTranslateText(
-            $formattedParent,
-            $sourceLanguage,
-            $targetLanguageCodes,
-            $inputConfigs,
-            $outputConfig,
-            ['models' => $models]
-        );
+        $request = (new BatchTranslateTextRequest())
+            ->setParent($formattedParent)
+            ->setSourceLanguageCode($sourceLanguage)
+            ->setTargetLanguageCodes($targetLanguageCodes)
+            ->setInputConfigs($inputConfigs)
+            ->setOutputConfig($outputConfig)
+            ->setModels($models);
+        $operationResponse = $translationServiceClient->batchTranslateText($request);
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $response = $operationResponse->getResult();

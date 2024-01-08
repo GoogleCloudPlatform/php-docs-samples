@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_delete_job]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DeleteDlpJobRequest;
 
 /**
  * Delete results of a Data Loss Prevention API job
@@ -39,7 +40,9 @@ function delete_job(string $jobId): void
 
     // Run job-deletion request
     // The Parent project ID is automatically extracted from this parameter
-    $dlp->deleteDlpJob($jobId);
+    $deleteDlpJobRequest = (new DeleteDlpJobRequest())
+        ->setName($jobId);
+    $dlp->deleteDlpJob($deleteDlpJobRequest);
 
     // Print status
     printf('Successfully deleted job %s' . PHP_EOL, $jobId);
