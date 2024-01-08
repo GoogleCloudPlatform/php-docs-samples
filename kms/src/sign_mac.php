@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_sign_mac]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\MacSignRequest;
 
 function sign_mac(
     string $projectId = 'my-project',
@@ -37,7 +38,10 @@ function sign_mac(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $signMacResponse = $client->macSign($keyVersionName, $data);
+    $macSignRequest = (new MacSignRequest())
+        ->setName($keyVersionName)
+        ->setData($data);
+    $signMacResponse = $client->macSign($macSignRequest);
 
     // The data comes back as raw bytes, which may include non-printable
     // characters. This base64-encodes the result so it can be printed below.
