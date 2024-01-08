@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_simple]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
+use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -43,7 +44,7 @@ function read_timeseries_simple(string $projectId, int $minutesAgo = 20): void
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     // Limit results to the last 20 minutes
@@ -57,12 +58,13 @@ function read_timeseries_simple(string $projectId, int $minutesAgo = 20): void
     $interval->setEndTime($endTime);
 
     $view = TimeSeriesView::FULL;
+    $listTimeSeriesRequest = (new ListTimeSeriesRequest())
+        ->setName($projectName)
+        ->setFilter($filter)
+        ->setInterval($interval)
+        ->setView($view);
 
-    $result = $metrics->listTimeSeries(
-        $projectName,
-        $filter,
-        $interval,
-        $view);
+    $result = $metrics->listTimeSeries($listTimeSeriesRequest);
 
     printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {
