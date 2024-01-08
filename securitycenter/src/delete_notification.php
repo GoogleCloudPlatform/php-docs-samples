@@ -36,7 +36,7 @@ function delete_notification(string $organizationId, string $notificationConfigI
     $deleteNotificationConfigRequest = (new DeleteNotificationConfigRequest())
         ->setName($notificationConfigName);
 
-    $response = $securityCenterClient->deleteNotificationConfig($deleteNotificationConfigRequest);
+    $securityCenterClient->deleteNotificationConfig($deleteNotificationConfigRequest);
     print('Notification config was deleted' . PHP_EOL);
 }
 // [END securitycenter_delete_notification_config]
