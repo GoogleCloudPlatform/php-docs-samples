@@ -51,7 +51,7 @@ function alert_restore_policies(string $projectId): void
     ]);
 
     print('Loading alert policies and notification channels from backup.json.' . PHP_EOL);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $record = json_decode((string) file_get_contents('backup.json'), true);
     $isSameProject = $projectName == $record['project_name'];
 

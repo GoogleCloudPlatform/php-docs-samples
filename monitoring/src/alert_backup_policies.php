@@ -42,7 +42,7 @@ function alert_backup_policies($projectId)
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $record = [
         'project_name' => $projectName,

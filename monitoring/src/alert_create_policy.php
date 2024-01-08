@@ -41,7 +41,7 @@ function alert_create_policy($projectId)
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $policy = new AlertPolicy();
     $policy->setDisplayName('Test Alert Policy');

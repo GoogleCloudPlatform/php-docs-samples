@@ -38,7 +38,7 @@ $zone = 'us-central1-f';
 
 try {
     $client = new MetricServiceClient();
-    $formattedProjectName = $client->projectName($projectId);
+    $formattedProjectName = 'projects/' . $projectId;
     $labels = [
         'instance_id' => $instanceId,
         'zone' => $zone,

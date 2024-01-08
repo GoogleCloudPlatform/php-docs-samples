@@ -44,7 +44,7 @@ function read_timeseries_simple(string $projectId, int $minutesAgo = 20): void
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     // Limit results to the last 20 minutes

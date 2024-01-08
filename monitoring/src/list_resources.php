@@ -40,7 +40,7 @@ function list_resources($projectId)
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $listMonitoredResourceDescriptorsRequest = (new ListMonitoredResourceDescriptorsRequest())
         ->setName($projectName);
     $descriptors = $metrics->listMonitoredResourceDescriptors($listMonitoredResourceDescriptorsRequest);

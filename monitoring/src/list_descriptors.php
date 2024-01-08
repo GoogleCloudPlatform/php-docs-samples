@@ -41,7 +41,7 @@ function list_descriptors($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $listMetricDescriptorsRequest = (new ListMetricDescriptorsRequest())
         ->setName($projectName);
     $descriptors = $metrics->listMetricDescriptors($listMetricDescriptorsRequest);

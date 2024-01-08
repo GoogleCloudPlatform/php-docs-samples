@@ -48,7 +48,7 @@ function write_timeseries($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $endTime = new Timestamp();
     $endTime->setSeconds(time());

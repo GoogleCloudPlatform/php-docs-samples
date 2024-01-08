@@ -42,7 +42,7 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
         ->setName($projectName)
         ->setFilter($filter);

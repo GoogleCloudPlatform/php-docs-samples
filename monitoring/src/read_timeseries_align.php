@@ -47,7 +47,7 @@ function read_timeseries_align(string $projectId, int $minutesAgo = 20): void
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
