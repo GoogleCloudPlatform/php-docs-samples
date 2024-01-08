@@ -31,7 +31,7 @@ class DeployTest extends TestCase
             '200',
             $resp->getStatusCode(),
             'Top page status code should be 200');
-        $this->assertRegExp('/External IP: .*/', (string) $resp->getBody());
+        $this->assertMatchesRegularExpression('/External IP: .*/', (string) $resp->getBody());
     }
 
     public function testCurl()
@@ -42,6 +42,6 @@ class DeployTest extends TestCase
             '200',
             $resp->getStatusCode(),
             '/curl status code should be 200');
-        $this->assertRegExp('/External IP: .*/', (string) $resp->getBody());
+        $this->assertMatchesRegularExpression('/External IP: .*/', (string) $resp->getBody());
     }
 }

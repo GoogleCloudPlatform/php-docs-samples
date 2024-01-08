@@ -25,11 +25,12 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_redact_image_listed_infotypes]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ByteContentItem;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\RedactImageRequest;
 use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
-use Google\Cloud\Dlp\V2\ByteContentItem;
 
 /**
  * Redact only certain sensitive data from an image using infoTypes.
@@ -88,12 +89,12 @@ function redact_image_listed_infotypes(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request.
-    $response = $dlp->redactImage([
-        'parent' => $parent,
-        'inspectConfig' => $inspectConfig,
-        'byteItem' => $byteContent,
-        'imageRedactionConfigs' => $imageRedactionConfigs
-    ]);
+    $redactImageRequest = (new RedactImageRequest())
+        ->setParent($parent)
+        ->setInspectConfig($inspectConfig)
+        ->setByteItem($byteContent)
+        ->setImageRedactionConfigs($imageRedactionConfigs);
+    $response = $dlp->redactImage($redactImageRequest);
 
     // Save result to file.
     file_put_contents($outputPath, $response->getRedactedImage());
