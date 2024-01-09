@@ -24,12 +24,14 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_dev_instance]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance;
-use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster;
+use Google\Cloud\Bigtable\Admin\V2\CreateInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\Instance;
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
+use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
  * Create a development Bigtable instance
@@ -77,17 +79,19 @@ function create_dev_instance(
     ];
     // Create development instance with given options
     try {
-        $instanceAdminClient->getInstance($instanceName);
+        $getInstanceRequest = (new GetInstanceRequest())
+            ->setName($instanceName);
+        $instanceAdminClient->getInstance($getInstanceRequest);
         printf('Instance %s already exists.' . PHP_EOL, $instanceId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Creating a development Instance: %s' . PHP_EOL, $instanceId);
-            $operationResponse = $instanceAdminClient->createInstance(
-                $projectName,
-                $instanceId,
-                $instance,
-                $clusters
-            );
+            $createInstanceRequest = (new CreateInstanceRequest())
+                ->setParent($projectName)
+                ->setInstanceId($instanceId)
+                ->setInstance($instance)
+                ->setClusters($clusters);
+            $operationResponse = $instanceAdminClient->createInstance($createInstanceRequest);
             $operationResponse->pollUntilComplete();
             if (!$operationResponse->operationSucceeded()) {
                 print('Error: ' . $operationResponse->getError()->getMessage());
