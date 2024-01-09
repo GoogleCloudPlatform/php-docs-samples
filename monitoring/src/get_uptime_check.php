@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_get]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\GetUptimeCheckConfigRequest;
 
 /**
  * Example:
@@ -40,8 +41,10 @@ function get_uptime_check($projectId, $configName)
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $getUptimeCheckConfigRequest = (new GetUptimeCheckConfigRequest())
+        ->setName($configName);
 
-    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($configName);
+    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($getUptimeCheckConfigRequest);
 
     print('Retrieved an uptime check:' . PHP_EOL);
     print($uptimeCheck->serializeToJsonString() . PHP_EOL);
