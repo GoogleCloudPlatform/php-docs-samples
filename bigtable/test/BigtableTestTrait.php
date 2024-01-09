@@ -24,8 +24,6 @@ use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
-use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
-use Google\Cloud\Bigtable\Admin\V2\DeleteInstanceRequest;
 use Google\Cloud\Bigtable\Admin\V2\DeleteInstanceRequest;
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\BigtableClient;
