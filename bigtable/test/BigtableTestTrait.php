@@ -86,8 +86,6 @@ trait BigtableTestTrait
             ->setParent($formattedParent)
             ->setTableId($tableId)
             ->setTable($table);
-        $createTableRequest = (new CreateTableRequest())
-            ->setParent($createTableRequest);
 
         self::$tableAdminClient->createtable($createTableRequest);
 
@@ -154,8 +152,6 @@ trait BigtableTestTrait
         );
         $deleteInstanceRequest = (new DeleteInstanceRequest())
             ->setName($instanceName);
-        $deleteInstanceRequest = (new DeleteInstanceRequest())
-            ->setName($deleteInstanceRequest);
         self::$instanceAdminClient->deleteInstance($deleteInstanceRequest);
     }
 
