@@ -40,7 +40,18 @@ function basic_query(DatastoreClient $datastore)
         ->filter('priority', '>=', 4)
         ->order('priority', Query::ORDER_DESCENDING);
     // [END datastore_basic_query]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $num = 0;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $num += 1;
+    }
+
+    print_r($entities);
+    printf("Found %s records.", $num);
 }
 
 // The following 2 lines are only needed to run the samples

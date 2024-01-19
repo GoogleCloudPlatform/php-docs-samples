@@ -39,7 +39,18 @@ function ancestor_query(DatastoreClient $datastore)
         ->kind('Task')
         ->hasAncestor($ancestorKey);
     // [END datastore_ancestor_query]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $found = true;
+    }
+
+    printf("Found Ancestors: %s", $found);
+    print_r($entities);
 }
 
 // The following 2 lines are only needed to run the samples

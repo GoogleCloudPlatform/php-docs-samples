@@ -46,7 +46,7 @@ function entity_with_parent(DatastoreClient $datastore)
         ]
     );
     // [END datastore_entity_with_parent]
-    return $task;
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples

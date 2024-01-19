@@ -43,7 +43,7 @@ function array_value(DatastoreClient $datastore, Key $key)
         ]
     );
     // [END datastore_array_value]
-    return $task;
+    print_r($task);
 }
 
 // The following 2 lines are only needed to run the samples
