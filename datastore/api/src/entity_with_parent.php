@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an entity with a parent key.
  *
  * @param DatastoreClient $datastore
- * @return EntityInterface
+ *
  */
 function entity_with_parent(DatastoreClient $datastore)
 {

@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with a property filter.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function property_filter(DatastoreClient $datastore)
 {

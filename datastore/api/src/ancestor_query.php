@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an ancestor query.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function ancestor_query(DatastoreClient $datastore)
 {

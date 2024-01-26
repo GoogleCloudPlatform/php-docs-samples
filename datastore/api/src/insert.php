@@ -31,7 +31,7 @@ use Google\Cloud\Datastore\Entity;
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @return EntityInterface
+ *
  */
 function insert(DatastoreClient $datastore)
 {

@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param array<Key> $keys
- * @return array<EntityInterface>
+ *
  */
 function batch_lookup(DatastoreClient $datastore, array $keys)
 {

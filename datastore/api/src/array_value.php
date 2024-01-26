@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return EntityInterface
+ *
  */
 function array_value(DatastoreClient $datastore, Key $key)
 {

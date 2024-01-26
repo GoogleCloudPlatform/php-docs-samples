@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return EntityInterface
+ *
  */
 function update(DatastoreClient $datastore)
 {

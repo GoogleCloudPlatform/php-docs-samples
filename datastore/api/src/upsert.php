@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a Datastore entity and upsert it.
  *
  * @param DatastoreClient $datastore
- * @return EntityInterface
+ *
  */
 function upsert(DatastoreClient $datastore)
 {

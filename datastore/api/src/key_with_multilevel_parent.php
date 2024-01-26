@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a Datastore key with a multi level parent.
  *
  * @param DatastoreClient $datastore
- * @return Key
+ *
  */
 function key_with_multilevel_parent(DatastoreClient $datastore)
 {

@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an incomplete Datastore key.
  *
  * @param DatastoreClient $datastore
- * @return Key
+ *
  */
 function incomplete_key(DatastoreClient $datastore)
 {

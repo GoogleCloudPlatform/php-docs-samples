@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param Key $taskKey
- * @return EntityInterface|null
+ *
  */
 function lookup(DatastoreClient $datastore, Key $key = null)
 {

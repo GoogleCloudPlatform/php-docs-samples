@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param Query|GqlQuery $query
- * @return EntityIterator<EntityInterface>
+ *
  */
 function run_query(DatastoreClient $datastore, $query)
 {
