@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @param Key $taskKey
+ * @param Key $key
  *
  */
 function lookup(DatastoreClient $datastore, Key $key = null)
