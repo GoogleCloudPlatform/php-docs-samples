@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_instance]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\DeleteInstanceRequest;
 
 /**
  * Delete a bigtable instance
@@ -42,7 +43,9 @@ function delete_instance(
 
     printf('Deleting Instance' . PHP_EOL);
     try {
-        $instanceAdminClient->deleteInstance($instanceName);
+        $deleteInstanceRequest = (new DeleteInstanceRequest())
+            ->setName($instanceName);
+        $instanceAdminClient->deleteInstance($deleteInstanceRequest);
         printf('Deleted Instance: %s.' . PHP_EOL, $instanceId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

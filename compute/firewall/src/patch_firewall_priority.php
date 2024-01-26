@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_firewall_patch]
-use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
 use Google\Cloud\Compute\V1\Firewall;
+use Google\Cloud\Compute\V1\PatchFirewallRequest;
 
 /**
  * Modifies the priority of a given firewall rule.
@@ -44,7 +45,11 @@ function patch_firewall_priority(string $projectId, string $firewallRuleName, in
 
     // The patch operation doesn't require the full definition of a Firewall object. It will only update
     // the values that were set in it, in this case it will only change the priority.
-    $operation = $firewallsClient->patch($firewallRuleName, $firewallResource, $projectId);
+    $request = (new PatchFirewallRequest())
+        ->setFirewall($firewallRuleName)
+        ->setFirewallResource($firewallResource)
+        ->setProject($projectId);
+    $operation = $firewallsClient->patch($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

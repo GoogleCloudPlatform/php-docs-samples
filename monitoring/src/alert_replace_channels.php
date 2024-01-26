@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_replace_channels]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
 use Google\Cloud\Monitoring\V3\AlertPolicy;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\UpdateAlertPolicyRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -53,9 +54,10 @@ function alert_replace_channels(string $projectId, string $alertPolicyId, array 
     $policy->setNotificationChannels($newChannels);
     $mask = new FieldMask();
     $mask->setPaths(['notification_channels']);
-    $updatedPolicy = $alertClient->updateAlertPolicy($policy, [
-        'updateMask' => $mask,
-    ]);
+    $updateAlertPolicyRequest = (new UpdateAlertPolicyRequest())
+        ->setAlertPolicy($policy)
+        ->setUpdateMask($mask);
+    $updatedPolicy = $alertClient->updateAlertPolicy($updateAlertPolicyRequest);
     printf('Updated %s' . PHP_EOL, $updatedPolicy->getName());
 }
 // [END monitoring_alert_replace_channels]

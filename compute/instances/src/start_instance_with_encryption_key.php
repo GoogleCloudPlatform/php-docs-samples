@@ -24,10 +24,12 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_start_enc_instance]
+use Google\Cloud\Compute\V1\Client\InstancesClient;
 use Google\Cloud\Compute\V1\CustomerEncryptionKey;
 use Google\Cloud\Compute\V1\CustomerEncryptionKeyProtectedDisk;
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\GetInstanceRequest;
 use Google\Cloud\Compute\V1\InstancesStartWithEncryptionKeyRequest;
+use Google\Cloud\Compute\V1\StartWithEncryptionKeyInstanceRequest;
 
 /**
  * Starts a stopped Google Compute Engine instance (with encrypted disks).
@@ -52,7 +54,11 @@ function start_instance_with_encryption_key(
     $instancesClient = new InstancesClient();
 
     // Get data about the instance.
-    $instanceData = $instancesClient->get($instanceName, $projectId, $zone);
+    $request = (new GetInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $instanceData = $instancesClient->get($request);
 
     // Use `setRawKey` to send over the key to unlock the disk
     // To use a key stored in KMS, you need to use `setKmsKeyName` and `setKmsKeyServiceAccount`
@@ -72,7 +78,12 @@ function start_instance_with_encryption_key(
         ->setDisks(array($diskData));
 
     // Start the instance with encrypted disk.
-    $operation = $instancesClient->startWithEncryptionKey($instanceName, $instancesStartWithEncryptionKeyRequest, $projectId, $zone);
+    $request2 = (new StartWithEncryptionKeyInstanceRequest())
+        ->setInstance($instanceName)
+        ->setInstancesStartWithEncryptionKeyRequestResource($instancesStartWithEncryptionKeyRequest)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->startWithEncryptionKey($request2);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\VideoIntelligence;
 
 // [START video_analyze_explicit_content]
-use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\AnnotateVideoRequest;
+use Google\Cloud\VideoIntelligence\V1\Client\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 use Google\Cloud\VideoIntelligence\V1\Likelihood;
 
@@ -39,10 +40,10 @@ function analyze_explicit_content(string $uri, int $pollingIntervalSeconds = 0)
 
     # Execute a request.
     $features = [Feature::EXPLICIT_CONTENT_DETECTION];
-    $operation = $video->annotateVideo([
-        'inputUri' => $uri,
-        'features' => $features,
-    ]);
+    $request = (new AnnotateVideoRequest())
+        ->setInputUri($uri)
+        ->setFeatures($features);
+    $operation = $video->annotateVideo($request);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete([

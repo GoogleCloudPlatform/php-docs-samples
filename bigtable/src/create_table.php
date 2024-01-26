@@ -24,11 +24,13 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_table]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Table\View;
-use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\Table;
+use Google\Cloud\Bigtable\Admin\V2\Table\View;
 
 /**
  * Create a new table in a Bigtable instance
@@ -54,17 +56,20 @@ function create_table(
     printf('Creating a Table : %s' . PHP_EOL, $tableId);
 
     try {
-        $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+        $getTableRequest = (new GetTableRequest())
+            ->setName($tableName)
+            ->setView(View::NAME_ONLY);
+        $tableAdminClient->getTable($getTableRequest);
         printf('Table %s already exists' . PHP_EOL, $tableId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Creating the %s table' . PHP_EOL, $tableId);
+            $createTableRequest = (new CreateTableRequest())
+                ->setParent($instanceName)
+                ->setTableId($tableId)
+                ->setTable($table);
 
-            $tableAdminClient->createtable(
-                $instanceName,
-                $tableId,
-                $table
-            );
+            $tableAdminClient->createtable($createTableRequest);
             printf('Created table %s' . PHP_EOL, $tableId);
         } else {
             throw $e;

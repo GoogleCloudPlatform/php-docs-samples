@@ -24,21 +24,22 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_cloud_storage]
-use Google\Cloud\Dlp\V2\CloudStorageOptions;
-use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\Deidentify;
 use Google\Cloud\Dlp\V2\BigQueryTable;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CloudStorageOptions;
+use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\FileType;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\TransformationConfig;
 use Google\Cloud\Dlp\V2\TransformationDetailsStorageConfig;
-use Google\Cloud\Dlp\V2\Client\BaseClient\DlpServiceBaseClient;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 
 /**
  * De-identify sensitive data stored in Cloud Storage using the API.
@@ -104,13 +105,13 @@ function deidentify_cloud_storage(
     // Specify the de-identify template used for the transformation.
     $transformationConfig = (new TransformationConfig())
         ->setDeidentifyTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $deidentifyTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $deidentifyTemplateName)
         )
         ->setStructuredDeidentifyTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $structuredDeidentifyTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $structuredDeidentifyTemplateName)
         )
         ->setImageRedactTemplate(
-            DlpServiceBaseClient::projectDeidentifyTemplateName($callingProjectId, $imageRedactTemplateName)
+            DlpServiceClient::projectDeidentifyTemplateName($callingProjectId, $imageRedactTemplateName)
         );
 
     $deidentify = (new Deidentify())
@@ -129,15 +130,18 @@ function deidentify_cloud_storage(
         ->setActions([$action]);
 
     // Send the job creation request and process the response.
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJobConfig
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setInspectJob($inspectJobConfig);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
         sleep(30);
-        $job = $dlp->getDlpJob($job->getName());
+        $getDlpJobRequest = (new GetDlpJobRequest())
+            ->setName($job->getName());
+        $job = $dlp->getDlpJob($getDlpJobRequest);
         if ($job->getState() == JobState::DONE) {
             break;
         }

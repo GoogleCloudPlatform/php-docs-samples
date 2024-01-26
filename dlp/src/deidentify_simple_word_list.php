@@ -25,18 +25,19 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_simple_word_list]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\ReplaceWithInfoTypeConfig;
 use Google\Cloud\Dlp\V2\CustomInfoType;
 use Google\Cloud\Dlp\V2\CustomInfoType\Dictionary;
 use Google\Cloud\Dlp\V2\CustomInfoType\Dictionary\WordList;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\ReplaceWithInfoTypeConfig;
 
 /**
  * De-identify sensitive data with a simple word list
@@ -91,12 +92,12 @@ function deidentify_simple_word_list(
         ->setInfoTypeTransformations($infoTypeTransformations);
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content,
-        'inspectConfig' => $inspectConfig
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content)
+        ->setInspectConfig($inspectConfig);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results
     printf('Deidentified content: %s', $response->getItem()->getValue());

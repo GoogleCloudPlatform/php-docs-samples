@@ -21,7 +21,8 @@ namespace Google\Cloud\Samples\Kms;
 
 use Exception;
 // [START kms_get_key_version_attestation]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetCryptoKeyVersionRequest;
 
 function get_key_version_attestation(
     string $projectId = 'my-project',
@@ -37,7 +38,9 @@ function get_key_version_attestation(
     $keyVersionName = $client->cryptokeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $version = $client->getCryptoKeyVersion($keyVersionName);
+    $getCryptoKeyVersionRequest = (new GetCryptoKeyVersionRequest())
+        ->setName($keyVersionName);
+    $version = $client->getCryptoKeyVersion($getCryptoKeyVersionRequest);
 
     // Only HSM keys have an attestation. For other key types, the attestion
     // will be NULL.
