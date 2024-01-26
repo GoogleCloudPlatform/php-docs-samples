@@ -39,7 +39,15 @@ function run_query(DatastoreClient $datastore, $query)
     $result = $datastore->runQuery($query);
     // [END datastore_run_gql_query]
     // [END datastore_run_query]
-    return $result;
+    $num = 0;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $num += 1;
+    }
+
+    print_r($entities);
+    printf("Found %s records.", $num);
 }
 
 // The following 2 lines are only needed to run the samples
