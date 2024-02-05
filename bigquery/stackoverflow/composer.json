@@ -1,5 +1,0 @@
-{
-    "require": {
-        "google/cloud-bigquery": "^1.0"
-    }
-}

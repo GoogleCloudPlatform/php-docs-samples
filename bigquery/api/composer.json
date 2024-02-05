@@ -1,6 +1,0 @@
-{
-    "require": {
-        "google/cloud-bigquery": "^1.4",
-        "google/cloud-storage": "^1.7"
-    }
-}
