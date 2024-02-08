@@ -2,7 +2,7 @@
 
 This sample shows you how to deploy Laravel on Cloud Run, connecting to a Cloud SQL database, and using Secret Manager for credential management.
 
-The deployed example will be a simple CRUD application listing products, and a customised Laravel welcome page showing the deployment information. 
+The deployed example will be a simple CRUD application listing products, and a customised Laravel welcome page showing the deployment information.
 
 ![Laravel Demo Screenshot](laravel-demo-screenshot.png)
 
@@ -16,7 +16,7 @@ In this tutorial, you will:
 * Deploy a Laravel app to Cloud Run.
 * Host static files on Cloud Storage.
 * Use Cloud Build to automate deployment.
-* Use Cloud Run Jobs to apply database migrations. 
+* Use Cloud Run Jobs to apply database migrations.
 
 ## Costs
 
@@ -52,7 +52,7 @@ This tutorial uses the following billable components of Google Cloud:
 
 ## Prepare your environment
 
-* Clone a copy of the code into your local machine; 
+* Clone a copy of the code into your local machine;
 
     ```bash
     git clone https://github.com/GoogleCloudPlatform/php-docs-samples.git
@@ -63,19 +63,19 @@ This tutorial uses the following billable components of Google Cloud:
 
 You will need PHP on your local system in order to run `php artisan` commands later.
 
-* Check you have PHP 8.0.2 or higher installed (or [install it](https://www.php.net/manual/en/install.php)):
+* Check you have PHP 8.1 or higher installed (or [install it](https://www.php.net/manual/en/install.php)):
 
     ```bash
     php --version
     ```
 
-* Check you have `composer` installed (or [install it](https://getcomposer.org/download/)): 
+* Check you have `composer` installed (or [install it](https://getcomposer.org/download/)):
 
     ```bash
     composer --version
     ```
 
-* Install the PHP dependencies: 
+* Install the PHP dependencies:
 
     ```bash
     composer install
@@ -83,7 +83,7 @@ You will need PHP on your local system in order to run `php artisan` commands la
 
 ## Confirm your Node setup
 
-You will need Node on your local system in order to generate static assets later. 
+You will need Node on your local system in order to generate static assets later.
 
 * Check you have node and npm installed (or [install them](https://cloud.google.com/nodejs/docs/setup)):
 
@@ -93,7 +93,7 @@ You will need Node on your local system in order to generate static assets later
     ```
 
 
-* Install the Node dependencies: 
+* Install the Node dependencies:
 
     ```bash
     npm install
@@ -102,7 +102,7 @@ You will need Node on your local system in order to generate static assets later
 
 ## Preparing backing services
 
-There are many variables in this tutorial. Set these early to help with copying code snippets: 
+There are many variables in this tutorial. Set these early to help with copying code snippets:
 
 ```
 export PROJECT_ID=$(gcloud config get-value project)
@@ -111,13 +111,13 @@ export REGION=us-central1
 export INSTANCE_NAME=myinstance
 export DATABASE_NAME=mydatabase
 export DATABASE_USERNAME=myuser
-export DATABASE_PASSWORD=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]'| fold -w 30 | head -n1) 
+export DATABASE_PASSWORD=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]'| fold -w 30 | head -n1)
 export ASSET_BUCKET=${PROJECT_ID}-static
 ```
 
 ### Cloud SQL
 
-* Create a MySQL instance: 
+* Create a MySQL instance:
 
     ```bash
     gcloud sql instances create ${INSTANCE_NAME} \
@@ -129,14 +129,14 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
     Note: if this operation takes longer than 10 minutes to complete, run the suggested `gcloud beta sql operations wait` command to track ongoing progress.
 
-* Create a database in that MySQL instance: 
+* Create a database in that MySQL instance:
 
     ```bash
     gcloud sql databases create ${DATABASE_NAME} \
         --instance ${INSTANCE_NAME}
     ```
 
-* Create a user for the database: 
+* Create a user for the database:
 
     ```bash
     gcloud sql users create ${DATABASE_USERNAME} \
@@ -147,7 +147,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 ### Setup Cloud Storage
 
 
-* Create a Cloud Storage bucket: 
+* Create a Cloud Storage bucket:
 
     ```bash
     gsutil mb gs://${ASSET_BUCKET}
@@ -155,7 +155,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Setup Artifact Registry
 
-* Create an Artifact Registry: 
+* Create an Artifact Registry:
 
     ```bash
     gcloud artifacts repositories create containers \
@@ -163,7 +163,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
         --location=${REGION}
     ```
 
-* Determine the registry name for future operations: 
+* Determine the registry name for future operations:
 
     ```bash
     export REGISTRY_NAME=${REGION}-docker.pkg.dev/${PROJECT_ID}/containers
@@ -177,8 +177,8 @@ export ASSET_BUCKET=${PROJECT_ID}-static
     cp .env.example .env
     ```
 
-* Update the values in `.env` with your values. 
-    
+* Update the values in `.env` with your values.
+
     ⚠️ Replace `${}` with your values, don't use the literals. Get these values with e.g. `echo ${DATABASE_NAME}`
 
     * DB_CONNECTION: `mysql`
@@ -190,7 +190,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
     Note: `ASSET_URL` is generated from `ASSET_BUCKET` and doesn't need to be hardcoded.
 
-* Update the `APP_KEY` by generating a new key: 
+* Update the `APP_KEY` by generating a new key:
     ```bash
     php artisan key:generate
     ```
@@ -199,7 +199,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Store secret values in Secret Manager
 
-* Create a secret with the value of your `.env` file: 
+* Create a secret with the value of your `.env` file:
 
     ```bash
     gcloud secrets create laravel_settings --data-file .env
@@ -207,7 +207,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Configure access to the secret
 
-* Allow Cloud Run access to the secret: 
+* Allow Cloud Run access to the secret:
 
     ```bash
     gcloud secrets add-iam-policy-binding laravel_settings \
@@ -219,7 +219,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Build the app into a container
 
-* Using Cloud Build and Google Cloud Buildpacks, create the container image: 
+* Using Cloud Build and Google Cloud Buildpacks, create the container image:
 
     ```bash
     gcloud builds submit \
@@ -228,9 +228,9 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 
 ### Applying database migrations
 
-With Cloud Run Jobs, you can use the same container from your service to perform administration tasks, such as database migrations. 
+With Cloud Run Jobs, you can use the same container from your service to perform administration tasks, such as database migrations.
 
-The configuration is similar to the deployment to Cloud Run, requiring the database and secret values. 
+The configuration is similar to the deployment to Cloud Run, requiring the database and secret values.
 
 1. Create a Cloud Run job to apply database migrations:
 
@@ -250,22 +250,22 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
     gcloud run jobs execute migrate --region ${REGION} --wait
     ```
 
-* Confirm the application of database migrations by clicking the "See logs for this execution" link. 
+* Confirm the application of database migrations by clicking the "See logs for this execution" link.
 
-  * You should see "INFO Running migrations." with multiple items labelled "DONE". 
+  * You should see "INFO Running migrations." with multiple items labelled "DONE".
   * You should also see "Container called exit(0).", where `0` is the exit code for success.
 
 ### Upload static assets
 
-Using the custom `npm` command, you can use `vite` to compile and `gsutil` to copy the assets from your application to Cloud Storage. 
+Using the custom `npm` command, you can use `vite` to compile and `gsutil` to copy the assets from your application to Cloud Storage.
 
-* Upload static assets: 
+* Upload static assets:
 
     ```bash
     npm run update-static
     ```
 
-    This command uses the `update-static` script in `package.json`. 
+    This command uses the `update-static` script in `package.json`.
 
 * Confirm the output of this operation
 
@@ -273,7 +273,7 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 ### Deploy the service to Cloud Run
 
-1. Deploy the service from the previously created image, specifying the database connection and secret configuration: 
+1. Deploy the service from the previously created image, specifying the database connection and secret configuration:
 
     ```bash
     gcloud run deploy laravel \
@@ -288,20 +288,20 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 1. Go to the Service URL to view the website.
 
-1. Confirm the information in the lower right of the Laravel welcome screen. 
+1. Confirm the information in the lower right of the Laravel welcome screen.
 
    * You should see a variation of "Laravel v9... (PHP v8...)" (the exact version of Laravel and PHP may change)
    * You should see the a variation of "Service: laravel. Revision laravel-00001-vid." (the revision name ends in three random characters, which will differ for every deployment)
-   * You should see "Project: (your project). Region (your region)." 
+   * You should see "Project: (your project). Region (your region)."
 
-1. Click on the "demo products" link, and create some entries. 
+1. Click on the "demo products" link, and create some entries.
 
-   * You should be able to see a styled page, confirming static assets are being served. 
-You should be able to write entries to the database, and read them back again, confirming database connectivity. 
+   * You should be able to see a styled page, confirming static assets are being served.
+You should be able to write entries to the database, and read them back again, confirming database connectivity.
 
 ## Updating the application
 
-While the initial provisioning and deployment steps were complex, making updates is a simpler process. 
+While the initial provisioning and deployment steps were complex, making updates is a simpler process.
 
 To make changes: build the container (to capture any new application changes), then update the service to use this new container image:
 
@@ -318,7 +318,7 @@ To apply application code changes, update the Cloud Run service with this new co
         --region ${REGION}
     ```
 
-    Note: you do not have to re-assert the database or secret settings on future deployments, unless you want to change these values. 
+    Note: you do not have to re-assert the database or secret settings on future deployments, unless you want to change these values.
 
 To apply database migrations, run the Cloud Run job using the newly built container:
 
@@ -328,7 +328,7 @@ To apply database migrations, run the Cloud Run job using the newly built contai
 
     Note: To generate new migrations to apply, you will need to run `php artisan make:migration` in a local development environment.
 
-To update static assets, run the custom npm command from earlier: 
+To update static assets, run the custom npm command from earlier:
 
     ```bash
     npm run update-static
@@ -339,15 +339,15 @@ To update static assets, run the custom npm command from earlier:
 
 ### Database migrations
 
-This tutorial opts to use Cloud Run Jobs to process database applications in an environment where connections to Cloud SQL can be done in a safe and secure manner. 
+This tutorial opts to use Cloud Run Jobs to process database applications in an environment where connections to Cloud SQL can be done in a safe and secure manner.
 
-This operation could be done on the user's local machine, which would require the installation and use of [Cloud SQL Auth Proxy](https://cloud.google.com/sql/docs/mysql/sql-proxy). Using Cloud Run Jobs removes that complexity. 
+This operation could be done on the user's local machine, which would require the installation and use of [Cloud SQL Auth Proxy](https://cloud.google.com/sql/docs/mysql/sql-proxy). Using Cloud Run Jobs removes that complexity.
 
 ### Static compilation
 
-This tutorial opts to use the user's local machine for compiling and uploading static assets. While this could be done in Cloud Run Jobs, this would require building a container with both PHP and NodeJS runtimes. Because NodeJS isn't required for running the service, this isn't required to be in the container. 
+This tutorial opts to use the user's local machine for compiling and uploading static assets. While this could be done in Cloud Run Jobs, this would require building a container with both PHP and NodeJS runtimes. Because NodeJS isn't required for running the service, this isn't required to be in the container.
 
-### Secrets access 
+### Secrets access
 
 `bootstrap/app.php` includes code to load the mounted secrets, if the folder has been mounted. This relates to the `--set-secrets` command used earlier.  (Look for the `cloudrun_laravel_secret_manager_mount` tag.)
 
