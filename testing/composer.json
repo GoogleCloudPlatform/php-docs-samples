@@ -8,7 +8,7 @@
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^7.0",
         "phpunit/phpunit": "^9.0",
-        "friendsofphp/php-cs-fixer": "^3,<3.9",
+        "friendsofphp/php-cs-fixer": "^3.29",
         "composer/semver": "^3.2",
         "phpstan/phpstan": "^1.10",
         "phpspec/prophecy-phpunit": "^2.0"
