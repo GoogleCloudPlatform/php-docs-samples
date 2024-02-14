@@ -141,11 +141,6 @@ class spannerTest extends TestCase
 
     public function testCreateInstance()
     {
-        // Plan: Test create Instance, database, then add column
-        self::$instanceId = 'test-17078357031982164687';
-        self::$databaseId = 'test-17078357031001015543';
-        $this->assertEquals(true, true);
-        return true;
         $output = $this->runAdminFunctionSnippet('create_instance', [
             'instance_id' => self::$instanceId
         ]);
@@ -225,8 +220,6 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabase()
     {
-        $this->assertEquals(true, true);
-        return true;
         $output = $this->runAdminFunctionSnippet('create_database');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database test-', $output);
@@ -344,7 +337,7 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testCreateDatabase
+     * @depends testDeleteData
      */
     public function testAddColumn()
     {
@@ -496,7 +489,7 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testCreateDatabase
+     * @depends testInsertDataTimestamp
      */
     public function testAddTimestampColumn()
     {
@@ -825,7 +818,7 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testCreateDatabase
+     * @depends testInsertDataWithDatatypes
      */
     public function testAddNumericColumn()
     {
@@ -853,7 +846,7 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testCreateDatabase
+     * @depends testInsertDataWithDatatypes
      */
     public function testAddJsonColumn()
     {
@@ -1060,8 +1053,6 @@ class spannerTest extends TestCase
      */
     public function testCreateSequence()
     {
-        $this->assertEquals(true, true);
-        return true;
         $output = $this->runAdminFunctionSnippet('create_sequence');
         $this->assertStringContainsString(
             'Created Seq sequence and Customers table, where ' .
@@ -1173,7 +1164,6 @@ class spannerTest extends TestCase
 
     private function runFunctionSnippet($sampleName, $params = [])
     {
-        self::markTestSkipped('testing');
         return $this->traitRunFunctionSnippet(
             $sampleName,
             array_values($params) ?: [self::$instanceId, self::$databaseId]
