@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,34 +23,35 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_list_databases]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\ListDatabasesRequest;
+// [START spanner_create_index]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Lists the databases and their leader options.
+ * Adds a simple index to the example database.
  * Example:
  * ```
- * list_databases($projectId, $instanceId);
+ * create_index($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
+ * @param string $databaseId The Spanner database ID.
  */
-function list_databases(string $projectId, string $instanceId): void
+function create_index(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new ListDatabasesRequest(['parent' => $instanceName]);
-    $resp = $databaseAdminClient->listDatabases($request);
-    $databases = $resp->iterateAllElements();
-    printf('Databases for %s' . PHP_EOL, $instanceName);
-    foreach ($databases as $database) {
-        printf("\t%s (default leader = %s)" . PHP_EOL, $database->getName(), $database->getDefaultLeader());
-    }
+    $operation = $database->updateDdl(
+        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle)'
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
+    printf('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }
-// [END spanner_list_databases]
+// [END spanner_create_index]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

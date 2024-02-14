@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,39 +23,46 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_create_index]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_create_table_with_datatypes]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Adds a simple index to the example database.
+ * Creates a table with suported datatypes.
  * Example:
  * ```
- * create_index($projectId, $instanceId, $databaseId);
+ * create_table_with_datatypes($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_index(string $projectId, string $instanceId, string $databaseId): void
+function create_table_with_datatypes(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $statement = 'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle)';
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [$statement]
-    ]);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'CREATE TABLE Venues (
+            VenueId		           INT64 NOT NULL,
+            VenueName              STRING(100),
+            VenueInfo              BYTES(MAX),
+            Capacity               INT64,
+            AvailableDates         ARRAY<DATE>,
+            LastContactDate        DATE,
+            OutdoorVenue           BOOL,
+            PopularityScore        FLOAT64,
+            LastUpdateTime TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
+    	) PRIMARY KEY (VenueId)'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
+    printf('Created Venues table in database %s on instance %s' . PHP_EOL,
+        $databaseId, $instanceId);
 }
-// [END spanner_create_index]
+// [END spanner_create_table_with_datatypes]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

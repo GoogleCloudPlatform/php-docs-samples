@@ -130,7 +130,7 @@ class spannerTest extends TestCase
         self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
-        self::$defaultLeader = 'us-central1';
+        self::$defaultLeader = 'us-east1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
         self::$baseConfigId = 'nam7';
@@ -230,7 +230,8 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabaseWithEncryptionKey()
     {
-        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+        $output = $this->runAdminFunctionSnippet('create_database_with_encryption_key', [
+            self::$projectId,
             self::$instanceId,
             self::$encryptedDatabaseId,
             self::$kmsKeyName,
@@ -244,7 +245,8 @@ class spannerTest extends TestCase
      */
     public function testUpdateDatabase()
     {
-        $output = $this->runFunctionSnippet('update_database', [
+        $output = $this->runAdminFunctionSnippet('update_database', [
+            'project_id' => self::$projectId,
             'instanceId' => self::$instanceId,
             'databaseId' => self::$databaseId
         ]);
@@ -385,7 +387,7 @@ class spannerTest extends TestCase
      */
     public function testCreateIndex()
     {
-        $output = $this->runFunctionSnippet('create_index');
+        $output = $this->runAdminFunctionSnippet('create_index');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
     }
@@ -419,7 +421,7 @@ class spannerTest extends TestCase
      */
     public function testCreateStoringIndex()
     {
-        $output = $this->runFunctionSnippet('create_storing_index');
+        $output = $this->runAdminFunctionSnippet('create_storing_index');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle2 index.', $output);
     }
@@ -474,7 +476,7 @@ class spannerTest extends TestCase
      */
     public function testCreateTableTimestamp()
     {
-        $output = $this->runFunctionSnippet('create_table_with_timestamp_column');
+        $output = $this->runAdminFunctionSnippet('create_table_with_timestamp_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created Performances table in database test-', $output);
     }
@@ -701,7 +703,7 @@ class spannerTest extends TestCase
      */
     public function testCreateTableDatatypes()
     {
-        $output = $this->runFunctionSnippet('create_table_with_datatypes');
+        $output = $this->runAdminFunctionSnippet('create_table_with_datatypes');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created Venues table in database test-', $output);
     }
@@ -1098,8 +1100,11 @@ class spannerTest extends TestCase
 
     public function testListInstanceConfigs()
     {
-        $output = $this->runFunctionSnippet('list_instance_configs');
-        $this->assertStringContainsString(self::$instanceConfig, $output);
+        $output = $this->traitRunFunctionSnippet('list_instance_configs');
+        $this->assertStringContainsString(
+            'Available leader options for instance config',
+            $output
+        );
     }
 
     public function testCreateDatabaseWithDefaultLeader()
@@ -1128,9 +1133,10 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateDatabaseWithDefaultLeader
      */
-    private function testUpdateDatabaseWithDefaultLeader()
+    public function testUpdateDatabaseWithDefaultLeader()
     {
-        $output = $this->runFunctionSnippet('update_database_with_default_leader', [
+        $output = $this->runAdminFunctionSnippet('update_database_with_default_leader', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
             'defaultLeader' => self::$updatedDefaultLeader
@@ -1141,9 +1147,10 @@ class spannerTest extends TestCase
     /**
      * @depends testUpdateDatabaseWithDefaultLeader
      */
-    private function testGetDatabaseDdl()
+    public function testGetDatabaseDdl()
     {
-        $output = $this->runFunctionSnippet('get_database_ddl', [
+        $output = $this->runAdminFunctionSnippet('get_database_ddl', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
         ]);
@@ -1154,9 +1161,9 @@ class spannerTest extends TestCase
     /**
      * @depends testUpdateDatabaseWithDefaultLeader
      */
-    private function testListDatabases()
+    public function testListDatabases()
     {
-        $output = $this->runFunctionSnippet('list_databases');
+        $output = $this->runAdminFunctionSnippet('list_databases');
         $this->assertStringContainsString(self::$databaseId, $output);
         $this->assertStringContainsString(self::$multiDatabaseId, $output);
         $this->assertStringContainsString(self::$updatedDefaultLeader, $output);

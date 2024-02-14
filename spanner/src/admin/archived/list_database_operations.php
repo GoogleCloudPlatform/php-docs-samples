@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_list_database_operations]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\ListDatabaseOperationsRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * List all optimize restored database operations in an instance.
@@ -34,24 +33,20 @@ use Google\Cloud\Spanner\Admin\Database\V1\ListDatabaseOperationsRequest;
  * list_database_operations($instanceId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  */
-function list_database_operations(string $projectId, string $instanceId): void
+function list_database_operations(string $instanceId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $parent = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
 
+    // List the databases that are being optimized after a restore operation.
     $filter = '(metadata.@type:type.googleapis.com/' .
-                'google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)';
-    $operations = $databaseAdminClient->listDatabaseOperations(
-        new ListDatabaseOperationsRequest([
-            'parent' => $parent,
-            'filter' => $filter
-        ])
-    );
+              'google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)';
 
-    foreach ($operations->iterateAllElements() as $operation) {
+    $operations = $instance->databaseOperations(['filter' => $filter]);
+
+    foreach ($operations as $operation) {
         if (!$operation->done()) {
             $meta = $operation->info()['metadata'];
             $dbName = basename($meta['name']);

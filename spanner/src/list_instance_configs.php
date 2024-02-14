@@ -40,7 +40,7 @@ function list_instance_configs(): void
         printf(
             'Available leader options for instance config %s: %s' . PHP_EOL,
             $config->info()['displayName'],
-            $config->info()['leaderOptions']
+            implode(',', $config->info()['leaderOptions'])
         );
     }
 }

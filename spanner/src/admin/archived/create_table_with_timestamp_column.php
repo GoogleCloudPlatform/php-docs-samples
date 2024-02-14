@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,38 +23,43 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_list_database_roles]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\ListDatabaseRolesRequest;
+// [START spanner_create_table_with_timestamp_column]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * List Database roles in the given database.
+ * Creates a table with a commit timestamp column.
  * Example:
  * ```
- * list_database_roles($projectId, $instanceId, $databaseId);
+ * create_table_with_timestamp_column($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google cloud project ID
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function list_database_roles(
-    string $projectId,
-    string $instanceId,
-    string $databaseId
-): void {
-    $adminClient = new DatabaseAdminClient();
-    $resource = $adminClient->databaseName($projectId, $instanceId, $databaseId);
-    $listDatabaseRolesRequest = (new ListDatabaseRolesRequest())
-        ->setParent($resource);
+function create_table_with_timestamp_column(string $instanceId, string $databaseId): void
+{
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $roles = $adminClient->listDatabaseRoles($listDatabaseRolesRequest);
-    printf('List of Database roles:' . PHP_EOL);
-    foreach ($roles as $role) {
-        printf($role->getName() . PHP_EOL);
-    }
+    $operation = $database->updateDdl(
+        'CREATE TABLE Performances (
+    		SingerId	INT64 NOT NULL,
+    		VenueId		INT64 NOT NULL,
+    		EventDate	DATE,
+    		Revenue		INT64,
+    		LastUpdateTime	TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
+    	) PRIMARY KEY (SingerId, VenueId, EventDate),
+    	INTERLEAVE IN PARENT Singers on DELETE CASCADE'
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
+    printf('Created Performances table in database %s on instance %s' . PHP_EOL,
+        $databaseId, $instanceId);
 }
-// [END spanner_list_database_roles]
+// [END spanner_create_table_with_timestamp_column]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

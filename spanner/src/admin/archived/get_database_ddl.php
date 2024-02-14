@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,34 +23,31 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_list_databases]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\ListDatabasesRequest;
+// [START spanner_get_database_ddl]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Lists the databases and their leader options.
+ * Gets the database DDL statements.
  * Example:
  * ```
- * list_databases($projectId, $instanceId);
+ * get_database_ddl($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
+ * @param string $databaseId The Spanner database ID.
  */
-function list_databases(string $projectId, string $instanceId): void
+function get_database_ddl(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new ListDatabasesRequest(['parent' => $instanceName]);
-    $resp = $databaseAdminClient->listDatabases($request);
-    $databases = $resp->iterateAllElements();
-    printf('Databases for %s' . PHP_EOL, $instanceName);
-    foreach ($databases as $database) {
-        printf("\t%s (default leader = %s)" . PHP_EOL, $database->getName(), $database->getDefaultLeader());
+    printf("Retrieved database DDL for $databaseId" . PHP_EOL);
+    foreach ($database->ddl() as $statement) {
+        printf('%s' . PHP_EOL, $statement);
     }
 }
-// [END spanner_list_databases]
+// [END spanner_get_database_ddl]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

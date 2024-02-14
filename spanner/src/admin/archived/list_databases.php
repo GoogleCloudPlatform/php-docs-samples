@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,29 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_list_databases]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\ListDatabasesRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Lists the databases and their leader options.
  * Example:
  * ```
- * list_databases($projectId, $instanceId);
+ * list_databases($instanceId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  */
-function list_databases(string $projectId, string $instanceId): void
+function list_databases(string $instanceId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
-
-    $request = new ListDatabasesRequest(['parent' => $instanceName]);
-    $resp = $databaseAdminClient->listDatabases($request);
-    $databases = $resp->iterateAllElements();
-    printf('Databases for %s' . PHP_EOL, $instanceName);
-    foreach ($databases as $database) {
-        printf("\t%s (default leader = %s)" . PHP_EOL, $database->getName(), $database->getDefaultLeader());
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    printf('Databases for %s' . PHP_EOL, $instance->name());
+    foreach ($instance->databases() as $database) {
+        if (isset($database->info()['defaultLeader'])) {
+            printf("\t%s (default leader = %s)" . PHP_EOL,
+                $database->info()['name'], $database->info()['defaultLeader']);
+        } else {
+            printf("\t%s" . PHP_EOL, $database->info()['name']);
+        }
     }
 }
 // [END spanner_list_databases]

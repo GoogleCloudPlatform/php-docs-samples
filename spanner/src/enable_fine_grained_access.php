@@ -55,7 +55,7 @@ function enable_fine_grained_access(
     string $title
 ): void {
     $adminClient = new DatabaseAdminClient();
-    $resource = sprintf('projects/%s/instances/%s/databases/%s', $projectId, $instanceId, $databaseId);
+    $resource = $adminClient->databaseName($projectId, $instanceId, $databaseId);
     $getIamPolicyRequest = (new GetIamPolicyRequest())
         ->setResource($resource);
     $policy = $adminClient->getIamPolicy($getIamPolicyRequest);

@@ -27,7 +27,6 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Creates a database with a default leader.
@@ -49,8 +48,8 @@ function create_database_with_default_leader(
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
 
-    $instance = sprintf('projects/%s/instances/%s', $projectId, $instanceId);
-    $databaseIdFull = sprintf('%s/databases/%s', $instance, $databaseId);
+    $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
+    $databaseIdFull = $databaseAdminClient->databaseName($projectId, $instanceId, $databaseId);
 
     $operation = $databaseAdminClient->createDatabase(
         new CreateDatabaseRequest([

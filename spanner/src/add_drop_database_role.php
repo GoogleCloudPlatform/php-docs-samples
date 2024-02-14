@@ -26,7 +26,6 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_add_and_drop_database_role]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
-use Google\Type\Expr;
 
 /**
  * Adds and drops roles to the Singers table in the example database.

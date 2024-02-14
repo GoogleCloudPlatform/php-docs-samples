@@ -21,8 +21,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
-
- namespace Google\Cloud\Samples\Spanner;
+namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_database]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
@@ -42,7 +41,7 @@ use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 function create_database(string $projectId, string $instanceId, string $databaseId): void
 {
     $databaseAdminClient = new DatabaseAdminClient();
-    $instance = sprintf('projects/%s/instances/%s', $projectId, $instanceId);
+    $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
 
     $operation = $databaseAdminClient->createDatabase(
         new CreateDatabaseRequest([

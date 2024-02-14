@@ -233,7 +233,7 @@ class spannerBackupTest extends TestCase
      */
     public function testListDatabaseOperations()
     {
-        $output = $this->runFunctionSnippet('list_database_operations');
+        $output = $this->runAdminFunctionSnippet('list_database_operations');
         $this->assertStringContainsString(self::$encryptedRestoredDatabaseId, $output);
     }
 
@@ -280,6 +280,14 @@ class spannerBackupTest extends TestCase
         return $this->traitRunFunctionSnippet(
             $sampleName,
             array_merge([self::$instanceId], array_values($params))
+        );
+    }
+
+    private function runAdminFunctionSnippet($sampleName, $params = [])
+    {
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_merge([self::$projectId, self::$instanceId], array_values($params))
         );
     }
 
