@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,49 +23,54 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_drop_sequence]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_create_table_with_foreign_key_delete_cascade]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Drops a sequence.
+ * Creates table with foreign key delete cascade.
  * Example:
  * ```
- * drop_sequence($projectId, $instanceId, $databaseId);
+ * create_table_with_foreign_key_delete_cascade($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function drop_sequence(
-    string $projectId,
+function create_table_with_foreign_key_delete_cascade(
     string $instanceId,
     string $databaseId
     ): void {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [
-            'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',
-            'DROP SEQUENCE Seq'
-        ]
+    $operation = $database->updateDdlBatch([
+        'CREATE TABLE Customers (
+            CustomerId INT64 NOT NULL,
+            CustomerName STRING(62) NOT NULL,
+        ) PRIMARY KEY (CustomerId)',
+        'CREATE TABLE ShoppingCarts (
+            CartId INT64 NOT NULL,
+            CustomerId INT64 NOT NULL,
+            CustomerName STRING(62) NOT NULL,
+            CONSTRAINT FKShoppingCartsCustomerId FOREIGN KEY (CustomerId)
+            REFERENCES Customers (CustomerId) ON DELETE CASCADE
+        ) PRIMARY KEY (CartId)'
     ]);
-
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf(
-        'Altered Customers table to drop DEFAULT from CustomerId ' .
-        'column and dropped the Seq sequence' .
+    printf(sprintf(
+        'Created Customers and ShoppingCarts table with ' .
+        'FKShoppingCartsCustomerId foreign key constraint ' .
+        'on database %s on instance %s %s',
+        $databaseId,
+        $instanceId,
         PHP_EOL
-    );
+    ));
 }
-// [END spanner_drop_sequence]
+// [END spanner_create_table_with_foreign_key_delete_cascade]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

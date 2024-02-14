@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,31 +24,27 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Adds a new column to the Albums table in the example database.
  * Example:
  * ```
- * add_column($projectId, $instanceId, $databaseId);
+ * add_column($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_column(string $projectId, string $instanceId, string $databaseId): void
+function add_column(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => ['ALTER TABLE Albums ADD COLUMN MarketingBudget INT64']
-    ]);
-
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'ALTER TABLE Albums ADD COLUMN MarketingBudget INT64'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,39 +23,35 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_add_timestamp_column]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Adds a new column to the Albums table in the example database.
+ * Adds a commit timestamp column to a table.
  * Example:
  * ```
- * add_column($projectId, $instanceId, $databaseId);
+ * add_timestamp_column($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_column(string $projectId, string $instanceId, string $databaseId): void
+function add_timestamp_column(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => ['ALTER TABLE Albums ADD COLUMN MarketingBudget INT64']
-    ]);
-
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Added the MarketingBudget column.' . PHP_EOL);
+    printf('Added LastUpdateTime as a commit timestamp column in Albums table' . PHP_EOL);
 }
-// [END spanner_add_column]
+// [END spanner_add_timestamp_column]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,10 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_database_with_default_leader]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Creates a database with a default leader.
@@ -33,42 +36,52 @@ use Google\Cloud\Spanner\SpannerClient;
  * create_database_with_default_leader($instanceId, $databaseId, $defaultLeader);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $defaultLeader The leader instance configuration used by default.
  */
-function create_database_with_default_leader(string $instanceId, string $databaseId, string $defaultLeader): void
-{
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
+function create_database_with_default_leader(
+    string $projectId,
+    string $instanceId,
+    string $databaseId,
+    string $defaultLeader
+): void {
+    $databaseAdminClient = new DatabaseAdminClient();
 
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
+    $instance = sprintf('projects/%s/instances/%s', $projectId, $instanceId);
+    $databaseIdFull = sprintf('%s/databases/%s', $instance, $databaseId);
 
-    $operation = $instance->createDatabase($databaseId, ['statements' => [
-        'CREATE TABLE Singers (
-            SingerId     INT64 NOT NULL,
-            FirstName    STRING(1024),
-            LastName     STRING(1024),
-            SingerInfo   BYTES(MAX)
-        ) PRIMARY KEY (SingerId)',
-        'CREATE TABLE Albums (
-            SingerId     INT64 NOT NULL,
-            AlbumId      INT64 NOT NULL,
-            AlbumTitle   STRING(MAX)
-        ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
-        "ALTER DATABASE `$databaseId` SET OPTIONS (
-        default_leader = '$defaultLeader')"
-    ]]);
+    $operation = $databaseAdminClient->createDatabase(
+        new CreateDatabaseRequest([
+            'parent' => $instance,
+            'create_statement' => sprintf('CREATE DATABASE `%s`', $databaseId),
+            'extra_statements' => [
+                'CREATE TABLE Singers (' .
+                'SingerId     INT64 NOT NULL,' .
+                'FirstName    STRING(1024),' .
+                'LastName     STRING(1024),' .
+                'SingerInfo   BYTES(MAX)' .
+                ') PRIMARY KEY (SingerId)',
+                'CREATE TABLE Albums (' .
+                    'SingerId     INT64 NOT NULL,' .
+                    'AlbumId      INT64 NOT NULL,' .
+                    'AlbumTitle   STRING(MAX)' .
+                ') PRIMARY KEY (SingerId, AlbumId),' .
+                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
+                sprintf("ALTER DATABASE `%s` SET OPTIONS (default_leader = '%s')", $databaseId, $defaultLeader)
+            ]
+        ])
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $database = $instance->database($databaseId);
+    $database = $databaseAdminClient->getDatabase(
+        new GetDatabaseRequest(['name' => $databaseIdFull])
+    );
     printf('Created database %s on instance %s with default leader %s' . PHP_EOL,
-        $databaseId, $instanceId, $database->info()['defaultLeader']);
+        $databaseId, $instanceId, $database->getDefaultLeader());
 }
 // [END spanner_create_database_with_default_leader]
 

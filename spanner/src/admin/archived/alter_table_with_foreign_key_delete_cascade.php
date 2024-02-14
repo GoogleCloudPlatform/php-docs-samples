@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,39 +23,47 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_alter_table_with_foreign_key_delete_cascade]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Adds a new column to the Albums table in the example database.
+ * Alter table to add a foreign key delete cascade action.
  * Example:
  * ```
- * add_column($projectId, $instanceId, $databaseId);
+ * alter_table_with_foreign_key_delete_cascade($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_column(string $projectId, string $instanceId, string $databaseId): void
-{
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+function alter_table_with_foreign_key_delete_cascade(
+    string $instanceId,
+    string $databaseId
+    ): void {
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => ['ALTER TABLE Albums ADD COLUMN MarketingBudget INT64']
-    ]);
-
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'ALTER TABLE ShoppingCarts
+        ADD CONSTRAINT FKShoppingCartsCustomerName
+        FOREIGN KEY (CustomerName)
+        REFERENCES Customers(CustomerName)
+        ON DELETE CASCADE'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Added the MarketingBudget column.' . PHP_EOL);
+    printf(sprintf(
+        'Altered ShoppingCarts table with FKShoppingCartsCustomerName ' .
+        'foreign key constraint on database %s on instance %s %s',
+        $databaseId,
+        $instanceId,
+        PHP_EOL
+    ));
 }
-// [END spanner_add_column]
+// [END spanner_alter_table_with_foreign_key_delete_cascade]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

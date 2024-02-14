@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,57 +23,44 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_create_sequence]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
-use Google\Cloud\Spanner\SpannerClient;
+// [START spanner_alter_sequence]
 use Google\Cloud\Spanner\Result;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Creates a sequence.
- *
+ * Alters a sequence.
  * Example:
  * ```
- * create_sequence($projectId, $instanceId, $databaseId);
+ * alter_sequence($instanceId, $databaseId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_sequence(string $projectId, string $instanceId, string $databaseId): void
-{
-    $databaseAdminClient = new DatabaseAdminClient();
+function alter_sequence(
+    string $instanceId,
+    string $databaseId
+    ): void {
     $spanner = new SpannerClient();
-
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $transaction = $database->transaction();
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [
-            "CREATE SEQUENCE Seq OPTIONS (sequence_kind = 'bit_reversed_positive')",
-            'CREATE TABLE Customers (CustomerId INT64 DEFAULT (GET_NEXT_SEQUENCE_VALUE(' .
-            'Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)'
-        ]
-    ]);
-
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'ALTER SEQUENCE Seq SET OPTIONS (skip_range_min = 1000, skip_range_max = 5000000)'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf(
-        'Created Seq sequence and Customers table, where ' .
-        'the key column CustomerId uses the sequence as a default value' .
+        'Altered Seq sequence to skip an inclusive range between 1000 and 5000000' .
         PHP_EOL
     );
 
-    $transaction = $database->transaction();
     $res = $transaction->execute(
         'INSERT INTO Customers (CustomerName) VALUES ' .
-        "('Alice'), ('David'), ('Marc') THEN RETURN CustomerId"
+        "('Lea'), ('Catalina'), ('Smith') THEN RETURN CustomerId"
     );
     $rows = $res->rows(Result::RETURN_ASSOCIATIVE);
 
@@ -91,7 +78,7 @@ function create_sequence(string $projectId, string $instanceId, string $database
         PHP_EOL
     ));
 }
-// [END spanner_create_sequence]
+// [END spanner_alter_sequence]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
