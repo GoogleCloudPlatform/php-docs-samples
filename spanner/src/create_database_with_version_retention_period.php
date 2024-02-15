@@ -27,6 +27,7 @@ namespace Google\Cloud\Samples\Spanner;
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\Database;
+use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseRequest;
 
 /**

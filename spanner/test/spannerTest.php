@@ -130,7 +130,7 @@ class spannerTest extends TestCase
         self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
-        self::$defaultLeader = 'us-east1';
+        self::$defaultLeader = 'us-south1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
         self::$baseConfigId = 'nam7';
