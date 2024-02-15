@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_app_profile]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\AppProfile;
 use Google\Cloud\Bigtable\Admin\V2\AppProfile\SingleClusterRouting;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\UpdateAppProfileRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -79,7 +80,11 @@ function update_app_profile(
         // Bigtable warns you while updating the routing policy, or when toggling the allow_transactional_writes
         // to force it to update, we set ignoreWarnings to true.
         // If you just want to update something simple like description, you can remove it.
-        $operationResponse = $instanceAdminClient->updateAppProfile($appProfile, $updateMask, ['ignoreWarnings' => true]);
+        $updateAppProfileRequest = (new UpdateAppProfileRequest())
+            ->setAppProfile($appProfile)
+            ->setUpdateMask($updateMask)
+            ->setIgnoreWarnings(true);
+        $operationResponse = $instanceAdminClient->updateAppProfile($updateAppProfileRequest);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {

@@ -17,11 +17,14 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_sign_asymmetric]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\AsymmetricSignRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\Digest;
 
-function sign_asymmetric_sample(
+function sign_asymmetric(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -46,18 +49,16 @@ function sign_asymmetric_sample(
         ->setSha256($hash);
 
     // Call the API.
-    $signResponse = $client->asymmetricSign($keyVersionName, $digest);
+    $asymmetricSignRequest = (new AsymmetricSignRequest())
+        ->setName($keyVersionName)
+        ->setDigest($digest);
+    $signResponse = $client->asymmetricSign($asymmetricSignRequest);
     printf('Signature: %s' . PHP_EOL, $signResponse->getSignature());
+
     return $signResponse;
 }
 // [END kms_sign_asymmetric]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID MESSAGE\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $message) = $argv;
-    sign_asymmetric_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $message);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

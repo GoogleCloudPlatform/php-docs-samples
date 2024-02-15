@@ -15,63 +15,73 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 7 || count($argv) > 7) {
-    return printf("Usage: php %s INPUT_URI OUTPUT_URI PROJECT_ID LOCATION SOURCE_LANGUAGE TARGET_LANGUAGE\n", __FILE__);
-}
-list($_, $inputUri, $outputUri, $projectId, $location, $sourceLang, $targetLang) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_batch_translate_text]
+use Google\Cloud\Translate\V3\BatchTranslateTextRequest;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\GcsDestination;
 use Google\Cloud\Translate\V3\GcsSource;
 use Google\Cloud\Translate\V3\InputConfig;
 use Google\Cloud\Translate\V3\OutputConfig;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $inputUri      Path to to source input (e.g. "gs://cloud-samples-data/text.txt").
+ * @param string $outputUri     Path to store results (e.g. "gs://YOUR_BUCKET_ID/results/").
+ * @param string $projectId     Your Google Cloud project ID.
+ * @param string $location      Project location (e.g. us-central1)
+ * @param string $targetLanguage    Language to translate to.
+ * @param string $sourceLanguage    Language of the source.
+ */
+function v3_batch_translate_text(
+    string $inputUri,
+    string $outputUri,
+    string $projectId,
+    string $location,
+    string $targetLanguage,
+    string $sourceLanguage
+): void {
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $inputUri = 'gs://cloud-samples-data/text.txt';
-// $outputUri = 'gs://YOUR_BUCKET_ID/path_to_store_results/';
-// $projectId = '[Google Cloud Project ID]';
-// $location = 'us-central1';
-// $sourceLang = 'en';
-// $targetLang = 'ja';
-$targetLanguageCodes = [$targetLang];
-$gcsSource = (new GcsSource())
-    ->setInputUri($inputUri);
+    $targetLanguageCodes = [$targetLanguage];
+    $gcsSource = (new GcsSource())
+        ->setInputUri($inputUri);
 
-// Optional. Can be "text/plain" or "text/html".
-$mimeType = 'text/plain';
-$inputConfigsElement = (new InputConfig())
-    ->setGcsSource($gcsSource)
-    ->setMimeType($mimeType);
-$inputConfigs = [$inputConfigsElement];
-$gcsDestination = (new GcsDestination())
-    ->setOutputUriPrefix($outputUri);
-$outputConfig = (new OutputConfig())
-    ->setGcsDestination($gcsDestination);
-$formattedParent = $translationServiceClient->locationName($projectId, $location);
+    // Optional. Can be "text/plain" or "text/html".
+    $mimeType = 'text/plain';
+    $inputConfigsElement = (new InputConfig())
+        ->setGcsSource($gcsSource)
+        ->setMimeType($mimeType);
+    $inputConfigs = [$inputConfigsElement];
+    $gcsDestination = (new GcsDestination())
+        ->setOutputUriPrefix($outputUri);
+    $outputConfig = (new OutputConfig())
+        ->setGcsDestination($gcsDestination);
+    $formattedParent = $translationServiceClient->locationName($projectId, $location);
 
-try {
-    $operationResponse = $translationServiceClient->batchTranslateText(
-        $formattedParent,
-        $sourceLang,
-        $targetLanguageCodes,
-        $inputConfigs,
-        $outputConfig
-    );
-    $operationResponse->pollUntilComplete();
-    if ($operationResponse->operationSucceeded()) {
-        $response = $operationResponse->getResult();
-        printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
-        printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
-    } else {
-        $error = $operationResponse->getError();
-        print($error->getMessage());
+    try {
+        $request = (new BatchTranslateTextRequest())
+            ->setParent($formattedParent)
+            ->setSourceLanguageCode($sourceLanguage)
+            ->setTargetLanguageCodes($targetLanguageCodes)
+            ->setInputConfigs($inputConfigs)
+            ->setOutputConfig($outputConfig);
+        $operationResponse = $translationServiceClient->batchTranslateText($request);
+        $operationResponse->pollUntilComplete();
+        if ($operationResponse->operationSucceeded()) {
+            $response = $operationResponse->getResult();
+            printf('Total Characters: %s' . PHP_EOL, $response->getTotalCharacters());
+            printf('Translated Characters: %s' . PHP_EOL, $response->getTranslatedCharacters());
+        } else {
+            $error = $operationResponse->getError();
+            print($error->getMessage());
+        }
+    } finally {
+        $translationServiceClient->close();
     }
-} finally {
-    $translationServiceClient->close();
 }
 // [END translate_v3_batch_translate_text]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

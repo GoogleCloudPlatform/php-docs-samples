@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
@@ -49,7 +49,7 @@ function write_simple(
     $timestampMicros = time() * 1000 * 1000;
     $columnFamilyId = 'stats_summary';
     $mutations = (new Mutations())
-    ->upsert($columnFamilyId, 'connected_cell', 1, $timestampMicros)
+    ->upsert($columnFamilyId, 'connected_cell', '1', $timestampMicros)
     ->upsert($columnFamilyId, 'connected_wifi', DataUtil::intToByteString(1), $timestampMicros)
     ->upsert($columnFamilyId, 'os_build', 'PQ2A.190405.003', $timestampMicros);
 

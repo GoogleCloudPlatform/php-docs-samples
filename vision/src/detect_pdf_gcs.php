@@ -29,10 +29,11 @@ use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\InputConfig;
 use Google\Cloud\Vision\V1\OutputConfig;
 
-// $path = 'gs://path/to/your/document.pdf'
-// $output = 'gs://path/to/store/results/'
-
-function detect_pdf_gcs($path, $output)
+/**
+ * @param string $path    GCS path to the document, e.g. "gs://path/to/your/document.pdf"
+ * @param string $output  GCS path to store the results, e.g. "gs://path/to/store/results/"
+ */
+function detect_pdf_gcs(string $path, string $output)
 {
     # select ocr feature
     $feature = (new Feature())
@@ -106,3 +107,7 @@ function detect_pdf_gcs($path, $output)
     $imageAnnotator->close();
 }
 // [END vision_text_detection_pdf_gcs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

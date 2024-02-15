@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 namespace Google\Cloud\Samples\PubSub;
 
@@ -29,7 +29,7 @@ use Google\Cloud\PubSub\V1\Encoding;
 use AvroStringIO;
 use AvroSchema;
 use AvroIODatumWriter;
-use AvroDataIOWriter;
+use AvroIOBinaryEncoder;
 
 /**
  * Publish a message using an AVRO schema.
@@ -39,7 +39,6 @@ use AvroDataIOWriter;
  * @param string $projectId
  * @param string $topicId
  * @param string $definitionFile
- * @return void
  */
 function publish_avro_records($projectId, $topicId, $definitionFile)
 {
@@ -47,7 +46,7 @@ function publish_avro_records($projectId, $topicId, $definitionFile)
         'projectId' => $projectId,
     ]);
 
-    $definition = file_get_contents($definitionFile);
+    $definition = (string) file_get_contents($definitionFile);
 
     $messageData = [
         'name' => 'Alaska',
@@ -81,14 +80,10 @@ function publish_avro_records($projectId, $topicId, $definitionFile)
         $io = new AvroStringIO();
         $schema = AvroSchema::parse($definition);
         $writer = new AvroIODatumWriter($schema);
-        $dataWriter = new AvroDataIOWriter($io, $writer, $schema);
+        $encoder = new AvroIOBinaryEncoder($io);
+        $writer->write($messageData, $encoder);
 
-        $dataWriter->append($messageData);
-
-        $dataWriter->close();
-
-        // AVRO binary data must be base64-encoded.
-        $encodedMessageData = base64_encode($io->string());
+        $encodedMessageData = $io->string();
     } else {
         // encode as JSON.
         $encodedMessageData = json_encode($messageData);

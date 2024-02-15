@@ -18,19 +18,21 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_insert_update_rows]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
-use Google\Cloud\Bigtable\BigtableClient;
+use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table as TableClass;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\BigtableClient;
 
 /**
  * Perform insert/update operations on a Bigtable
@@ -59,11 +61,11 @@ function insert_update_rows(
     printf('Creating table %s' . PHP_EOL, $tableId);
 
     try {
-        $tableAdminClient->createtable(
-            $instanceName,
-            $tableId,
-            $table
-        );
+        $createTableRequest = (new CreateTableRequest())
+            ->setParent($instanceName)
+            ->setTableId($tableId)
+            ->setTable($table);
+        $tableAdminClient->createtable($createTableRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'ALREADY_EXISTS') {
             printf('Table %s already exists.' . PHP_EOL, $tableId);
@@ -83,7 +85,10 @@ function insert_update_rows(
     $columnModification = new Modification();
     $columnModification->setId($columnFamilyId);
     $columnModification->setCreate($columnFamily4);
-    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+        ->setName($tableName)
+        ->setModifications([$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
 
     printf('Inserting data in the table' . PHP_EOL);
 
@@ -102,7 +107,7 @@ function insert_update_rows(
     printf('Data inserted successfully!' . PHP_EOL);
 }
 
-function time_in_microseconds()
+function time_in_microseconds(): float
 {
     $mt = microtime(true);
     $mt = sprintf('%.03f', $mt);

@@ -18,15 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_simple]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
 use Google\Cloud\Monitoring\V3\TimeInterval;
-use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest_TimeSeriesView;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -37,13 +38,13 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_simple($projectId, $minutesAgo = 20)
+function read_timeseries_simple(string $projectId, int $minutesAgo = 20): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     // Limit results to the last 20 minutes
@@ -56,13 +57,14 @@ function read_timeseries_simple($projectId, $minutesAgo = 20)
     $interval->setStartTime($startTime);
     $interval->setEndTime($endTime);
 
-    $view = ListTimeSeriesRequest_TimeSeriesView::FULL;
+    $view = TimeSeriesView::FULL;
+    $listTimeSeriesRequest = (new ListTimeSeriesRequest())
+        ->setName($projectName)
+        ->setFilter($filter)
+        ->setInterval($interval)
+        ->setView($view);
 
-    $result = $metrics->listTimeSeries(
-        $projectName,
-        $filter,
-        $interval,
-        $view);
+    $result = $metrics->listTimeSeries($listTimeSeriesRequest);
 
     printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {
@@ -74,3 +76,7 @@ function read_timeseries_simple($projectId, $minutesAgo = 20)
     }
 }
 // [END monitoring_read_timeseries_simple]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

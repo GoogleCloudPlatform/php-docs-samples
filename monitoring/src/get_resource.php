@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_get_resource]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\GetMonitoredResourceDescriptorRequest;
 
 /**
  * Example:
@@ -42,7 +43,9 @@ function get_resource($projectId, $resourceType)
     ]);
 
     $metricName = $metrics->monitoredResourceDescriptorName($projectId, $resourceType);
-    $resource = $metrics->getMonitoredResourceDescriptor($metricName);
+    $getMonitoredResourceDescriptorRequest = (new GetMonitoredResourceDescriptorRequest())
+        ->setName($metricName);
+    $resource = $metrics->getMonitoredResourceDescriptor($getMonitoredResourceDescriptorRequest);
 
     printf('Name: %s' . PHP_EOL, $resource->getName());
     printf('Type: %s' . PHP_EOL, $resource->getType());
@@ -57,3 +60,7 @@ function get_resource($projectId, $resourceType)
     }
 }
 // [END monitoring_get_resource]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

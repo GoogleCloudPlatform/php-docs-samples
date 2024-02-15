@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/auth/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
 # [START auth_api_explicit_compute]
@@ -28,8 +28,8 @@ use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
-use Google_Client;
-use Google_Service_Storage;
+use Google\Client as GoogleClient;
+use Google\Service\Storage;
 
 /**
  * Authenticate to a cloud API using Compute credentials explicitly.
@@ -48,10 +48,10 @@ function auth_api_explicit_compute($projectId)
         'auth' => 'google_auth'
     ]);
 
-    $client = new Google_Client();
+    $client = new GoogleClient();
     $client->setHttpClient($http_client);
 
-    $storage = new Google_Service_Storage($client);
+    $storage = new Storage($client);
 
     # Make an authenticated API request (listing storage buckets)
     $buckets = $storage->buckets->listBuckets($projectId);

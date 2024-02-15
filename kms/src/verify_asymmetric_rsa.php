@@ -17,8 +17,10 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_verify_asymmetric_signature_rsa]
-function verify_asymmetric_rsa_sample(
+function verify_asymmetric_rsa(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -26,7 +28,7 @@ function verify_asymmetric_rsa_sample(
     string $versionId = '123',
     string $message = '...',
     string $signature = '...'
-) {
+): void {
     // PHP has limited support for asymmetric encryption operations.
     // Specifically, openssl_public_encrypt() does not allow customizing
     // algorithms or padding. Thus, it is not currently possible to use PHP
@@ -36,13 +38,3 @@ function verify_asymmetric_rsa_sample(
     // functionality. Google does not endorse this external library.
 }
 // [END kms_verify_asymmetric_signature_rsa]
-
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID MESSAGE SIGNATURE\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $message, $signature) = $argv;
-    verify_asymmetric_rsa_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $message, $signature);
-}

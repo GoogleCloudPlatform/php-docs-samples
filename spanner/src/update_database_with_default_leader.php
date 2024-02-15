@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $databaseId The Spanner database ID.
  * @param string $defaultLeader The leader instance configuration used by default.
  */
-function update_database_with_default_leader($instanceId, $databaseId, $defaultLeader)
+function update_database_with_default_leader(string $instanceId, string $databaseId, string $defaultLeader): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_list_ips]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\ListUptimeCheckIpsRequest;
 
 /**
  * Example:
@@ -32,13 +33,14 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * list_uptime_check_ips($projectId);
  * ```
  */
-function list_uptime_check_ips($projectId)
+function list_uptime_check_ips(string $projectId): void
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $listUptimeCheckIpsRequest = new ListUptimeCheckIpsRequest();
 
-    $pages = $uptimeCheckClient->listUptimeCheckIps();
+    $pages = $uptimeCheckClient->listUptimeCheckIps($listUptimeCheckIpsRequest);
 
     foreach ($pages->iteratePages() as $page) {
         $ips = $page->getResponseObject()->getUptimeCheckIps();
@@ -53,3 +55,7 @@ function list_uptime_check_ips($projectId)
     }
 }
 // [END monitoring_uptime_check_list_ips]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

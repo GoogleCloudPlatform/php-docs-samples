@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -36,7 +36,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_database($instanceId, $databaseId)
+function create_database(string $instanceId, string $databaseId): void
 {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -50,7 +50,9 @@ function create_database($instanceId, $databaseId)
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
             LastName     STRING(1024),
-            SingerInfo   BYTES(MAX)
+            SingerInfo   BYTES(MAX),
+            FullName     STRING(2048) AS
+            (ARRAY_TO_STRING([FirstName, LastName], " ")) STORED
         ) PRIMARY KEY (SingerId)',
         'CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,

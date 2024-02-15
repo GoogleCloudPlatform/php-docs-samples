@@ -18,28 +18,34 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_list_channels]
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\ListNotificationChannelsRequest;
 
 /**
  * @param string $projectId Your project ID
  */
 function alert_list_channels($projectId)
 {
+    $projectName = 'projects/' . $projectId;
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
+    $listNotificationChannelsRequest = (new ListNotificationChannelsRequest())
+        ->setName($projectName);
 
-    $channels = $channelClient->listNotificationChannels(
-        $channelClient->projectName($projectId)
-    );
+    $channels = $channelClient->listNotificationChannels($listNotificationChannelsRequest);
     foreach ($channels->iterateAllElements() as $channel) {
         printf('Name: %s (%s)' . PHP_EOL, $channel->getDisplayName(), $channel->getName());
     }
 }
 // [END monitoring_alert_list_channels]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

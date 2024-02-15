@@ -19,18 +19,19 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_template]
 use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobTemplateRequest;
 use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
 use Google\Cloud\Video\Transcoder\V1\JobConfig;
 use Google\Cloud\Video\Transcoder\V1\JobTemplate;
 use Google\Cloud\Video\Transcoder\V1\MuxStream;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
 
 /**
@@ -89,8 +90,12 @@ function create_job_template($projectId, $location, $templateId)
                 ->setElementaryStreams(['video-stream1', 'audio-stream0'])
         ])
     );
+    $request = (new CreateJobTemplateRequest())
+        ->setParent($formattedParent)
+        ->setJobTemplate($jobTemplate)
+        ->setJobTemplateId($templateId);
 
-    $response = $transcoderServiceClient->createJobTemplate($formattedParent, $jobTemplate, $templateId);
+    $response = $transcoderServiceClient->createJobTemplate($request);
 
     // Print job template name.
     printf('Job template: %s' . PHP_EOL, $response->getName());

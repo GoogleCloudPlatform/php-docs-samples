@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_cluster]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance\State;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GetClusterRequest;
+use Google\Cloud\Bigtable\Admin\V2\Instance\State;
+use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
  * Get a Bigtable cluster
@@ -46,7 +47,9 @@ function get_cluster(
     printf('Fetching the Cluster %s' . PHP_EOL, $clusterId);
     try {
         $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
-        $cluster = $instanceAdminClient->getCluster($clusterName);
+        $getClusterRequest = (new GetClusterRequest())
+            ->setName($clusterName);
+        $cluster = $instanceAdminClient->getCluster($getClusterRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Cluster %s does not exists.' . PHP_EOL, $clusterId);

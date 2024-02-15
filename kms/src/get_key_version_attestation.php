@@ -17,10 +17,14 @@
 
 declare(strict_types=1);
 
-// [START kms_get_key_version_attestation]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+namespace Google\Cloud\Samples\Kms;
 
-function get_key_version_attestation_sample(
+use Exception;
+// [START kms_get_key_version_attestation]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetCryptoKeyVersionRequest;
+
+function get_key_version_attestation(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -34,7 +38,9 @@ function get_key_version_attestation_sample(
     $keyVersionName = $client->cryptokeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $version = $client->getCryptoKeyVersion($keyVersionName);
+    $getCryptoKeyVersionRequest = (new GetCryptoKeyVersionRequest())
+        ->setName($keyVersionName);
+    $version = $client->getCryptoKeyVersion($getCryptoKeyVersionRequest);
 
     // Only HSM keys have an attestation. For other key types, the attestion
     // will be NULL.
@@ -44,16 +50,11 @@ function get_key_version_attestation_sample(
     }
 
     printf('Got key attestation: %s' . PHP_EOL, $attestation->getContent());
+
     return $attestation;
 }
 // [END kms_get_key_version_attestation]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId) = $argv;
-    get_key_version_attestation_sample($projectId, $locationId, $keyRingId, $keyId, $versionId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

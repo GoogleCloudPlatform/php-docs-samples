@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2016 Google Inc.
  *
@@ -19,154 +18,167 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 7 || count($argv) > 8) {
-    return print("Usage: php inspect_datastore.php CALLING_PROJECT DATA_PROJECT TOPIC SUBSCRIPTION KIND NAMESPACE [MAX_FINDINGS]\n");
-}
-list($_, $callingProjectId, $dataProjectId, $topicId, $subscriptionId, $kind, $namespaceId) = $argv;
-$maxFindings = isset($argv[7]) ? (int) $argv[7] : 0;
+namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_datastore]
-/**
- * Inspect Datastore, using Pub/Sub for job status notifications.
- */
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\DatastoreOptions;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DatastoreOptions;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
+use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\KindExpression;
+use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\PartitionId;
 use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
-use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
 use Google\Cloud\PubSub\PubSubClient;
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $dataProjectId = 'The project ID containing the target Datastore';
-// $topicId = 'The name of the Pub/Sub topic to notify once the job completes';
-// $subscriptionId = 'The name of the Pub/Sub subscription to use when listening for job';
-// $kind = 'The datastore kind to inspect';
-// $namespaceId = 'The ID namespace of the Datastore document to inspect';
-// $maxFindings = 0;  // (Optional) The maximum number of findings to report per request (0 = server maximum)
+/**
+ * Inspect Datastore, using Pub/Sub for job status notifications.
+ *
+ * @param string $callingProjectId  The project ID to run the API call under
+ * @param string $dataProjectId     The project ID containing the target Datastore
+ * @param string $topicId           The name of the Pub/Sub topic to notify once the job completes
+ * @param string $subscriptionId    The name of the Pub/Sub subscription to use when listening for job
+ * @param string $kind              The datastore kind to inspect
+ * @param string $namespaceId       The ID namespace of the Datastore document to inspect
+ * @param int    $maxFindings       (Optional) The maximum number of findings to report per request (0 = server maximum)
+ */
+function inspect_datastore(
+    string $callingProjectId,
+    string $dataProjectId,
+    string $topicId,
+    string $subscriptionId,
+    string $kind,
+    string $namespaceId,
+    int $maxFindings = 0
+): void {
+    // Instantiate clients
+    $dlp = new DlpServiceClient();
+    $pubsub = new PubSubClient();
+    $topic = $pubsub->topic($topicId);
 
-// Instantiate clients
-$dlp = new DlpServiceClient();
-$pubsub = new PubSubClient();
-$topic = $pubsub->topic($topicId);
+    // The infoTypes of information to match
+    $personNameInfoType = (new InfoType())
+        ->setName('PERSON_NAME');
+    $phoneNumberInfoType = (new InfoType())
+        ->setName('PHONE_NUMBER');
+    $infoTypes = [$personNameInfoType, $phoneNumberInfoType];
 
-// The infoTypes of information to match
-$personNameInfoType = (new InfoType())
-    ->setName('PERSON_NAME');
-$phoneNumberInfoType = (new InfoType())
-    ->setName('PHONE_NUMBER');
-$infoTypes = [$personNameInfoType, $phoneNumberInfoType];
+    // The minimum likelihood required before returning a match
+    $minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
 
-// The minimum likelihood required before returning a match
-$minLikelihood = likelihood::LIKELIHOOD_UNSPECIFIED;
+    // Specify finding limits
+    $limits = (new FindingLimits())
+        ->setMaxFindingsPerRequest($maxFindings);
 
-// Specify finding limits
-$limits = (new FindingLimits())
-    ->setMaxFindingsPerRequest($maxFindings);
+    // Construct items to be inspected
+    $partitionId = (new PartitionId())
+        ->setProjectId($dataProjectId)
+        ->setNamespaceId($namespaceId);
 
-// Construct items to be inspected
-$partitionId = (new PartitionId())
-    ->setProjectId($dataProjectId)
-    ->setNamespaceId($namespaceId);
+    $kindExpression = (new KindExpression())
+        ->setName($kind);
 
-$kindExpression = (new KindExpression())
-    ->setName($kind);
+    $datastoreOptions = (new DatastoreOptions())
+        ->setPartitionId($partitionId)
+        ->setKind($kindExpression);
 
-$datastoreOptions = (new DatastoreOptions())
-    ->setPartitionId($partitionId)
-    ->setKind($kindExpression);
+    // Construct the inspect config object
+    $inspectConfig = (new InspectConfig())
+        ->setInfoTypes($infoTypes)
+        ->setMinLikelihood($minLikelihood)
+        ->setLimits($limits);
 
-// Construct the inspect config object
-$inspectConfig = (new InspectConfig())
-    ->setInfoTypes($infoTypes)
-    ->setMinLikelihood($minLikelihood)
-    ->setLimits($limits);
+    // Construct the storage config object
+    $storageConfig = (new StorageConfig())
+        ->setDatastoreOptions($datastoreOptions);
 
-// Construct the storage config object
-$storageConfig = (new StorageConfig())
-    ->setDatastoreOptions($datastoreOptions);
+    // Construct the action to run when job completes
+    $pubSubAction = (new PublishToPubSub())
+        ->setTopic($topic->name());
 
-// Construct the action to run when job completes
-$pubSubAction = (new PublishToPubSub())
-    ->setTopic($topic->name());
+    $action = (new Action())
+        ->setPubSub($pubSubAction);
 
-$action = (new Action())
-    ->setPubSub($pubSubAction);
+    // Construct inspect job config to run
+    $inspectJob = (new InspectJobConfig())
+        ->setInspectConfig($inspectConfig)
+        ->setStorageConfig($storageConfig)
+        ->setActions([$action]);
 
-// Construct inspect job config to run
-$inspectJob = (new InspectJobConfig())
-    ->setInspectConfig($inspectConfig)
-    ->setStorageConfig($storageConfig)
-    ->setActions([$action]);
+    // Listen for job notifications via an existing topic/subscription.
+    $subscription = $topic->subscription($subscriptionId);
 
-// Listen for job notifications via an existing topic/subscription.
-$subscription = $topic->subscription($subscriptionId);
+    // Submit request
+    $parent = "projects/$callingProjectId/locations/global";
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setInspectJob($inspectJob);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
-// Submit request
-$parent = "projects/$callingProjectId/locations/global";
-$job = $dlp->createDlpJob($parent, [
-    'inspectJob' => $inspectJob
-]);
-
-// Poll Pub/Sub using exponential backoff until job finishes
-// Consider using an asynchronous execution model such as Cloud Functions
-$attempt = 1;
-$startTime = time();
-do {
-    foreach ($subscription->pull() as $message) {
-        if (isset($message->attributes()['DlpJobName']) &&
-            $message->attributes()['DlpJobName'] === $job->getName()) {
-            $subscription->acknowledge($message);
-            // Get the updated job. Loop to avoid race condition with DLP API.
-            do {
-                $job = $dlp->getDlpJob($job->getName());
-            } while ($job->getState() == JobState::RUNNING);
-            break 2; // break from parent do while
-        }
-    }
-    printf('Waiting for job to complete' . PHP_EOL);
-    // Exponential backoff with max delay of 60 seconds
-    sleep(min(60, pow(2, ++$attempt)));
-} while (time() - $startTime < 600); // 10 minute timeout
-
-// Print finding counts
-printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
-switch ($job->getState()) {
-    case JobState::DONE:
-        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-        if (count($infoTypeStats) === 0) {
-            print('No findings.' . PHP_EOL);
-        } else {
-            foreach ($infoTypeStats as $infoTypeStat) {
-                printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+    // Poll Pub/Sub using exponential backoff until job finishes
+    // Consider using an asynchronous execution model such as Cloud Functions
+    $attempt = 1;
+    $startTime = time();
+    do {
+        foreach ($subscription->pull() as $message) {
+            if (
+                isset($message->attributes()['DlpJobName']) &&
+                $message->attributes()['DlpJobName'] === $job->getName()
+            ) {
+                $subscription->acknowledge($message);
+                // Get the updated job. Loop to avoid race condition with DLP API.
+                do {
+                    $getDlpJobRequest = (new GetDlpJobRequest())
+                        ->setName($job->getName());
+                    $job = $dlp->getDlpJob($getDlpJobRequest);
+                } while ($job->getState() == JobState::RUNNING);
+                break 2; // break from parent do while
             }
         }
-        break;
-    case JobState::FAILED:
-        printf('Job %s had errors:' . PHP_EOL, $job->getName());
-        $errors = $job->getErrors();
-        foreach ($errors as $error) {
-            var_dump($error->getDetails());
-        }
-        break;
-    case JobState::PENDING:
-        printf('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
-        break;
-    default:
-        print('Unexpected job state.');
+        print('Waiting for job to complete' . PHP_EOL);
+        // Exponential backoff with max delay of 60 seconds
+        sleep(min(60, pow(2, ++$attempt)));
+    } while (time() - $startTime < 600); // 10 minute timeout
+
+    // Print finding counts
+    printf('Job %s status: %s' . PHP_EOL, $job->getName(), JobState::name($job->getState()));
+    switch ($job->getState()) {
+        case JobState::DONE:
+            $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
+            if (count($infoTypeStats) === 0) {
+                print('No findings.' . PHP_EOL);
+            } else {
+                foreach ($infoTypeStats as $infoTypeStat) {
+                    printf('  Found %s instance(s) of infoType %s' . PHP_EOL, $infoTypeStat->getCount(), $infoTypeStat->getInfoType()->getName());
+                }
+            }
+            break;
+        case JobState::FAILED:
+            printf('Job %s had errors:' . PHP_EOL, $job->getName());
+            $errors = $job->getErrors();
+            foreach ($errors as $error) {
+                var_dump($error->getDetails());
+            }
+            break;
+        case JobState::PENDING:
+            print('Job has not completed. Consider a longer timeout or an asynchronous execution model' . PHP_EOL);
+            break;
+        default:
+            print('Unexpected job state.');
+    }
 }
 # [END dlp_inspect_datastore]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

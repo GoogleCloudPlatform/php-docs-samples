@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_app_profile]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GetAppProfileRequest;
 
 /**
  * Get the App Profile
@@ -44,7 +45,9 @@ function get_app_profile(
 
     printf('Fetching the App Profile %s' . PHP_EOL, $appProfileId);
     try {
-        $appProfile = $instanceAdminClient->getAppProfile($appProfileName);
+        $getAppProfileRequest = (new GetAppProfileRequest())
+            ->setName($appProfileName);
+        $appProfile = $instanceAdminClient->getAppProfile($getAppProfileRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('App profile %s does not exist.' . PHP_EOL, $appProfileId);

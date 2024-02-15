@@ -15,56 +15,64 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 7 || count($argv) > 7) {
-    return printf("Usage: php %s MODEL_ID TEXT TARGET_LANGUAGE SOURCE_LANGUAGE PROJECT_ID LOCATION\n", __FILE__);
-}
-list($_, $modelId, $text, $targetLanguage, $sourceLanguage, $projectId, $location) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_translate_text_with_model]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $modelId       Your model ID.
+ * @param string $text          The text to translate.
+ * @param string $targetLanguage    Language to translate to.
+ * @param string $sourceLanguage    Language of the source.
+ * @param string $projectId     Your Google Cloud project ID.
+ * @param string $location      Project location (e.g. us-central1)
+ */
+function v3_translate_text_with_model(
+    string $modelId,
+    string $text,
+    string $targetLanguage,
+    string $sourceLanguage,
+    string $projectId,
+    string $location
+): void {
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $modelId = '[MODEL ID]';
-// $text = 'Hello, world!';
-// $targetLanguage = 'fr';
-// $sourceLanguage = 'en';
-// $projectId = '[Google Cloud Project ID]';
-// $location = 'global';
-$modelPath = sprintf(
-    'projects/%s/locations/%s/models/%s',
-    $projectId,
-    $location,
-    $modelId
-);
-$contents = [$text];
-$formattedParent = $translationServiceClient->locationName(
-    $projectId,
-    $location
-);
-
-// Optional. Can be "text/plain" or "text/html".
-$mimeType = 'text/plain';
-
-try {
-    $response = $translationServiceClient->translateText(
-        $contents,
-        $targetLanguage,
-        $formattedParent,
-        [
-            'model' => $modelPath,
-            'sourceLanguageCode' => $sourceLanguage,
-            'mimeType' => $mimeType
-        ]
+    $modelPath = sprintf(
+        'projects/%s/locations/%s/models/%s',
+        $projectId,
+        $location,
+        $modelId
     );
-    // Display the translation for each input text provided
-    foreach ($response->getTranslations() as $translation) {
-        printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+    $contents = [$text];
+    $formattedParent = $translationServiceClient->locationName(
+        $projectId,
+        $location
+    );
+
+    // Optional. Can be "text/plain" or "text/html".
+    $mimeType = 'text/plain';
+
+    try {
+        $request = (new TranslateTextRequest())
+            ->setContents($contents)
+            ->setTargetLanguageCode($targetLanguage)
+            ->setParent($formattedParent)
+            ->setModel($modelPath)
+            ->setSourceLanguageCode($sourceLanguage)
+            ->setMimeType($mimeType);
+        $response = $translationServiceClient->translateText($request);
+        // Display the translation for each input text provided
+        foreach ($response->getTranslations() as $translation) {
+            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+        }
+    } finally {
+        $translationServiceClient->close();
     }
-} finally {
-    $translationServiceClient->close();
 }
 // [END translate_v3_translate_text_with_model]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

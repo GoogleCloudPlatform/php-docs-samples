@@ -19,46 +19,49 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return print("Usage: php list_triggers.php CALLING_PROJECT\n");
-}
-list($_, $callingProjectId) = $argv;
+namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_triggers]
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ListJobTriggersRequest;
+
 /**
  * List Data Loss Prevention API job triggers.
+ *
+ * @param string $callingProjectId  The project ID to run the API call under
  */
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+function list_triggers(string $callingProjectId): void
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
+    $parent = "projects/$callingProjectId/locations/global";
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // Run request
+    $listJobTriggersRequest = (new ListJobTriggersRequest())
+        ->setParent($parent);
+    $response = $dlp->listJobTriggers($listJobTriggersRequest);
 
-$parent = "projects/$callingProjectId/locations/global";
-
-// Run request
-$response = $dlp->listJobTriggers($parent);
-
-// Print results
-$triggers = $response->iterateAllElements();
-foreach ($triggers as $trigger) {
-    printf('Trigger %s' . PHP_EOL, $trigger->getName());
-    printf('  Created: %s' . PHP_EOL, $trigger->getCreateTime()->getSeconds());
-    printf('  Updated: %s' . PHP_EOL, $trigger->getUpdateTime()->getSeconds());
-    printf('  Display Name: %s' . PHP_EOL, $trigger->getDisplayName());
-    printf('  Description: %s' . PHP_EOL, $trigger->getDescription());
-    printf('  Status: %s' . PHP_EOL, $trigger->getStatus());
-    printf('  Error count: %s' . PHP_EOL, count($trigger->getErrors()));
-    $timespanConfig = $trigger->getInspectJob()->getStorageConfig()->getTimespanConfig();
-    printf('  Auto-populates timespan config: %s' . PHP_EOL,
-        ($timespanConfig && $timespanConfig->getEnableAutoPopulationOfTimespanConfig() ? 'yes' : 'no'));
+    // Print results
+    $triggers = $response->iterateAllElements();
+    foreach ($triggers as $trigger) {
+        printf('Trigger %s' . PHP_EOL, $trigger->getName());
+        printf('  Created: %s' . PHP_EOL, $trigger->getCreateTime()->getSeconds());
+        printf('  Updated: %s' . PHP_EOL, $trigger->getUpdateTime()->getSeconds());
+        printf('  Display Name: %s' . PHP_EOL, $trigger->getDisplayName());
+        printf('  Description: %s' . PHP_EOL, $trigger->getDescription());
+        printf('  Status: %s' . PHP_EOL, $trigger->getStatus());
+        printf('  Error count: %s' . PHP_EOL, count($trigger->getErrors()));
+        $timespanConfig = $trigger->getInspectJob()->getStorageConfig()->getTimespanConfig();
+        printf('  Auto-populates timespan config: %s' . PHP_EOL,
+            ($timespanConfig && $timespanConfig->getEnableAutoPopulationOfTimespanConfig() ? 'yes' : 'no'));
+    }
 }
 # [END dlp_list_triggers]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

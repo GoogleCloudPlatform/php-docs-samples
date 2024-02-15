@@ -74,6 +74,9 @@ export DATASTORE_EVENTUALLY_CONSISTENT_RETRY_COUNT=
 export DLP_DEID_WRAPPED_KEY=
 export DLP_DEID_KEY_NAME=projects/$GOOGLE_PROJECT_ID/locations/global/keyRings/ci/cryptoKeys/ci
 
+# DocumentAI
+export GOOGLE_DOCUMENTAI_PROCESSOR_ID=
+
 # Firestore
 export FIRESTORE_PROJECT_ID=
 
@@ -85,9 +88,6 @@ export IAP_URL=
 
 # IAM
 export GOOGLE_IAM_USER=
-
-# IOT
-export GOOGLE_IOT_DEVICE_CERTIFICATE_B64=
 
 # KMS
 export GOOGLE_KMS_KEYRING=
@@ -102,6 +102,10 @@ export REDIS_PORT=
 # PubSub
 export GOOGLE_PUBSUB_SUBSCRIPTION=php-example-subscription
 export GOOGLE_PUBSUB_TOPIC=php-example-topic
+# GOOGLE_PUBSUB_BIGQUERY_TABLE excludes project_id
+# for example if table is ${PROJECT_ID}.pubsub_test_dataset.pubsub_test_table
+# the value of GOOGLE_PUBSUB_BIGQUERY_TABLE should be pubsub_test_dataset.pubsub_test_table
+export GOOGLE_PUBSUB_BIGQUERY_TABLE=
 
 # Security Center
 export GOOGLE_ORGANIZATION_ID=

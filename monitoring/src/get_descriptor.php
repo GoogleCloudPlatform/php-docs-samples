@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_get_descriptor]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\GetMetricDescriptorRequest;
 
 /**
  * Example:
@@ -42,7 +43,9 @@ function get_descriptor($projectId, $metricId)
     ]);
 
     $metricName = $metrics->metricDescriptorName($projectId, $metricId);
-    $descriptor = $metrics->getMetricDescriptor($metricName);
+    $getMetricDescriptorRequest = (new GetMetricDescriptorRequest())
+        ->setName($metricName);
+    $descriptor = $metrics->getMetricDescriptor($getMetricDescriptorRequest);
 
     printf('Name: ' . $descriptor->getDisplayName() . PHP_EOL);
     printf('Description: ' . $descriptor->getDescription() . PHP_EOL);
@@ -59,3 +62,7 @@ function get_descriptor($projectId, $metricId)
     }
 }
 // [END monitoring_get_descriptor]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

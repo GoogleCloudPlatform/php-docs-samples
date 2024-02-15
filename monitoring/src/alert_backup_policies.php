@@ -18,14 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_backup_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
+use Google\Cloud\Monitoring\V3\ListNotificationChannelsRequest;
 
 /**
  * Back up alert policies.
@@ -40,18 +42,22 @@ function alert_backup_policies($projectId)
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $record = [
         'project_name' => $projectName,
         'policies' => [],
         'channels' => [],
     ];
-    $policies = $alertClient->listAlertPolicies($projectName);
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($projectName);
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         $record['policies'][] = json_decode($policy->serializeToJsonString());
     }
-    $channels = $channelClient->listNotificationChannels($projectName);
+    $listNotificationChannelsRequest = (new ListNotificationChannelsRequest())
+        ->setName($projectName);
+    $channels = $channelClient->listNotificationChannels($listNotificationChannelsRequest);
     foreach ($channels->iterateAllElements() as $channel) {
         $record['channels'][] = json_decode($channel->serializeToJsonString());
     }
@@ -59,3 +65,7 @@ function alert_backup_policies($projectId)
     print('Backed up alert policies and notification channels to backup.json.');
 }
 // [END monitoring_alert_backup_policies]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

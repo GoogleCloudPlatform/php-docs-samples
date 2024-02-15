@@ -17,10 +17,13 @@
 
 declare(strict_types=1);
 
-// [START kms_get_public_key]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+namespace Google\Cloud\Samples\Kms;
 
-function get_public_key_sample(
+// [START kms_get_public_key]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetPublicKeyRequest;
+
+function get_public_key(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -34,18 +37,15 @@ function get_public_key_sample(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $publicKey = $client->getPublicKey($keyVersionName);
+    $getPublicKeyRequest = (new GetPublicKeyRequest())
+        ->setName($keyVersionName);
+    $publicKey = $client->getPublicKey($getPublicKeyRequest);
     printf('Public key: %s' . PHP_EOL, $publicKey->getPem());
+
     return $publicKey;
 }
 // [END kms_get_public_key]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId) = $argv;
-    get_public_key_sample($projectId, $locationId, $keyRingId, $keyId, $versionId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

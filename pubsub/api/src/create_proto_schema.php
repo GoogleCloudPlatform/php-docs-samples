@@ -18,13 +18,12 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_create_proto_schema]
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\Schema\Type;
 
 /**
  * Create a Schema with an Protocol Buffer definition.
@@ -39,8 +38,8 @@ function create_proto_schema($projectId, $schemaId, $protoFile)
         'projectId' => $projectId,
     ]);
 
-    $definition = file_get_contents($protoFile);
-    $schema = $pubsub->createSchema($schemaId, Type::PROTOCOL_BUFFER, $definition);
+    $definition = (string) file_get_contents($protoFile);
+    $schema = $pubsub->createSchema($schemaId, 'PROTOCOL_BUFFER', $definition);
 
     printf('Schema %s created.', $schema->name());
 }

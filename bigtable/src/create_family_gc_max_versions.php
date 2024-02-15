@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_max_versions]
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 
 /**
  * Create a new column family with a max versions GC rule
@@ -53,7 +54,10 @@ function create_family_gc_max_versions(
     $columnModification = new Modification();
     $columnModification->setId('cf2');
     $columnModification->setCreate($columnFamily2);
-    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+        ->setName($tableName)
+        ->setModifications([$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
 
     print('Created column family cf2 with Max Versions GC Rule.' . PHP_EOL);
 }

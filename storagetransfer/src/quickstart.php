@@ -18,14 +18,16 @@
 namespace Google\Cloud\Samples\StorageTransfer;
 
 # [START storagetransfer_quickstart]
-use Google\Cloud\StorageTransfer\V1\StorageTransferServiceClient;
+use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
+use Google\Cloud\StorageTransfer\V1\CreateTransferJobRequest;
+use Google\Cloud\StorageTransfer\V1\GcsData;
+use Google\Cloud\StorageTransfer\V1\RunTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
 use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
 use Google\Cloud\StorageTransfer\V1\TransferSpec;
-use Google\Cloud\StorageTransfer\V1\GcsData;
 
 /**
- * Creates and runs a tranfser job between two GCS buckets
+ * Creates and runs a transfer job between two GCS buckets
  *
  * @param string $projectId Your Google Cloud project ID.
  * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
@@ -46,8 +48,13 @@ function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
     ]);
 
     $client = new StorageTransferServiceClient();
-    $response = $client->createTransferJob($transferJob);
-    $client->runTransferJob($response->getName(), $projectId);
+    $request = (new CreateTransferJobRequest())
+        ->setTransferJob($transferJob);
+    $response = $client->createTransferJob($request);
+    $request2 = (new RunTransferJobRequest())
+        ->setJobName($response->getName())
+        ->setProjectId($projectId);
+    $client->runTransferJob($request2);
 
     printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $sourceGcsBucketName, $sinkGcsBucketName, $response->getName());
 }

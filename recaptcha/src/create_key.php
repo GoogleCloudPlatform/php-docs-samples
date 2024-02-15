@@ -18,17 +18,18 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/recaptcha/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/recaptcha/README.md
  */
 
 namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_create_site_key]
-use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
+use Google\ApiCore\ApiException;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\CreateKeyRequest;
 use Google\Cloud\RecaptchaEnterprise\V1\Key;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
-use Google\ApiCore\ApiException;
 
 /**
  * Create a site key for reCAPTCHA
@@ -61,7 +62,10 @@ function create_key(string $projectId, string $keyName): void
     $key->setWebSettings($settings);
 
     try {
-        $createdKey = $client->createKey($formattedProject, $key);
+        $createKeyRequest = (new CreateKeyRequest())
+            ->setParent($formattedProject)
+            ->setKey($key);
+        $createdKey = $client->createKey($createKeyRequest);
         printf('The key: %s is created.' . PHP_EOL, $createdKey->getName());
     } catch (ApiException $e) {
         print('createKey() call failed with the following error: ');

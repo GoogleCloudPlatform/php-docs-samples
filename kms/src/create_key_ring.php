@@ -17,15 +17,18 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_create_key_ring]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateKeyRingRequest;
 use Google\Cloud\Kms\V1\KeyRing;
 
-function create_key_ring_sample(
+function create_key_ring(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $id = 'my-key-ring'
-) {
+): KeyRing {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -36,18 +39,17 @@ function create_key_ring_sample(
     $keyRing = new KeyRing();
 
     // Call the API.
-    $createdKeyRing = $client->createKeyRing($locationName, $id, $keyRing);
+    $createKeyRingRequest = (new CreateKeyRingRequest())
+        ->setParent($locationName)
+        ->setKeyRingId($id)
+        ->setKeyRing($keyRing);
+    $createdKeyRing = $client->createKeyRing($createKeyRingRequest);
     printf('Created key ring: %s' . PHP_EOL, $createdKeyRing->getName());
+
     return $createdKeyRing;
 }
 // [END kms_create_key_ring]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $id) = $argv;
-    create_key_ring_sample($projectId, $locationId, $id);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

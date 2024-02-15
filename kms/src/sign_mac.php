@@ -17,10 +17,13 @@
 
 declare(strict_types=1);
 
-// [START kms_sign_mac]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+namespace Google\Cloud\Samples\Kms;
 
-function sign_mac_sample(
+// [START kms_sign_mac]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\MacSignRequest;
+
+function sign_mac(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -35,7 +38,10 @@ function sign_mac_sample(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $signMacResponse = $client->macSign($keyVersionName, $data);
+    $macSignRequest = (new MacSignRequest())
+        ->setName($keyVersionName)
+        ->setData($data);
+    $signMacResponse = $client->macSign($macSignRequest);
 
     // The data comes back as raw bytes, which may include non-printable
     // characters. This base64-encodes the result so it can be printed below.
@@ -46,12 +52,6 @@ function sign_mac_sample(
 }
 // [END kms_sign_mac]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID DATA\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $data) = $argv;
-    sign_mac_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $data);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

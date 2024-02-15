@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_list_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
 
 /**
  * Adds a new column to the Albums table in the example database.
@@ -37,15 +38,20 @@ use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
  */
 function alert_list_policies($projectId)
 {
+    $projectName = 'projects/' . $projectId;
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($projectName);
 
-    $policies = $alertClient->listAlertPolicies(
-        $alertClient->projectName($projectId)
-    );
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         printf('Name: %s (%s)' . PHP_EOL, $policy->getDisplayName(), $policy->getName());
     }
 }
 // [END monitoring_alert_list_policies]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

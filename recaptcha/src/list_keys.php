@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/recaptcha/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/recaptcha/README.md
  */
 
 namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_list_site_keys]
-use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\ListKeysRequest;
 
 /**
  * List all the reCAPTCHA keys associate to a Google Cloud project
@@ -38,9 +39,10 @@ function list_keys(string $projectId): void
     $formattedProject = $client->projectName($projectId);
 
     try {
-        $response = $client->listKeys($formattedProject, [
-            'pageSize' => 2
-        ]);
+        $listKeysRequest = (new ListKeysRequest())
+            ->setParent($formattedProject)
+            ->setPageSize(2);
+        $response = $client->listKeys($listKeysRequest);
 
         print('Keys fetched' . PHP_EOL);
 

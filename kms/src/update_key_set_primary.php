@@ -17,10 +17,13 @@
 
 declare(strict_types=1);
 
-// [START kms_update_key_set_primary]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+namespace Google\Cloud\Samples\Kms;
 
-function update_key_set_primary_sample(
+// [START kms_update_key_set_primary]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyPrimaryVersionRequest;
+
+function update_key_set_primary(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -34,18 +37,16 @@ function update_key_set_primary_sample(
     $keyName = $client->cryptoKeyName($projectId, $locationId, $keyRingId, $keyId);
 
     // Call the API.
-    $updatedKey = $client->updateCryptoKeyPrimaryVersion($keyName, $versionId);
+    $updateCryptoKeyPrimaryVersionRequest = (new UpdateCryptoKeyPrimaryVersionRequest())
+        ->setName($keyName)
+        ->setCryptoKeyVersionId($versionId);
+    $updatedKey = $client->updateCryptoKeyPrimaryVersion($updateCryptoKeyPrimaryVersionRequest);
     printf('Updated primary %s to %s' . PHP_EOL, $updatedKey->getName(), $versionId);
+
     return $updatedKey;
 }
 // [END kms_update_key_set_primary]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId) = $argv;
-    update_key_set_primary_sample($projectId, $locationId, $keyRingId, $keyId, $versionId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

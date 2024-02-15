@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/spanner/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/spanner/README.md
  */
 
 namespace Google\Cloud\Samples\Spanner;
@@ -43,7 +43,7 @@ function set_transaction_tag(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $t->executeUpdate(
             'UPDATE Venues SET Capacity = CAST(Capacity/4 AS INT64) WHERE OutdoorVenue = false',
             [

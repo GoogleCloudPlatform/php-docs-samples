@@ -19,13 +19,14 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_delete_job_template]
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\DeleteJobTemplateRequest;
 
 /**
  * Deletes a Transcoder job template.
@@ -40,7 +41,9 @@ function delete_job_template($projectId, $location, $templateId)
     $transcoderServiceClient = new TranscoderServiceClient();
 
     $formattedName = $transcoderServiceClient->jobTemplateName($projectId, $location, $templateId);
-    $transcoderServiceClient->deleteJobTemplate($formattedName);
+    $request = (new DeleteJobTemplateRequest())
+        ->setName($formattedName);
+    $transcoderServiceClient->deleteJobTemplate($request);
 
     print('Deleted job template' . PHP_EOL);
 }

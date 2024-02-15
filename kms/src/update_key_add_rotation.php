@@ -17,19 +17,22 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_update_key_add_rotation_schedule]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\CryptoKey;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyRequest;
 use Google\Protobuf\Duration;
 use Google\Protobuf\FieldMask;
 use Google\Protobuf\Timestamp;
 
-function update_key_add_rotation_sample(
+function update_key_add_rotation(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -55,18 +58,16 @@ function update_key_add_rotation_sample(
         ->setPaths(['rotation_period', 'next_rotation_time']);
 
     // Call the API.
-    $updatedKey = $client->updateCryptoKey($key, $updateMask);
+    $updateCryptoKeyRequest = (new UpdateCryptoKeyRequest())
+        ->setCryptoKey($key)
+        ->setUpdateMask($updateMask);
+    $updatedKey = $client->updateCryptoKey($updateCryptoKeyRequest);
     printf('Updated key: %s' . PHP_EOL, $updatedKey->getName());
+
     return $updatedKey;
 }
 // [END kms_update_key_add_rotation_schedule]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId) = $argv;
-    update_key_add_rotation_sample($projectId, $locationId, $keyRingId, $keyId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

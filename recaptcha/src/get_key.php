@@ -18,15 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/recaptcha/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/recaptcha/README.md
  */
 
 namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_get_site_key]
-use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
-use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
 use Google\ApiCore\ApiException;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\GetKeyRequest;
+use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
 
 /**
  * Get a reCAPTCHA key from a google cloud project
@@ -41,7 +42,9 @@ function get_key(string $projectId, string $keyId): void
 
     try {
         // Returns a 'Google\Cloud\RecaptchaEnterprise\V1\Key' object
-        $key = $client->getKey($formattedKeyName);
+        $getKeyRequest = (new GetKeyRequest())
+            ->setName($formattedKeyName);
+        $key = $client->getKey($getKeyRequest);
         $webSettings = $key->getWebSettings();
 
         print('Key fetched' . PHP_EOL);

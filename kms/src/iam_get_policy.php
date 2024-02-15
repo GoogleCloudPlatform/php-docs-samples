@@ -17,10 +17,13 @@
 
 declare(strict_types=1);
 
-// [START kms_iam_get_policy]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+namespace Google\Cloud\Samples\Kms;
 
-function iam_get_policy_sample(
+// [START kms_iam_get_policy]
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+
+function iam_get_policy(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
@@ -36,7 +39,9 @@ function iam_get_policy_sample(
     // $resourceName = $client->keyRingName($projectId, $locationId, $keyRingId);
 
     // Get the current IAM policy.
-    $policy = $client->getIamPolicy($resourceName);
+    $getIamPolicyRequest = (new GetIamPolicyRequest())
+        ->setResource($resourceName);
+    $policy = $client->getIamPolicy($getIamPolicyRequest);
 
     // Print the policy.
     printf('IAM policy for %s' . PHP_EOL, $resourceName);
@@ -52,12 +57,6 @@ function iam_get_policy_sample(
 }
 // [END kms_iam_get_policy]
 
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId) = $argv;
-    iam_get_policy_sample($projectId, $locationId, $keyRingId, $keyId);
-}
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+return \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

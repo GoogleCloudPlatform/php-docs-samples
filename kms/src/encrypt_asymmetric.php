@@ -17,15 +17,17 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\Kms;
+
 // [START kms_encrypt_asymmetric]
-function encrypt_asymmetric_sample(
+function encrypt_asymmetric(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $versionId = '123',
     string $plaintext = '...'
-) {
+): void {
     // PHP has limited support for asymmetric encryption operations.
     // Specifically, openssl_public_encrypt() does not allow customizing
     // algorithms or padding. Thus, it is not currently possible to use PHP
@@ -35,13 +37,3 @@ function encrypt_asymmetric_sample(
     // functionality. Google does not endorse this external library.
 }
 // [END kms_encrypt_asymmetric]
-
-if (isset($argv)) {
-    if (count($argv) === 0) {
-        return printf("Usage: php %s PROJECT_ID LOCATION_ID KEY_RING_ID KEY_ID VERSION_ID PLAINTEXT\n", basename(__FILE__));
-    }
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-    list($_, $projectId, $locationId, $keyRingId, $keyId, $versionId, $plaintext) = $argv;
-    encrypt_asymmetric_sample($projectId, $locationId, $keyRingId, $keyId, $versionId, $plaintext);
-}

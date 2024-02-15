@@ -9,8 +9,8 @@ These samples show how to use the [Google Cloud Speech API][speech-api]
 to transcribe audio files, as well as live audio from your computer's
 microphone.
 
-This repository contains samples that use the [Google Cloud
-Library for PHP][google-cloud-php] to make REST calls as well as
+This repository contains samples that use the [Cloud Speech Client
+Library for PHP][google-cloud-php-speech] to make REST calls as well as
 contains samples using the more-efficient (though sometimes more
 complex) [GRPC][grpc] API. The GRPC API also allows streaming requests.
 
@@ -64,7 +64,7 @@ If you have not set a timezone you may get an error from php. This can be resolv
   1. Adding the timezone to the php.ini file e.g., adding the following line: date.timezone = "America/Los_Angeles"
 
 [speech-api]: https://cloud.google.com/speech-to-text/docs/quickstart-client-libraries
-[google-cloud-php]: https://googlecloudplatform.github.io/google-cloud-php/
+[google-cloud-php-speech]: https://cloud.google.com/php/docs/reference/cloud-speech/latest
 [choose-encoding]: https://cloud.google.com/speech-to-text/docs/best-practices#choosing_an_audio_encoding
 [sox]: http://sox.sourceforge.net/
 [grpc]: http://grpc.io

@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_list_descriptors]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListMetricDescriptorsRequest;
 
 /**
  * Example:
@@ -40,8 +41,10 @@ function list_descriptors($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
-    $descriptors = $metrics->listMetricDescriptors($projectName);
+    $projectName = 'projects/' . $projectId;
+    $listMetricDescriptorsRequest = (new ListMetricDescriptorsRequest())
+        ->setName($projectName);
+    $descriptors = $metrics->listMetricDescriptors($listMetricDescriptorsRequest);
 
     printf('Metric Descriptors:' . PHP_EOL);
     foreach ($descriptors->iterateAllElements() as $descriptor) {
@@ -49,3 +52,7 @@ function list_descriptors($projectId)
     }
 }
 // [END monitoring_list_descriptors]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -15,57 +15,64 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 6 || count($argv) > 6) {
-    return printf("Usage: php %s TEXT SOURCE_LANGUAGE TARGET_LANGUAGE PROJECT_ID GLOSSARY_ID\n", __FILE__);
-}
-list($_, $text, $sourceLanguage, $targetLanguage, $projectId, $glossaryId) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_translate_text_with_glossary]
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $text          The text to translate.
+ * @param string $targetLanguage    Language to translate to.
+ * @param string $sourceLanguage    Language of the source.
+ * @param string $projectId     Your Google Cloud project ID.
+ * @param string $glossaryId    Your glossary ID.
+ */
+function v3_translate_text_with_glossary(
+    string $text,
+    string $targetLanguage,
+    string $sourceLanguage,
+    string $projectId,
+    string $glossaryId
+): void {
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $text = 'Hello, world!';
-// $sourceLanguage = 'en';
-// $targetLanguage = 'fr';
-// $projectId = '[Google Cloud Project ID]';
-// $glossaryId = '[YOUR_GLOSSARY_ID]';
-$glossaryPath = $translationServiceClient->glossaryName(
-    $projectId,
-    'us-central1',
-    $glossaryId
-);
-$contents = [$text];
-$formattedParent = $translationServiceClient->locationName(
-    $projectId,
-    'us-central1'
-);
-$glossaryConfig = new TranslateTextGlossaryConfig();
-$glossaryConfig->setGlossary($glossaryPath);
-
-// Optional. Can be "text/plain" or "text/html".
-$mimeType = 'text/plain';
-
-try {
-    $response = $translationServiceClient->translateText(
-        $contents,
-        $targetLanguage,
-        $formattedParent,
-        [
-            'sourceLanguageCode' => $sourceLanguage,
-            'glossaryConfig' => $glossaryConfig,
-            'mimeType' => $mimeType
-        ]
+    $glossaryPath = $translationServiceClient->glossaryName(
+        $projectId,
+        'us-central1',
+        $glossaryId
     );
-    // Display the translation for each input text provided
-    foreach ($response->getGlossaryTranslations() as $translation) {
-        printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+    $contents = [$text];
+    $formattedParent = $translationServiceClient->locationName(
+        $projectId,
+        'us-central1'
+    );
+    $glossaryConfig = new TranslateTextGlossaryConfig();
+    $glossaryConfig->setGlossary($glossaryPath);
+
+    // Optional. Can be "text/plain" or "text/html".
+    $mimeType = 'text/plain';
+
+    try {
+        $request = (new TranslateTextRequest())
+            ->setContents($contents)
+            ->setTargetLanguageCode($targetLanguage)
+            ->setParent($formattedParent)
+            ->setSourceLanguageCode($sourceLanguage)
+            ->setGlossaryConfig($glossaryConfig)
+            ->setMimeType($mimeType);
+        $response = $translationServiceClient->translateText($request);
+        // Display the translation for each input text provided
+        foreach ($response->getGlossaryTranslations() as $translation) {
+            printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
+        }
+    } finally {
+        $translationServiceClient->close();
     }
-} finally {
-    $translationServiceClient->close();
 }
 // [END translate_v3_translate_text_with_glossary]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

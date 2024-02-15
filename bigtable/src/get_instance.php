@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_instance]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type;
-use Google\Cloud\Bigtable\Admin\V2\Instance\State;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\Instance\State;
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type;
 
 /**
  * Get a Bigtable instance
@@ -44,7 +45,9 @@ function get_instance(
 
     printf('Fetching the Instance %s' . PHP_EOL, $instanceId);
     try {
-        $instance = $instanceAdminClient->getInstance($instanceName);
+        $getInstanceRequest = (new GetInstanceRequest())
+            ->setName($instanceName);
+        $instance = $instanceAdminClient->getInstance($getInstanceRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
@@ -67,7 +70,7 @@ function get_instance(
     // Labels are an object of the MapField class which implement the IteratorAggregate, Countable
     // and ArrayAccess interfaces so you can do the following:
     printf("\tNum of Labels: " . $labels->count() . PHP_EOL);
-    printf("\tLabel with a key(dev-label): " . ($labels->offsetExists('dev-label') ? $labels['dev-label'] : 'N/A') . PHP_EOL);
+    printf("\tLabel with a key(dev-label): " . ($labels['dev-label'] ?? 'N/A') . PHP_EOL);
 
     // we can even loop over all the labels
     foreach ($labels as $key => $val) {

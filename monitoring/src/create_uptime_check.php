@@ -18,15 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_create]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
-use Google\Cloud\Monitoring\V3\UptimeCheckConfig;
 use Google\Api\MonitoredResource;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\CreateUptimeCheckConfigRequest;
+use Google\Cloud\Monitoring\V3\UptimeCheckConfig;
 
 /**
  * Example:
@@ -40,6 +41,7 @@ use Google\Api\MonitoredResource;
  */
 function create_uptime_check($projectId, $hostName = 'example.com', $displayName = 'New uptime check')
 {
+    $projectName = 'projects/' . $projectId;
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
@@ -51,12 +53,16 @@ function create_uptime_check($projectId, $hostName = 'example.com', $displayName
     $uptimeCheckConfig = new UptimeCheckConfig();
     $uptimeCheckConfig->setDisplayName($displayName);
     $uptimeCheckConfig->setMonitoredResource($monitoredResource);
+    $createUptimeCheckConfigRequest = (new CreateUptimeCheckConfigRequest())
+        ->setParent($projectName)
+        ->setUptimeCheckConfig($uptimeCheckConfig);
 
-    $uptimeCheckConfig = $uptimeCheckClient->createUptimeCheckConfig(
-        $uptimeCheckClient->projectName($projectId),
-        $uptimeCheckConfig
-    );
+    $uptimeCheckConfig = $uptimeCheckClient->createUptimeCheckConfig($createUptimeCheckConfigRequest);
 
     printf('Created an uptime check: %s' . PHP_EOL, $uptimeCheckConfig->getName());
 }
 // [END monitoring_uptime_check_create]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

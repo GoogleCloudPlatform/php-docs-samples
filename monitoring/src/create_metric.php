@@ -18,18 +18,16 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_create_metric]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Api\LabelDescriptor;
-use Google\Api\LabelDescriptor_ValueType;
 use Google\Api\MetricDescriptor;
-use Google\Api\MetricDescriptor_MetricKind;
-use Google\Api\MetricDescriptor_ValueType;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\CreateMetricDescriptorRequest;
 
 /**
  * Create a new metric in Stackdriver Monitoring.
@@ -46,23 +44,30 @@ function create_metric($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $descriptor = new MetricDescriptor();
     $descriptor->setDescription('Daily sales records from all branch stores.');
     $descriptor->setDisplayName('Daily Sales');
     $descriptor->setType('custom.googleapis.com/stores/daily_sales');
-    $descriptor->setMetricKind(MetricDescriptor_MetricKind::GAUGE);
-    $descriptor->setValueType(MetricDescriptor_ValueType::DOUBLE);
+    $descriptor->setMetricKind(MetricDescriptor\MetricKind::GAUGE);
+    $descriptor->setValueType(MetricDescriptor\ValueType::DOUBLE);
     $descriptor->setUnit('{USD}');
     $label = new LabelDescriptor();
     $label->setKey('store_id');
-    $label->setValueType(LabelDescriptor_ValueType::STRING);
+    $label->setValueType(LabelDescriptor\ValueType::STRING);
     $label->setDescription('The ID of the store.');
     $labels = [$label];
     $descriptor->setLabels($labels);
+    $createMetricDescriptorRequest = (new CreateMetricDescriptorRequest())
+        ->setName($projectName)
+        ->setMetricDescriptor($descriptor);
 
-    $descriptor = $metrics->createMetricDescriptor($projectName, $descriptor);
+    $descriptor = $metrics->createMetricDescriptor($createMetricDescriptorRequest);
     printf('Created a metric: ' . $descriptor->getName() . PHP_EOL);
 }
 // [END monitoring_create_metric]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

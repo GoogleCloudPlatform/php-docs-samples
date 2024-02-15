@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,11 +30,10 @@ use Google\Cloud\Storage\StorageClient;
  * Create a new bucket with a custom default storage class and location.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function create_bucket_class_location($bucketName)
+function create_bucket_class_location(string $bucketName): void
 {
-    // $bucketName = 'my-bucket';
-
     $storage = new StorageClient();
     $storageClass = 'COLDLINE';
     $location = 'ASIA';

@@ -15,39 +15,49 @@
  * limitations under the License.
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-if (count($argv) < 4) {
-    return printf('Usage: php %s ORGANIZATION_ID NOTIFICATION_ID PROJECT_ID TOPIC_NAME\n', basename(__FILE__));
-}
-list($_, $organizationId, $notificationConfigId, $projectId, $topicName) = $argv;
+namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_create_notification_config]
-use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\Client\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\CreateNotificationConfigRequest;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig\StreamingConfig;
 
-/** Uncomment and populate these variables in your code */
-// $organizationId = "{your-org-id}";
-// $notificationConfigId = {"your-unique-id"};
-// $projectId = "{your-project}"";
-// $topicName = "{your-topic}";
+/**
+ * @param string $organizationId        Your org ID
+ * @param string $notificationConfigId  A unique identifier
+ * @param string $projectId             Your Cloud Project ID
+ * @param string $topicName             Your topic name
+ */
+function create_notification(
+    string $organizationId,
+    string $notificationConfigId,
+    string $projectId,
+    string $topicName
+): void {
+    $securityCenterClient = new SecurityCenterClient();
+    // 'parent' must be in one of the following formats:
+    //		"organizations/{orgId}"
+    //		"projects/{projectId}"
+    //		"folders/{folderId}"
+    $parent = $securityCenterClient::organizationName($organizationId);
+    $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
-$securityCenterClient = new SecurityCenterClient();
-$organizationName = $securityCenterClient::organizationName($organizationId);
-$pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
+    $streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
+    $notificationConfig = (new NotificationConfig())
+        ->setDescription('A sample notification config')
+        ->setPubsubTopic($pubsubTopic)
+        ->setStreamingConfig($streamingConfig);
+    $createNotificationConfigRequest = (new CreateNotificationConfigRequest())
+        ->setParent($parent)
+        ->setConfigId($notificationConfigId)
+        ->setNotificationConfig($notificationConfig);
 
-$streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
-$notificationConfig = (new NotificationConfig())
-    ->setDescription('A sample notification config')
-    ->setPubsubTopic($pubsubTopic)
-    ->setStreamingConfig($streamingConfig);
-
-$response = $securityCenterClient->createNotificationConfig(
-    $organizationName,
-    $notificationConfigId,
-    $notificationConfig
-);
-printf('Notification config was created: %s' . PHP_EOL, $response->getName());
-
+    $response = $securityCenterClient->createNotificationConfig($createNotificationConfigRequest);
+    printf('Notification config was created: %s' . PHP_EOL, $response->getName());
+}
 // [END securitycenter_create_notification_config]
+
+// The following 2 lines are only needed to execute the samples on the CLI
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

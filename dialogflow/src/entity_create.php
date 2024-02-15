@@ -18,8 +18,9 @@
 // [START dialogflow_create_entity]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
-use Google\Cloud\Dialogflow\V2\EntityType_Entity;
+use Google\Cloud\Dialogflow\V2\BatchCreateEntitiesRequest;
+use Google\Cloud\Dialogflow\V2\Client\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\EntityType\Entity;
 
 /**
 * Create an entity of the given entity type.
@@ -37,12 +38,15 @@ function entity_create($projectId, $entityTypeId, $entityValue, $synonyms = [])
         $entityTypeId);
 
     // prepare entity
-    $entity = new EntityType_Entity();
+    $entity = new Entity();
     $entity->setValue($entityValue);
     $entity->setSynonyms($synonyms);
 
     // create entity
-    $response = $entityTypesClient->batchCreateEntities($parent, [$entity]);
+    $batchCreateEntitiesRequest = (new BatchCreateEntitiesRequest())
+        ->setParent($parent)
+        ->setEntities([$entity]);
+    $response = $entityTypesClient->batchCreateEntities($batchCreateEntitiesRequest);
     printf('Entity created: %s' . PHP_EOL, $response->getName());
 
     $entityTypesClient->close();

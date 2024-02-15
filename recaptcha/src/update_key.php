@@ -18,19 +18,20 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/recaptcha/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/recaptcha/README.md
  */
 
 namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_update_site_key]
-use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
+use Google\ApiCore\ApiException;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
 use Google\Cloud\RecaptchaEnterprise\V1\Key;
+use Google\Cloud\RecaptchaEnterprise\V1\UpdateKeyRequest;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\ChallengeSecurityPreference;
 use Google\Cloud\RecaptchaEnterprise\V1\WebKeySettings\IntegrationType;
 use Google\Protobuf\FieldMask;
-use Google\ApiCore\ApiException;
 
 /**
  * Update an existing reCAPTCHA site key
@@ -76,9 +77,10 @@ function update_key(
     ]);
 
     try {
-        $updatedKey = $client->updateKey($key, [
-            'updateMask' => $updateMask
-        ]);
+        $updateKeyRequest = (new UpdateKeyRequest())
+            ->setKey($key)
+            ->setUpdateMask($updateMask);
+        $updatedKey = $client->updateKey($updateKeyRequest);
 
         printf('The key: %s is updated.' . PHP_EOL, $updatedKey->getDisplayName());
     } catch (ApiException $e) {

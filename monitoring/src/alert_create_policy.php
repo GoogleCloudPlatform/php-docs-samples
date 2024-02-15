@@ -18,18 +18,19 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 # [START monitoring_alert_create_policy]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
 use Google\Cloud\Monitoring\V3\AlertPolicy;
-use Google\Cloud\Monitoring\V3\ComparisonType;
 use Google\Cloud\Monitoring\V3\AlertPolicy\Condition;
 use Google\Cloud\Monitoring\V3\AlertPolicy\Condition\MetricThreshold;
 use Google\Cloud\Monitoring\V3\AlertPolicy\ConditionCombinerType;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\ComparisonType;
+use Google\Cloud\Monitoring\V3\CreateAlertPolicyRequest;
 use Google\Protobuf\Duration;
 
 /**
@@ -40,7 +41,7 @@ function alert_create_policy($projectId)
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $policy = new AlertPolicy();
     $policy->setDisplayName('Test Alert Policy');
@@ -55,8 +56,15 @@ function alert_create_policy($projectId)
             'comparison' => ComparisonType::COMPARISON_LT,
         ])
     ])]);
+    $createAlertPolicyRequest = (new CreateAlertPolicyRequest())
+        ->setName($projectName)
+        ->setAlertPolicy($policy);
 
-    $policy = $alertClient->createAlertPolicy($projectName, $policy);
+    $policy = $alertClient->createAlertPolicy($createAlertPolicyRequest);
     printf('Created alert policy %s' . PHP_EOL, $policy->getName());
 }
 # [END monitoring_alert_create_policy]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

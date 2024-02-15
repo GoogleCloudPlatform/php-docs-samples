@@ -18,12 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigquery/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigquery/api/README.md
  */
 
 if (isset($argv)) {
     return print("This file is for example only and cannot be executed\n");
 }
+$projectId = '';
+$datasetId = '';
+$tableId = '';
 
 # [START bigquery_get_table]
 use Google\Cloud\BigQuery\BigQueryClient;

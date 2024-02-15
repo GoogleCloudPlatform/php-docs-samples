@@ -12,3 +12,4 @@ credentials.*
 .vscode/
 .kokoro/secrets.sh
 .phpunit.result.cache
+.DS_Store

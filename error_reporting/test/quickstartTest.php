@@ -49,6 +49,6 @@ class quickstartTest extends TestCase
 
         // Make sure it worked
         $this->assertStringContainsString('Throwing a test exception', $output);
-        $this->verifyReportedError(self::$projectId, 'quickstart.php test exception');
+        $this->verifyReportedError(self::$projectId, 'Something went wrong');
     }
 }

@@ -55,7 +55,7 @@ PHP Fatal error:  Uncaught Error: Call to undefined function Google\Protobuf\Int
 You may need to install the bcmath PHP extension.
 e.g. (may depend on your php version)
 ```
-$ sudo apt-get install php7.3-bcmath
+$ sudo apt-get install php8.0-bcmath
 ```
 
 

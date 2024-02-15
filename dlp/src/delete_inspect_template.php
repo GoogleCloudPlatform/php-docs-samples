@@ -19,34 +19,39 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 3) {
-    return print("Usage: php delete_inspect_template.php CALLING_PROJECT TEMPLATE\n");
-}
-list($_, $callingProjectId, $templateId) = $argv;
+namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_delete_inspect_template]
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DeleteInspectTemplateRequest;
+
 /**
  * Delete a DLP inspection configuration template.
+ *
+ * @param string $callingProjectId  The project ID to run the API call under
+ * @param string $templateId        The name of the template to delete
  */
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+function delete_inspect_template(
+    string $callingProjectId,
+    string $templateId
+): void {
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $templateId = 'The name of the template to delete';
+    // Run template deletion request
+    $templateName = "projects/$callingProjectId/locations/global/inspectTemplates/$templateId";
+    $deleteInspectTemplateRequest = (new DeleteInspectTemplateRequest())
+        ->setName($templateName);
+    $dlp->deleteInspectTemplate($deleteInspectTemplateRequest);
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
-
-// Run template deletion request
-$templateName = "projects/$callingProjectId/locations/global/inspectTemplates/$templateId";
-$dlp->deleteInspectTemplate($templateName);
-
-// Print results
-printf('Successfully deleted template %s' . PHP_EOL, $templateName);
+    // Print results
+    printf('Successfully deleted template %s' . PHP_EOL, $templateName);
+}
 // [END dlp_delete_inspect_template]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 
 namespace Google\Cloud\Samples\PubSub;
@@ -33,8 +33,12 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $deadLetterTopicName The Pub/Sub topic to use for dead letter policy.
  */
-function dead_letter_update_subscription($projectId, $topicName, $subscriptionName, $deadLetterTopicName)
-{
+function dead_letter_update_subscription(
+    string $projectId,
+    string $topicName,
+    string $subscriptionName,
+    string $deadLetterTopicName
+): void {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);

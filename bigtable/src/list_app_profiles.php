@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_app_profiles]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ListAppProfilesRequest;
 
 /**
  * List the App profiles for an instance
@@ -43,7 +44,9 @@ function list_app_profiles(
     printf('Fetching App Profiles' . PHP_EOL);
 
     try {
-        $appProfiles = $instanceAdminClient->listAppProfiles($instanceName);
+        $listAppProfilesRequest = (new ListAppProfilesRequest())
+            ->setParent($instanceName);
+        $appProfiles = $instanceAdminClient->listAppProfiles($listAppProfilesRequest);
 
         foreach ($appProfiles->iterateAllElements() as $profile) {
             // You can fetch any AppProfile metadata from the $profile object(see get_app_profile.php)

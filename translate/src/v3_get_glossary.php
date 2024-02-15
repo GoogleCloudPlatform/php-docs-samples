@@ -15,38 +15,44 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 3 || count($argv) > 3) {
-    return printf("Usage: php %s PROJECT_ID GLOSSARY_ID\n", __FILE__);
-}
-list($_, $projectId, $glossaryId) = $argv;
+namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_get_glossary]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GetGlossaryRequest;
 
-$translationServiceClient = new TranslationServiceClient();
+/**
+ * @param string $projectId     Your Google Cloud project ID.
+ * @param string $glossaryId    Your glossary ID.
+ */
+function v3_get_glossary(string $projectId, string $glossaryId): void
+{
+    $translationServiceClient = new TranslationServiceClient();
 
-/** Uncomment and populate these variables in your code */
-// $projectId = '[Google Cloud Project ID]';
-// $glossaryId = '[Glossary ID]';
-$formattedName = $translationServiceClient->glossaryName(
-    $projectId,
-    'us-central1',
-    $glossaryId
-);
-
-try {
-    $response = $translationServiceClient->getGlossary($formattedName);
-    printf('Glossary name: %s' . PHP_EOL, $response->getName());
-    printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
-    printf(
-        'Input URI: %s' . PHP_EOL,
-        $response->getInputConfig()
-            ->getGcsSource()
-            ->getInputUri()
+    $formattedName = $translationServiceClient->glossaryName(
+        $projectId,
+        'us-central1',
+        $glossaryId
     );
-} finally {
-    $translationServiceClient->close();
+
+    try {
+        $request = (new GetGlossaryRequest())
+            ->setName($formattedName);
+        $response = $translationServiceClient->getGlossary($request);
+        printf('Glossary name: %s' . PHP_EOL, $response->getName());
+        printf('Entry count: %s' . PHP_EOL, $response->getEntryCount());
+        printf(
+            'Input URI: %s' . PHP_EOL,
+            $response->getInputConfig()
+                ->getGcsSource()
+                ->getInputUri()
+        );
+    } finally {
+        $translationServiceClient->close();
+    }
 }
 // [END translate_v3_get_glossary]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

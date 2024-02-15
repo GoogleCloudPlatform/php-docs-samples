@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_get]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\GetUptimeCheckConfigRequest;
 
 /**
  * Example:
@@ -40,10 +41,16 @@ function get_uptime_check($projectId, $configName)
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $getUptimeCheckConfigRequest = (new GetUptimeCheckConfigRequest())
+        ->setName($configName);
 
-    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($configName);
+    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($getUptimeCheckConfigRequest);
 
     print('Retrieved an uptime check:' . PHP_EOL);
     print($uptimeCheck->serializeToJsonString() . PHP_EOL);
 }
 // [END monitoring_uptime_check_get]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

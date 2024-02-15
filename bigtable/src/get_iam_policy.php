@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_iam_policy]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
 
 /**
  * Get the IAM policy for a Bigtable instance
@@ -42,7 +43,9 @@ function get_iam_policy(
 
     try {
         // we could instantiate the BigtableTableAdminClient and pass the tableName to get the IAM policy for the table resource as well.
-        $iamPolicy = $instanceAdminClient->getIamPolicy($instanceName);
+        $getIamPolicyRequest = (new GetIamPolicyRequest())
+            ->setResource($instanceName);
+        $iamPolicy = $instanceAdminClient->getIamPolicy($getIamPolicyRequest);
 
         printf($iamPolicy->getVersion() . PHP_EOL);
 

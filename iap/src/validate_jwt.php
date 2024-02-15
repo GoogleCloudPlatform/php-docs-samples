@@ -17,7 +17,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/iap/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/iap/README.md
  */
 
 # [START iap_validate_jwt]
@@ -33,18 +33,19 @@ use Google\Auth\AccessToken;
  * @param string $cloudProjectNumber The project *number* for your Google
  *     Cloud project. This is returned by 'gcloud projects describe $PROJECT_ID',
  *     or in the Project Info card in Cloud Console.
- * @param string $cloud_project Your Google Cloud Project ID.
- *
- * @return (user_id, user_email).
+ * @param string $cloudProjectId Your Google Cloud Project ID.
  */
-function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjectId)
-{
+function validate_jwt_from_app_engine(
+    string $iapJwt,
+    string $cloudProjectNumber,
+    string $cloudProjectId
+): void {
     $expectedAudience = sprintf(
         '/projects/%s/apps/%s',
         $cloudProjectNumber,
         $cloudProjectId
     );
-    return validate_jwt($iapJwt, $expectedAudience);
+    validate_jwt($iapJwt, $expectedAudience);
 }
 
 /**
@@ -58,8 +59,11 @@ function validate_jwt_from_app_engine($iapJwt, $cloudProjectNumber, $cloudProjec
  *     application. See https://cloud.google.com/iap/docs/signed-headers-howto
  *     for details on how to get this value.
  */
-function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backendServiceId)
-{
+function validate_jwt_from_compute_engine(
+    string $iapJwt,
+    string $cloudProjectNumber,
+    string $backendServiceId
+): void {
     $expectedAudience = sprintf(
         '/projects/%s/global/backendServices/%s',
         $cloudProjectNumber,
@@ -76,7 +80,7 @@ function validate_jwt_from_compute_engine($iapJwt, $cloudProjectNumber, $backend
  *     App Engine:     /projects/{PROJECT_NUMBER}/apps/{PROJECT_ID}
  *     Compute Engine: /projects/{PROJECT_NUMBER}/global/backendServices/{BACKEND_SERVICE_ID}
  */
-function validate_jwt($iapJwt, $expectedAudience)
+function validate_jwt(string $iapJwt, string $expectedAudience): void
 {
     // Validate the signature using the IAP cert URL.
     $token = new AccessToken();
@@ -85,7 +89,8 @@ function validate_jwt($iapJwt, $expectedAudience)
     ]);
 
     if (!$jwt) {
-        return print('Failed to validate JWT: Invalid JWT');
+        print('Failed to validate JWT: Invalid JWT');
+        return;
     }
 
     // Validate token by checking issuer and audience fields.

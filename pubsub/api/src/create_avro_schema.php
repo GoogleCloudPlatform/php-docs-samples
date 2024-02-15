@@ -18,13 +18,12 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/master/pubsub/api/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/blob/main/pubsub/api/README.md
  */
 namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_create_avro_schema]
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\Schema\Type;
 
 /**
  * Create a Schema with an AVRO definition.
@@ -33,14 +32,14 @@ use Google\Cloud\PubSub\V1\Schema\Type;
  * @param string $schemaId
  * @param string $avscFile
  */
-function create_avro_schema($projectId, $schemaId, $avscFile)
+function create_avro_schema(string $projectId, string $schemaId, string $avscFile): void
 {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
 
-    $definition = file_get_contents($avscFile);
-    $schema = $pubsub->createSchema($schemaId, Type::AVRO, $definition);
+    $definition = (string) file_get_contents($avscFile);
+    $schema = $pubsub->createSchema($schemaId, 'AVRO', $definition);
 
     printf('Schema %s created.', $schema->name());
 }

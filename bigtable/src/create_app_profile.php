@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_app_profile]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\ApiCore\ApiException;
 use Google\Cloud\Bigtable\Admin\V2\AppProfile;
 use Google\Cloud\Bigtable\Admin\V2\AppProfile\SingleClusterRouting;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\CreateAppProfileRequest;
 
 /**
  * Create an App Profile
@@ -68,7 +69,11 @@ function create_app_profile(
     printf('Creating a new AppProfile %s' . PHP_EOL, $appProfileId);
 
     try {
-        $newAppProfile = $instanceAdminClient->createAppProfile($instanceName, $appProfileId, $appProfile);
+        $createAppProfileRequest = (new CreateAppProfileRequest())
+            ->setParent($instanceName)
+            ->setAppProfileId($appProfileId)
+            ->setAppProfile($appProfile);
+        $newAppProfile = $instanceAdminClient->createAppProfile($createAppProfileRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'ALREADY_EXISTS') {
             printf('AppProfile %s already exists.', $appProfileId);

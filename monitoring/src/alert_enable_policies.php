@@ -18,13 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_enable_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
+use Google\Cloud\Monitoring\V3\UpdateAlertPolicyRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -40,11 +42,12 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($projectName)
+        ->setFilter($filter);
 
-    $policies = $alertClient->listAlertPolicies($projectName, [
-        'filter' => $filter
-    ]);
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         $isEnabled = $policy->getEnabled()->getValue();
         if ($enable == $isEnabled) {
@@ -56,9 +59,10 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
             $policy->getEnabled()->setValue((bool) $enable);
             $mask = new FieldMask();
             $mask->setPaths(['enabled']);
-            $alertClient->updateAlertPolicy($policy, [
-                'updateMask' => $mask
-            ]);
+            $updateAlertPolicyRequest = (new UpdateAlertPolicyRequest())
+                ->setAlertPolicy($policy)
+                ->setUpdateMask($mask);
+            $alertClient->updateAlertPolicy($updateAlertPolicyRequest);
             printf('%s %s' . PHP_EOL,
                 $enable ? 'Enabled' : 'Disabled',
                 $policy->getName()
@@ -67,3 +71,7 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
     }
 }
 // [END monitoring_alert_enable_policies]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

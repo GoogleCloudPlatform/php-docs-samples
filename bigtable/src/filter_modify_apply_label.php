@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
@@ -59,7 +59,7 @@ function filter_modify_apply_label(
 // [END bigtable_filters_modify_apply_label]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

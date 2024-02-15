@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_cluster]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster;
 
 /**
  * Update a cluster in a Bigtable instance
@@ -45,7 +46,10 @@ function update_cluster(
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
     try {
-        $operationResponse = $instanceAdminClient->updateCluster($clusterName, $newNumNodes);
+        $cluster = (new Cluster())
+            ->setName($clusterName)
+            ->setServeNodes($newNumNodes);
+        $operationResponse = $instanceAdminClient->updateCluster($cluster);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {

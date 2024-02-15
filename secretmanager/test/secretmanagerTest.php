@@ -20,10 +20,14 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
+use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
+use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
@@ -38,6 +42,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretToDelete;
     private static $testSecretWithVersions;
     private static $testSecretToCreateName;
+    private static $testUmmrSecretToCreateName;
     private static $testSecretVersion;
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;
@@ -53,6 +58,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretToDelete = self::createSecret();
         self::$testSecretWithVersions = self::createSecret();
         self::$testSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testUmmrSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -67,6 +73,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretToDelete->getName());
         self::deleteSecret(self::$testSecretWithVersions->getName());
         self::deleteSecret(self::$testSecretToCreateName);
+        self::deleteSecret(self::$testUmmrSecretToCreateName);
     }
 
     private static function randomSecretId(): string
@@ -78,32 +85,41 @@ class secretmanagerTest extends TestCase
     {
         $parent = self::$client->projectName(self::$projectId);
         $secretId = self::randomSecretId();
-
-        return self::$client->createSecret($parent, $secretId,
-            new Secret([
+        $createSecretRequest = (new CreateSecretRequest())
+            ->setParent($parent)
+            ->setSecretId($secretId)
+            ->setSecret(new Secret([
                 'replication' => new Replication([
                     'automatic' => new Automatic(),
                 ]),
-            ])
-        );
+            ]));
+
+        return self::$client->createSecret($createSecretRequest);
     }
 
     private static function addSecretVersion(Secret $secret): SecretVersion
     {
-        return self::$client->addSecretVersion($secret->getName(), new SecretPayload([
+        $addSecretVersionRequest = (new AddSecretVersionRequest())
+            ->setParent($secret->getName())
+            ->setPayload(new SecretPayload([
             'data' => 'my super secret data',
         ]));
+        return self::$client->addSecretVersion($addSecretVersionRequest);
     }
 
     private static function disableSecretVersion(SecretVersion $version): SecretVersion
     {
-        return self::$client->disableSecretVersion($version->getName());
+        $disableSecretVersionRequest = (new DisableSecretVersionRequest())
+            ->setName($version->getName());
+        return self::$client->disableSecretVersion($disableSecretVersionRequest);
     }
 
     private static function deleteSecret(string $name)
     {
         try {
-            self::$client->deleteSecret($name);
+            $deleteSecretRequest = (new DeleteSecretRequest())
+                ->setName($name);
+            self::$client->deleteSecret($deleteSecretRequest);
         } catch (GaxApiException $e) {
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;
@@ -115,7 +131,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersion->getName());
 
-        $output = $this->runSnippet('access_secret_version', [
+        $output = $this->runFunctionSnippet('access_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -128,7 +144,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
-        $output = $this->runSnippet('add_secret_version', [
+        $output = $this->runFunctionSnippet('add_secret_version', [
             $name['project'],
             $name['secret'],
         ]);
@@ -140,9 +156,22 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretToCreateName);
 
-        $output = $this->runSnippet('create_secret', [
+        $output = $this->runFunctionSnippet('create_secret', [
             $name['project'],
             $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithUserManagedReplication()
+    {
+        $name = self::$client->parseName(self::$testUmmrSecretToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_user_managed_replication', [
+            $name['project'],
+            $name['secret'],
+            'us-east1,us-east4,us-west1',
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
@@ -152,7 +181,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretToDelete->getName());
 
-        $output = $this->runSnippet('delete_secret', [
+        $output = $this->runFunctionSnippet('delete_secret', [
             $name['project'],
             $name['secret'],
         ]);
@@ -164,7 +193,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToDestroy->getName());
 
-        $output = $this->runSnippet('destroy_secret_version', [
+        $output = $this->runFunctionSnippet('destroy_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -177,7 +206,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToDisable->getName());
 
-        $output = $this->runSnippet('disable_secret_version', [
+        $output = $this->runFunctionSnippet('disable_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -190,7 +219,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersionToEnable->getName());
 
-        $output = $this->runSnippet('enable_secret_version', [
+        $output = $this->runFunctionSnippet('enable_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -203,7 +232,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretVersion->getName());
 
-        $output = $this->runSnippet('get_secret_version', [
+        $output = $this->runFunctionSnippet('get_secret_version', [
             $name['project'],
             $name['secret'],
             $name['secret_version'],
@@ -217,7 +246,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('get_secret', [
+        $output = $this->runFunctionSnippet('get_secret', [
             $name['project'],
             $name['secret'],
         ]);
@@ -230,7 +259,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('iam_grant_access', [
+        $output = $this->runFunctionSnippet('iam_grant_access', [
             $name['project'],
             $name['secret'],
             self::$iamUser,
@@ -243,7 +272,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('iam_revoke_access', [
+        $output = $this->runFunctionSnippet('iam_revoke_access', [
             $name['project'],
             $name['secret'],
             self::$iamUser,
@@ -256,7 +285,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecretWithVersions->getName());
 
-        $output = $this->runSnippet('list_secret_versions', [
+        $output = $this->runFunctionSnippet('list_secret_versions', [
             $name['project'],
             $name['secret'],
         ]);
@@ -268,7 +297,7 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('list_secrets', [
+        $output = $this->runFunctionSnippet('list_secrets', [
             $name['project'],
         ]);
 
@@ -280,7 +309,19 @@ class secretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runSnippet('update_secret', [
+        $output = $this->runFunctionSnippet('update_secret', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testUpdateSecretWithAlias()
+    {
+        $name = self::$client->parseName(self::$testSecretWithVersions->getName());
+
+        $output = $this->runFunctionSnippet('update_secret_with_alias', [
             $name['project'],
             $name['secret'],
         ]);

@@ -19,63 +19,64 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/dlp/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/dlp/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) < 2 || count($argv) > 3) {
-    return print("Usage: php list_jobs.php CALLING_PROJECT [FILTER]\n");
-}
-list($_, $callingProjectId) = $argv;
-$filter = isset($argv[2]) ? $argv[2] : '';
+namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_jobs]
-/**
- * List Data Loss Prevention API jobs corresponding to a given filter.
- */
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\DlpJobType;
+use Google\Cloud\Dlp\V2\ListDlpJobsRequest;
 
-/** Uncomment and populate these variables in your code */
-// $callingProjectId = 'The project ID to run the API call under';
-// $filter = 'The filter expression to use';
+/**
+ * List Data Loss Prevention API jobs corresponding to a given filter.
+ *
+ * @param string $callingProjectId  The project ID to run the API call under
+ * @param string $filter            The filter expression to use
+ */
+function list_jobs(string $callingProjectId, string $filter): void
+{
+    // Instantiate a client.
+    $dlp = new DlpServiceClient();
 
-// Instantiate a client.
-$dlp = new DlpServiceClient();
+    // The type of job to list (either 'INSPECT_JOB' or 'REDACT_JOB')
+    $jobType = DlpJobType::INSPECT_JOB;
 
-// The type of job to list (either 'INSPECT_JOB' or 'REDACT_JOB')
-$jobType = DlpJobType::INSPECT_JOB;
+    // Run job-listing request
+    // For more information and filter syntax,
+    // @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
+    $parent = "projects/$callingProjectId/locations/global";
+    $listDlpJobsRequest = (new ListDlpJobsRequest())
+        ->setParent($parent)
+        ->setFilter($filter)
+        ->setType($jobType);
+    $response = $dlp->listDlpJobs($listDlpJobsRequest);
 
-// Run job-listing request
-// For more information and filter syntax,
-// @see https://cloud.google.com/dlp/docs/reference/rest/v2/projects.dlpJobs/list
-$parent = "projects/$callingProjectId/locations/global";
-$response = $dlp->listDlpJobs($parent, [
-  'filter' => $filter,
-  'type' => $jobType
-]);
+    // Print job list
+    $jobs = $response->iterateAllElements();
+    foreach ($jobs as $job) {
+        printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
+        $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
 
-// Print job list
-$jobs = $response->iterateAllElements();
-foreach ($jobs as $job) {
-    printf('Job %s status: %s' . PHP_EOL, $job->getName(), $job->getState());
-    $infoTypeStats = $job->getInspectDetails()->getResult()->getInfoTypeStats();
-
-    if ($job->getState() == JobState::DONE) {
-        if (count($infoTypeStats) > 0) {
-            foreach ($infoTypeStats as $infoTypeStat) {
-                printf(
-                    '  Found %s instance(s) of type %s' . PHP_EOL,
-                    $infoTypeStat->getCount(),
-                    $infoTypeStat->getInfoType()->getName()
-                );
+        if ($job->getState() == JobState::DONE) {
+            if (count($infoTypeStats) > 0) {
+                foreach ($infoTypeStats as $infoTypeStat) {
+                    printf(
+                        '  Found %s instance(s) of type %s' . PHP_EOL,
+                        $infoTypeStat->getCount(),
+                        $infoTypeStat->getInfoType()->getName()
+                    );
+                }
+            } else {
+                print('  No findings.' . PHP_EOL);
             }
-        } else {
-            print('  No findings.' . PHP_EOL);
         }
     }
 }
 # [END dlp_list_jobs]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

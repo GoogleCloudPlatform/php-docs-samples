@@ -18,47 +18,51 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/texttospeech/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/texttospeech/README.md
  */
 
-// Include Google Cloud dependendencies using Composer
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 1) {
-    return print("Usage: php list_voices.php\n");
-}
+namespace Google\Cloud\Samples\TextToSpeech;
 
 // [START tts_list_voices]
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\Client\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\ListVoicesRequest;
 
-// create client object
-$client = new TextToSpeechClient();
+function list_voices(): void
+{
+    // create client object
+    $client = new TextToSpeechClient();
 
-// perform list voices request
-$response = $client->listVoices();
-$voices = $response->getVoices();
+    // perform list voices request
+    $request = (new ListVoicesRequest());
+    $response = $client->listVoices($request);
+    $voices = $response->getVoices();
 
-foreach ($voices as $voice) {
-    // display the voice's name. example: tpc-vocoded
-    printf('Name: %s' . PHP_EOL, $voice->getName());
+    foreach ($voices as $voice) {
+        // display the voice's name. example: tpc-vocoded
+        printf('Name: %s' . PHP_EOL, $voice->getName());
 
-    // display the supported language codes for this voice. example: 'en-US'
-    foreach ($voice->getLanguageCodes() as $languageCode) {
-        printf('Supported language: %s' . PHP_EOL, $languageCode);
+        // display the supported language codes for this voice. example: 'en-US'
+        foreach ($voice->getLanguageCodes() as $languageCode) {
+            printf('Supported language: %s' . PHP_EOL, $languageCode);
+        }
+
+        // SSML voice gender values from TextToSpeech\V1\SsmlVoiceGender
+        $ssmlVoiceGender = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE', 'FEMALE',
+        'NEUTRAL'];
+
+        // display the SSML voice gender
+        $gender = $voice->getSsmlGender();
+        printf('SSML voice gender: %s' . PHP_EOL, $ssmlVoiceGender[$gender]);
+
+        // display the natural hertz rate for this voice
+        printf('Natural Sample Rate Hertz: %d' . PHP_EOL,
+            $voice->getNaturalSampleRateHertz());
     }
 
-    // SSML voice gender values from TextToSpeech\V1\SsmlVoiceGender
-    $ssmlVoiceGender = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE', 'FEMALE',
-    'NEUTRAL'];
-
-    // display the SSML voice gender
-    $gender = $voice->getSsmlGender();
-    printf('SSML voice gender: %s' . PHP_EOL, $ssmlVoiceGender[$gender]);
-
-    // display the natural hertz rate for this voice
-    printf('Natural Sample Rate Hertz: %d' . PHP_EOL,
-        $voice->getNaturalSampleRateHertz());
+    $client->close();
 }
-
-$client->close();
 // [END tts_list_voices]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

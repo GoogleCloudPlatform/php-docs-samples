@@ -19,9 +19,10 @@ namespace Google\Cloud\Samples\Datastore;
 
 use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Entity;
+use Google\Cloud\Datastore\EntityInterface;
 use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
+use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
 /**
@@ -39,7 +40,7 @@ function initialize_client()
  * Create a Datastore entity.
  *
  * @param DatastoreClient $datastore
- * @return Entity
+ * @return EntityInterface
  */
 function basic_entity(DatastoreClient $datastore)
 {
@@ -58,7 +59,7 @@ function basic_entity(DatastoreClient $datastore)
  * Create a Datastore entity and upsert it.
  *
  * @param DatastoreClient $datastore
- * @return Entity
+ * @return EntityInterface
  */
 function upsert(DatastoreClient $datastore)
 {
@@ -81,7 +82,7 @@ function upsert(DatastoreClient $datastore)
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @return Entity
+ * @return EntityInterface
  */
 function insert(DatastoreClient $datastore)
 {
@@ -101,7 +102,7 @@ function insert(DatastoreClient $datastore)
  * Look up a Datastore entity with the given key.
  *
  * @param DatastoreClient $datastore
- * @return Entity|null
+ * @return EntityInterface|null
  */
 function lookup(DatastoreClient $datastore)
 {
@@ -116,7 +117,7 @@ function lookup(DatastoreClient $datastore)
  * Update a Datastore entity in a transaction.
  *
  * @param DatastoreClient $datastore
- * @return Entity|null
+ * @return EntityInterface
  */
 function update(DatastoreClient $datastore)
 {
@@ -148,7 +149,7 @@ function delete(DatastoreClient $datastore, Key $taskKey)
  * Upsert multiple Datastore entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Entity> $tasks
+ * @param array<EntityInterface> $tasks
  */
 function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
@@ -161,8 +162,8 @@ function batch_upsert(DatastoreClient $datastore, array $tasks)
  * Lookup multiple entities.
  *
  * @param DatastoreClient $datastore
- * @param array <Key> $keys
- * @return array <Entity>
+ * @param array<Key> $keys
+ * @return array<EntityInterface>
  */
 function batch_lookup(DatastoreClient $datastore, array $keys)
 {
@@ -181,7 +182,7 @@ function batch_lookup(DatastoreClient $datastore, array $keys)
  * Delete multiple Datastore entities with the given keys.
  *
  * @param DatastoreClient $datastore
- * @param array <Key> $keys
+ * @param array<Key> $keys
  */
 function batch_delete(DatastoreClient $datastore, array $keys)
 {
@@ -254,7 +255,7 @@ function key_with_multilevel_parent(DatastoreClient $datastore)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return Entity
+ * @return EntityInterface
  */
 function properties(DatastoreClient $datastore, Key $key)
 {
@@ -280,7 +281,7 @@ function properties(DatastoreClient $datastore, Key $key)
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- * @return Entity
+ * @return EntityInterface
  */
 function array_value(DatastoreClient $datastore, Key $key)
 {
@@ -315,15 +316,45 @@ function basic_query(DatastoreClient $datastore)
 }
 
 /**
+ * Create a basic Datastore Gql query.
+ *
+ * @param DatastoreClient $datastore
+ * @return GqlQuery
+ */
+function basic_gql_query(DatastoreClient $datastore)
+{
+    // [START datastore_basic_gql_query]
+    $gql = <<<EOF
+SELECT * from Task
+where
+    done = @a
+    AND priority >= @b
+order by
+    priority desc
+EOF;
+    $query = $datastore->gqlQuery($gql, [
+        'bindings' => [
+            'a' => false,
+            'b' => 4,
+        ],
+    ]);
+    // [END datastore_basic_gql_query]
+    return $query;
+}
+
+/**
  * Run a given query.
  *
  * @param DatastoreClient $datastore
- * @return EntityIterator<Entity>
+ * @param Query|GqlQuery $query
+ * @return EntityIterator<EntityInterface>
  */
-function run_query(DatastoreClient $datastore, Query $query)
+function run_query(DatastoreClient $datastore, $query)
 {
     // [START datastore_run_query]
+    // [START datastore_run_gql_query]
     $result = $datastore->runQuery($query);
+    // [END datastore_run_gql_query]
     // [END datastore_run_query]
     return $result;
 }
@@ -586,11 +617,11 @@ function limit(DatastoreClient $datastore)
  * Fetch a query cursor.
  *
  * @param DatastoreClient $datastore
- * @param string $pageSize
+ * @param int $pageSize
  * @param string $pageCursor
  * @return array
  */
-function cursor_paging(DatastoreClient $datastore, $pageSize, $pageCursor = '')
+function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCursor = '')
 {
     $query = $datastore->query()
         ->kind('Task')
@@ -738,7 +769,7 @@ function unindexed_property_query(DatastoreClient $datastore)
  * Create an entity with two array properties.
  *
  * @param DatastoreClient $datastore
- * @return Entity
+ * @return EntityInterface
  */
 function exploding_properties(DatastoreClient $datastore)
 {
@@ -817,9 +848,9 @@ function transactional_retry(
  * Insert an entity only if there is no entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @param Entity $task
+ * @param EntityInterface $task
  */
-function get_or_create(DatastoreClient $datastore, Entity $task)
+function get_or_create(DatastoreClient $datastore, EntityInterface $task)
 {
     // [START datastore_transactional_get_or_create]
     $transaction = $datastore->transaction();
@@ -835,7 +866,7 @@ function get_or_create(DatastoreClient $datastore, Entity $task)
  * Run a query with an ancestor inside a transaction.
  *
  * @param DatastoreClient $datastore
- * @return array<Entity>
+ * @return array<EntityInterface>
  */
 function get_task_list_entities(DatastoreClient $datastore)
 {
@@ -859,7 +890,7 @@ function get_task_list_entities(DatastoreClient $datastore)
  * Create and run a query with readConsistency option.
  *
  * @param DatastoreClient $datastore
- * @return EntityIterator<Entity>
+ * @return EntityIterator<EntityInterface>
  */
 function eventual_consistent_query(DatastoreClient $datastore)
 {
@@ -876,7 +907,7 @@ function eventual_consistent_query(DatastoreClient $datastore)
  * Create an entity with a parent key.
  *
  * @param DatastoreClient $datastore
- * @return Entity
+ * @return EntityInterface
  */
 function entity_with_parent(DatastoreClient $datastore)
 {
@@ -973,7 +1004,7 @@ function property_run_query(DatastoreClient $datastore)
  * Create and run a property query with a kind.
  *
  * @param DatastoreClient $datastore
- * @return array<string => string>
+ * @return array<string,string>
  */
 function property_by_kind_run_query(DatastoreClient $datastore)
 {
@@ -983,7 +1014,7 @@ function property_by_kind_run_query(DatastoreClient $datastore)
         ->kind('__property__')
         ->hasAncestor($ancestorKey);
     $result = $datastore->runQuery($query);
-    /* @var array<string => string> $properties */
+    /* @var array<string,string> $properties */
     $properties = [];
     /* @var Entity $entity */
     foreach ($result as $entity) {

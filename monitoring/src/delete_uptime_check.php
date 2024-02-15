@@ -18,13 +18,14 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/monitoring/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/monitoring/README.md
  */
 
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_delete]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\DeleteUptimeCheckConfigRequest;
 
 /**
  * Example:
@@ -40,9 +41,15 @@ function delete_uptime_check($projectId, $configName)
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $deleteUptimeCheckConfigRequest = (new DeleteUptimeCheckConfigRequest())
+        ->setName($configName);
 
-    $uptimeCheckClient->deleteUptimeCheckConfig($configName);
+    $uptimeCheckClient->deleteUptimeCheckConfig($deleteUptimeCheckConfigRequest);
 
     printf('Deleted an uptime check: ' . $configName . PHP_EOL);
 }
 // [END monitoring_uptime_check_delete]
+
+// The following 2 lines are only needed to run the samples
+require_once __DIR__ . '/../../testing/sample_helpers.php';
+\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

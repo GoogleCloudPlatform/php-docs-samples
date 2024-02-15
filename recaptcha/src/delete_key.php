@@ -18,14 +18,15 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/recaptcha/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/recaptcha/README.md
  */
 
 namespace Google\Cloud\Samples\Recaptcha;
 
 // [START recaptcha_enterprise_delete_site_key]
 use Google\ApiCore\ApiException;
-use Google\Cloud\RecaptchaEnterprise\V1\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\Client\RecaptchaEnterpriseServiceClient;
+use Google\Cloud\RecaptchaEnterprise\V1\DeleteKeyRequest;
 
 /**
  * Delete an existing reCAPTCHA key from your Google Cloud project
@@ -39,7 +40,9 @@ function delete_key(string $projectId, string $keyId): void
     $formattedKeyName = $client->keyName($projectId, $keyId);
 
     try {
-        $client->deleteKey($formattedKeyName);
+        $deleteKeyRequest = (new DeleteKeyRequest())
+            ->setName($formattedKeyName);
+        $client->deleteKey($deleteKeyRequest);
         printf('The key: %s is deleted.' . PHP_EOL, $keyId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

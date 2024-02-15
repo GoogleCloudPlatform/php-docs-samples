@@ -19,18 +19,19 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/transcoder/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/transcoder/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_from_ad_hoc]
 use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobRequest;
 use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
 use Google\Cloud\Video\Transcoder\V1\Job;
 use Google\Cloud\Video\Transcoder\V1\JobConfig;
 use Google\Cloud\Video\Transcoder\V1\MuxStream;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
 
 /**
@@ -95,8 +96,11 @@ function create_job_from_ad_hoc($projectId, $location, $inputUri, $outputUri)
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
         ->setConfig($jobConfig);
+    $request = (new CreateJobRequest())
+        ->setParent($formattedParent)
+        ->setJob($job);
 
-    $response = $transcoderServiceClient->createJob($formattedParent, $job);
+    $response = $transcoderServiceClient->createJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());

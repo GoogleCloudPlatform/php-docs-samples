@@ -18,7 +18,7 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/storage/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
 namespace Google\Cloud\Samples\Storage;
@@ -30,17 +30,18 @@ use Google\Cloud\Storage\StorageClient;
  * Upload a file.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  * @param string $objectName The name of your Cloud Storage object.
+ *        (e.g. 'my-object')
  * @param string $source The path to the file to upload.
+ *        (e.g. '/path/to/your/file')
  */
-function upload_object($bucketName, $objectName, $source)
+function upload_object(string $bucketName, string $objectName, string $source): void
 {
-    // $bucketName = 'my-bucket';
-    // $objectName = 'my-object';
-    // $source = '/path/to/your/file';
-
     $storage = new StorageClient();
-    $file = fopen($source, 'r');
+    if (!$file = fopen($source, 'r')) {
+        throw new \InvalidArgumentException('Unable to open file for reading');
+    }
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->upload($file, [
         'name' => $objectName

@@ -18,16 +18,17 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/bigtable/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/bigtable/README.md
  */
 
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_set_iam_policy]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
 use Google\Cloud\Iam\V1\Binding;
 use Google\Cloud\Iam\V1\Policy;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
 
 /**
  * Set the IAM policy for a Bigtable instance
@@ -55,8 +56,11 @@ function set_iam_policy(
                 ])
             ]
         ]);
+        $setIamPolicyRequest = (new SetIamPolicyRequest())
+            ->setResource($instanceName)
+            ->setPolicy($policy);
 
-        $iamPolicy = $instanceAdminClient->setIamPolicy($instanceName, $policy);
+        $iamPolicy = $instanceAdminClient->setIamPolicy($setIamPolicyRequest);
 
         foreach ($iamPolicy->getBindings() as $binding) {
             foreach ($binding->getmembers() as $member) {
