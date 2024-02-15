@@ -44,7 +44,7 @@ function create_database_with_encryption_key(
     string $projectId,
     string $instanceId,
     string $databaseId,
-    string $kmsKeyName = ''
+    string $kmsKeyName
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
@@ -74,7 +74,9 @@ function create_database_with_encryption_key(
     }
 
     $operationResponse = $databaseAdminClient->createDatabase($createDatabaseRequest);
+    printf('Waiting for operation to complete...' . PHP_EOL);
     $operationResponse->pollUntilComplete();
+
     if ($operationResponse->operationSucceeded()) {
         $database = $operationResponse->getResult();
         printf(

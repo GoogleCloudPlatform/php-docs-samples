@@ -130,7 +130,7 @@ class spannerTest extends TestCase
         self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
-        self::$defaultLeader = 'us-south1';
+        self::$defaultLeader = 'us-east1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
         self::$baseConfigId = 'nam7';
@@ -1163,8 +1163,10 @@ class spannerTest extends TestCase
      */
     public function testListDatabases()
     {
-        $output = $this->runAdminFunctionSnippet('list_databases');
-        $this->assertStringContainsString(self::$databaseId, $output);
+        $output = $this->runAdminFunctionSnippet('list_databases', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$multiInstanceId,
+        ]);
         $this->assertStringContainsString(self::$multiDatabaseId, $output);
         $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
     }

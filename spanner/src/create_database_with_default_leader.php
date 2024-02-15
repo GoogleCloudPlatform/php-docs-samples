@@ -26,15 +26,13 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_create_database_with_default_leader]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
-use Google\Cloud\Spanner\Admin\Database\V1\Database;
 use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseRequest;
 
 /**
  * Creates a database with a default leader.
  * Example:
  * ```
- * create_database_with_default_leader($instanceId, $databaseId, $defaultLeader);
+ * create_database_with_default_leader($projectId, $instanceId, $databaseId, $defaultLeader);
  * ```
  *
  * @param string $projectId The Google Cloud project ID.
@@ -69,21 +67,14 @@ function create_database_with_default_leader(
                     'AlbumId      INT64 NOT NULL,' .
                     'AlbumTitle   STRING(MAX)' .
                 ') PRIMARY KEY (SingerId, AlbumId),' .
-                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
+                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
+                "ALTER DATABASE `$databaseId` SET OPTIONS(default_leader='$defaultLeader')"
             ]
         ])
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
-
-    $database = (new Database())
-        ->setDefaultLeader($defaultLeader)
-        ->setName($databaseIdFull);
-
-    printf('Updating database %s', $databaseId);
-    $operation = $databaseAdminClient->updateDatabase((new UpdateDatabaseRequest())
-        ->setDatabase($database));
 
     $database = $databaseAdminClient->getDatabase(
         new GetDatabaseRequest(['name' => $databaseIdFull])

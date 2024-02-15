@@ -63,7 +63,7 @@ function update_database_with_default_leader(
         new GetDatabaseRequest(['name' => $databaseName])
     );
 
-    printf('Updated the default leader to %d' . PHP_EOL, $database->getDefaultLeader());
+    printf('Updated the default leader to %s' . PHP_EOL, $database->getDefaultLeader());
 }
 // [END spanner_update_database_with_default_leader]
 

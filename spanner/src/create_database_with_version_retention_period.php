@@ -26,9 +26,7 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_create_database_with_version_retention_period]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
-use Google\Cloud\Spanner\Admin\Database\V1\Database;
 use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseRequest;
 
 /**
  * Creates a database with data retention for Point In Time Restore.
@@ -50,6 +48,7 @@ function create_database_with_version_retention_period(
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
+    $databaseFullName = $databaseAdminClient->databaseName($projectId, $instanceId, $databaseId);
 
     $operation = $databaseAdminClient->createDatabase(
         new CreateDatabaseRequest([
@@ -67,7 +66,8 @@ function create_database_with_version_retention_period(
                     'AlbumId      INT64 NOT NULL,' .
                     'AlbumTitle   STRING(MAX)' .
                 ') PRIMARY KEY (SingerId, AlbumId),' .
-                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
+                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE',
+                "ALTER DATABASE `$databaseId` SET OPTIONS(version_retention_period='$retentionPeriod')"
             ]
         ])
     );
@@ -75,20 +75,11 @@ function create_database_with_version_retention_period(
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $databaseFullName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $database = (new Database())
-        ->setVersionRetentionPeriod($retentionPeriod)
-        ->setName($databaseFullName);
-
-    printf('Updating database %s', $databaseId);
-    $operation = $databaseAdminClient->updateDatabase((new UpdateDatabaseRequest())
-        ->setDatabase($database));
-
     $request = new GetDatabaseRequest(['name' => $databaseFullName]);
     $databaseInfo = $databaseAdminClient->getDatabase($request);
 
     print(sprintf(
-        "Database %s created with version retention period %s",
+        'Database %s created with version retention period %s',
         $databaseInfo->getName(), $databaseInfo->getVersionRetentionPeriod()
     ) . PHP_EOL);
 }
