@@ -39,7 +39,18 @@ function array_value_equality(DatastoreClient $datastore)
         ->filter('tag', '=', 'fun')
         ->filter('tag', '=', 'programming');
     // [END datastore_array_value_equality]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $num = 0;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $num += 1;
+    }
+
+    printf("Found %s records", $num);
+    print_r($entities);
 }
 
 // The following 2 lines are only needed to run the samples

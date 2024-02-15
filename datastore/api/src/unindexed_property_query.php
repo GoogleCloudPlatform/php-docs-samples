@@ -38,7 +38,17 @@ function unindexed_property_query(DatastoreClient $datastore)
         ->kind('Task')
         ->filter('description', '=', 'A task description.');
     // [END datastore_unindexed_property_query]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    foreach ($result as $e) {
+        $found = true;
+    }
+
+    if(!$found) {
+        print("No records found.\n");
+    }
 }
 
 // The following 2 lines are only needed to run the samples

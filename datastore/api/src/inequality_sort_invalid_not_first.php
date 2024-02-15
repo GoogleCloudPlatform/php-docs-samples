@@ -40,7 +40,17 @@ function inequality_sort_invalid_not_first(DatastoreClient $datastore)
         ->order('created')
         ->order('priority');
     // [END datastore_inequality_sort_invalid_not_first]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    foreach ($result as $e) {
+        $found = true;
+    }
+
+    if(!$found) {
+        print("No records found.\n");
+    }
 }
 
 // The following 2 lines are only needed to run the samples

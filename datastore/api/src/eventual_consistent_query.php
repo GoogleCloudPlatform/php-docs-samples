@@ -39,7 +39,7 @@ function eventual_consistent_query(DatastoreClient $datastore)
         ->hasAncestor($datastore->key('TaskList', 'default'));
     $result = $datastore->runQuery($query, ['readConsistency' => 'EVENTUAL']);
     // [END datastore_eventual_consistent_query]
-    return $result;
+    print_r($result);
 }
 
 // The following 2 lines are only needed to run the samples

@@ -48,7 +48,7 @@ function namespace_run_query(DatastoreClient $datastore, $start, $end)
         $namespaces[] = $namespace->key()->pathEnd()['name'];
     }
     // [END datastore_namespace_run_query]
-    return $namespaces;
+    print_r($namespaces);
 }
 
 // The following 2 lines are only needed to run the samples

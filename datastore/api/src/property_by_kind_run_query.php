@@ -49,7 +49,7 @@ function property_by_kind_run_query(DatastoreClient $datastore)
     }
     // Example values of $properties: ['description' => ['STRING']]
     // [END datastore_property_by_kind_run_query]
-    return $properties;
+    print_r($properties);
 }
 
 // The following 2 lines are only needed to run the samples

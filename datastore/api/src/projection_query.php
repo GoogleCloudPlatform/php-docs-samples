@@ -38,7 +38,18 @@ function projection_query(DatastoreClient $datastore)
         ->kind('Task')
         ->projection(['priority', 'percent_complete']);
     // [END datastore_projection_query]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $found = true;
+    }
+
+    printf("Found keys: %s", $found);
+    print_r($entities);
 }
 
 // The following 2 lines are only needed to run the samples

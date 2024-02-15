@@ -32,8 +32,14 @@ use Google\Cloud\Datastore\Query\Query;
  * @param Query $query
  * @return array
  */
-function run_projection_query(DatastoreClient $datastore, Query $query)
+function run_projection_query(DatastoreClient $datastore, Query $query = null)
 {
+    if(!isset($query)) {
+      $query = $datastore->query()
+      ->kind('Task')
+      ->projection(['priority', 'percent_complete']);
+    }
+
     // [START datastore_run_query_projection]
     $priorities = array();
     $percentCompletes = array();
@@ -44,7 +50,8 @@ function run_projection_query(DatastoreClient $datastore, Query $query)
         $percentCompletes[] = $task['percent_complete'];
     }
     // [END datastore_run_query_projection]
-    return array($priorities, $percentCompletes);
+
+    print_r(array($priorities, $percentCompletes));
 }
 
 // The following 2 lines are only needed to run the samples

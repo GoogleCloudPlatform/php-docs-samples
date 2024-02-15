@@ -38,7 +38,19 @@ function limit(DatastoreClient $datastore)
         ->kind('Task')
         ->limit(5);
     // [END datastore_limit]
-    return $query;
+    // return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $num = 0;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $num += 1;
+    }
+
+    printf("Found %s records", $num);
+    print_r($entities);
 }
 
 // The following 2 lines are only needed to run the samples

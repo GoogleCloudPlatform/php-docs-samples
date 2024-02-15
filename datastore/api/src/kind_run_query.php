@@ -44,7 +44,7 @@ function kind_run_query(DatastoreClient $datastore)
         $kinds[] = $kind->key()->pathEnd()['name'];
     }
     // [END datastore_kind_run_query]
-    return $kinds;
+    print_r($kinds);
 }
 
 // The following 2 lines are only needed to run the samples

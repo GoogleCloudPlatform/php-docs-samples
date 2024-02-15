@@ -39,7 +39,17 @@ function inequality_invalid(DatastoreClient $datastore)
         ->filter('priority', '>', 3)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'));
     // [END datastore_inequality_invalid]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    foreach ($result as $e) {
+        $found = true;
+    }
+
+    if(!$found) {
+        print("No records found.\n");
+    }
 }
 
 // The following 2 lines are only needed to run the samples

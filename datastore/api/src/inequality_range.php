@@ -40,7 +40,17 @@ function inequality_range(DatastoreClient $datastore)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'))
         ->filter('created', '<', new DateTime('2000-12-31T23:59:59z'));
     // [END datastore_inequality_range]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    foreach ($result as $e) {
+        $found = true;
+    }
+
+    if(!$found) {
+        print("No records found.\n");
+    }
 }
 
 // The following 2 lines are only needed to run the samples

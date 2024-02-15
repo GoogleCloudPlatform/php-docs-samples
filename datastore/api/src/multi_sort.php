@@ -39,7 +39,20 @@ function multi_sort(DatastoreClient $datastore)
         ->order('priority', Query::ORDER_DESCENDING)
         ->order('created');
     // [END datastore_multi_sort]
-    return $query;
+    // return $query;
+
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $num = 0;
+    $entities = [];
+    foreach ($result as $e) {
+        $entities[] = $e;
+        $num += 1;
+    }
+
+    printf("Found %s records", $num);
+    print_r($entities);
 }
 
 // The following 2 lines are only needed to run the samples

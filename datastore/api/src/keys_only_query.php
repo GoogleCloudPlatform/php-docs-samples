@@ -37,7 +37,18 @@ function keys_only_query(DatastoreClient $datastore)
     $query = $datastore->query()
         ->keysOnly();
     // [END datastore_keys_only_query]
-    return $query;
+    print_r($query);
+
+    $result = $datastore->runQuery($query);
+    $found = false;
+    $keys = [];
+    foreach ($result as $e) {
+        $keys[] = $e;
+        $found = true;
+    }
+
+    printf("Found keys: %s", $found);
+    print_r($keys);
 }
 
 // The following 2 lines are only needed to run the samples

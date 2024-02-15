@@ -41,12 +41,15 @@ function get_task_list_entities(DatastoreClient $datastore)
         ->hasAncestor($taskListKey);
     $result = $transaction->runQuery($query);
     $taskListEntities = [];
+    $num = 0;
     /* @var Entity $task */
     foreach ($result as $task) {
         $taskListEntities[] = $task;
+        $num += 1;
     }
     // [END datastore_transactional_single_entity_group_read_only]
-    return $taskListEntities;
+    printf('Found %d tasks', $num);
+    print_r($taskListEntities);
 }
 
 // The following 2 lines are only needed to run the samples

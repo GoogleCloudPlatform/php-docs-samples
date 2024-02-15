@@ -47,7 +47,7 @@ function property_run_query(DatastoreClient $datastore)
         $properties[] = "$kind.$propertyName";
     }
     // [END datastore_property_run_query]
-    return $properties;
+    print_r($properties);
 }
 
 // The following 2 lines are only needed to run the samples
