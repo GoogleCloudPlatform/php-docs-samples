@@ -27,7 +27,7 @@ namespace Google\Cloud\Samples\PubSub;
 use Google\ApiCore\ApiException;
 use Google\Cloud\PubSub\V1\Schema;
 use Google\Cloud\PubSub\V1\Schema\Type;
-use Google\Cloud\PubSub\V1\SchemaServiceClient;
+use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
 
 /**
  * Commit a new Proto schema revision to an existing schema.

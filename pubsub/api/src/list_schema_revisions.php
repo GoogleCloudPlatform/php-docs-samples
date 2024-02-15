@@ -23,7 +23,7 @@
 namespace Google\Cloud\Samples\PubSub;
 
 use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\SchemaServiceClient;
+use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
 
 # [START pubsub_list_schema_revisions]
 
