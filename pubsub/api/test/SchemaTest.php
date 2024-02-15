@@ -18,8 +18,8 @@
 namespace Google\Cloud\Samples\PubSub;
 
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\PublisherClient;
-use Google\Cloud\PubSub\V1\SchemaServiceClient;
+use Google\Cloud\PubSub\V1\Client\PublisherClient;
+use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;

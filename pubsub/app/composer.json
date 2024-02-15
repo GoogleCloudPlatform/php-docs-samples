@@ -1,6 +1,7 @@
 {
+  "minimum-stability": "RC",
   "require": {
-    "google/cloud-pubsub": "^1.23.0",
+    "google/cloud-pubsub": "^2.0",
     "google/cloud-datastore": "^1.11.2",
     "slim/slim": "^4.7",
     "slim/psr7": "^1.3",

@@ -1,6 +1,7 @@
 {
+    "minimum-stability": "RC",
     "require": {
-        "google/cloud-pubsub": "^1.31",
+        "google/cloud-pubsub": "^2.0",
         "wikimedia/avro": "^1.9"
     }
 }
