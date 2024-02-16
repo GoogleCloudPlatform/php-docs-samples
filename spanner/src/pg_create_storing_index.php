@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,25 +24,29 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_create_storing_index]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Create a new storing index in a Spanner PostgreSQL database.
  * The PostgreSQL dialect uses INCLUDE keyword, as
  * opposed to the STORING keyword of Cloud Spanner.
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_create_storing_index(string $instanceId, string $databaseId): void
+function pg_create_storing_index(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $statement = 'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)';
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [$statement]
+    ]);
 
-    $operation = $database->updateDdl(
-        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)'
-    );
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

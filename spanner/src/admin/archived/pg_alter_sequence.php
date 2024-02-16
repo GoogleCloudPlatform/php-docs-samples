@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,31 +23,62 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_create_clients]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
+// [START spanner_postgresql_alter_sequence]
+use Google\Cloud\Spanner\Result;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Create an instance client and a database client
+ * Alters a sequence.
+ * Example:
+ * ```
+ * pg_alter_sequence($instanceId, $databaseId);
+ * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_connect_to_db(string $instanceId, string $databaseId): void
-{
-    // Instance Admin Client
-    $instanceAdminClient = new InstanceAdminClient();
-
-    // Database Admin Client
-    $databaseAdminClient = new DatabaseAdminClient();
-
+function pg_alter_sequence(
+    string $instanceId,
+    string $databaseId
+    ): void {
     $spanner = new SpannerClient();
-    // Spanner Data plane client
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
+    $transaction = $database->transaction();
+
+    $operation = $database->updateDdl(
+        'ALTER SEQUENCE Seq SKIP RANGE 1000 5000000'
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
+
+    printf(
+        'Altered Seq sequence to skip an inclusive range between 1000 and 5000000' .
+        PHP_EOL
+    );
+
+    $res = $transaction->execute(
+        'INSERT INTO Customers (CustomerName) VALUES ' .
+        "('Lea'), ('Catalina'), ('Smith') RETURNING CustomerId"
+    );
+    $rows = $res->rows(Result::RETURN_ASSOCIATIVE);
+
+    foreach ($rows as $row) {
+        printf('Inserted customer record with CustomerId: %d %s',
+            $row['customerid'],
+            PHP_EOL
+        );
+    }
+    $transaction->commit();
+
+    printf(sprintf(
+        'Number of customer records inserted is: %d %s',
+        $res->stats()['rowCountExact'],
+        PHP_EOL
+    ));
 }
-// [END spanner_postgresql_create_clients]
+// [END spanner_postgresql_alter_sequence]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

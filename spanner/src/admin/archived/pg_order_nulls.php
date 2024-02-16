@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_order_nulls]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -33,32 +31,22 @@ use Google\Cloud\Spanner\SpannerClient;
  * query, and how an application can change the default behavior by adding
  * `NULLS FIRST` or `NULLS LAST` to an `ORDER BY` clause.
  *
- * @param string $projectId Your Google Cloud Project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $tableName The table to create. Defaults to 'Singers'
  */
-function pg_order_nulls(
-    string $projectId,
-    string $instanceId,
-    string $databaseId,
-    string $tableName = 'Singers'
-): void {
-    $databaseAdminClient = new DatabaseAdminClient();
+function pg_order_nulls(string $instanceId, string $databaseId, string $tableName = 'Singers'): void
+{
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $statement = sprintf('CREATE TABLE %s (
+    $query = sprintf('CREATE TABLE %s (
         SingerId  bigint NOT NULL PRIMARY KEY,
         Name varchar(1024)
     )', $tableName);
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $request = new UpdateDatabaseDdlRequest([
-    'database' => $databaseName,
-    'statements' => [$statement]
-    ]);
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+
+    $operation = $database->updateDdl($query);
 
     print('Creating the table...' . PHP_EOL);
     $operation->pollUntilComplete();

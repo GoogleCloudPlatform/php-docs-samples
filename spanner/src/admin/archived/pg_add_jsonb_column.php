@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,32 +24,27 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_jsonb_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Add a JSONB column to a table present in a PG Spanner database.
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $tableName The table in which the column needs to be added.
  */
 function pg_add_jsonb_column(
-    string $projectId,
     string $instanceId,
     string $databaseId,
     string $tableName = 'Venues'
 ): void {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $statement = sprintf('ALTER TABLE %s ADD COLUMN VenueDetails JSONB', $tableName);
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [$statement]
-    ]);
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        sprintf('ALTER TABLE %s ADD COLUMN VenueDetails JSONB', $tableName)
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,40 +23,33 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_jsonb_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_postgresql_create_storing_index]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Add a JSONB column to a table present in a PG Spanner database.
+ * Create a new storing index in a Spanner PostgreSQL database.
+ * The PostgreSQL dialect uses INCLUDE keyword, as
+ * opposed to the STORING keyword of Cloud Spanner.
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $tableName The table in which the column needs to be added.
  */
-function pg_add_jsonb_column(
-    string $projectId,
-    string $instanceId,
-    string $databaseId,
-    string $tableName = 'Venues'
-): void {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $statement = sprintf('ALTER TABLE %s ADD COLUMN VenueDetails JSONB', $tableName);
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [$statement]
-    ]);
+function pg_create_storing_index(string $instanceId, string $databaseId): void
+{
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        'CREATE INDEX AlbumsByAlbumTitle ON Albums(AlbumTitle) INCLUDE (MarketingBudget)'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    print(sprintf('Added column VenueDetails on table %s.', $tableName) . PHP_EOL);
+    print('Added the AlbumsByAlbumTitle index.' . PHP_EOL);
 }
-// [END spanner_postgresql_jsonb_add_column]
+// [END spanner_postgresql_create_storing_index]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,37 +24,29 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_information_schema]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Query the information schema metadata in a Spanner PostgreSQL database
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_information_schema(string $projectId, string $instanceId, string $databaseId): void
+function pg_information_schema(string $instanceId, string $databaseId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
     $spanner = new SpannerClient();
-
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $statement = 'CREATE TABLE Venues (
-        VenueId  bigint NOT NULL PRIMARY KEY,
-        Name     varchar(1024) NOT NULL,
-        Revenues numeric,
-        Picture  bytea
-    )';
 
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [$statement]
-    ]);
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdl(
+        '
+        CREATE TABLE Venues (
+            VenueId  bigint NOT NULL PRIMARY KEY,
+            Name     varchar(1024) NOT NULL,
+            Revenues numeric,
+            Picture  bytea
+        )'
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

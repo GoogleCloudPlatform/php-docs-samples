@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,40 +23,42 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgresql_jsonb_add_column]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
+// [START spanner_postgresql_drop_sequence]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Add a JSONB column to a table present in a PG Spanner database.
+ * Drops a sequence.
+ * Example:
+ * ```
+ * pg_drop_sequence($instanceId, $databaseId);
+ * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param string $tableName The table in which the column needs to be added.
  */
-function pg_add_jsonb_column(
-    string $projectId,
+function pg_drop_sequence(
     string $instanceId,
-    string $databaseId,
-    string $tableName = 'Venues'
-): void {
-    $databaseAdminClient = new DatabaseAdminClient();
-    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
-    $statement = sprintf('ALTER TABLE %s ADD COLUMN VenueDetails JSONB', $tableName);
-    $request = new UpdateDatabaseDdlRequest([
-        'database' => $databaseName,
-        'statements' => [$statement]
-    ]);
+    string $databaseId
+    ): void {
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
 
-    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation = $database->updateDdlBatch([
+        'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',
+        'DROP SEQUENCE Seq'
+    ]);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    print(sprintf('Added column VenueDetails on table %s.', $tableName) . PHP_EOL);
+    printf(
+        'Altered Customers table to drop DEFAULT from CustomerId ' .
+        'column and dropped the Seq sequence' .
+        PHP_EOL
+    );
 }
-// [END spanner_postgresql_jsonb_add_column]
+// [END spanner_postgresql_drop_sequence]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
