@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an invalid query with inequality filters on multiple properties.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function inequality_invalid(DatastoreClient $datastore)
 {

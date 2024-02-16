@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Insert an entity only if there is no entity with the same key.
  *
  * @param DatastoreClient $datastore
- * @param EntityInterface $task
+ *
  */
 function get_or_create(DatastoreClient $datastore, EntityInterface $task)
 {

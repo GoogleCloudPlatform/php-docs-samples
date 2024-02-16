@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with an equality filter on 'description'.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function unindexed_property_query(DatastoreClient $datastore)
 {

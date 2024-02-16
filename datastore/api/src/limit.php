@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with a limit.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function limit(DatastoreClient $datastore)
 {

@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with equality filters.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function array_value_equality(DatastoreClient $datastore)
 {

@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a projection query.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function projection_query(DatastoreClient $datastore)
 {

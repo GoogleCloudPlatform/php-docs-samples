@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with inequality range filters on the same property.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function inequality_range(DatastoreClient $datastore)
 {

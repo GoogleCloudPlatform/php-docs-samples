@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with an inequality filter and multiple sort orders.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function inequality_sort(DatastoreClient $datastore)
 {

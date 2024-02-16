@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create and run a property query with a kind.
  *
  * @param DatastoreClient $datastore
- * @return array<string,string>
+ *
  */
 function property_by_kind_run_query(DatastoreClient $datastore)
 {

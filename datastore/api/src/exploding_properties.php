@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an entity with two array properties.
  *
  * @param DatastoreClient $datastore
- * @return EntityInterface
+ *
  */
 function exploding_properties(DatastoreClient $datastore)
 {

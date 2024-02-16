@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query sorting with multiple properties.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function multi_sort(DatastoreClient $datastore)
 {

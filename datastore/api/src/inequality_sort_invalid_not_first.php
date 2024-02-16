@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create an invalid query with an inequality filter and a wrong sort order.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function inequality_sort_invalid_not_first(DatastoreClient $datastore)
 {

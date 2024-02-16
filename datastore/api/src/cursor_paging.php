@@ -32,7 +32,7 @@ use Google\Cloud\Datastore\Query\Query;
  * @param DatastoreClient $datastore
  * @param int $pageSize
  * @param string $pageCursor
- * @return array
+ *
  */
 function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCursor = '')
 {

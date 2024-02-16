@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with distinctOn.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function distinct_on(DatastoreClient $datastore)
 {

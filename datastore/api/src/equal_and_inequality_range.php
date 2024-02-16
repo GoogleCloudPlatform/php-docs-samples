@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  * single property.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function equal_and_inequality_range(DatastoreClient $datastore)
 {

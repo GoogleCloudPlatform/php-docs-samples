@@ -31,7 +31,7 @@ use Google\Cloud\Datastore\Query\Query;
  * @param DatastoreClient $datastore
  * @param string $start a starting namespace (inclusive)
  * @param string $end an ending namespace (exclusive)
- * @return array<string> namespaces returned from the query.
+ *
  */
 function namespace_run_query(DatastoreClient $datastore, $start, $end)
 {

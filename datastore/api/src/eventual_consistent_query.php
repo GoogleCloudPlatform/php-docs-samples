@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create and run a query with readConsistency option.
  *
  * @param DatastoreClient $datastore
- * @return EntityIterator<EntityInterface>
+ *
  */
 function eventual_consistent_query(DatastoreClient $datastore)
 {

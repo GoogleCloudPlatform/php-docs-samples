@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a keys-only query.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function keys_only_query(DatastoreClient $datastore)
 {

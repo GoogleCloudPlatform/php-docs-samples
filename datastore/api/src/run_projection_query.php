@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param Query $query
- * @return array
+ *
  */
 function run_projection_query(DatastoreClient $datastore, Query $query = null)
 {

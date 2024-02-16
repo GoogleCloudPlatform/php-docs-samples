@@ -30,7 +30,7 @@ use Google\Cloud\Datastore\Query\Query;
  *
  * @param DatastoreClient $datastore
  * @param Key $lastSeenKey
- * @return Query
+ *
  */
 function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
 {

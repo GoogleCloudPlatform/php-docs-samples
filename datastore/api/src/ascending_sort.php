@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with ascending sort.
  *
  * @param DatastoreClient $datastore
- * @return Query
+ *
  */
 function ascending_sort(DatastoreClient $datastore)
 {

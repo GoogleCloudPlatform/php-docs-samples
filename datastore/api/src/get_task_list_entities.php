@@ -29,7 +29,7 @@ use Google\Cloud\Datastore\Query\Query;
  * Run a query with an ancestor inside a transaction.
  *
  * @param DatastoreClient $datastore
- * @return array<EntityInterface>
+ *
  */
 function get_task_list_entities(DatastoreClient $datastore)
 {
