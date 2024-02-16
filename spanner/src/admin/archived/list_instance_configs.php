@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_list_instance_configs]
-
-use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
-use Google\Cloud\Spanner\Admin\Instance\V1\ListInstanceConfigsRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Lists the available instance configurations.
@@ -34,21 +32,15 @@ use Google\Cloud\Spanner\Admin\Instance\V1\ListInstanceConfigsRequest;
  * ```
  * list_instance_configs();
  * ```
- *
- * @param string $projectId The Google Cloud project ID.
  */
-function list_instance_configs(string $projectId = null): void
+function list_instance_configs(): void
 {
-    $instanceAdminClient = new InstanceAdminClient();
-    $projectName = InstanceAdminClient::projectName($projectId);
-    $request = new ListInstanceConfigsRequest();
-    $request->setParent($projectName);
-    $resp = $instanceAdminClient->listInstanceConfigs($request);
-    foreach ($resp as $element) {
+    $spanner = new SpannerClient();
+    foreach ($spanner->instanceConfigurations() as $config) {
         printf(
             'Available leader options for instance config %s: %s' . PHP_EOL,
-            $element->getDisplayName(),
-            implode(',', iterator_to_array($element->getLeaderOptions()))
+            $config->info()['displayName'],
+            implode(',', $config->info()['leaderOptions'])
         );
     }
 }

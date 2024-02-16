@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,35 +23,42 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_instance_config]
-use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
-use Google\Cloud\Spanner\Admin\Instance\V1\DeleteInstanceConfigRequest;
+// [START spanner_create_instance]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Deletes a customer managed instance configuration.
+ * Creates an instance.
  * Example:
  * ```
- * delete_instance_config($instanceConfigId);
+ * create_instance($instanceId);
  * ```
  *
- * @param string $projectId The Google Cloud Project ID.
- * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
+ * @param string $instanceId The Spanner instance ID.
  */
-function delete_instance_config(string $projectId, string $instanceConfigId)
+function create_instance(string $instanceId): void
 {
-    $instanceAdminClient = new InstanceAdminClient();
-    $instanceConfigName = $instanceAdminClient->instanceConfigName(
-        $projectId,
-        $instanceConfigId
+    $spanner = new SpannerClient();
+    $instanceConfig = $spanner->instanceConfiguration(
+        'regional-us-central1'
+    );
+    $operation = $spanner->createInstance(
+        $instanceConfig,
+        $instanceId,
+        [
+            'displayName' => 'This is a display name.',
+            'nodeCount' => 1,
+            'labels' => [
+                'cloud_spanner_samples' => true,
+            ]
+        ]
     );
 
-    $request = new DeleteInstanceConfigRequest();
-    $request->setName($instanceConfigName);
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
 
-    $instanceAdminClient->deleteInstanceConfig($request);
-    printf('Deleted instance config: %s' . PHP_EOL, $instanceConfigId);
+    printf('Created instance %s' . PHP_EOL, $instanceId);
 }
-// [END spanner_delete_instance_config]
+// [END spanner_create_instance]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

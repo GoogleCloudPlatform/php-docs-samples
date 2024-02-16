@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_update_instance_config]
-use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
-use Google\Cloud\Spanner\Admin\Instance\V1\InstanceConfig;
-use Google\Cloud\Spanner\Admin\Instance\V1\UpdateInstanceConfigRequest;
-use Google\Protobuf\FieldMask;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Updates a customer managed instance configuration.
@@ -36,29 +33,22 @@ use Google\Protobuf\FieldMask;
  * update_instance_config($instanceConfigId);
  * ```
  *
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
  */
-function update_instance_config(string $projectId, string $instanceConfigId): void
+function update_instance_config($instanceConfigId)
 {
-    $instanceAdminClient = new InstanceAdminClient();
+    $spanner = new SpannerClient();
+    $instanceConfiguration = $spanner->instanceConfiguration($instanceConfigId);
 
-    $instanceConfigPath = $instanceAdminClient->instanceConfigName($projectId, $instanceConfigId);
-    $displayName = 'New display name';
-
-    $instanceConfig = new InstanceConfig();
-    $instanceConfig->setName($instanceConfigPath);
-    $instanceConfig->setDisplayName($displayName);
-    $instanceConfig->setLabels(['cloud_spanner_samples' => true, 'updated' => true]);
-
-    $fieldMask = new FieldMask();
-    $fieldMask->setPaths(['display_name', 'labels']);
-
-    $updateInstanceConfigRequest = (new UpdateInstanceConfigRequest())
-        ->setInstanceConfig($instanceConfig)
-        ->setUpdateMask($fieldMask);
-
-    $operation = $instanceAdminClient->updateInstanceConfig($updateInstanceConfigRequest);
+    $operation = $instanceConfiguration->update(
+        [
+            'displayName' => 'New display name',
+            'labels' => [
+                'cloud_spanner_samples' => true,
+                'updated' => true,
+            ]
+        ]
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -142,6 +142,7 @@ class spannerTest extends TestCase
     public function testCreateInstance()
     {
         $output = $this->runAdminFunctionSnippet('create_instance', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$instanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
@@ -150,7 +151,8 @@ class spannerTest extends TestCase
 
     public function testCreateInstanceWithProcessingUnits()
     {
-        $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
+        $output = $this->runAdminFunctionSnippet('create_instance_with_processing_units', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$lowCostInstanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
@@ -159,8 +161,8 @@ class spannerTest extends TestCase
 
     public function testCreateInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('create_instance_config', [
-            self::$customInstanceConfigId, self::$baseConfigId
+        $output = $this->runAdminFunctionSnippet('create_instance_config', [
+            self::$projectId, self::$customInstanceConfigId, self::$baseConfigId
         ]);
 
         $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
@@ -171,7 +173,8 @@ class spannerTest extends TestCase
      */
     public function testUpdateInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('update_instance_config', [
+        $output = $this->runAdminFunctionSnippet('update_instance_config', [
+            self::$projectId,
             self::$customInstanceConfigId
         ]);
 
@@ -179,11 +182,12 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testUpdateInstanceConfig
+     * @depends testListInstanceConfigOperations
      */
     public function testDeleteInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('delete_instance_config', [
+        $output = $this->runAdminFunctionSnippet('delete_instance_config', [
+            self::$projectId,
             self::$customInstanceConfigId
         ]);
         $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
@@ -194,13 +198,14 @@ class spannerTest extends TestCase
      */
     public function testListInstanceConfigOperations()
     {
-        $output = $this->runFunctionSnippet('list_instance_config_operations', [
-            self::$customInstanceConfigId
+        $output = $this->runAdminFunctionSnippet('list_instance_config_operations', [
+            self::$projectId
         ]);
 
         $this->assertStringContainsString(
             sprintf(
-                'Instance config operation for %s of type %s has status done.',
+                'Instance config operation for projects/%s/instanceConfigs/%s of type %s has status done.',
+                self::$projectId,
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
             ),
@@ -208,7 +213,8 @@ class spannerTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Instance config operation for %s of type %s has status done.',
+                'Instance config operation for projects/%s/instanceConfigs/%s of type %s has status done.',
+                self::$projectId,
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
             ),
@@ -1092,7 +1098,8 @@ class spannerTest extends TestCase
 
     public function testGetInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('get_instance_config', [
+        $output = $this->runAdminFunctionSnippet('get_instance_config', [
+            'project_id' => self::$projectId,
             'instance_config' => self::$instanceConfig
         ]);
         $this->assertStringContainsString(self::$instanceConfig, $output);
@@ -1100,7 +1107,9 @@ class spannerTest extends TestCase
 
     public function testListInstanceConfigs()
     {
-        $output = $this->traitRunFunctionSnippet('list_instance_configs');
+        $output = $this->runAdminFunctionSnippet('list_instance_configs', [
+            'project_id' => self::$projectId
+        ]);
         $this->assertStringContainsString(
             'Available leader options for instance config',
             $output
