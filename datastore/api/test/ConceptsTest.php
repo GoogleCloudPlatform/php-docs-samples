@@ -682,14 +682,9 @@ class ConceptsTest extends TestCase
         }
         self::$datastore->upsertBatch($entities);
         $this->runEventuallyConsistentTest(function () {
-            // $res = cursor_paging(self::$datastore, 3);
             $output = $this->runFunctionSnippet('cursor_paging', [self::$datastore, 3]);
-            print_r($output);
             $this->assertStringContainsString('Found 3 entities', $output);
-            // $this->assertEquals(3, count($res['entities']));
-            // $res = cursor_paging(self::$datastore, 3, $res['nextPageCursor']);
-            // $this->assertEquals(2, count($res['entities']));
-            // $this->assertStringContainsString('Found 2 entities', $output);
+            $this->assertStringContainsString('Found 2 entities with next page cursor', $output);
         });
     }
 

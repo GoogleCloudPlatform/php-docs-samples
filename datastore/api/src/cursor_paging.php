@@ -48,13 +48,23 @@ function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCu
         $nextPageCursor = $entity->cursor();
         $entities[] = $entity;
     }
-    print_r(array(
-        'nextPageCursor' => $nextPageCursor,
-        'entities' => $entities
-    ));
 
     printf("Found %s entities", count($entities));
-    printf("Next page cursor: %s", $nextPageCursor);
+
+    $entities = [];
+    if(!empty($nextPageCursor)) {
+        $query = $datastore->query()
+          ->kind('Task')
+          ->limit($pageSize)
+          ->start($nextPageCursor);
+        $result = $datastore->runQuery($query);
+
+        foreach ($result as $entity) {
+            $entities[] = $entity;
+        }
+
+        printf("Found %s entities with next page cursor", count($entities));
+    }
 }
 
 // The following 2 lines are only needed to run the samples
