@@ -17,13 +17,8 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\EntityInterface;
-use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
-use Google\Cloud\Datastore\Query\GqlQuery;
-use Google\Cloud\Datastore\Query\Query;
 
 /**
  * Lookup multiple entities.

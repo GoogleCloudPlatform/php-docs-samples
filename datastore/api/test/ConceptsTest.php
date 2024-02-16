@@ -17,10 +17,8 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-use Iterator;
 use Google\Cloud\Datastore\DatastoreClient;
 use Google\Cloud\Datastore\Entity;
-use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
@@ -176,7 +174,7 @@ class ConceptsTest extends TestCase
 
         $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key1]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString('[name] => '.$path1, $output);
+        $this->assertStringContainsString('[name] => ' . $path1, $output);
         $this->assertStringContainsString('[category] => Personal', $output);
         $this->assertStringContainsString('[done]', $output);
         $this->assertStringContainsString('[priority] => 4', $output);
@@ -184,7 +182,7 @@ class ConceptsTest extends TestCase
 
         $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key2]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString('[name] => '.$path2, $output);
+        $this->assertStringContainsString('[name] => ' . $path2, $output);
         $this->assertStringContainsString('[category] => Work', $output);
         $this->assertStringContainsString('[done]', $output);
         $this->assertStringContainsString('[priority] => 0', $output);
@@ -211,21 +209,21 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key2;
 
         $this->runFunctionSnippet('batch_upsert', [self::$datastore, [$task1, $task2]]);
-        $output = $this->runFunctionSnippet('batch_lookup',[self::$datastore, [$key1, $key2]]);
+        $output = $this->runFunctionSnippet('batch_lookup', [self::$datastore, [$key1, $key2]]);
 
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString('[name] => '.$path1, $output);
-        $this->assertStringContainsString('[category] => '.$task1['category'], $output);
+        $this->assertStringContainsString('[name] => ' . $path1, $output);
+        $this->assertStringContainsString('[category] => ' . $task1['category'], $output);
         $this->assertStringContainsString('[done] =>', $output);
         $this->assertStringContainsString('[priority] => 4', $output);
-        $this->assertStringContainsString('[description] => '.$task1['description'], $output);
+        $this->assertStringContainsString('[description] => ' . $task1['description'], $output);
 
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString('[name] => '.$path2, $output);
-        $this->assertStringContainsString('[category] => '.$task2['category'], $output);
+        $this->assertStringContainsString('[name] => ' . $path2, $output);
+        $this->assertStringContainsString('[category] => ' . $task2['category'], $output);
         $this->assertStringContainsString('[done]', $output);
         $this->assertStringContainsString('[priority] => 0', $output);
-        $this->assertStringContainsString('[description] => '.$task2['description'], $output);
+        $this->assertStringContainsString('[description] => ' . $task2['description'], $output);
     }
 
     public function testBatchDelete()
@@ -259,8 +257,8 @@ class ConceptsTest extends TestCase
     public function testNamedKey()
     {
         $output = $this->runFunctionSnippet('named_key', [self::$datastore]);
-        $this->assertStringContainsString("Task", $output);
-        $this->assertStringContainsString("sampleTask", $output);
+        $this->assertStringContainsString('Task', $output);
+        $this->assertStringContainsString('sampleTask', $output);
     }
 
     public function testIncompleteKey()
@@ -275,20 +273,20 @@ class ConceptsTest extends TestCase
     {
         $output = $this->runFunctionSnippet('key_with_parent', [self::$datastore]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString("[name] => sampleTask", $output);
+        $this->assertStringContainsString('[name] => sampleTask', $output);
         $this->assertStringContainsString('[kind] => TaskList', $output);
-        $this->assertStringContainsString("[name] => default", $output);
+        $this->assertStringContainsString('[name] => default', $output);
     }
 
     public function testKeyWithMultilevelParent()
     {
         $output = $this->runFunctionSnippet('key_with_multilevel_parent', [self::$datastore]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString("[name] => sampleTask", $output);
+        $this->assertStringContainsString('[name] => sampleTask', $output);
         $this->assertStringContainsString('[kind] => TaskList', $output);
-        $this->assertStringContainsString("[name] => default", $output);
+        $this->assertStringContainsString('[name] => default', $output);
         $this->assertStringContainsString('[kind] => User', $output);
-        $this->assertStringContainsString("[name] => alice", $output);
+        $this->assertStringContainsString('[name] => alice', $output);
     }
 
     public function testProperties()
@@ -309,13 +307,13 @@ class ConceptsTest extends TestCase
         $key = self::$datastore->key('Task', generateRandomString());
         $output = $this->runFunctionSnippet('array_value', [self::$datastore, $key]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString("[name] => ", $output);
-        $this->assertStringContainsString("[tags] => Array", $output);
-        $this->assertStringContainsString("[collaborators] => Array", $output);
-        $this->assertStringContainsString("[0] => fun", $output);
-        $this->assertStringContainsString("[1] => programming", $output);
-        $this->assertStringContainsString("[0] => alice", $output);
-        $this->assertStringContainsString("[1] => bob", $output);
+        $this->assertStringContainsString('[name] => ', $output);
+        $this->assertStringContainsString('[tags] => Array', $output);
+        $this->assertStringContainsString('[collaborators] => Array', $output);
+        $this->assertStringContainsString('[0] => fun', $output);
+        $this->assertStringContainsString('[1] => programming', $output);
+        $this->assertStringContainsString('[0] => alice', $output);
+        $this->assertStringContainsString('[1] => bob', $output);
     }
 
     public function testBasicQuery()
@@ -336,8 +334,8 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
                 $this->assertStringContainsString('Found 2 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
-                $this->assertStringContainsString($key2->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
             });
     }
 
@@ -359,8 +357,8 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
                 $this->assertStringContainsString('Found 2 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
-                $this->assertStringContainsString($key2->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
             });
     }
 
@@ -382,8 +380,8 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
                 $this->assertStringContainsString('Found 2 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
-                $this->assertStringContainsString($key2->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
             });
     }
 
@@ -403,7 +401,7 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $output) {
                 $this->assertStringContainsString('Found 1 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
             });
     }
 
@@ -425,7 +423,7 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $output) {
                 $this->assertStringContainsString('Found 1 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
             });
     }
 
@@ -442,9 +440,9 @@ class ConceptsTest extends TestCase
 
         $this->runEventuallyConsistentTest(
           function () use ($key1, $output) {
-            $this->assertStringContainsString('Found 1 records', $output);
-            $this->assertStringContainsString($key1->path()[0]["name"], $output);
-        });
+              $this->assertStringContainsString('Found 1 records', $output);
+              $this->assertStringContainsString($key1->path()[0]['name'], $output);
+          });
     }
 
     public function testAscendingSort()
@@ -463,8 +461,8 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
                 $this->assertStringContainsString('Found 2 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
-                $this->assertStringContainsString($key2->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
             });
     }
 
@@ -483,9 +481,9 @@ class ConceptsTest extends TestCase
 
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
-              $this->assertStringContainsString('Found 2 records', $output);
-              $this->assertStringContainsString($key1->path()[0]["name"], $output);
-              $this->assertStringContainsString($key2->path()[0]["name"], $output);
+                $this->assertStringContainsString('Found 2 records', $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
             });
     }
 
@@ -511,9 +509,9 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $key3, $entity1, $entity2, $entity3, $output) {
                 $this->assertStringContainsString('Found 3 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
-                $this->assertStringContainsString($key2->path()[0]["name"], $output);
-                $this->assertStringContainsString($key3->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+                $this->assertStringContainsString($key2->path()[0]['name'], $output);
+                $this->assertStringContainsString($key3->path()[0]['name'], $output);
                 $this->assertStringContainsString($entity1['priority'], $output);
                 $this->assertStringContainsString($entity2['priority'], $output);
                 $this->assertStringContainsString($entity3['priority'], $output);
@@ -553,7 +551,7 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(
             function () use ($key1, $key2, $output) {
                 $this->assertStringContainsString('Found 1 records', $output);
-                $this->assertStringContainsString($key1->path()[0]["name"], $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
             });
     }
 
@@ -568,7 +566,7 @@ class ConceptsTest extends TestCase
             $output = $this->runFunctionSnippet('keys_only_query', [self::$datastore]);
             $this->assertStringContainsString('Query\Query Object', $output);
             $this->assertStringContainsString('Found keys: 1', $output);
-            $this->assertStringContainsString($key->path()[0]["name"], $output);
+            $this->assertStringContainsString($key->path()[0]['name'], $output);
         });
     }
 
@@ -625,7 +623,7 @@ class ConceptsTest extends TestCase
             $this->assertStringContainsString('Found 1 records', $output);
             $this->assertStringContainsString('[priority] => 4', $output);
             $this->assertStringContainsString('[category] => work', $output);
-            $this->assertStringContainsString($key1->path()[0]["name"], $output);
+            $this->assertStringContainsString($key1->path()[0]['name'], $output);
         });
     }
 
@@ -648,10 +646,10 @@ class ConceptsTest extends TestCase
             $this->assertStringContainsString('Found 1 records', $output);
             $this->assertStringContainsString('[kind] => Array', $output);
             $this->assertStringContainsString('[name] => Task', $output);
-            $this->assertStringContainsString("[tag] => Array", $output);
-            $this->assertStringContainsString("[0] => fun", $output);
-            $this->assertStringContainsString("[1] => programming", $output);
-            $this->assertStringContainsString($key->path()[0]["name"], $output);
+            $this->assertStringContainsString('[tag] => Array', $output);
+            $this->assertStringContainsString('[0] => fun', $output);
+            $this->assertStringContainsString('[1] => programming', $output);
+            $this->assertStringContainsString($key->path()[0]['name'], $output);
         });
     }
 
@@ -750,15 +748,15 @@ class ConceptsTest extends TestCase
     {
         $output = $this->runFunctionSnippet('exploding_properties', [self::$datastore]);
         $this->assertStringContainsString('[kind] => Task', $output);
-        $this->assertStringContainsString("[tags] => Array", $output);
-        $this->assertStringContainsString("[collaborators] => Array", $output);
-        $this->assertStringContainsString("[created] => DateTime Object", $output);
-        $this->assertStringContainsString("[0] => fun", $output);
-        $this->assertStringContainsString("[1] => programming", $output);
-        $this->assertStringContainsString("[2] => learn", $output);
-        $this->assertStringContainsString("[0] => alice", $output);
-        $this->assertStringContainsString("[1] => bob", $output);
-        $this->assertStringContainsString("[2] => charlie", $output);
+        $this->assertStringContainsString('[tags] => Array', $output);
+        $this->assertStringContainsString('[collaborators] => Array', $output);
+        $this->assertStringContainsString('[created] => DateTime Object', $output);
+        $this->assertStringContainsString('[0] => fun', $output);
+        $this->assertStringContainsString('[1] => programming', $output);
+        $this->assertStringContainsString('[2] => learn', $output);
+        $this->assertStringContainsString('[0] => alice', $output);
+        $this->assertStringContainsString('[1] => bob', $output);
+        $this->assertStringContainsString('[2] => charlie', $output);
     }
 
     public function testTransferFunds()
@@ -808,7 +806,7 @@ class ConceptsTest extends TestCase
         self::$datastore->upsert($task);
         $output = $this->runFunctionSnippet('get_task_list_entities', [self::$datastore]);
         $this->assertStringContainsString('Found 1 tasks', $output);
-        $this->assertStringContainsString($taskKey->path()[0]["name"], $output);
+        $this->assertStringContainsString($taskKey->path()[0]['name'], $output);
         $this->assertStringContainsString('[description] => finish datastore sample', $output);
     }
 
@@ -826,7 +824,7 @@ class ConceptsTest extends TestCase
         $this->runEventuallyConsistentTest(function () use ($taskKey) {
             $output = $this->runFunctionSnippet('get_task_list_entities', [self::$datastore]);
             $this->assertStringContainsString('Found 1 tasks', $output);
-            $this->assertStringContainsString($taskKey->path()[0]["name"], $output);
+            $this->assertStringContainsString($taskKey->path()[0]['name'], $output);
             $this->assertStringContainsString('[description] => learn eventual consistency', $output);
         });
     }

@@ -17,12 +17,7 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\EntityInterface;
-use Google\Cloud\Datastore\EntityIterator;
-use Google\Cloud\Datastore\Key;
-use Google\Cloud\Datastore\Query\GqlQuery;
 use Google\Cloud\Datastore\Query\Query;
 
 /**
@@ -50,7 +45,7 @@ function composite_filter(DatastoreClient $datastore)
     }
 
     print_r($entities);
-    printf("Found %s records.", $num);
+    printf('Found %s records.', $num);
 }
 
 // The following 2 lines are only needed to run the samples

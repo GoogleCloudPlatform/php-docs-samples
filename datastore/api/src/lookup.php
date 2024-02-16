@@ -17,13 +17,8 @@
 
 namespace Google\Cloud\Samples\Datastore;
 
-use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\EntityInterface;
-use Google\Cloud\Datastore\EntityIterator;
 use Google\Cloud\Datastore\Key;
-use Google\Cloud\Datastore\Query\GqlQuery;
-use Google\Cloud\Datastore\Query\Query;
 
 /**
  * Look up a Datastore entity with the given key.
@@ -34,8 +29,9 @@ use Google\Cloud\Datastore\Query\Query;
  */
 function lookup(DatastoreClient $datastore, Key $key = null)
 {
-    if(!isset($key))
+    if (!isset($key)) {
         $key = $datastore->key('Task', 'sampleTask');
+    }
     // [START datastore_lookup]
     // $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
