@@ -95,6 +95,9 @@ class SchemaTest extends TestCase
     {
         $schemaId = uniqid('samples-test-' . $type . '-');
         $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
+        $expectedMessage = $type === 'avro'
+            ? 'Committed a schema using an Avro schema'
+            : 'Committed a schema using a Protocol Buffer schema';
 
         $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
             self::$projectId,
@@ -110,7 +113,7 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Committed a schema using an %s schema: %s@', ucfirst($type), $schemaName
+                '%s: %s@', $expectedMessage, $schemaName
             ),
             $listOutput
         );
@@ -125,7 +128,7 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Got a schema revision: %s@%s',
+                'Got the schema revision: %s@%s',
                 $schemaName,
                 $schemaRevisionId
             ),

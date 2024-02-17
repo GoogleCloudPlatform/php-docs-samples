@@ -24,10 +24,8 @@ namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_commit_proto_schema]
 
-use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\Schema;
-use Google\Cloud\PubSub\V1\Schema\Type;
-use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
+use Google\Cloud\Core\Exception\NotFoundException;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Commit a new Proto schema revision to an existing schema.
@@ -39,18 +37,18 @@ use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
  */
 function commit_proto_schema(string $projectId, string $schemaId, string $protoFile): void
 {
-    $client = new SchemaServiceClient();
-    $schemaName = $client->schemaName($projectId, $schemaId);
+    $client = new PubSubClient([
+        'projectId' => $projectId
+    ]);
+
     try {
-        $schema = new Schema();
+        $schema = $client->schema($schemaId);
         $definition = file_get_contents($protoFile);
-        $schema->setName($schemaName)
-            ->setType(Type::PROTOCOL_BUFFER)
-            ->setDefinition($definition);
-        $response = $client->commitSchema($schemaName, $schema);
-        printf("Committed a schema using an Proto schema: %s\n", $response->getName());
-    } catch (ApiException $e) {
-        printf("%s does not exist.\n", $schemaName);
+        $info = $schema->commit($definition, 'PROTOCOL_BUFFER');
+
+        printf("Committed a schema using a Protocol Buffer schema: %s\n", $info['name']);
+    } catch (NotFoundException $e) {
+        printf("%s does not exist.\n", $schemaId);
     }
 }
 # [END pubsub_commit_proto_schema]

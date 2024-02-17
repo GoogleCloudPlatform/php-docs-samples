@@ -22,8 +22,8 @@
  */
 namespace Google\Cloud\Samples\PubSub;
 
-use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
+use Google\Cloud\Core\Exception\NotFoundException;
+use Google\Cloud\PubSub\PubSubClient;
 
 # [START pubsub_get_schema_revision]
 
@@ -36,16 +36,18 @@ use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
  */
 function get_schema_revision(string $projectId, string $schemaId, string $schemaRevisionId)
 {
-    $schemaServiceClient = new SchemaServiceClient();
-    $schemaName = $schemaServiceClient->schemaName(
-        $projectId, $schemaId . '@' . $schemaRevisionId
-    );
+    $client = new PubSubClient([
+        'projectId' => $projectId
+    ]);
+
+    $schemaPath = $schemaId . '@' . $schemaRevisionId;
 
     try {
-        $response = $schemaServiceClient->getSchema($schemaName);
-        printf('Got a schema revision: %s' . PHP_EOL, $response->getName());
-    } catch (ApiException $ex) {
-        printf('%s not found' . PHP_EOL, $schemaName);
+        $schema = $client->schema($schemaPath);
+        $info = $schema->info();
+        printf('Got the schema revision: %s@%s' . PHP_EOL, $info['name'], $info['revisionId']);
+    } catch (NotFoundException $ex) {
+        printf('%s not found' . PHP_EOL, $schemaId);
     }
 }
 # [END pubsub_get_schema_revision]

@@ -24,10 +24,8 @@ namespace Google\Cloud\Samples\PubSub;
 
 # [START pubsub_commit_avro_schema]
 
-use Google\ApiCore\ApiException;
-use Google\Cloud\PubSub\V1\Schema;
-use Google\Cloud\PubSub\V1\Schema\Type;
-use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
+use Google\Cloud\Core\Exception\NotFoundException;
+use Google\Cloud\PubSub\PubSubClient;
 
 /**
  * Commit a new AVRO schema revision to an existing schema.
@@ -38,18 +36,18 @@ use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
  */
 function commit_avro_schema(string $projectId, string $schemaId, string $avscFile): void
 {
-    $client = new SchemaServiceClient();
-    $schemaName = $client->schemaName($projectId, $schemaId);
+    $client = new PubSubClient([
+        'projectId' => $projectId
+    ]);
+
     try {
-        $schema = new Schema();
+        $schema = $client->schema($schemaId);
         $definition = file_get_contents($avscFile);
-        $schema->setName($schemaName)
-            ->setType(Type::AVRO)
-            ->setDefinition($definition);
-        $response = $client->commitSchema($schemaName, $schema);
-        printf("Committed a schema using an Avro schema: %s\n", $response->getName());
-    } catch (ApiException $e) {
-        printf("%s does not exist.\n", $schemaName);
+        $info = $schema->commit($definition, 'AVRO');
+
+        printf("Committed a schema using an Avro schema: %s\n", $info['name']);
+    } catch (NotFoundException $e) {
+        printf("%s does not exist.\n", $schemaId);
     }
 }
 # [END pubsub_commit_avro_schema]
