@@ -26,6 +26,7 @@ namespace Google\Cloud\Samples\Spanner;
 // [START spanner_list_database_operations]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\ListDatabaseOperationsRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\OptimizeRestoredDatabaseMetadata;
 
 /**
  * List all optimize restored database operations in an instance.
@@ -52,12 +53,11 @@ function list_database_operations(string $projectId, string $instanceId): void
     );
 
     foreach ($operations->iterateAllElements() as $operation) {
-        if (!$operation->done()) {
-            $meta = $operation->info()['metadata'];
-            $dbName = basename($meta['name']);
-            $progress = $meta['progress']['progressPercent'];
-            printf('Database %s restored from backup is %d%% optimized.' . PHP_EOL, $dbName, $progress);
-        }
+        $obj = new OptimizeRestoredDatabaseMetadata();
+        $meta = $operation->getMetadata()->unpack($obj);
+        $progress = $meta->getProgress()->getProgressPercent();
+        $dbName = basename($meta->getName());
+        printf('Database %s restored from backup is %d%% optimized.' . PHP_EOL, $dbName, $progress);
     }
 }
 // [END spanner_list_database_operations]

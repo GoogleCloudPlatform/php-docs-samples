@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,29 +24,24 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Delete a backup.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * delete_backup($instanceId, $backupId);
  * ```
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function delete_backup(string $instanceId, string $backupId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
-
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
-
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $backup = $instance->backup($backupId);
+    $backupName = $backup->name();
+    $backup->delete();
     print("Backup $backupName deleted" . PHP_EOL);
 }
 // [END spanner_delete_backup]

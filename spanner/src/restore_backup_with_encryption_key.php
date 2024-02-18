@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,48 +24,63 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_restore_backup_with_encryption_key]
+use Google\Cloud\Spanner\Admin\Database\V1\Backup;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\EncryptionConfig;
 use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseEncryptionConfig;
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseMetadata;
+use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseRequest;
+use Google\Cloud\Spanner\Database;
+use Google\Protobuf\FieldMask;
+use Google\Protobuf\Timestamp;
 
 /**
  * Restore a database from a backup.
  * Example:
  * ```
- * restore_backup_with_encryption_key($instanceId, $databaseId, $backupId, $kmsKeyName);
+ * restore_backup_with_encryption_key($projectId, $instanceId, $databaseId, $backupId, $kmsKeyName);
  * ```
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function restore_backup_with_encryption_key(string $instanceId, string $databaseId, string $backupId, string $kmsKeyName): void
+function restore_backup_with_encryption_key(string $projectId, string $instanceId, string $databaseId, string $backupId, string $kmsKeyName): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-    $backup = $instance->backup($backupId);
-
-    $operation = $database->restore($backup->name(), [
-        'encryptionConfig' => [
-            'kmsKeyName' => $kmsKeyName,
-            'encryptionType' => RestoreDatabaseEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
-        ]
+    $databaseAdminClient = new DatabaseAdminClient();
+    $instanceFullName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $backupFullName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
+    $request = new RestoreDatabaseRequest([
+        'parent' => $instanceFullName,
+        'database_id' => $databaseId,
+        'backup' => $backupFullName,
+        'encryption_config' => new RestoreDatabaseEncryptionConfig([
+            'kms_key_name' => $kmsKeyName,
+            'encryption_type' => RestoreDatabaseEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
+        ])
     ]);
-    // Wait for restore operation to complete.
+
+    // Create restore operation
+    $operation = $databaseAdminClient->restoreDatabase($request);
+
+    print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    // Newly created database has restore information.
-    $database->reload();
-    $restoreInfo = $database->info()['restoreInfo'];
-    $sourceDatabase = $restoreInfo['backupInfo']['sourceDatabase'];
-    $sourceBackup = $restoreInfo['backupInfo']['backup'];
-    $encryptionConfig = $database->info()['encryptionConfig'];
-
+    // Reload new database and get restore info
+    $database = $operation->operationSucceeded() ? $operation->getResult() : null;
+    $restoreInfo = $database->getRestoreInfo();
+    $backupInfo = $restoreInfo->getBackupInfo();
+    $sourceDatabase = $backupInfo->getSourceDatabase();
+    $sourceBackup = $backupInfo->getBackup();
+    $encryptionConfig = $database->getEncryptionConfig();
     printf(
         'Database %s restored from backup %s using encryption key %s' . PHP_EOL,
-        $sourceDatabase, $sourceBackup, $encryptionConfig['kmsKeyName']);
+        $sourceDatabase, $sourceBackup, $encryptionConfig->getKmsKeyName()
+    );
 }
 // [END spanner_restore_backup_with_encryption_key]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

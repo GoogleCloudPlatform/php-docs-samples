@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,36 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+// [START spanner_update_backup]
+use Google\Cloud\Spanner\SpannerClient;
+use DateTime;
 
 /**
- * Delete a backup.
+ * Update the backup expire time.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * update_backup($instanceId, $backupId);
  * ```
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $backupId The Spanner backup ID.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function update_backup(string $instanceId, string $backupId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $backup = $instance->backup($backupId);
+    $backup->reload();
 
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
+    $newExpireTime = new DateTime('+30 days');
+    $maxExpireTime = new DateTime($backup->info()['maxExpireTime']);
+    // The new expire time can't be greater than maxExpireTime for the backup.
+    $newExpireTime = min($newExpireTime, $maxExpireTime);
 
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
+    $backup->updateExpireTime($newExpireTime);
 
-    print("Backup $backupName deleted" . PHP_EOL);
+    printf('Backup %s new expire time: %s' . PHP_EOL, $backupId, $backup->info()['expireTime']);
 }
-// [END spanner_delete_backup]
+// [END spanner_update_backup]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
