@@ -49,7 +49,7 @@ function delete_instance_config(string $projectId, string $instanceConfigId)
     $request->setName($instanceConfigName);
 
     $instanceAdminClient->deleteInstanceConfig($request);
-    printf('Deleted instance config: %s' . PHP_EOL, $instanceConfigId);
+    printf('Deleted instance configuration %s' . PHP_EOL, $instanceConfigId);
 }
 // [END spanner_delete_instance_config]
 
