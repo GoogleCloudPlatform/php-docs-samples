@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ function transfer_funds(
     $transaction->updateBatch([$fromAccount, $toAccount]);
     $transaction->commit();
 }
+// [END datastore_transactional_update]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

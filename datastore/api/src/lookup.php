@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ use Google\Cloud\Datastore\Key;
  *
  * @param DatastoreClient $datastore
  * @param Key $key
- *
  */
 function lookup(DatastoreClient $datastore, Key $key = null)
 {
@@ -33,7 +32,6 @@ function lookup(DatastoreClient $datastore, Key $key = null)
         $key = $datastore->key('Task', 'sampleTask');
     }
     // [START datastore_lookup]
-    // $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->lookup($key);
     // [END datastore_lookup]
     print_r($task);

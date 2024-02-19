@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ use Google\Cloud\Datastore\Query\Query;
  * @param DatastoreClient $datastore
  * @param int $pageSize
  * @param string $pageCursor
- *
  */
 function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCursor = '')
 {
@@ -61,6 +60,7 @@ function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCu
         printf('Found %s entities with next page cursor', count($entities));
     }
 }
+// [END datastore_cursor_paging]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a basic Datastore Gql query.
  *
  * @param DatastoreClient $datastore
- *
  */
 function basic_gql_query(DatastoreClient $datastore)
 {

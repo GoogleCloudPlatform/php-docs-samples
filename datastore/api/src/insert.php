@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ use Google\Cloud\Datastore\Key;
  * an entity with the same key.
  *
  * @param DatastoreClient $datastore
- *
  */
 function insert(DatastoreClient $datastore)
 {
@@ -39,7 +38,6 @@ function insert(DatastoreClient $datastore)
     ]);
     $datastore->insert($task);
     // [END datastore_insert]
-    // return $task;
     print_r($task);
 }
 

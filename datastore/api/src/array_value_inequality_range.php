@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ use Google\Cloud\Datastore\Query\Query;
  * Create a query with inequality filters.
  *
  * @param DatastoreClient $datastore
- *
  */
 function array_value_inequality_range(DatastoreClient $datastore)
 {
@@ -34,7 +33,6 @@ function array_value_inequality_range(DatastoreClient $datastore)
         ->filter('tag', '>', 'learn')
         ->filter('tag', '<', 'math');
     // [END datastore_array_value_inequality_range]
-    // return $query;
     print_r($query);
 
     $result = $datastore->runQuery($query);

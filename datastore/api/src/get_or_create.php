@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,18 @@ use Google\Cloud\Datastore\Key;
  * Insert an entity only if there is no entity with the same key.
  *
  * @param DatastoreClient $datastore
- *
  */
 function get_or_create(DatastoreClient $datastore, EntityInterface $task)
 {
     // [START datastore_transactional_get_or_create]
     $transaction = $datastore->transaction();
-    $existed = $transaction->lookup($task->key());
-    if ($existed === null) {
-        $transaction->insert($task);
+    $entity = $transaction->lookup($task->key());
+    if ($entity === null) {
+        $entity = $transaction->insert($task);
         $transaction->commit();
     }
     // [END datastore_transactional_get_or_create]
+    print_r($entity);
 }
 
 // The following 2 lines are only needed to run the samples

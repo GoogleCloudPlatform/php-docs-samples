@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,9 @@ use Google\Cloud\Datastore\EntityInterface;
 function batch_upsert(DatastoreClient $datastore, array $tasks)
 {
     // [START datastore_batch_upsert]
-    $datastore->upsertBatch($tasks);
+    $result = $datastore->upsertBatch($tasks);
     // [END datastore_batch_upsert]
+    printf('Upserted %s rows', count($result['mutationResults']));
 }
 
 // The following 2 lines are only needed to run the samples

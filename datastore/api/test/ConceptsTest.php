@@ -168,9 +168,10 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key1;
         self::$keys[] = $key2;
 
-        $this->runFunctionSnippet('batch_upsert', [
+        $output = $this->runFunctionSnippet('batch_upsert', [
             self::$datastore, [$task1, $task2]
         ]);
+        $this->assertStringContainsString('Upserted 2 rows', $output);
 
         $output = $this->runFunctionSnippet('lookup', [self::$datastore, $key1]);
         $this->assertStringContainsString('[kind] => Task', $output);
@@ -246,7 +247,8 @@ class ConceptsTest extends TestCase
         self::$keys[] = $key2;
 
         $this->runFunctionSnippet('batch_upsert', [self::$datastore, [$task1, $task2]]);
-        $this->runFunctionSnippet('batch_delete', [self::$datastore, [$key1, $key2]]);
+        $output = $this->runFunctionSnippet('batch_delete', [self::$datastore, [$key1, $key2]]);
+        $this->assertStringContainsString('Deleted 2 rows', $output);
 
         $output = $this->runFunctionSnippet('batch_lookup', [self::$datastore, [$key1, $key2]]);
 

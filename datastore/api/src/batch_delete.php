@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,9 @@ use Google\Cloud\Datastore\Key;
 function batch_delete(DatastoreClient $datastore, array $keys)
 {
     // [START datastore_batch_delete]
-    $datastore->deleteBatch($keys);
+    $result = $datastore->deleteBatch($keys);
     // [END datastore_batch_delete]
+    printf('Deleted %s rows', count($result['mutationResults']));
 }
 
 // The following 2 lines are only needed to run the samples
