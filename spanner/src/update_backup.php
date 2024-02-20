@@ -25,7 +25,6 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_update_backup]
 use Google\Cloud\Spanner\Admin\Database\V1\Backup;
-use Google\Cloud\Spanner\Admin\Database\V1\GetBackupRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\UpdateBackupRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Protobuf\Timestamp;

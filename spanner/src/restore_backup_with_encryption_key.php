@@ -24,15 +24,9 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_restore_backup_with_encryption_key]
-use Google\Cloud\Spanner\Admin\Database\V1\Backup;
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\EncryptionConfig;
 use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseEncryptionConfig;
-use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseMetadata;
 use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseRequest;
-use Google\Cloud\Spanner\Database;
-use Google\Protobuf\FieldMask;
-use Google\Protobuf\Timestamp;
 
 /**
  * Restore a database from a backup.
@@ -46,8 +40,13 @@ use Google\Protobuf\Timestamp;
  * @param string $backupId The Spanner backup ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function restore_backup_with_encryption_key(string $projectId, string $instanceId, string $databaseId, string $backupId, string $kmsKeyName): void
-{
+function restore_backup_with_encryption_key(
+    string $projectId,
+    string $instanceId,
+    string $databaseId,
+    string $backupId,
+    string $kmsKeyName
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $instanceFullName = DatabaseAdminClient::instanceName($projectId, $instanceId);
     $backupFullName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);

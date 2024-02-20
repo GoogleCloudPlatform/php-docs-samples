@@ -224,7 +224,7 @@ class spannerBackupTest extends TestCase
     public function testListDatabaseOperations()
     {
         $output = $this->runFunctionSnippet('list_database_operations');
-        $this->assertStringContainsString(self::$encryptedRestoredDatabaseId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
     /**
