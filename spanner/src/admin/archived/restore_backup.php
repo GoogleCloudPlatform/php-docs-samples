@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,50 +24,39 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_restore_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseRequest;
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Restore a database from a backup.
  * Example:
  * ```
- * restore_backup($projectId, $instanceId, $databaseId, $backupId);
+ * restore_backup($instanceId, $databaseId, $backupId);
  * ```
- * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
  */
-function restore_backup(
-    string $projectId,
-    string $instanceId,
-    string $databaseId,
-    string $backupId
-): void {
-    $databaseAdminClient = new DatabaseAdminClient();
+function restore_backup(string $instanceId, string $databaseId, string $backupId): void
+{
+    $spanner = new SpannerClient();
+    $instance = $spanner->instance($instanceId);
+    $database = $instance->database($databaseId);
+    $backup = $instance->backup($backupId);
 
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
-    $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $operation = $database->restore($backup->name());
+    // Wait for restore operation to complete.
+    $operation->pollUntilComplete();
 
-    $request = new RestoreDatabaseRequest([
-        'parent' => $instanceName,
-        'database_id' => $databaseId,
-        'backup' => $backupName
-    ]);
+    // Newly created database has restore information.
+    $database->reload();
+    $restoreInfo = $database->info()['restoreInfo'];
+    $sourceDatabase = $restoreInfo['backupInfo']['sourceDatabase'];
+    $sourceBackup = $restoreInfo['backupInfo']['backup'];
+    $versionTime = $restoreInfo['backupInfo']['versionTime'];
 
-    $operationResponse = $databaseAdminClient->restoreDatabase($request);
-    $operationResponse->pollUntilComplete();
-
-    $database = $operationResponse->operationSucceeded() ? $operationResponse->getResult() : null;
-    $restoreInfo = $database->getRestoreInfo();
-    $backupInfo = $restoreInfo->getBackupInfo();
-    $sourceDatabase = $backupInfo->getSourceDatabase();
-    $sourceBackup = $backupInfo->getBackup();
-    $versionTime = $backupInfo->getVersionTime()->getSeconds();
     printf(
         'Database %s restored from backup %s with version time %s' . PHP_EOL,
-        $sourceDatabase, $sourceBackup, $versionTime
-    );
+        $sourceDatabase, $sourceBackup, $versionTime);
 }
 // [END spanner_restore_backup]
 
