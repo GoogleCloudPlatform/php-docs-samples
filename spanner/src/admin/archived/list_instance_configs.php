@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2021 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,28 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+// [START spanner_list_instance_configs]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete a backup.
+ * Lists the available instance configurations.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * list_instance_configs();
  * ```
- * @param string $projectId The Google Cloud project ID.
- * @param string $instanceId The Spanner instance ID.
- * @param string $backupId The Spanner backup ID.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function list_instance_configs(): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
-
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
-
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
-
-    print("Backup $backupName deleted" . PHP_EOL);
+    $spanner = new SpannerClient();
+    foreach ($spanner->instanceConfigurations() as $config) {
+        printf(
+            'Available leader options for instance config %s: %s' . PHP_EOL,
+            $config->info()['displayName'],
+            implode(',', $config->info()['leaderOptions'])
+        );
+    }
 }
-// [END spanner_delete_backup]
+// [END spanner_list_instance_configs]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

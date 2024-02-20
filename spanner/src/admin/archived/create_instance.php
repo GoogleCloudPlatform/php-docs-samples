@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,42 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+// [START spanner_create_instance]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete a backup.
+ * Creates an instance.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * create_instance($instanceId);
  * ```
- * @param string $projectId The Google Cloud project ID.
+ *
  * @param string $instanceId The Spanner instance ID.
- * @param string $backupId The Spanner backup ID.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function create_instance(string $instanceId): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
+    $spanner = new SpannerClient();
+    $instanceConfig = $spanner->instanceConfiguration(
+        'regional-us-central1'
+    );
+    $operation = $spanner->createInstance(
+        $instanceConfig,
+        $instanceId,
+        [
+            'displayName' => 'This is a display name.',
+            'nodeCount' => 1,
+            'labels' => [
+                'cloud_spanner_samples' => true,
+            ]
+        ]
+    );
 
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
+    print('Waiting for operation to complete...' . PHP_EOL);
+    $operation->pollUntilComplete();
 
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
-
-    print("Backup $backupName deleted" . PHP_EOL);
+    printf('Created instance %s' . PHP_EOL, $instanceId);
 }
-// [END spanner_delete_backup]
+// [END spanner_create_instance]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

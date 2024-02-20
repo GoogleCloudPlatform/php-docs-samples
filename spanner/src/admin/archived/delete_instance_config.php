@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,28 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+// [START spanner_delete_instance_config]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete a backup.
+ * Deletes a customer managed instance configuration.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * delete_instance_config($instanceConfigId);
  * ```
- * @param string $projectId The Google Cloud project ID.
- * @param string $instanceId The Spanner instance ID.
- * @param string $backupId The Spanner backup ID.
+ *
+ * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function delete_instance_config($instanceConfigId)
 {
-    $databaseAdminClient = new DatabaseAdminClient();
+    $spanner = new SpannerClient();
+    $instanceConfiguration = $spanner->instanceConfiguration($instanceConfigId);
 
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
+    $instanceConfiguration->delete();
 
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
-
-    print("Backup $backupName deleted" . PHP_EOL);
+    printf('Deleted instance configuration %s' . PHP_EOL, $instanceConfigId);
 }
-// [END spanner_delete_backup]
+// [END spanner_delete_instance_config]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

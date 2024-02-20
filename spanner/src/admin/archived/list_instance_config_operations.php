@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2022 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,35 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_delete_backup]
-use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+// [START spanner_list_instance_config_operations]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
- * Delete a backup.
+ * Lists the instance configuration operations for a project.
  * Example:
  * ```
- * delete_backup($projectId, $instanceId, $backupId);
+ * list_instance_config_operations();
  * ```
- * @param string $projectId The Google Cloud project ID.
- * @param string $instanceId The Spanner instance ID.
- * @param string $backupId The Spanner backup ID.
  */
-function delete_backup(string $projectId, string $instanceId, string $backupId): void
+function list_instance_config_operations(): void
 {
-    $databaseAdminClient = new DatabaseAdminClient();
+    $spanner = new SpannerClient();
 
-    $backupName = DatabaseAdminClient::backupName($projectId, $instanceId, $backupId);
-
-    $request = new DeleteBackupRequest();
-    $request->setName($backupName);
-    $databaseAdminClient->deleteBackup($request);
-
-    print("Backup $backupName deleted" . PHP_EOL);
+    $operations = $spanner->instanceConfigOperations();
+    foreach ($operations as $operation) {
+        $meta = $operation->info()['metadata'];
+        $instanceConfig = $meta['instanceConfig'];
+        $configName = basename($instanceConfig['name']);
+        $type = $meta['typeUrl'];
+        printf(
+            'Instance config operation for %s of type %s has status %s.' . PHP_EOL,
+            $configName,
+            $type,
+            $operation->done() ? 'done' : 'running'
+        );
+    }
 }
-// [END spanner_delete_backup]
+// [END spanner_list_instance_config_operations]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

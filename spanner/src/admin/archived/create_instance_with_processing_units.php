@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2024 Google Inc.
+ * Copyright 2021 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,46 +23,46 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_create_instance]
-use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
-use Google\Cloud\Spanner\Admin\Instance\V1\CreateInstanceRequest;
-use Google\Cloud\Spanner\Admin\Instance\V1\Instance;
+// [START spanner_create_instance_with_processing_units]
+use Google\Cloud\Spanner\SpannerClient;
 
 /**
  * Creates an instance.
  * Example:
  * ```
- * create_instance($projectId, $instanceId);
+ * create_instance_with_processing_units($instanceId);
  * ```
  *
- * @param string $projectId  The Spanner project ID.
  * @param string $instanceId The Spanner instance ID.
  */
-function create_instance(string $projectId, string $instanceId): void
+function create_instance_with_processing_units(string $instanceId): void
 {
-    $instanceAdminClient = new InstanceAdminClient();
-    $parent = InstanceAdminClient::projectName($projectId);
-    $instanceName = InstanceAdminClient::instanceName($projectId, $instanceId);
-    $configName = $instanceAdminClient->instanceConfigName($projectId, 'regional-us-central1');
-    $instance = (new Instance())
-        ->setName($instanceName)
-        ->setConfig($configName)
-        ->setDisplayName('dispName')
-        ->setNodeCount(1);
-
-    $operation = $instanceAdminClient->createInstance(
-        (new CreateInstanceRequest())
-        ->setParent($parent)
-        ->setInstanceId($instanceId)
-        ->setInstance($instance)
+    $spanner = new SpannerClient();
+    $instanceConfig = $spanner->instanceConfiguration(
+        'regional-us-central1'
+    );
+    $operation = $spanner->createInstance(
+        $instanceConfig,
+        $instanceId,
+        [
+            'displayName' => 'This is a display name.',
+            'processingUnits' => 500,
+            'labels' => [
+                'cloud_spanner_samples' => true,
+            ]
+        ]
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf('Created instance %s' . PHP_EOL, $instanceId);
+
+    $instance = $spanner->instance($instanceId);
+    $info = $instance->info(['processingUnits']);
+    printf('Instance %s has %d processing units.' . PHP_EOL, $instanceId, $info['processingUnits']);
 }
-// [END spanner_create_instance]
+// [END spanner_create_instance_with_processing_units]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
