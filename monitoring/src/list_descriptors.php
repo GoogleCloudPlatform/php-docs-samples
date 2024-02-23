@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_list_descriptors]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListMetricDescriptorsRequest;
 
 /**
  * Example:
@@ -40,8 +41,10 @@ function list_descriptors($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
-    $descriptors = $metrics->listMetricDescriptors($projectName);
+    $projectName = 'projects/' . $projectId;
+    $listMetricDescriptorsRequest = (new ListMetricDescriptorsRequest())
+        ->setName($projectName);
+    $descriptors = $metrics->listMetricDescriptors($listMetricDescriptorsRequest);
 
     printf('Metric Descriptors:' . PHP_EOL);
     foreach ($descriptors->iterateAllElements() as $descriptor) {

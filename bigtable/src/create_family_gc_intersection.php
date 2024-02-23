@@ -24,11 +24,12 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_family_gc_intersection]
-use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
+use Google\Cloud\Bigtable\Admin\V2\GcRule\Intersection as GcRuleIntersection;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Protobuf\Duration;
 
 /**
@@ -65,7 +66,10 @@ function create_family_gc_intersection(
     $columnModification = new Modification();
     $columnModification->setId('cf4');
     $columnModification->setCreate($columnFamily4);
-    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+        ->setName($tableName)
+        ->setModifications([$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
 
     print('Created column family cf4 with Union GC rule' . PHP_EOL);
 }

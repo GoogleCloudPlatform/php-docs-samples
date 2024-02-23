@@ -24,19 +24,20 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
-use Google\Cloud\Dlp\V2\CryptoKey;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations;
-use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CustomInfoType;
 use Google\Cloud\Dlp\V2\CustomInfoType\SurrogateType;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\ReidentifyContentRequest;
 use Google\Cloud\Dlp\V2\UnwrappedCryptoKey;
 
 # [START dlp_reidentify_free_text_with_fpe_using_surrogate]
@@ -117,11 +118,12 @@ function reidentify_free_text_with_fpe_using_surrogate(
         ->setValue($string);
 
     // Run request.
-    $response = $dlp->reidentifyContent($parent, [
-        'reidentifyConfig' => $reidentifyConfig,
-        'inspectConfig' => $inspectConfig,
-        'item' => $content
-    ]);
+    $reidentifyContentRequest = (new ReidentifyContentRequest())
+        ->setParent($parent)
+        ->setReidentifyConfig($reidentifyConfig)
+        ->setInspectConfig($inspectConfig)
+        ->setItem($content);
+    $response = $dlp->reidentifyContent($reidentifyContentRequest);
 
     // Print the results.
     printf($response->getItem()->getValue());

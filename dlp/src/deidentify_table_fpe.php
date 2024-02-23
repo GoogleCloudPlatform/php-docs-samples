@@ -26,20 +26,21 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_table_fpe]
 
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\Value;
-use Google\Cloud\Dlp\V2\Table;
-use Google\Cloud\Dlp\V2\Table\Row;
-use Google\Cloud\Dlp\V2\FieldId;
-use Google\Cloud\Dlp\V2\FieldTransformation;
-use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2\RecordTransformations;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig;
 use Google\Cloud\Dlp\V2\CryptoReplaceFfxFpeConfig\FfxCommonNativeAlphabet;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
+use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\Dlp\V2\FieldTransformation;
+use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\RecordTransformations;
+use Google\Cloud\Dlp\V2\Table;
+use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\Value;
 
 /**
  * De-identify table data with format-preserving encryption.
@@ -132,11 +133,11 @@ function deidentify_table_fpe(
         ->setRecordTransformations($recordtransformations);
 
     // Run request.
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results.
     $csvRef = fopen($outputCsvFile, 'w');

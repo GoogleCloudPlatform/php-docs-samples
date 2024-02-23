@@ -18,7 +18,8 @@
 // [START dialogflow_list_entities]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\Client\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\GetEntityTypeRequest;
 
 function entity_list($projectId, $entityTypeId)
 {
@@ -27,7 +28,9 @@ function entity_list($projectId, $entityTypeId)
     // prepare
     $parent = $entityTypesClient->entityTypeName($projectId,
         $entityTypeId);
-    $entityType = $entityTypesClient->getEntityType($parent);
+    $getEntityTypeRequest = (new GetEntityTypeRequest())
+        ->setName($parent);
+    $entityType = $entityTypesClient->getEntityType($getEntityTypeRequest);
 
     // get entities
     $entities = $entityType->getEntities();

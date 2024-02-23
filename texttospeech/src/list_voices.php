@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\TextToSpeech;
 
 // [START tts_list_voices]
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\Client\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\ListVoicesRequest;
 
 function list_voices(): void
 {
@@ -32,7 +33,8 @@ function list_voices(): void
     $client = new TextToSpeechClient();
 
     // perform list voices request
-    $response = $client->listVoices();
+    $request = (new ListVoicesRequest());
+    $response = $client->listVoices($request);
     $voices = $response->getVoices();
 
     foreach ($voices as $voice) {

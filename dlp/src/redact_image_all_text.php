@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_redact_image_all_text]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 use Google\Cloud\Dlp\V2\ByteContentItem;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\RedactImageRequest;
+use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 
 /**
  * Redact all detected text in an image.
@@ -68,11 +69,11 @@ function redact_image_all_text(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request.
-    $response = $dlp->redactImage([
-        'parent' => $parent,
-        'byteItem' => $byteContent,
-        'imageRedactionConfigs' => [$imageRedactionConfig]
-    ]);
+    $redactImageRequest = (new RedactImageRequest())
+        ->setParent($parent)
+        ->setByteItem($byteContent)
+        ->setImageRedactionConfigs([$imageRedactionConfig]);
+    $response = $dlp->redactImage($redactImageRequest);
 
     // Save result to file.
     file_put_contents($outputPath, $response->getRedactedImage());

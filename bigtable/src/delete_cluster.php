@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_cluster]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\DeleteClusterRequest;
 
 /**
  * Delete a cluster
@@ -44,7 +45,9 @@ function delete_cluster(
 
     printf('Deleting Cluster' . PHP_EOL);
     try {
-        $instanceAdminClient->deleteCluster($clusterName);
+        $deleteClusterRequest = (new DeleteClusterRequest())
+            ->setName($clusterName);
+        $instanceAdminClient->deleteCluster($deleteClusterRequest);
         printf('Cluster %s deleted.' . PHP_EOL, $clusterId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_list_triggers]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ListJobTriggersRequest;
 
 /**
  * List Data Loss Prevention API job triggers.
@@ -40,7 +41,9 @@ function list_triggers(string $callingProjectId): void
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request
-    $response = $dlp->listJobTriggers($parent);
+    $listJobTriggersRequest = (new ListJobTriggersRequest())
+        ->setParent($parent);
+    $response = $dlp->listJobTriggers($listJobTriggersRequest);
 
     // Print results
     $triggers = $response->iterateAllElements();

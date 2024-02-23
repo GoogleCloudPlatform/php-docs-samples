@@ -18,14 +18,17 @@
 // [START dialogflow_list_contexts]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\ContextsClient;
+use Google\Cloud\Dialogflow\V2\Client\ContextsClient;
+use Google\Cloud\Dialogflow\V2\ListContextsRequest;
 
 function context_list($projectId, $sessionId)
 {
     // get contexts
     $contextsClient = new ContextsClient();
     $parent = $contextsClient->sessionName($projectId, $sessionId);
-    $contexts = $contextsClient->listContexts($parent);
+    $listContextsRequest = (new ListContextsRequest())
+        ->setParent($parent);
+    $contexts = $contextsClient->listContexts($listContextsRequest);
 
     printf('Contexts for session %s' . PHP_EOL, $parent);
     foreach ($contexts->iterateAllElements() as $context) {

@@ -20,8 +20,9 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_create_key_version]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateCryptoKeyVersionRequest;
 use Google\Cloud\Kms\V1\CryptoKeyVersion;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function create_key_version(
     string $projectId = 'my-project',
@@ -39,7 +40,10 @@ function create_key_version(
     $version = new CryptoKeyVersion();
 
     // Call the API.
-    $createdVersion = $client->createCryptoKeyVersion($keyName, $version);
+    $createCryptoKeyVersionRequest = (new CreateCryptoKeyVersionRequest())
+        ->setParent($keyName)
+        ->setCryptoKeyVersion($version);
+    $createdVersion = $client->createCryptoKeyVersion($createCryptoKeyVersionRequest);
     printf('Created key version: %s' . PHP_EOL, $createdVersion->getName());
 
     return $createdVersion;
