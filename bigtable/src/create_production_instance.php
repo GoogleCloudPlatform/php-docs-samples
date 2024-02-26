@@ -24,13 +24,15 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_prod_instance]
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
-use Google\Cloud\Bigtable\Admin\V2\Instance;
-use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\ApiCore\ApiException;
 use Exception;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster;
+use Google\Cloud\Bigtable\Admin\V2\CreateInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\Instance;
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
+use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
  * Create a production Bigtable instance
@@ -71,18 +73,20 @@ function create_production_instance(
         $clusterId => $cluster
     ];
     try {
-        $instanceAdminClient->getInstance($instanceName);
+        $getInstanceRequest = (new GetInstanceRequest())
+            ->setName($instanceName);
+        $instanceAdminClient->getInstance($getInstanceRequest);
         printf('Instance %s already exists.' . PHP_EOL, $instanceId);
         throw new Exception(sprintf('Instance %s already exists.' . PHP_EOL, $instanceId));
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Creating an Instance: %s' . PHP_EOL, $instanceId);
-            $operationResponse = $instanceAdminClient->createInstance(
-                $projectName,
-                $instanceId,
-                $instance,
-                $clusters
-            );
+            $createInstanceRequest = (new CreateInstanceRequest())
+                ->setParent($projectName)
+                ->setInstanceId($instanceId)
+                ->setInstance($instance)
+                ->setClusters($clusters);
+            $operationResponse = $instanceAdminClient->createInstance($createInstanceRequest);
             $operationResponse->pollUntilComplete();
             if (!$operationResponse->operationSucceeded()) {
                 print('Error: ' . $operationResponse->getError()->getMessage());

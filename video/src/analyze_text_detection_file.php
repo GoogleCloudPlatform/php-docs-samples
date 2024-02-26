@@ -19,7 +19,8 @@
 namespace Google\Cloud\Samples\VideoIntelligence;
 
 // [START video_detect_text]
-use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\AnnotateVideoRequest;
+use Google\Cloud\VideoIntelligence\V1\Client\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
 /**
@@ -36,10 +37,10 @@ function analyze_text_detection_file(string $path, int $pollingIntervalSeconds =
 
     # Execute a request.
     $features = [Feature::TEXT_DETECTION];
-    $operation = $video->annotateVideo([
-        'inputContent' => $inputContent,
-        'features' => $features,
-    ]);
+    $request = (new AnnotateVideoRequest())
+        ->setInputContent($inputContent)
+        ->setFeatures($features);
+    $operation = $video->annotateVideo($request);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete([

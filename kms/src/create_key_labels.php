@@ -20,11 +20,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_create_key_labels]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateCryptoKeyRequest;
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
 
 function create_key_labels(
     string $projectId = 'my-project',
@@ -50,7 +51,11 @@ function create_key_labels(
         ]);
 
     // Call the API.
-    $createdKey = $client->createCryptoKey($keyRingName, $id, $key);
+    $createCryptoKeyRequest = (new CreateCryptoKeyRequest())
+        ->setParent($keyRingName)
+        ->setCryptoKeyId($id)
+        ->setCryptoKey($key);
+    $createdKey = $client->createCryptoKey($createCryptoKeyRequest);
     printf('Created labeled key: %s' . PHP_EOL, $createdKey->getName());
 
     return $createdKey;

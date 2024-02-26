@@ -25,9 +25,11 @@ namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_api_cluster_disable_autoscaling]
 use Google\ApiCore\ApiException;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
 
+use Google\Cloud\Bigtable\Admin\V2\GetClusterRequest;
+use Google\Cloud\Bigtable\Admin\V2\PartialUpdateClusterRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -46,7 +48,9 @@ function disable_cluster_autoscale_config(
 ): void {
     $instanceAdminClient = new BigtableInstanceAdminClient();
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
-    $cluster = $instanceAdminClient->getCluster($clusterName);
+    $getClusterRequest = (new GetClusterRequest())
+        ->setName($clusterName);
+    $cluster = $instanceAdminClient->getCluster($getClusterRequest);
 
     // static serve node is required to disable auto scale config
     $cluster->setServeNodes($newNumNodes);
@@ -59,7 +63,10 @@ function disable_cluster_autoscale_config(
     ]);
 
     try {
-        $operationResponse = $instanceAdminClient->partialUpdateCluster($cluster, $updateMask);
+        $partialUpdateClusterRequest = (new PartialUpdateClusterRequest())
+            ->setCluster($cluster)
+            ->setUpdateMask($updateMask);
+        $operationResponse = $instanceAdminClient->partialUpdateCluster($partialUpdateClusterRequest);
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();

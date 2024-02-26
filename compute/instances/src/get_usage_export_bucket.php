@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_get]
-use Google\Cloud\Compute\V1\ProjectsClient;
+use Google\Cloud\Compute\V1\Client\ProjectsClient;
+use Google\Cloud\Compute\V1\GetProjectRequest;
 
 /**
  * Retrieve Compute Engine usage export bucket for the Cloud project.
@@ -39,7 +40,9 @@ function get_usage_export_bucket(string $projectId)
 {
     // Get the usage export location for the project from the server.
     $projectsClient = new ProjectsClient();
-    $projectResponse = $projectsClient->get($projectId);
+    $request = (new GetProjectRequest())
+        ->setProject($projectId);
+    $projectResponse = $projectsClient->get($request);
 
     // Replace the empty value returned by the API with the default value used to generate report file names.
     if ($projectResponse->hasUsageExportLocation()) {

@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_get_public_key]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetPublicKeyRequest;
 
 function get_public_key(
     string $projectId = 'my-project',
@@ -36,7 +37,9 @@ function get_public_key(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $publicKey = $client->getPublicKey($keyVersionName);
+    $getPublicKeyRequest = (new GetPublicKeyRequest())
+        ->setName($keyVersionName);
+    $publicKey = $client->getPublicKey($getPublicKeyRequest);
     printf('Public key: %s' . PHP_EOL, $publicKey->getPem());
 
     return $publicKey;

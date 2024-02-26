@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_verify_mac]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\MacVerifyRequest;
 
 function verify_mac(
     string $projectId = 'my-project',
@@ -38,7 +39,11 @@ function verify_mac(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $verifyMacResponse = $client->macVerify($keyVersionName, $data, $signature);
+    $macVerifyRequest = (new MacVerifyRequest())
+        ->setName($keyVersionName)
+        ->setData($data)
+        ->setMac($signature);
+    $verifyMacResponse = $client->macVerify($macVerifyRequest);
 
     printf('Signature verified: %s' . PHP_EOL, $verifyMacResponse->getSuccess());
 
