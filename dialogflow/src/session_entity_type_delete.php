@@ -18,7 +18,8 @@
 // [START dialogflow_delete_session_entity_type]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\SessionEntityTypesClient;
+use Google\Cloud\Dialogflow\V2\Client\SessionEntityTypesClient;
+use Google\Cloud\Dialogflow\V2\DeleteSessionEntityTypeRequest;
 
 /**
 * Delete a session entity type with the given display name.
@@ -29,7 +30,9 @@ function session_entity_type_delete($projectId, $displayName, $sessionId)
 
     $sessionEntityTypeName = $sessionEntityTypesClient
         ->sessionEntityTypeName($projectId, $sessionId, $displayName);
-    $sessionEntityTypesClient->deleteSessionEntityType($sessionEntityTypeName);
+    $deleteSessionEntityTypeRequest = (new DeleteSessionEntityTypeRequest())
+        ->setName($sessionEntityTypeName);
+    $sessionEntityTypesClient->deleteSessionEntityType($deleteSessionEntityTypeRequest);
     printf('Session entity type deleted: %s' . PHP_EOL, $sessionEntityTypeName);
 
     $sessionEntityTypesClient->close();

@@ -25,10 +25,11 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_image_all_infotypes]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\ByteContentItem;
 use Google\Cloud\Dlp\V2\ByteContentItem\BytesType;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\ContentItem;
+use Google\Cloud\Dlp\V2\InspectContentRequest;
 use Google\Cloud\Dlp\V2\Likelihood;
 
 /**
@@ -60,10 +61,10 @@ function inspect_image_all_infotypes(
         ->setByteItem($fileBytes);
 
     // Run request.
-    $response = $dlp->inspectContent([
-        'parent' => $parent,
-        'item' => $item
-    ]);
+    $inspectContentRequest = (new InspectContentRequest())
+        ->setParent($parent)
+        ->setItem($item);
+    $response = $dlp->inspectContent($inspectContentRequest);
 
     // Print the results.
     $findings = $response->getResult()->getFindings();

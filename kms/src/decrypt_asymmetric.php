@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_decrypt_asymmetric]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\AsymmetricDecryptRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 
 function decrypt_asymmetric(
     string $projectId = 'my-project',
@@ -37,7 +38,10 @@ function decrypt_asymmetric(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $decryptResponse = $client->asymmetricDecrypt($keyVersionName, $ciphertext);
+    $asymmetricDecryptRequest = (new AsymmetricDecryptRequest())
+        ->setName($keyVersionName)
+        ->setCiphertext($ciphertext);
+    $decryptResponse = $client->asymmetricDecrypt($asymmetricDecryptRequest);
     printf('Plaintext: %s' . PHP_EOL, $decryptResponse->getPlaintext());
 
     return $decryptResponse;

@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_get_job]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
 
 /**
  * Get DLP inspection job.
@@ -38,7 +39,9 @@ function get_job(
     $dlp = new DlpServiceClient();
     try {
         // Send the get job request
-        $response = $dlp->getDlpJob($jobName);
+        $getDlpJobRequest = (new GetDlpJobRequest())
+            ->setName($jobName);
+        $response = $dlp->getDlpJob($getDlpJobRequest);
         printf('Job %s status: %s' . PHP_EOL, $response->getName(), $response->getState());
     } finally {
         $dlp->close();

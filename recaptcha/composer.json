@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-recaptcha-enterprise": "^1.0"
+        "google/cloud-recaptcha-enterprise": "^1.8"
     }
 }

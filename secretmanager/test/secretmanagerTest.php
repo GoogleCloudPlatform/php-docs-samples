@@ -20,10 +20,14 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
+use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
+use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
@@ -81,32 +85,41 @@ class secretmanagerTest extends TestCase
     {
         $parent = self::$client->projectName(self::$projectId);
         $secretId = self::randomSecretId();
-
-        return self::$client->createSecret($parent, $secretId,
-            new Secret([
+        $createSecretRequest = (new CreateSecretRequest())
+            ->setParent($parent)
+            ->setSecretId($secretId)
+            ->setSecret(new Secret([
                 'replication' => new Replication([
                     'automatic' => new Automatic(),
                 ]),
-            ])
-        );
+            ]));
+
+        return self::$client->createSecret($createSecretRequest);
     }
 
     private static function addSecretVersion(Secret $secret): SecretVersion
     {
-        return self::$client->addSecretVersion($secret->getName(), new SecretPayload([
+        $addSecretVersionRequest = (new AddSecretVersionRequest())
+            ->setParent($secret->getName())
+            ->setPayload(new SecretPayload([
             'data' => 'my super secret data',
         ]));
+        return self::$client->addSecretVersion($addSecretVersionRequest);
     }
 
     private static function disableSecretVersion(SecretVersion $version): SecretVersion
     {
-        return self::$client->disableSecretVersion($version->getName());
+        $disableSecretVersionRequest = (new DisableSecretVersionRequest())
+            ->setName($version->getName());
+        return self::$client->disableSecretVersion($disableSecretVersionRequest);
     }
 
     private static function deleteSecret(string $name)
     {
         try {
-            self::$client->deleteSecret($name);
+            $deleteSecretRequest = (new DeleteSecretRequest())
+                ->setName($name);
+            self::$client->deleteSecret($deleteSecretRequest);
         } catch (GaxApiException $e) {
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;

@@ -18,7 +18,8 @@
 // [START dialogflow_delete_context]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\ContextsClient;
+use Google\Cloud\Dialogflow\V2\Client\ContextsClient;
+use Google\Cloud\Dialogflow\V2\DeleteContextRequest;
 
 function context_delete($projectId, $contextId, $sessionId)
 {
@@ -26,7 +27,9 @@ function context_delete($projectId, $contextId, $sessionId)
 
     $contextName = $contextsClient->contextName($projectId, $sessionId,
         $contextId);
-    $contextsClient->deleteContext($contextName);
+    $deleteContextRequest = (new DeleteContextRequest())
+        ->setName($contextName);
+    $contextsClient->deleteContext($deleteContextRequest);
     printf('Context deleted: %s' . PHP_EOL, $contextName);
 
     $contextsClient->close();
