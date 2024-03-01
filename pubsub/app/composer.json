@@ -1,5 +1,4 @@
 {
-  "minimum-stability": "RC",
   "require": {
     "google/cloud-pubsub": "^2.0",
     "google/cloud-datastore": "^1.11.2",
