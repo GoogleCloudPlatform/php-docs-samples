@@ -55,7 +55,7 @@ function update_cluster(
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();
             printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
-        // doSomethingWith($updatedCluster)
+            // doSomethingWith($updatedCluster)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

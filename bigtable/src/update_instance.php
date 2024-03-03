@@ -73,7 +73,7 @@ function update_instance(
         if ($operationResponse->operationSucceeded()) {
             $updatedInstance = $operationResponse->getResult();
             printf('Instance updated with the new display name: %s.' . PHP_EOL, $updatedInstance->getDisplayName());
-        // doSomethingWith($updatedInstance)
+            // doSomethingWith($updatedInstance)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

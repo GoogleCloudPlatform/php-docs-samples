@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\SpannerClient;
 function pg_create_sequence(
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

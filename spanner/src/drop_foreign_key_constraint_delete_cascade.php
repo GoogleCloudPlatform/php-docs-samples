@@ -39,7 +39,7 @@ use Google\Cloud\Spanner\SpannerClient;
 function drop_foreign_key_constraint_delete_cascade(
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

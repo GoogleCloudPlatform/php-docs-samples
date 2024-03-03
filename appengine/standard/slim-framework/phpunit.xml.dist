@@ -16,7 +16,7 @@
 -->
 <phpunit bootstrap="../../../testing/bootstrap.php">
     <testsuites>
-        <testsuite name="AppEngine for PHP 7.4 Slim Framework test">
+        <testsuite name="AppEngine for PHP Slim Framework test">
             <directory>test</directory>
         </testsuite>
     </testsuites>
