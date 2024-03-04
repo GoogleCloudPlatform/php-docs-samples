@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_create_clients]
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -34,12 +36,15 @@ use Google\Cloud\Spanner\SpannerClient;
  */
 function pg_connect_to_db(string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-
     // Instance Admin Client
-    $instance = $spanner->instance($instanceId);
+    $instanceAdminClient = new InstanceAdminClient();
 
-    // Spanner Database Client
+    // Database Admin Client
+    $databaseAdminClient = new DatabaseAdminClient();
+
+    $spanner = new SpannerClient();
+    // Spanner Data plane client
+    $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 }
 // [END spanner_postgresql_create_clients]
