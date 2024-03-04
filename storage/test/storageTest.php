@@ -153,6 +153,57 @@ class storageTest extends TestCase
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
     }
 
+    public function testCreateBucketWithObjectRetention()
+    {
+        $bucketName = self::$tempBucket->name() . '_object_retention';
+        $output = self::runFunctionSnippet('create_bucket_with_object_retention', [
+            $bucketName,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Created bucket %s with object retention enabled setting: Enabled' . PHP_EOL, $bucketName),
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateBucketWithObjectRetention
+     */
+    public function testSetObjectRetentionPolicy()
+    {
+        $bucketName = self::$tempBucket->name() . '_object_retention';
+        $bucket = self::$storage->bucket($bucketName);
+        $this->assertTrue($bucket->exists());
+
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT') . '.ObjectRetention';
+        $object = $bucket->upload('test', [
+            'name' => $objectName,
+        ]);
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('set_object_retention_policy', [
+            $bucketName,
+            $objectName
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Retention policy for object %s was updated to: %s' . PHP_EOL,
+                $objectName,
+                $object->reload()['retention']['retainUntilTime']
+            ),
+            $output
+        );
+
+        // Disable object retention before delete
+        $object->update([
+            'retention' => [],
+            'overrideUnlockedRetention' => true
+        ]);
+        $object->delete();
+        $bucket->delete();
+    }
+
     public function testGetBucketClassAndLocation()
     {
         $output = $this->runFunctionSnippet(

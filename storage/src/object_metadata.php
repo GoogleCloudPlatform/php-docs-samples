@@ -85,6 +85,10 @@ function object_metadata(string $bucketName, string $objectName): void
     if (isset($info['retentionExpirationTime'])) {
         printf('Retention Expiration Time: %s' . PHP_EOL, $info['retentionExpirationTime']);
     }
+    if (isset($info['retention'])) {
+        printf('Retention mode: %s' . PHP_EOL, $info['retention']['mode']);
+        printf('Retain until time is: %s' . PHP_EOL, $info['retention']['retainUntilTime']);
+    }
     if (isset($info['customTime'])) {
         printf('Custom Time: %s' . PHP_EOL, $info['customTime']);
     }
