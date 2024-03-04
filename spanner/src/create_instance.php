@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,33 +24,37 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_instance]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\CreateInstanceRequest;
+use Google\Cloud\Spanner\Admin\Instance\V1\Instance;
 
 /**
  * Creates an instance.
  * Example:
  * ```
- * create_instance($instanceId);
+ * create_instance($projectId, $instanceId);
  * ```
  *
+ * @param string $projectId  The Spanner project ID.
  * @param string $instanceId The Spanner instance ID.
  */
-function create_instance(string $instanceId): void
+function create_instance(string $projectId, string $instanceId): void
 {
-    $spanner = new SpannerClient();
-    $instanceConfig = $spanner->instanceConfiguration(
-        'regional-us-central1'
-    );
-    $operation = $spanner->createInstance(
-        $instanceConfig,
-        $instanceId,
-        [
-            'displayName' => 'This is a display name.',
-            'nodeCount' => 1,
-            'labels' => [
-                'cloud_spanner_samples' => true,
-            ]
-        ]
+    $instanceAdminClient = new InstanceAdminClient();
+    $parent = InstanceAdminClient::projectName($projectId);
+    $instanceName = InstanceAdminClient::instanceName($projectId, $instanceId);
+    $configName = $instanceAdminClient->instanceConfigName($projectId, 'regional-us-central1');
+    $instance = (new Instance())
+        ->setName($instanceName)
+        ->setConfig($configName)
+        ->setDisplayName('dispName')
+        ->setNodeCount(1);
+
+    $operation = $instanceAdminClient->createInstance(
+        (new CreateInstanceRequest())
+        ->setParent($parent)
+        ->setInstanceId($instanceId)
+        ->setInstance($instance)
     );
 
     print('Waiting for operation to complete...' . PHP_EOL);

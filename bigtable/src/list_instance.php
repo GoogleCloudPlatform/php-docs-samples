@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_instances]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ListInstancesRequest;
 
 /**
  * List Bigtable instances in a project
@@ -38,8 +39,10 @@ function list_instance(string $projectId): void
     $projectName = $instanceAdminClient->projectName($projectId);
 
     printf('Listing Instances:' . PHP_EOL);
+    $listInstancesRequest = (new ListInstancesRequest())
+        ->setParent($projectName);
 
-    $getInstances = $instanceAdminClient->listInstances($projectName)->getInstances();
+    $getInstances = $instanceAdminClient->listInstances($listInstancesRequest)->getInstances();
     $instances = $getInstances->getIterator();
 
     foreach ($instances as $instance) {

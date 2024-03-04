@@ -20,8 +20,9 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_update_key_update_labels]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\CryptoKey;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyRequest;
 use Google\Protobuf\FieldMask;
 
 function update_key_update_labels(
@@ -46,7 +47,10 @@ function update_key_update_labels(
         ->setPaths(['labels']);
 
     // Call the API.
-    $updatedKey = $client->updateCryptoKey($key, $updateMask);
+    $updateCryptoKeyRequest = (new UpdateCryptoKeyRequest())
+        ->setCryptoKey($key)
+        ->setUpdateMask($updateMask);
+    $updatedKey = $client->updateCryptoKey($updateCryptoKeyRequest);
     printf('Updated key: %s' . PHP_EOL, $updatedKey->getName());
 
     return $updatedKey;

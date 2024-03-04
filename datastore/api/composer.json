@@ -1,11 +1,5 @@
 {
     "require": {
         "google/cloud-datastore": "^1.2"
-    },
-    "autoload": {
-        "psr-4": { "Google\\Cloud\\Samples\\Datastore\\": "src" },
-        "files": [
-            "src/functions/concepts.php"
-        ]
     }
 }

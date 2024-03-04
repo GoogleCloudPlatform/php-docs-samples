@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_create_metric]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
 use Google\Api\LabelDescriptor;
 use Google\Api\MetricDescriptor;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\CreateMetricDescriptorRequest;
 
 /**
  * Create a new metric in Stackdriver Monitoring.
@@ -43,7 +44,7 @@ function create_metric($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $descriptor = new MetricDescriptor();
     $descriptor->setDescription('Daily sales records from all branch stores.');
@@ -58,8 +59,11 @@ function create_metric($projectId)
     $label->setDescription('The ID of the store.');
     $labels = [$label];
     $descriptor->setLabels($labels);
+    $createMetricDescriptorRequest = (new CreateMetricDescriptorRequest())
+        ->setName($projectName)
+        ->setMetricDescriptor($descriptor);
 
-    $descriptor = $metrics->createMetricDescriptor($projectName, $descriptor);
+    $descriptor = $metrics->createMetricDescriptor($createMetricDescriptorRequest);
     printf('Created a metric: ' . $descriptor->getName() . PHP_EOL);
 }
 // [END monitoring_create_metric]

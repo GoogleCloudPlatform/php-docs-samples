@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,58 +24,74 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_database_with_encryption_key]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\EncryptionConfig;
 
 /**
  * Creates an encrypted database with tables for sample data.
  * Example:
  * ```
- * create_database_with_encryption_key($instanceId, $databaseId, $kmsKeyName);
+ * create_database_with_encryption_key($projectId, $instanceId, $databaseId, $kmsKeyName);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
-function create_database_with_encryption_key(string $instanceId, string $databaseId, string $kmsKeyName): void
-{
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
+function create_database_with_encryption_key(
+    string $projectId,
+    string $instanceId,
+    string $databaseId,
+    string $kmsKeyName
+): void {
+    $databaseAdminClient = new DatabaseAdminClient();
+    $instanceName = DatabaseAdminClient::instanceName($projectId, $instanceId);
 
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
-
-    $operation = $instance->createDatabase($databaseId, [
-        'statements' => [
-            'CREATE TABLE Singers (
-                SingerId     INT64 NOT NULL,
-                FirstName    STRING(1024),
-                LastName     STRING(1024),
-                SingerInfo   BYTES(MAX)
-            ) PRIMARY KEY (SingerId)',
-            'CREATE TABLE Albums (
-                SingerId     INT64 NOT NULL,
-                AlbumId      INT64 NOT NULL,
-                AlbumTitle   STRING(MAX)
-            ) PRIMARY KEY (SingerId, AlbumId),
-            INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
-        ],
-        'encryptionConfig' => ['kmsKeyName' => $kmsKeyName]
+    $createDatabaseRequest = new CreateDatabaseRequest();
+    $createDatabaseRequest->setParent($instanceName);
+    $createDatabaseRequest->setCreateStatement(sprintf('CREATE DATABASE `%s`', $databaseId));
+    $createDatabaseRequest->setExtraStatements([
+        'CREATE TABLE Singers (
+            SingerId     INT64 NOT NULL,
+            FirstName    STRING(1024),
+            LastName     STRING(1024),
+            SingerInfo   BYTES(MAX)
+        ) PRIMARY KEY (SingerId)',
+        'CREATE TABLE Albums (
+            SingerId     INT64 NOT NULL,
+            AlbumId      INT64 NOT NULL,
+            AlbumTitle   STRING(MAX)
+        ) PRIMARY KEY (SingerId, AlbumId),
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
     ]);
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
+    if (!empty($kmsKeyName)) {
+        $encryptionConfig = new EncryptionConfig();
+        $encryptionConfig->setKmsKeyName($kmsKeyName);
+        $createDatabaseRequest->setEncryptionConfig($encryptionConfig);
+    }
 
-    $database = $instance->database($databaseId);
-    printf(
-        'Created database %s on instance %s with encryption key %s' . PHP_EOL,
-        $databaseId,
-        $instanceId,
-        $database->info()['encryptionConfig']['kmsKeyName']
-    );
+    $operationResponse = $databaseAdminClient->createDatabase($createDatabaseRequest);
+    printf('Waiting for operation to complete...' . PHP_EOL);
+    $operationResponse->pollUntilComplete();
+
+    if ($operationResponse->operationSucceeded()) {
+        $database = $operationResponse->getResult();
+        printf(
+            'Created database %s on instance %s with encryption key %s' . PHP_EOL,
+            $databaseId,
+            $instanceId,
+            $database->getEncryptionConfig()->getKmsKeyName()
+        );
+    } else {
+        $error = $operationResponse->getError();
+        printf('Failed to create encrypted database: %s' . PHP_EOL, $error->getMessage());
+    }
 }
 // [END spanner_create_database_with_encryption_key]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);

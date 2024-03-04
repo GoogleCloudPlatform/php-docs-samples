@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_destroy_key_version]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\DestroyCryptoKeyVersionRequest;
 
 function destroy_key_version(
     string $projectId = 'my-project',
@@ -36,7 +37,9 @@ function destroy_key_version(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $destroyedVersion = $client->destroyCryptoKeyVersion($keyVersionName);
+    $destroyCryptoKeyVersionRequest = (new DestroyCryptoKeyVersionRequest())
+        ->setName($keyVersionName);
+    $destroyedVersion = $client->destroyCryptoKeyVersion($destroyCryptoKeyVersionRequest);
     printf('Destroyed key version: %s' . PHP_EOL, $destroyedVersion->getName());
 
     return $destroyedVersion;

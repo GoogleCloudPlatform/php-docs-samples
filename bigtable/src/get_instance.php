@@ -24,10 +24,11 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_instance]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type;
-use Google\Cloud\Bigtable\Admin\V2\Instance\State;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\Instance\State;
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type;
 
 /**
  * Get a Bigtable instance
@@ -44,7 +45,9 @@ function get_instance(
 
     printf('Fetching the Instance %s' . PHP_EOL, $instanceId);
     try {
-        $instance = $instanceAdminClient->getInstance($instanceName);
+        $getInstanceRequest = (new GetInstanceRequest())
+            ->setName($instanceName);
+        $instance = $instanceAdminClient->getInstance($getInstanceRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Instance %s does not exists.' . PHP_EOL, $instanceId);

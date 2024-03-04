@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,27 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_add_column]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Add a column to a table present in a PG Spanner database.
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_add_column(string $instanceId, string $databaseId): void
+function pg_add_column(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $statement = 'ALTER TABLE Albums ADD COLUMN MarketingBudget bigint';
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [$statement]
+    ]);
 
-    $operation = $database->updateDdl(
-        'ALTER TABLE Albums ADD COLUMN MarketingBudget bigint'
-    );
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -27,9 +27,10 @@ namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\Dlp\V2\BucketingConfig;
 use Google\Cloud\Dlp\V2\BucketingConfig\Bucket;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\FieldTransformation;
 use Google\Cloud\Dlp\V2\PrimitiveTransformation;
@@ -133,11 +134,11 @@ function deidentify_table_primitive_bucketing(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Send the request and receive response from the service.
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $contentItem
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($contentItem);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results.
     $csvRef = fopen($outputCsvFile, 'w');

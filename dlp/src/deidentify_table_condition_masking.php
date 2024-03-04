@@ -26,21 +26,22 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_table_condition_masking]
 use Google\Cloud\Dlp\V2\CharacterMaskConfig;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\Value;
-use Google\Cloud\Dlp\V2\Table;
-use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\FieldTransformation;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\RecordCondition;
 use Google\Cloud\Dlp\V2\RecordCondition\Condition;
 use Google\Cloud\Dlp\V2\RecordCondition\Conditions;
 use Google\Cloud\Dlp\V2\RecordCondition\Expressions;
 use Google\Cloud\Dlp\V2\RecordTransformations;
 use Google\Cloud\Dlp\V2\RelationalOperator;
+use Google\Cloud\Dlp\V2\Table;
+use Google\Cloud\Dlp\V2\Table\Row;
+use Google\Cloud\Dlp\V2\Value;
 
 /**
  * De-identify table data using masking and conditional logic.
@@ -130,11 +131,11 @@ function deidentify_table_condition_masking(
         ->setRecordTransformations($recordtransformations);
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print results
     $csvRef = fopen($outputCsvFile, 'w');

@@ -3,6 +3,10 @@
 namespace Google\Cloud\Samples\Bigtable\Tests;
 
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\GetAppProfileRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetClusterRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetTableRequest;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
@@ -167,7 +171,9 @@ final class BigtableTest extends TestCase
         $this->assertContains('App profile updated: ' . $appProfileName, $array);
 
         // let's check if the allow_transactional_writes also changed
-        $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+        $getAppProfileRequest = (new GetAppProfileRequest())
+            ->setName($appProfileName);
+        $appProfile = self::$instanceAdminClient->getAppProfile($getAppProfileRequest);
 
         $this->assertTrue($appProfile->getSingleClusterRouting()->getAllowTransactionalWrites());
     }
@@ -190,7 +196,9 @@ final class BigtableTest extends TestCase
 
         // let's check if we can fetch the profile or not
         try {
-            self::$instanceAdminClient->getAppProfile($appProfileName);
+            $getAppProfileRequest2 = (new GetAppProfileRequest())
+                ->setName($appProfileName);
+            self::$instanceAdminClient->getAppProfile($getAppProfileRequest2);
             $this->fail(sprintf('App Profile %s still exists', self::$appProfileId));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -232,7 +240,9 @@ final class BigtableTest extends TestCase
         ]);
 
         try {
-            self::$instanceAdminClient->getCluster($clusterName);
+            $getClusterRequest = (new GetClusterRequest())
+                ->setName($clusterName);
+            self::$instanceAdminClient->getCluster($getClusterRequest);
             $this->fail(sprintf('Cluster %s still exists', $clusterName));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -641,7 +651,10 @@ final class BigtableTest extends TestCase
         ]);
 
         try {
-            $table = self::$tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+            $getTableRequest = (new GetTableRequest())
+                ->setName($tableName)
+                ->setView(View::NAME_ONLY);
+            $table = self::$tableAdminClient->getTable($getTableRequest);
             $this->fail(sprintf('Instance %s still exists', $table->getName()));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -734,7 +747,9 @@ final class BigtableTest extends TestCase
         ]);
 
         try {
-            $instance = self::$instanceAdminClient->getInstance($instanceName);
+            $getInstanceRequest = (new GetInstanceRequest())
+                ->setName($instanceName);
+            $instance = self::$instanceAdminClient->getInstance($getInstanceRequest);
             $this->fail(sprintf('Instance %s still exists', $instance->getName()));
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -746,7 +761,9 @@ final class BigtableTest extends TestCase
     private function checkCluster($clusterName)
     {
         try {
-            $cluster = self::$instanceAdminClient->getCluster($clusterName);
+            $getClusterRequest2 = (new GetClusterRequest())
+                ->setName($clusterName);
+            $cluster = self::$instanceAdminClient->getCluster($getClusterRequest2);
             $this->assertEquals($cluster->getName(), $clusterName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -761,7 +778,9 @@ final class BigtableTest extends TestCase
     private function checkRule($tableName, $familyKey, $gcRuleCompare)
     {
         try {
-            $table = self::$tableAdminClient->getTable($tableName);
+            $getTableRequest2 = (new GetTableRequest())
+                ->setName($tableName);
+            $table = self::$tableAdminClient->getTable($getTableRequest2);
             $columnFamilies = $table->getColumnFamilies()->getIterator();
             $key = $columnFamilies->key();
             $json = $columnFamilies->current()->serializeToJsonString();
@@ -783,7 +802,9 @@ final class BigtableTest extends TestCase
     private function checkInstance($instanceName)
     {
         try {
-            $instance = self::$instanceAdminClient->getInstance($instanceName);
+            $getInstanceRequest2 = (new GetInstanceRequest())
+                ->setName($instanceName);
+            $instance = self::$instanceAdminClient->getInstance($getInstanceRequest2);
             $this->assertEquals($instance->getName(), $instanceName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -798,7 +819,9 @@ final class BigtableTest extends TestCase
     private function checkTable($tableName)
     {
         try {
-            $table = self::$tableAdminClient->getTable($tableName);
+            $getTableRequest3 = (new GetTableRequest())
+                ->setName($tableName);
+            $table = self::$tableAdminClient->getTable($getTableRequest3);
             $this->assertEquals($table->getName(), $tableName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {
@@ -813,7 +836,9 @@ final class BigtableTest extends TestCase
     private function checkAppProfile($appProfileName)
     {
         try {
-            $appProfile = self::$instanceAdminClient->getAppProfile($appProfileName);
+            $getAppProfileRequest3 = (new GetAppProfileRequest())
+                ->setName($appProfileName);
+            $appProfile = self::$instanceAdminClient->getAppProfile($getAppProfileRequest3);
             $this->assertEquals($appProfile->getName(), $appProfileName);
         } catch (ApiException $e) {
             if ($e->getStatus() === 'NOT_FOUND') {

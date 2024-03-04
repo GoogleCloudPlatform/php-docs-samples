@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_detect_language]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\DetectLanguageRequest;
 
 /**
  * @param string $text      The text whose language to detect.  This will be detected as en.
@@ -37,13 +38,11 @@ function v3_detect_language(string $text, string $projectId): void
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->detectLanguage(
-            $formattedParent,
-            [
-                'content' => $text,
-                'mimeType' => $mimeType
-            ]
-        );
+        $request = (new DetectLanguageRequest())
+            ->setParent($formattedParent)
+            ->setContent($text)
+            ->setMimeType($mimeType);
+        $response = $translationServiceClient->detectLanguage($request);
         // Display list of detected languages sorted by detection confidence.
         // The most probable language is first.
         foreach ($response->getLanguages() as $language) {
