@@ -34,6 +34,7 @@ class storageTest extends TestCase
     private static $bucketName;
     private static $storage;
     private static $tempBucket;
+    private static $objectRetentionBucketName;
 
     public static function setUpBeforeClass(): void
     {
@@ -43,6 +44,11 @@ class storageTest extends TestCase
         self::$tempBucket = self::$storage->createBucket(
             sprintf('%s-test-bucket-%s', self::$projectId, time())
         );
+        self::$objectRetentionBucketName = sprintf(
+            '%s_object_retention-%s',
+            self::$projectId,
+            time()
+        );
     }
 
     public static function tearDownAfterClass(): void
@@ -51,6 +57,17 @@ class storageTest extends TestCase
             $object->delete();
         }
         self::$tempBucket->delete();
+
+        $objectRetentionBucket = self::$storage->bucket(self::$objectRetentionBucketName);
+        foreach ($objectRetentionBucket->objects() as $object) {
+            // Disable object retention before delete
+            $object->update([
+                'retention' => [],
+                'overrideUnlockedRetention' => true
+            ]);
+            $object->delete();
+        }
+        $objectRetentionBucket->delete();
     }
 
     public function testBucketAcl()
@@ -155,13 +172,15 @@ class storageTest extends TestCase
 
     public function testCreateBucketWithObjectRetention()
     {
-        $bucketName = self::$tempBucket->name() . '_object_retention';
         $output = self::runFunctionSnippet('create_bucket_with_object_retention', [
-            $bucketName,
+            self::$objectRetentionBucketName,
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Created bucket %s with object retention enabled setting: Enabled' . PHP_EOL, $bucketName),
+            sprintf(
+                'Created bucket %s with object retention enabled setting: Enabled' . PHP_EOL,
+                self::$objectRetentionBucketName
+            ),
             $output
         );
     }
@@ -171,18 +190,16 @@ class storageTest extends TestCase
      */
     public function testSetObjectRetentionPolicy()
     {
-        $bucketName = self::$tempBucket->name() . '_object_retention';
-        $bucket = self::$storage->bucket($bucketName);
-        $this->assertTrue($bucket->exists());
+        $objectRetentionBucket = self::$storage->bucket(self::$objectRetentionBucketName);
 
         $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT') . '.ObjectRetention';
-        $object = $bucket->upload('test', [
+        $object = $objectRetentionBucket->upload('test', [
             'name' => $objectName,
         ]);
         $this->assertTrue($object->exists());
 
         $output = self::runFunctionSnippet('set_object_retention_policy', [
-            $bucketName,
+            self::$objectRetentionBucketName,
             $objectName
         ]);
 
@@ -194,14 +211,6 @@ class storageTest extends TestCase
             ),
             $output
         );
-
-        // Disable object retention before delete
-        $object->update([
-            'retention' => [],
-            'overrideUnlockedRetention' => true
-        ]);
-        $object->delete();
-        $bucket->delete();
     }
 
     public function testGetBucketClassAndLocation()
