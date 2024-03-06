@@ -182,6 +182,22 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Message published with retry settings/', $output);
     }
 
+    public function testTopicMessageWithCompressionEnabled()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publisher_with_compression', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->assertMatchesRegularExpression(
+            '/Published a compressed message of message ID: /',
+            $output
+        );
+    }
+
     public function testListSubscriptions()
     {
         $subscription = $this->requireEnv('GOOGLE_PUBSUB_SUBSCRIPTION');
