@@ -50,7 +50,7 @@ function create_instance_with_autoscaling_config(string $projectId, string $inst
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
     $configName = $instanceAdminClient->instanceConfigName($projectId, 'regional-us-central1');
     // Only one of minNodes/maxNodes or minProcessingUnits/maxProcessingUnits
-    // can be set. Both min and max need to be set and 
+    // can be set. Both min and max need to be set and
     // maxNodes/maxProcessingUnits can be at most 10X of
     // minNodes/minProcessingUnits.
     // highPriorityCpuUtilizationPercent and storageUtilizationPercent are both
