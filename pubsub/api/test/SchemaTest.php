@@ -148,6 +148,49 @@ class SchemaTest extends TestCase
         ]);
     }
 
+    public function testCreateUpdateTopicWithSchemaRevisions()
+    {
+        $schemaId = uniqid('samples-test-');
+        $pubsub = new PubSubClient([
+            'projectId' => self::$projectId,
+        ]);
+        $definition = (string) file_get_contents(self::PROTOBUF_DEFINITION);
+        $schema = $pubsub->createSchema($schemaId, 'PROTOCOL_BUFFER', $definition);
+        $schema->commit($definition, 'PROTOCOL_BUFFER');
+        $schemas = ($schema->listRevisions())['schemas'];
+        $revisions = array_map(fn ($x) => $x['revisionId'], $schemas);
+
+        $topicId = uniqid('samples-test-topic-');
+        $output = $this->runFunctionSnippet('create_topic_with_schema_revisions', [
+            self::$projectId,
+            $topicId,
+            $schemaId,
+            $revisions[1],
+            $revisions[0],
+            'BINARY'
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Topic %s created', PublisherClient::topicName(self::$projectId, $topicId)),
+            $output
+        );
+
+        $output = $this->runFunctionSnippet('update_topic_schema', [
+            self::$projectId,
+            $topicId,
+            $revisions[1],
+            $revisions[0],
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Updated topic with schema: %s', PublisherClient::topicName(self::$projectId, $topicId)),
+            $output
+        );
+
+        $schema->delete();
+        $pubsub->topic($topicId)->delete();
+    }
+
     /**
      * @dataProvider definitions
      */
