@@ -192,8 +192,8 @@ class PubSubTest extends TestCase
             'This is a test message',
         ]);
 
-        $this->assertMatchesRegularExpression(
-            '/Published a compressed message of message ID: /',
+        $this->assertStringContainsString(
+            'Published a compressed message of message ID: ',
             $output
         );
     }
