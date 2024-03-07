@@ -16,7 +16,7 @@
 
 # Use the official PHP image.
 # https://hub.docker.com/_/php
-FROM php:8.0-apache
+FROM php:8.3-apache
 
 # Configure PHP for Cloud Run.
 # Precompile PHP code with opcache.
