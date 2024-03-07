@@ -41,6 +41,9 @@ class spannerTest extends TestCase
 
     use RetryTrait, EventuallyConsistentTestTrait;
 
+    /** @var string autoscalingInstanceId */
+    protected static $autoscalingInstanceId;
+
     /** @var string instanceId */
     protected static $instanceId;
 
@@ -117,6 +120,7 @@ class spannerTest extends TestCase
             'projectId' => self::$projectId,
         ]);
 
+        self::$autoscalingInstanceId = 'test-' . time() . rand();
         self::$instanceId = 'test-' . time() . rand();
         self::$lowCostInstanceId = 'test-' . time() . rand();
         self::$databaseId = 'test-' . time() . rand();
@@ -166,6 +170,17 @@ class spannerTest extends TestCase
         ]);
 
         $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    public function testCreateInstanceWithAutoscalingConfig()
+    {
+        $output = $this->runAdminFunctionSnippet('create_instance_with_autoscaling_config', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$autoscalingInstanceId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
+        $this->assertStringContainsString('minNodes set to 1', $output);
     }
 
     /**
