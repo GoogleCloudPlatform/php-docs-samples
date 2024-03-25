@@ -2,7 +2,7 @@
 
 ## Description
 
-Al code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
+All code in the snippets directory demonstrate how to invoke Cloud Tasks from PHP.
 
 `src/create_task.php` is a simple function to create tasks with App Engine routing.
 

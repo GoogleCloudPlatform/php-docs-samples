@@ -2,7 +2,7 @@
 
 ## Description
 
-Al code in the snippets directory demonstrate how to invoke
+All code in the snippets directory demonstrate how to invoke
 [Cloud Tasks][cloud-tasks] from PHP.
 
 `src/create_http_task.php` is a simple function to create tasks with an HTTP target.
@@ -44,7 +44,7 @@ Al code in the snippets directory demonstrate how to invoke
     * `PROJECT_ID` is your Google Cloud Project id.
     * `QUEUE_ID` is your queue id.
       Queue IDs already created can be listed with `gcloud tasks queues list`.
-    * `LOCATION_ID` is the location of your queue.  
+    * `LOCATION_ID` is the location of your queue.
       Determine the location ID, which can be discovered with
       `gcloud tasks queues describe <QUEUE_NAME>`, with the location embedded in
       the "name" value (for instance, if the name is
