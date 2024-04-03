@@ -23,7 +23,7 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit Tests for storage commands.
+ * Tests for storage insights library samples.
  */
 class StorageInsightsTest extends TestCase
 {
@@ -185,7 +185,7 @@ class StorageInsightsTest extends TestCase
         // report uuid is the second line of the output
         $reportName = explode("\n", trim($output))[1];
         // report name is of the format: projects/*/locations/*/reportConfigs/*
-        $reportNameParts = explode("/", $reportName);
+        $reportNameParts = explode('/', $reportName);
         return end($reportNameParts);
     }
 }

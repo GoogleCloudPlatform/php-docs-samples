@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_edit_inventory_report_config]
 use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
-use Google\Cloud\StorageInsights\V1\UpdateReportConfigRequest;
 use Google\Protobuf\FieldMask;
 
 /**
