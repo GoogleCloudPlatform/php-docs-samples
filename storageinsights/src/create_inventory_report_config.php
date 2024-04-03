@@ -28,6 +28,11 @@ use Google\Cloud\StorageInsights\V1\ObjectMetadataReportOptions;
 use Google\Cloud\StorageInsights\V1\CloudStorageDestinationOptions;
 
 /**
+ * Creates an inventory report config.
+ * Example:
+ * ```
+ * create_inventory_report_config($projectId, $bucketLocation, $sourceBucket, $destinationBucket);
+ * ```
  * @param string $projectId Your Google Cloud Project ID
  * @param string $bucketLocation The location of your source and destination buckets
  * @param string $sourceBucket The name of your Google Cloud Storage source bucket

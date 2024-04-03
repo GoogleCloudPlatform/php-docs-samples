@@ -21,6 +21,7 @@ namespace Google\Cloud\Samples\StorageInsights;
 use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
 
 /**
+ * Lists inventory report configs.
  * Example:
  * ```
  * list_inventory_report_configs($projectId, $location);

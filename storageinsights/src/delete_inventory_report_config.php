@@ -22,6 +22,10 @@ use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
 
 /**
  * Delete an inventory report config.
+ * Example:
+ * ```
+ * delete_inventory_report_config($projectId, $bucketLocation, $inventoryReportConfigUuid);
+ * ```
  *
  * @param string $projectId Your Google Cloud Project ID
  * @param string $bucketLocation The location of your bucket

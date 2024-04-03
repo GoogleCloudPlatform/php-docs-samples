@@ -21,6 +21,12 @@ namespace Google\Cloud\Samples\StorageInsights;
 use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
 
 /**
+ * Gets an existing inventory report config.
+ * Example:
+ * ```
+ * get_inventory_report_names($projectId, $bucketLocation, $inventoryReportConfigUuid);
+ * ```
+ *
  * @param string $projectId Your Google Cloud Project ID
  * @param string $bucketLocation The location your bucket is in
  * @param string $inventoryReportConfigUuid The UUID of the inventory report you want to get file names for
@@ -35,7 +41,7 @@ function get_inventory_report_names(
     $reportConfigName = $storageInsightsClient->reportConfigName($projectId, $bucketLocation, $inventoryReportConfigUuid);
     $reportConfig = $storageInsightsClient->getReportConfig($reportConfigName);
     $extension = $reportConfig->hasCsvOptions() ? 'csv' : 'parquet';
-    printf('You can use the Google Cloud Storage Client '
+    print('You can use the Google Cloud Storage Client '
         . 'to download the following objects from Google Cloud Storage:' . PHP_EOL);
     $listReportConfigs = $storageInsightsClient->listReportDetails($reportConfig->getName());
     foreach ($listReportConfigs->iterateAllElements() as $reportDetail) {

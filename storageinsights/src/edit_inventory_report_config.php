@@ -22,7 +22,11 @@ use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
 use Google\Protobuf\FieldMask;
 
 /**
- * Edit an existing inventory report config.
+ * Update an existing inventory report config.
+ * Example:
+ * ```
+ * edit_inventory_report_config($projectId, $bucketLocation, $inventoryReportConfigUuid);
+ * ```
  *
  * @param string $projectId Your Google Cloud Project ID
  * @param string $bucketLocation The location of your bucket
