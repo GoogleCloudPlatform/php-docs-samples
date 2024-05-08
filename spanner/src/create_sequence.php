@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,33 +24,42 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_sequence]
-use Google\Cloud\Spanner\Result;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Result;
 
 /**
  * Creates a sequence.
+ *
  * Example:
  * ```
- * create_sequence($instanceId, $databaseId);
+ * create_sequence($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_sequence(
-    string $instanceId,
-    string $databaseId
-): void {
+function create_sequence(string $projectId, string $instanceId, string $databaseId): void
+{
+    $databaseAdminClient = new DatabaseAdminClient();
     $spanner = new SpannerClient();
+
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
-    $transaction = $database->transaction();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
-    $operation = $database->updateDdlBatch([
-        "CREATE SEQUENCE Seq OPTIONS (sequence_kind = 'bit_reversed_positive')",
-        'CREATE TABLE Customers (CustomerId INT64 DEFAULT (GET_NEXT_SEQUENCE_VALUE(' .
-        'Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)'
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [
+            "CREATE SEQUENCE Seq OPTIONS (sequence_kind = 'bit_reversed_positive')",
+            'CREATE TABLE Customers (CustomerId INT64 DEFAULT (GET_NEXT_SEQUENCE_VALUE(' .
+            'Sequence Seq)), CustomerName STRING(1024)) PRIMARY KEY (CustomerId)'
+        ]
     ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
@@ -61,6 +70,7 @@ function create_sequence(
         PHP_EOL
     );
 
+    $transaction = $database->transaction();
     $res = $transaction->execute(
         'INSERT INTO Customers (CustomerName) VALUES ' .
         "('Alice'), ('David'), ('Marc') THEN RETURN CustomerId"

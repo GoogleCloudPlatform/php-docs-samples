@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,34 +24,48 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_update_database]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Database;
+use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseRequest;
+use Google\Protobuf\FieldMask;
 
 /**
  * Updates the drop protection setting for a database.
  * Example:
  * ```
- * update_database($instanceId, $databaseId);
+ * update_database($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function update_database(string $instanceId, string $databaseId): void
+function update_database(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-    printf(
-        'Updating database %s',
-        $database->name(),
+    $newUpdateMaskField = new FieldMask([
+        'paths' => ['enable_drop_protection']
+    ]);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseFullName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $database = (new Database())
+        ->setEnableDropProtection(true)
+        ->setName($databaseFullName);
+
+    printf('Updating database %s', $databaseId);
+    $operation = $databaseAdminClient->updateDatabase((new UpdateDatabaseRequest())
+        ->setDatabase($database)
+        ->setUpdateMask($newUpdateMaskField));
+
+    $operation->pollUntilComplete();
+
+    $database = $databaseAdminClient->getDatabase(
+        new GetDatabaseRequest(['name' => $databaseFullName])
     );
-    $op = $database->updateDatabase(['enableDropProtection' => true]);
-    $op->pollUntilComplete();
-    $database->reload();
     printf(
         'Updated the drop protection for %s to %s' . PHP_EOL,
-        $database->name(),
-        $database->info()['enableDropProtection']
+        $database->getName(),
+        $database->getEnableDropProtection()
     );
 }
 // [END spanner_update_database]

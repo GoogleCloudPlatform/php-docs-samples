@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_alter_sequence]
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 use Google\Cloud\Spanner\Result;
 use Google\Cloud\Spanner\SpannerClient;
 
@@ -31,24 +33,33 @@ use Google\Cloud\Spanner\SpannerClient;
  * Alters a sequence.
  * Example:
  * ```
- * alter_sequence($instanceId, $databaseId);
+ * alter_sequence($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function alter_sequence(
-    string $instanceId,
-    string $databaseId
-): void {
+function alter_sequence(string $projectId, string $instanceId, string $databaseId): void
+{
+    $databaseAdminClient = new DatabaseAdminClient();
     $spanner = new SpannerClient();
+
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
     $transaction = $database->transaction();
 
-    $operation = $database->updateDdl(
-        'ALTER SEQUENCE Seq SET OPTIONS (skip_range_min = 1000, skip_range_max = 5000000)'
-    );
+    $statements = [
+         'ALTER SEQUENCE Seq SET OPTIONS ' .
+        '(skip_range_min = 1000, skip_range_max = 5000000)'
+    ];
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => $statements
+    ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

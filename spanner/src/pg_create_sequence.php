@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,35 +24,43 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_create_sequence]
-use Google\Cloud\Spanner\Result;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Result;
 
 /**
  * Creates a sequence.
  * Example:
  * ```
- * pg_create_sequence($instanceId, $databaseId);
+ * pg_create_sequence($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud Project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
 function pg_create_sequence(
+    string $projectId,
     string $instanceId,
     string $databaseId
 ): void {
-    $spanner = new SpannerClient();
+    $databaseAdminClient = new DatabaseAdminClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
     $transaction = $database->transaction();
+    $operation = $databaseAdminClient->updateDatabaseDdl(new UpdateDatabaseDdlRequest([
+        'database' => DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId),
+        'statements' => [
+            'CREATE SEQUENCE Seq BIT_REVERSED_POSITIVE',
+            "CREATE TABLE Customers (
+            CustomerId           BIGINT DEFAULT nextval('Seq'), 
+            CustomerName         CHARACTER VARYING(1024), 
+            PRIMARY KEY (CustomerId))"
+        ]
+    ]));
 
-    $operation = $database->updateDdlBatch([
-        'CREATE SEQUENCE Seq BIT_REVERSED_POSITIVE',
-        "CREATE TABLE Customers (CustomerId BIGINT DEFAULT nextval('Seq'), " .
-        'CustomerName character varying(1024), PRIMARY KEY (CustomerId))'
-    ]);
-
-    print('Waiting for operation to complete...' . PHP_EOL);
+    print('Waiting for operation to complete ...' . PHP_EOL);
     $operation->pollUntilComplete();
 
     printf(
