@@ -46,6 +46,7 @@ function pg_create_sequence(
     string $databaseId
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
+    $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
     $transaction = $database->transaction();
