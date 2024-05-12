@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,32 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_get_database_ddl]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseDdlRequest;
 
 /**
  * Gets the database DDL statements.
  * Example:
  * ```
- * get_database_ddl($instanceId, $databaseId);
+ * get_database_ddl($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function get_database_ddl(string $instanceId, string $databaseId): void
+function get_database_ddl(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+
+    $request = new GetDatabaseDdlRequest(['database' => $databaseName]);
+
+    $statements = $databaseAdminClient->getDatabaseDdl($request)->getStatements();
 
     printf("Retrieved database DDL for $databaseId" . PHP_EOL);
-    foreach ($database->ddl() as $statement) {
-        printf('%s' . PHP_EOL, $statement);
+    foreach ($statements as $statement) {
+        printf($statement . PHP_EOL);
     }
 }
 // [END spanner_get_database_ddl]
