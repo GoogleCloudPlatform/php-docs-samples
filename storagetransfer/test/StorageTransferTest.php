@@ -18,10 +18,12 @@
 namespace Google\Cloud\Samples\StorageTransfer;
 
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\StorageTransfer\V1\StorageTransferServiceClient;
-use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
-use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
+use Google\Cloud\StorageTransfer\V1\GetGoogleServiceAccountRequest;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
+use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
+use Google\Cloud\StorageTransfer\V1\UpdateTransferJobRequest;
+use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class StorageTransferTest extends TestCase
@@ -70,13 +72,19 @@ class StorageTransferTest extends TestCase
             'name' => $jobName,
             'status' => Status::DELETED
         ]);
+        $request = (new UpdateTransferJobRequest())
+            ->setJobName($jobName)
+            ->setProjectId(self::$projectId)
+            ->setTransferJob($transferJob);
 
-        self::$sts->updateTransferJob($jobName, self::$projectId, $transferJob);
+        self::$sts->updateTransferJob($request);
     }
 
     private static function grantStsPermissions($bucket)
     {
-        $googleServiceAccount = self::$sts->getGoogleServiceAccount(self::$projectId);
+        $request2 = (new GetGoogleServiceAccountRequest())
+            ->setProjectId(self::$projectId);
+        $googleServiceAccount = self::$sts->getGoogleServiceAccount($request2);
         $email = $googleServiceAccount->getAccountEmail();
         $members = ['serviceAccount:' . $email];
 

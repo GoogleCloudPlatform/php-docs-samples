@@ -24,15 +24,16 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_dictionary_replacement]
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CustomInfoType\Dictionary\WordList;
-use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
+use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
+use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 use Google\Cloud\Dlp\V2\ReplaceDictionaryConfig;
 
 /**
@@ -90,12 +91,12 @@ function deidentify_dictionary_replacement(
 
     // Send the request and receive response from the service.
     $parent = "projects/$callingProjectId/locations/global";
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'inspectConfig' => $inspectConfig,
-        'item' => $contentItem
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setInspectConfig($inspectConfig)
+        ->setItem($contentItem);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results.
     printf('Text after replace with infotype config: %s', $response->getItem()->getValue());

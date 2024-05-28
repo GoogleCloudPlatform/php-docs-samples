@@ -24,17 +24,18 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_instances_create]
-use Google\Cloud\Compute\V1\InstancesClient;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
-use Google\Cloud\Compute\V1\Instance;
-use Google\Cloud\Compute\V1\NetworkInterface;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
+use Google\Cloud\Compute\V1\InsertInstanceRequest;
 
 /**
  * To correctly handle string enums in Cloud Compute library
  * use constants defined in the Enums subfolder.
  */
-use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
+use Google\Cloud\Compute\V1\Instance;
+use Google\Cloud\Compute\V1\NetworkInterface;
 
 /**
  * Creates an instance in the specified project and zone.
@@ -82,7 +83,11 @@ function create_instance(
 
     // Insert the new Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->insert($instance, $projectId, $zone);
+    $request = (new InsertInstanceRequest())
+        ->setInstanceResource($instance)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->insert($request);
 
     # [START compute_instances_operation_check]
     // Wait for the operation to complete.

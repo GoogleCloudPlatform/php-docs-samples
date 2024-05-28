@@ -25,17 +25,18 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_create_job]
+use Google\Cloud\Dlp\V2\Action;
+use Google\Cloud\Dlp\V2\Action\PublishSummaryToCscc;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
-use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action\PublishSummaryToCscc;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\StorageConfig\TimespanConfig;
 
 /**
@@ -102,9 +103,10 @@ function create_job(
 
     // Send the job creation request and process the response.
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJobConfig
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setInspectJob($inspectJobConfig);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     // Print results.
     printf($job->getName());

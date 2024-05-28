@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_get_supported_languages_for_target]
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GetSupportedLanguagesRequest;
 
 /**
  * @param string $projectId     Your Google Cloud project ID.
@@ -31,10 +32,10 @@ function v3_get_supported_languages_for_target(string $languageCode, string $pro
     $formattedParent = $translationServiceClient->locationName($projectId, 'global');
 
     try {
-        $response = $translationServiceClient->getSupportedLanguages(
-            $formattedParent,
-            ['displayLanguageCode' => $languageCode]
-        );
+        $request = (new GetSupportedLanguagesRequest())
+            ->setParent($formattedParent)
+            ->setDisplayLanguageCode($languageCode);
+        $response = $translationServiceClient->getSupportedLanguages($request);
         // List language codes of supported languages
         foreach ($response->getLanguages() as $language) {
             printf('Language Code: %s' . PHP_EOL, $language->getLanguageCode());

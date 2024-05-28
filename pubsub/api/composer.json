@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-pubsub": "^1.46",
+        "google/cloud-pubsub": "^2.0",
         "rg/avro-php": "^2.0.1||^3.0.0"
     }
 }

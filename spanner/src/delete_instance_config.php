@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_delete_instance_config]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\DeleteInstanceConfigRequest;
 
 /**
  * Deletes a customer managed instance configuration.
@@ -33,15 +34,21 @@ use Google\Cloud\Spanner\SpannerClient;
  * delete_instance_config($instanceConfigId);
  * ```
  *
+ * @param string $projectId The Google Cloud Project ID.
  * @param string $instanceConfigId The customer managed instance configuration id. The id must start with 'custom-'.
  */
-function delete_instance_config($instanceConfigId)
+function delete_instance_config(string $projectId, string $instanceConfigId)
 {
-    $spanner = new SpannerClient();
-    $instanceConfiguration = $spanner->instanceConfiguration($instanceConfigId);
+    $instanceAdminClient = new InstanceAdminClient();
+    $instanceConfigName = $instanceAdminClient->instanceConfigName(
+        $projectId,
+        $instanceConfigId
+    );
 
-    $instanceConfiguration->delete();
+    $request = new DeleteInstanceConfigRequest();
+    $request->setName($instanceConfigName);
 
+    $instanceAdminClient->deleteInstanceConfig($request);
     printf('Deleted instance configuration %s' . PHP_EOL, $instanceConfigId);
 }
 // [END spanner_delete_instance_config]

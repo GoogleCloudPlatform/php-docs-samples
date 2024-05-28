@@ -86,4 +86,14 @@ class authTest extends TestCase
         ]);
         $this->assertStringContainsString(self::$bucketName, $output);
     }
+
+    public function testAuthCloudApiKey()
+    {
+        $output = $this->runFunctionSnippet('auth_cloud_apikey', [
+            'projectId' => self::$projectId,
+            'location' => 'us-central1',
+            'apiKey' => 'abc', // fake API key
+        ]);
+        $this->assertStringContainsString('API_KEY_INVALID', $output);
+    }
 }

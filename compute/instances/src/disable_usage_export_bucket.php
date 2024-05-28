@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_disable]
-use Google\Cloud\Compute\V1\ProjectsClient;
+use Google\Cloud\Compute\V1\Client\ProjectsClient;
 use Google\Cloud\Compute\V1\Operation;
+use Google\Cloud\Compute\V1\SetUsageExportBucketProjectRequest;
 use Google\Cloud\Compute\V1\UsageExportLocation;
 
 /**
@@ -39,7 +40,10 @@ function disable_usage_export_bucket(string $projectId)
 {
     // Disable the usage export location by sending empty UsageExportLocation as usageExportLocationResource.
     $projectsClient = new ProjectsClient();
-    $operation = $projectsClient->setUsageExportBucket($projectId, new UsageExportLocation());
+    $request = (new SetUsageExportBucketProjectRequest())
+        ->setProject($projectId)
+        ->setUsageExportLocationResource(new UsageExportLocation());
+    $operation = $projectsClient->setUsageExportBucket($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

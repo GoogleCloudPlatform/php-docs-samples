@@ -25,12 +25,13 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_redact_image_colored_infotypes]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 use Google\Cloud\Dlp\V2\ByteContentItem;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\Color;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\RedactImageRequest;
+use Google\Cloud\Dlp\V2\RedactImageRequest\ImageRedactionConfig;
 
 /**
  * Redact data from an image with color-coded infoTypes.
@@ -102,12 +103,12 @@ function redact_image_colored_infotypes(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request.
-    $response = $dlp->redactImage([
-        'parent' => $parent,
-        'byteItem' => $byteContent,
-        'inspectConfig' => $inspectConfig,
-        'imageRedactionConfigs' => $imageRedactionConfigs
-    ]);
+    $redactImageRequest = (new RedactImageRequest())
+        ->setParent($parent)
+        ->setByteItem($byteContent)
+        ->setInspectConfig($inspectConfig)
+        ->setImageRedactionConfigs($imageRedactionConfigs);
+    $response = $dlp->redactImage($redactImageRequest);
 
     // Save result to file.
     file_put_contents($outputPath, $response->getRedactedImage());

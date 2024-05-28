@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,31 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_add_numeric_column]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Adds a NUMERIC column to a table.
  * Example:
  * ```
- * add_numeric_column($instanceId, $databaseId);
+ * add_numeric_column($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_numeric_column(string $instanceId, string $databaseId): void
+function add_numeric_column(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
-    $operation = $database->updateDdl(
-        'ALTER TABLE Venues ADD COLUMN Revenue NUMERIC'
-    );
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => ['ALTER TABLE Venues ADD COLUMN Revenue NUMERIC']
+    ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,48 +24,56 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_add_and_drop_database_role]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Adds and drops roles to the Singers table in the example database.
  * Example:
  * ```
- * add_drop_database_role($instanceId, $databaseId);
+ * add_drop_database_role($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function add_drop_database_role(string $instanceId, string $databaseId): void
+function add_drop_database_role(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
-    $roleParent = 'new_parent';
-    $roleChild = 'new_child';
-
-    $operation = $database->updateDdlBatch([
-        sprintf('CREATE ROLE %s', $roleParent),
-        sprintf('GRANT SELECT ON TABLE Singers TO ROLE %s', $roleParent),
-        sprintf('CREATE ROLE %s', $roleChild),
-        sprintf('GRANT ROLE %s TO ROLE %s', $roleParent, $roleChild)
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [
+            'CREATE ROLE new_parent',
+            'GRANT SELECT ON TABLE Singers TO ROLE new_parent',
+            'CREATE ROLE new_child',
+            'GRANT ROLE new_parent TO ROLE new_child'
+        ]
     ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     printf('Waiting for create role and grant operation to complete...%s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created roles %s and %s and granted privileges%s', $roleParent, $roleChild, PHP_EOL);
+    printf('Created roles %s and %s and granted privileges%s', 'new_parent', 'new_child', PHP_EOL);
 
-    $operation = $database->updateDdlBatch([
-        sprintf('REVOKE ROLE %s FROM ROLE %s', $roleParent, $roleChild),
-        sprintf('DROP ROLE %s', $roleChild)
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [
+            'REVOKE ROLE new_parent FROM ROLE new_child',
+            'DROP ROLE new_child'
+        ]
     ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     printf('Waiting for revoke role and drop role operation to complete...%s', PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Revoked privileges and dropped role %s%s', $roleChild, PHP_EOL);
+    printf('Revoked privileges and dropped role %s%s', 'new_child', PHP_EOL);
 }
 // [END spanner_add_and_drop_database_role]
 

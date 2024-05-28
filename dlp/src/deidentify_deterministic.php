@@ -26,17 +26,18 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_deidentify_deterministic]
 
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\PrimitiveTransformation;
-use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoDeterministicConfig;
+use Google\Cloud\Dlp\V2\CryptoKey;
+use Google\Cloud\Dlp\V2\DeidentifyConfig;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InfoTypeTransformations;
+use Google\Cloud\Dlp\V2\InfoTypeTransformations\InfoTypeTransformation;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
-use Google\Cloud\Dlp\V2\CryptoKey;
+use Google\Cloud\Dlp\V2\PrimitiveTransformation;
 
 /**
  * De-identify content through deterministic encryption.
@@ -108,13 +109,12 @@ function deidentify_deterministic(
         ->setInfoTypeTransformations($infoTypeTransformations);
 
     // Send the request and receive response from the service.
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $content,
-        'inspectConfig' => $inspectConfig
-
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($content)
+        ->setInspectConfig($inspectConfig);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Print the results.
     printf($response->getItem()->getValue());

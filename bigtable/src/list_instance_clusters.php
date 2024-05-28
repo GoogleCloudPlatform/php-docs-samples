@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_get_clusters]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ListClustersRequest;
 
 /**
  * List clusters of an instance
@@ -42,7 +43,9 @@ function list_instance_clusters(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     printf('Listing Clusters:' . PHP_EOL);
-    $getClusters = $instanceAdminClient->listClusters($instanceName)->getClusters();
+    $listClustersRequest = (new ListClustersRequest())
+        ->setParent($instanceName);
+    $getClusters = $instanceAdminClient->listClusters($listClustersRequest)->getClusters();
     $clusters = $getClusters->getIterator();
 
     foreach ($clusters as $cluster) {
