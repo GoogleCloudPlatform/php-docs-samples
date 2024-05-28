@@ -34,6 +34,7 @@ class storageTest extends TestCase
     private static $bucketName;
     private static $storage;
     private static $tempBucket;
+    private static $objectRetentionBucketName;
 
     public static function setUpBeforeClass(): void
     {
@@ -43,6 +44,11 @@ class storageTest extends TestCase
         self::$tempBucket = self::$storage->createBucket(
             sprintf('%s-test-bucket-%s', self::$projectId, time())
         );
+        self::$objectRetentionBucketName = sprintf(
+            '%s_object_retention-%s',
+            self::$projectId,
+            time()
+        );
     }
 
     public static function tearDownAfterClass(): void
@@ -51,6 +57,17 @@ class storageTest extends TestCase
             $object->delete();
         }
         self::$tempBucket->delete();
+
+        $objectRetentionBucket = self::$storage->bucket(self::$objectRetentionBucketName);
+        foreach ($objectRetentionBucket->objects() as $object) {
+            // Disable object retention before delete
+            $object->update([
+                'retention' => [],
+                'overrideUnlockedRetention' => true
+            ]);
+            $object->delete();
+        }
+        $objectRetentionBucket->delete();
     }
 
     public function testBucketAcl()
@@ -59,7 +76,7 @@ class storageTest extends TestCase
             self::$tempBucket->name(),
         ]);
 
-        $this->assertRegExp('/: OWNER/', $output);
+        $this->assertMatchesRegularExpression('/: OWNER/', $output);
     }
 
     public function testPrintDefaultBucketAcl()
@@ -151,6 +168,49 @@ class storageTest extends TestCase
         $this->assertFalse($bucket->exists());
 
         $this->assertStringContainsString("Bucket deleted: $bucketName", $output);
+    }
+
+    public function testCreateBucketWithObjectRetention()
+    {
+        $output = self::runFunctionSnippet('create_bucket_with_object_retention', [
+            self::$objectRetentionBucketName,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Created bucket %s with object retention enabled setting: Enabled' . PHP_EOL,
+                self::$objectRetentionBucketName
+            ),
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateBucketWithObjectRetention
+     */
+    public function testSetObjectRetentionPolicy()
+    {
+        $objectRetentionBucket = self::$storage->bucket(self::$objectRetentionBucketName);
+
+        $objectName = $this->requireEnv('GOOGLE_STORAGE_OBJECT') . '.ObjectRetention';
+        $object = $objectRetentionBucket->upload('test', [
+            'name' => $objectName,
+        ]);
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('set_object_retention_policy', [
+            self::$objectRetentionBucketName,
+            $objectName
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Retention policy for object %s was updated to: %s' . PHP_EOL,
+                $objectName,
+                $object->reload()['retention']['retainUntilTime']
+            ),
+            $output
+        );
     }
 
     public function testGetBucketClassAndLocation()
@@ -836,6 +896,7 @@ class storageTest extends TestCase
         $bucket = self::$storage->createBucket($bucketName, [
             'autoclass' => [
                 'enabled' => true,
+                'terminalStorageClass' => 'ARCHIVE',
             ],
             'location' => 'US',
         ]);
@@ -849,30 +910,38 @@ class storageTest extends TestCase
             sprintf('Bucket %s has autoclass enabled: %s', $bucketName, true),
             $output
         );
+        $this->assertStringContainsString(
+            sprintf('Autoclass terminal storage class is set to %s', 'ARCHIVE'),
+            $output
+        );
     }
 
     public function testSetBucketWithAutoclass()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'), [
-            'autoclass' => [
-                'enabled' => true,
-            ],
             'location' => 'US',
         ]);
-        $info = $bucket->reload();
-        $this->assertArrayHasKey('autoclass', $info);
-        $this->assertTrue($info['autoclass']['enabled']);
 
+        $terminalStorageClass = 'ARCHIVE';
         $output = self::runFunctionSnippet('set_bucket_autoclass', [
             $bucket->name(),
-            false
+            true,
+            $terminalStorageClass
         ]);
         $bucket->delete();
 
         $this->assertStringContainsString(
             sprintf(
-                'Updated bucket %s with autoclass set to false.',
-                $bucket->name(),
+                'Updated bucket %s with autoclass set to true.',
+                $bucket->name()
+            ),
+            $output
+        );
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Autoclass terminal storage class is %s.' . PHP_EOL,
+                $terminalStorageClass
             ),
             $output
         );

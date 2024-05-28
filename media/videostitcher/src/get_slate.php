@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_slate]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetSlateRequest;
 
 /**
  * Gets a slate.
@@ -43,7 +44,9 @@ function get_slate(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->slateName($callingProjectId, $location, $slateId);
-    $slate = $stitcherClient->getSlate($formattedName);
+    $request = (new GetSlateRequest())
+        ->setName($formattedName);
+    $slate = $stitcherClient->getSlate($request);
 
     // Print results
     printf('Slate: %s' . PHP_EOL, $slate->getName());

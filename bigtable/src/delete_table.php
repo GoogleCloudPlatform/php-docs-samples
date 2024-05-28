@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_table]
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\DeleteTableRequest;
 
 /**
  * Delete a table
@@ -45,7 +46,9 @@ function delete_table(
     // Delete the entire table
     try {
         printf('Attempting to delete table %s.' . PHP_EOL, $tableId);
-        $tableAdminClient->deleteTable($tableName);
+        $deleteTableRequest = (new DeleteTableRequest())
+            ->setName($tableName);
+        $tableAdminClient->deleteTable($deleteTableRequest);
         printf('Deleted %s table.' . PHP_EOL, $tableId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

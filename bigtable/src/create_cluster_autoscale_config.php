@@ -26,10 +26,11 @@ namespace Google\Cloud\Samples\Bigtable;
 // [START bigtable_api_cluster_create_autoscaling]
 use Google\Cloud\Bigtable\Admin\V2\AutoscalingLimits;
 use Google\Cloud\Bigtable\Admin\V2\AutoscalingTargets;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\Cluster;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterAutoscalingConfig;
 use Google\Cloud\Bigtable\Admin\V2\Cluster\ClusterConfig;
+use Google\Cloud\Bigtable\Admin\V2\CreateClusterRequest;
 use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
@@ -79,7 +80,11 @@ function create_cluster_autoscale_config(
         )
     );
     $cluster->setClusterConfig($clusterConfig);
-    $operationResponse = $instanceAdminClient->createCluster($instanceName, $clusterId, $cluster);
+    $createClusterRequest = (new CreateClusterRequest())
+        ->setParent($instanceName)
+        ->setClusterId($clusterId)
+        ->setCluster($cluster);
+    $operationResponse = $instanceAdminClient->createCluster($createClusterRequest);
 
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
@@ -87,7 +92,7 @@ function create_cluster_autoscale_config(
         printf('Cluster created: %s' . PHP_EOL, $clusterId);
     } else {
         $error = $operationResponse->getError();
-        printf('Cluster not created: %s' . PHP_EOL, $error->getMessage());
+        printf('Cluster not created: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 // [END bigtable_api_cluster_create_autoscaling]

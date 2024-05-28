@@ -20,14 +20,15 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_create_key_ring]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateKeyRingRequest;
 use Google\Cloud\Kms\V1\KeyRing;
 
 function create_key_ring(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $id = 'my-key-ring'
-) {
+): KeyRing {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -38,7 +39,11 @@ function create_key_ring(
     $keyRing = new KeyRing();
 
     // Call the API.
-    $createdKeyRing = $client->createKeyRing($locationName, $id, $keyRing);
+    $createKeyRingRequest = (new CreateKeyRingRequest())
+        ->setParent($locationName)
+        ->setKeyRingId($id)
+        ->setKeyRing($keyRing);
+    $createdKeyRing = $client->createKeyRing($createKeyRingRequest);
     printf('Created key ring: %s' . PHP_EOL, $createdKeyRing->getName());
 
     return $createdKeyRing;

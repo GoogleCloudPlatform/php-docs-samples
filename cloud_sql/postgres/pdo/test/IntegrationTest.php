@@ -25,9 +25,6 @@ use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\CloudSqlProxyTrait;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class IntegrationTest extends TestCase
 {
     use TestTrait;
@@ -51,7 +48,7 @@ class IntegrationTest extends TestCase
             'CLOUDSQL_CONNECTION_NAME_POSTGRES'
         );
         $socketDir = $this->requireEnv('DB_SOCKET_DIR');
-        $instanceUnixSocket = "${socketDir}/${connectionName}";
+        $instanceUnixSocket = "{$socketDir}/{$connectionName}";
 
         putenv("DB_PASS=$dbPass");
         putenv("DB_NAME=$dbName");

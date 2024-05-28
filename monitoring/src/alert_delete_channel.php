@@ -24,19 +24,23 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 # [START monitoring_alert_delete_channel]
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\DeleteNotificationChannelRequest;
 
 /**
  * @param string $projectId Your project ID
+ * @param string $channelId
  */
-function alert_delete_channel($projectId, $channelId)
+function alert_delete_channel(string $projectId, string $channelId): void
 {
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
     $channelName = $channelClient->notificationChannelName($projectId, $channelId);
+    $deleteNotificationChannelRequest = (new DeleteNotificationChannelRequest())
+        ->setName($channelName);
 
-    $channelClient->deleteNotificationChannel($channelName);
+    $channelClient->deleteNotificationChannel($deleteNotificationChannelRequest);
     printf('Deleted notification channel %s' . PHP_EOL, $channelName);
 }
 # [END monitoring_alert_delete_channel]

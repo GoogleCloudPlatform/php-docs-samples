@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_delete]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\DeleteUptimeCheckConfigRequest;
 
 /**
  * Example:
@@ -40,8 +41,10 @@ function delete_uptime_check($projectId, $configName)
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $deleteUptimeCheckConfigRequest = (new DeleteUptimeCheckConfigRequest())
+        ->setName($configName);
 
-    $uptimeCheckClient->deleteUptimeCheckConfig($configName);
+    $uptimeCheckClient->deleteUptimeCheckConfig($deleteUptimeCheckConfigRequest);
 
     printf('Deleted an uptime check: ' . $configName . PHP_EOL);
 }

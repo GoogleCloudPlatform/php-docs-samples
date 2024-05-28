@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_delete_input]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\DeleteInputRequest;
 
 /**
  * Deletes an input.
@@ -44,7 +45,9 @@ function delete_input(
     $formattedName = $livestreamClient->inputName($callingProjectId, $location, $inputId);
 
     // Run the input deletion request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->deleteInput($formattedName);
+    $request = (new DeleteInputRequest())
+        ->setName($formattedName);
+    $operationResponse = $livestreamClient->deleteInput($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         // Print status

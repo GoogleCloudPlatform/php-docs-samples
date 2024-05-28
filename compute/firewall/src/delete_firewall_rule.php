@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_firewall_delete]
-use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
+use Google\Cloud\Compute\V1\DeleteFirewallRequest;
 
 /**
  * Delete a firewall rule from the specified project.
@@ -40,7 +41,10 @@ function delete_firewall_rule(string $projectId, string $firewallRuleName)
     $firewallsClient = new FirewallsClient();
 
     // Delete the firewall rule using Firewalls Client.
-    $operation = $firewallsClient->delete($firewallRuleName, $projectId);
+    $request = (new DeleteFirewallRequest())
+        ->setFirewall($firewallRuleName)
+        ->setProject($projectId);
+    $operation = $firewallsClient->delete($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
@@ -48,7 +52,7 @@ function delete_firewall_rule(string $projectId, string $firewallRuleName)
         printf('Rule %s deleted successfully!' . PHP_EOL, $firewallRuleName);
     } else {
         $error = $operation->getError();
-        printf('Failed to delete firewall rule: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to delete firewall rule: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_firewall_delete]

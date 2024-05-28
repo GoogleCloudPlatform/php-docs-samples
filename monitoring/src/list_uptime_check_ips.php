@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_list_ips]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\ListUptimeCheckIpsRequest;
 
 /**
  * Example:
@@ -32,13 +33,14 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * list_uptime_check_ips($projectId);
  * ```
  */
-function list_uptime_check_ips($projectId)
+function list_uptime_check_ips(string $projectId): void
 {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $listUptimeCheckIpsRequest = new ListUptimeCheckIpsRequest();
 
-    $pages = $uptimeCheckClient->listUptimeCheckIps();
+    $pages = $uptimeCheckClient->listUptimeCheckIps($listUptimeCheckIpsRequest);
 
     foreach ($pages->iteratePages() as $page) {
         $ips = $page->getResponseObject()->getUptimeCheckIps();

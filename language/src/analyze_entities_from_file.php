@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Language;
 
 # [START language_entities_gcs]
+use Google\Cloud\Language\V1\AnalyzeEntitiesRequest;
+use Google\Cloud\Language\V1\Client\LanguageServiceClient;
 use Google\Cloud\Language\V1\Document;
 use Google\Cloud\Language\V1\Document\Type;
-use Google\Cloud\Language\V1\LanguageServiceClient;
 use Google\Cloud\Language\V1\Entity\Type as EntityType;
 
 /**
@@ -43,7 +44,9 @@ function analyze_entities_from_file(string $uri): void
         ->setType(Type::PLAIN_TEXT);
 
     // Call the analyzeEntities function
-    $response = $languageServiceClient->analyzeEntities($document, []);
+    $request = (new AnalyzeEntitiesRequest())
+        ->setDocument($document);
+    $response = $languageServiceClient->analyzeEntities($request);
     $entities = $response->getEntities();
     // Print out information about each entity
     foreach ($entities as $entity) {

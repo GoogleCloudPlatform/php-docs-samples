@@ -25,8 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_live_session]
-use Google\Cloud\Video\Stitcher\V1\AdTag;
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateLiveSessionRequest;
 use Google\Cloud\Video\Stitcher\V1\LiveSession;
 
 /**
@@ -35,36 +35,27 @@ use Google\Cloud\Video\Stitcher\V1\LiveSession;
  *
  * @param string $callingProjectId     The project ID to run the API call under
  * @param string $location             The location of the session
- * @param string $sourceUri            Uri of the media to stitch; this URI must
- *                                     reference either an MPEG-DASH manifest
- *                                     (.mpd) file or an M3U playlist manifest
- *                                     (.m3u8) file.
- * @param string $adTagUri             The Uri of the ad tag
- * @param string $slateId              The user-defined slate ID of the default
- *                                     slate to use when no slates are specified
- *                                     in an ad break's message
+ * @param string $liveConfigId         The live config ID to use to create the
+ *                                     live session
  */
 function create_live_session(
     string $callingProjectId,
     string $location,
-    string $sourceUri,
-    string $adTagUri,
-    string $slateId
+    string $liveConfigId
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
+    $liveConfig = $stitcherClient->liveConfigName($callingProjectId, $location, $liveConfigId);
     $liveSession = new LiveSession();
-    $liveSession->setSourceUri($sourceUri);
-    $liveSession->setAdTagMap([
-        'default' => (new AdTag())
-            ->setUri($adTagUri)
-    ]);
-    $liveSession->setDefaultSlateId($slateId);
+    $liveSession->setLiveConfig($liveConfig);
 
     // Run live session creation request
-    $response = $stitcherClient->createLiveSession($parent, $liveSession);
+    $request = (new CreateLiveSessionRequest())
+        ->setParent($parent)
+        ->setLiveSession($liveSession);
+    $response = $stitcherClient->createLiveSession($request);
 
     // Print results
     printf('Live session: %s' . PHP_EOL, $response->getName());

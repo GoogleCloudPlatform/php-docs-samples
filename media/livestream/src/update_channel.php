@@ -25,9 +25,10 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_update_channel]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\Channel;
 use Google\Cloud\Video\LiveStream\V1\InputAttachment;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\UpdateChannelRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -62,7 +63,10 @@ function update_channel(
     ]);
 
     // Run the channel update request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->updateChannel($channel, ['updateMask' => $updateMask]);
+    $request = (new UpdateChannelRequest())
+        ->setChannel($channel)
+        ->setUpdateMask($updateMask);
+    $operationResponse = $livestreamClient->updateChannel($request);
 
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {

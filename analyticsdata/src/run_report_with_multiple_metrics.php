@@ -28,15 +28,16 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_run_report_with_multiple_metrics]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\MetricType;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 
 /**
- * @param string $propertyID Your GA-4 Property ID
+ * @param string $propertyId Your GA-4 Property ID
  * Runs a report of active users grouped by three metrics.
  */
 function run_report_with_multiple_metrics(string $propertyId)
@@ -45,21 +46,21 @@ function run_report_with_multiple_metrics(string $propertyId)
     $client = new BetaAnalyticsDataClient();
 
     // Make an API call.
-    $response = $client->runReport([
-        'property' => 'properties/' . $propertyId,
-        'dimensions' => [new Dimension(['name' => 'date'])],
-        'metrics' => [
+    $request = (new RunReportRequest())
+        ->setProperty('properties/' . $propertyId)
+        ->setDimensions([new Dimension(['name' => 'date'])])
+        ->setMetrics([
             new Metric(['name' => 'activeUsers']),
             new Metric(['name' => 'newUsers']),
             new Metric(['name' => 'totalRevenue'])
-        ],
-        'dateRanges' => [
+        ])
+        ->setDateRanges([
             new DateRange([
                 'start_date' => '7daysAgo',
                 'end_date' => 'today',
             ])
-        ],
-    ]);
+        ]);
+    $response = $client->runReport($request);
 
     printRunReportResponseWithMultipleMetrics($response);
 }

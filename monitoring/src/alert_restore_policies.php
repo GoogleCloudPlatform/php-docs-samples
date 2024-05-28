@@ -26,17 +26,21 @@ namespace Google\Cloud\Samples\Monitoring;
 # [START monitoring_alert_restore_policies]
 # [START monitoring_alert_update_channel]
 # [START monitoring_alert_enable_channel]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\ApiCore\ApiException;
 use Google\Cloud\Monitoring\V3\AlertPolicy;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\CreateAlertPolicyRequest;
+use Google\Cloud\Monitoring\V3\CreateNotificationChannelRequest;
 use Google\Cloud\Monitoring\V3\NotificationChannel;
 use Google\Cloud\Monitoring\V3\NotificationChannel\VerificationStatus;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Monitoring\V3\UpdateAlertPolicyRequest;
+use Google\Cloud\Monitoring\V3\UpdateNotificationChannelRequest;
 
 /**
  * @param string $projectId Your project ID
  */
-function alert_restore_policies($projectId)
+function alert_restore_policies(string $projectId): void
 {
     $alertClient = new AlertPolicyServiceClient([
         'projectId' => $projectId,
@@ -47,15 +51,15 @@ function alert_restore_policies($projectId)
     ]);
 
     print('Loading alert policies and notification channels from backup.json.' . PHP_EOL);
-    $projectName = $alertClient->projectName($projectId);
-    $record = json_decode(file_get_contents('backup.json'), true);
+    $projectName = 'projects/' . $projectId;
+    $record = json_decode((string) file_get_contents('backup.json'), true);
     $isSameProject = $projectName == $record['project_name'];
 
     # Convert dicts to AlertPolicies.
     $policies = [];
     foreach ($record['policies'] as $policyArray) {
         $policy = new AlertPolicy();
-        $policy->mergeFromJsonString(json_encode($policyArray));
+        $policy->mergeFromJsonString((string) json_encode($policyArray));
         $policies[] = $policy;
     }
 
@@ -63,7 +67,7 @@ function alert_restore_policies($projectId)
     $channels = [];
     foreach (array_filter($record['channels']) as $channelArray) {
         $channel = new NotificationChannel();
-        $channel->mergeFromJsonString(json_encode($channelArray));
+        $channel->mergeFromJsonString((string) json_encode($channelArray));
         $channels[] = $channel;
     }
 
@@ -82,7 +86,9 @@ function alert_restore_policies($projectId)
 
         if ($isSameProject) {
             try {
-                $channelClient->updateNotificationChannel($channel);
+                $updateNotificationChannelRequest = (new UpdateNotificationChannelRequest())
+                    ->setNotificationChannel($channel);
+                $channelClient->updateNotificationChannel($updateNotificationChannelRequest);
                 $updated = true;
             } catch (ApiException $e) {
                 # The channel was deleted.  Create it below.
@@ -96,10 +102,10 @@ function alert_restore_policies($projectId)
             # The channel no longer exists.  Recreate it.
             $oldName = $channel->getName();
             $channel->setName('');
-            $newChannel = $channelClient->createNotificationChannel(
-                $projectName,
-                $channel
-            );
+            $createNotificationChannelRequest = (new CreateNotificationChannelRequest())
+                ->setName($projectName)
+                ->setNotificationChannel($channel);
+            $newChannel = $channelClient->createNotificationChannel($createNotificationChannelRequest);
             $channelNameMap[$oldName] = $newChannel->getName();
         }
     }
@@ -108,8 +114,8 @@ function alert_restore_policies($projectId)
     foreach ($policies as $policy) {
         printf('Updating policy %s' . PHP_EOL, $policy->getDisplayName());
         # These two fields cannot be set directly, so clear them.
-        $policy->setCreationRecord(null);
-        $policy->setMutationRecord(null);
+        $policy->clearCreationRecord();
+        $policy->clearMutationRecord();
 
         $notificationChannels = $policy->getNotificationChannels();
 
@@ -123,7 +129,9 @@ function alert_restore_policies($projectId)
         $updated = false;
         if ($isSameProject) {
             try {
-                $alertClient->updateAlertPolicy($policy);
+                $updateAlertPolicyRequest = (new UpdateAlertPolicyRequest())
+                    ->setAlertPolicy($policy);
+                $alertClient->updateAlertPolicy($updateAlertPolicyRequest);
                 $updated = true;
             } catch (ApiException $e) {
                 # The policy was deleted.  Create it below.
@@ -140,7 +148,10 @@ function alert_restore_policies($projectId)
             foreach ($policy->getConditions() as $condition) {
                 $condition->setName('');
             }
-            $policy = $alertClient->createAlertPolicy($projectName, $policy);
+            $createAlertPolicyRequest = (new CreateAlertPolicyRequest())
+                ->setName($projectName)
+                ->setAlertPolicy($policy);
+            $policy = $alertClient->createAlertPolicy($createAlertPolicyRequest);
         }
         printf('Updated %s' . PHP_EOL, $policy->getName());
     }

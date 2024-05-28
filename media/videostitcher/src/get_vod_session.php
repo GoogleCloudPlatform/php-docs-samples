@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_vod_session]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetVodSessionRequest;
 
 /**
  * Gets a VOD session.
@@ -43,7 +44,9 @@ function get_vod_session(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->vodSessionName($callingProjectId, $location, $sessionId);
-    $session = $stitcherClient->getVodSession($formattedName);
+    $request = (new GetVodSessionRequest())
+        ->setName($formattedName);
+    $session = $stitcherClient->getVodSession($request);
 
     // Print results
     printf('VOD session: %s' . PHP_EOL, $session->getName());

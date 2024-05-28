@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_restore_key_version]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\RestoreCryptoKeyVersionRequest;
 
 function restore_key_version(
     string $projectId = 'my-project',
@@ -36,7 +37,9 @@ function restore_key_version(
     $keyVersionName = $client->cryptoKeyVersionName($projectId, $locationId, $keyRingId, $keyId, $versionId);
 
     // Call the API.
-    $restoredVersion = $client->restoreCryptoKeyVersion($keyVersionName);
+    $restoreCryptoKeyVersionRequest = (new RestoreCryptoKeyVersionRequest())
+        ->setName($keyVersionName);
+    $restoredVersion = $client->restoreCryptoKeyVersion($restoreCryptoKeyVersionRequest);
     printf('Restored key version: %s' . PHP_EOL, $restoredVersion->getName());
 
     return $restoredVersion;

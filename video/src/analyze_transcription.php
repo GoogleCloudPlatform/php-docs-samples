@@ -19,10 +19,11 @@
 namespace Google\Cloud\Samples\VideoIntelligence;
 
 // [START video_speech_transcription_gcs]
-use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\AnnotateVideoRequest;
+use Google\Cloud\VideoIntelligence\V1\Client\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
-use Google\Cloud\VideoIntelligence\V1\VideoContext;
 use Google\Cloud\VideoIntelligence\V1\SpeechTranscriptionConfig;
+use Google\Cloud\VideoIntelligence\V1\VideoContext;
 
 /**
  * @param string $uri The cloud storage object to analyze (gs://your-bucket-name/your-object-name)
@@ -42,11 +43,11 @@ function analyze_transcription(string $uri, int $pollingIntervalSeconds = 0)
 
     # execute a request.
     $features = [Feature::SPEECH_TRANSCRIPTION];
-    $operation = $client->annotateVideo([
-        'inputUri' => $uri,
-        'videoContext' => $videoContext,
-        'features' => $features,
-    ]);
+    $request = (new AnnotateVideoRequest())
+        ->setInputUri($uri)
+        ->setVideoContext($videoContext)
+        ->setFeatures($features);
+    $operation = $client->annotateVideo($request);
 
     print('Processing video for speech transcription...' . PHP_EOL);
     # Wait for the request to complete.

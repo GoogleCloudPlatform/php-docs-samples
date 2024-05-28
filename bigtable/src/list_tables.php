@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_tables]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ListTablesRequest;
 
 /**
  * List tables in an instance
@@ -43,7 +44,10 @@ function list_tables(
     $instanceName = $instanceAdminClient->instanceName($projectId, $instanceId);
 
     printf('Listing Tables:' . PHP_EOL);
-    $tables = $tableAdminClient->listTables($instanceName)->iterateAllElements();
+    $listTablesRequest = (new ListTablesRequest())
+        ->setParent($instanceName);
+    $tables = $tableAdminClient->listTables($listTablesRequest)->iterateAllElements();
+    $tables = iterator_to_array($tables);
     if (empty($tables)) {
         print('No table exists.' . PHP_EOL);
         return;

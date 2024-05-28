@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_family]
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
 
 /**
  * Delete a column family in a table
@@ -49,7 +50,10 @@ function delete_family(
     $columnModification = new Modification();
     $columnModification->setId($familyId);
     $columnModification->setDrop(true);
-    $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+    $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+        ->setName($tableName)
+        ->setModifications([$columnModification]);
+    $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
     print("Column family $familyId deleted successfully." . PHP_EOL);
 }
 // [END bigtable_delete_family]

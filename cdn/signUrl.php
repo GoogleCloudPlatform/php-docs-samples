@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-# [START signed_url]
 # [START cloudcdn_sign_url]
 /**
  * Decodes base64url (RFC4648 Section 5) string
@@ -83,4 +82,3 @@ function sign_url($url, $keyName, $base64UrlKey, $expirationTime)
     return "{$url}&Signature={$encodedSignature}";
 }
 # [END cloudcdn_sign_url]
-# [END signed_url]

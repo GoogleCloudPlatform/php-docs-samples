@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_delete_channel]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\DeleteChannelRequest;
 
 /**
  * Deletes a channel.
@@ -44,7 +45,9 @@ function delete_channel(
     $formattedName = $livestreamClient->channelName($callingProjectId, $location, $channelId);
 
     // Run the channel deletion request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->deleteChannel($formattedName);
+    $request = (new DeleteChannelRequest())
+        ->setName($formattedName);
+    $operationResponse = $livestreamClient->deleteChannel($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         // Print status

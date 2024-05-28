@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_reset_instance]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\ResetInstanceRequest;
 
 /**
  * Reset a running Google Compute Engine instance (with unencrypted disks).
@@ -43,7 +44,11 @@ function reset_instance(
 ) {
     // Stop the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->reset($instanceName, $projectId, $zone);
+    $request = (new ResetInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->reset($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
@@ -51,7 +56,7 @@ function reset_instance(
         printf('Instance %s reset successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to reset instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to reset instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 

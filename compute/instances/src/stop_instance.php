@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_stop_instance]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\StopInstanceRequest;
 
 /**
  * Stops a running Google Compute Engine instance.
@@ -43,7 +44,11 @@ function stop_instance(
 ) {
     // Stop the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->stop($instanceName, $projectId, $zone);
+    $request = (new StopInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->stop($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
@@ -51,7 +56,7 @@ function stop_instance(
         printf('Instance %s stopped successfully' . PHP_EOL, $instanceName);
     } else {
         $error = $operation->getError();
-        printf('Failed to stop instance: %s' . PHP_EOL, $error->getMessage());
+        printf('Failed to stop instance: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 

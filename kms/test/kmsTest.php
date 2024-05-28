@@ -20,19 +20,34 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 use Google\Cloud\Iam\V1\Binding;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\Kms\V1\AsymmetricSignRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateCryptoKeyRequest;
+use Google\Cloud\Kms\V1\CreateKeyRingRequest;
 use Google\Cloud\Kms\V1\CryptoKey;
 use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionState;
-use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
-use Google\Cloud\Kms\V1\Digest;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
-use Google\Cloud\Kms\V1\KeyRing;
-use Google\Cloud\Kms\V1\ProtectionLevel;
-use Google\Cloud\TestUtils\TestTrait;
 
-use PHPUnit\Framework\TestCase;
+use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
+use Google\Cloud\Kms\V1\DecryptRequest;
+use Google\Cloud\Kms\V1\DestroyCryptoKeyVersionRequest;
+use Google\Cloud\Kms\V1\Digest;
+use Google\Cloud\Kms\V1\EncryptRequest;
+use Google\Cloud\Kms\V1\GetCryptoKeyVersionRequest;
+use Google\Cloud\Kms\V1\GetPublicKeyRequest;
+use Google\Cloud\Kms\V1\KeyRing;
+use Google\Cloud\Kms\V1\ListCryptoKeysRequest;
+use Google\Cloud\Kms\V1\ListCryptoKeyVersionsRequest;
+use Google\Cloud\Kms\V1\MacSignRequest;
+use Google\Cloud\Kms\V1\MacVerifyRequest;
+use Google\Cloud\Kms\V1\ProtectionLevel;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyRequest;
+use Google\Cloud\TestUtils\TestTrait;
 use Google\Protobuf\FieldMask;
+use PHPUnit\Framework\TestCase;
 
 class kmsTest extends TestCase
 {
@@ -80,7 +95,9 @@ class kmsTest extends TestCase
         $client = new KeyManagementServiceClient();
 
         $keyRingName = $client->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
-        $keys = $client->listCryptoKeys($keyRingName);
+        $listCryptoKeysRequest = (new ListCryptoKeysRequest())
+            ->setParent($keyRingName);
+        $keys = $client->listCryptoKeys($listCryptoKeysRequest);
         foreach ($keys as $key) {
             if ($key->getRotationPeriod() || $key->getNextRotationTime()) {
                 $updatedKey = (new CryptoKey())
@@ -88,15 +105,21 @@ class kmsTest extends TestCase
 
                 $updateMask = (new FieldMask)
                     ->setPaths(['rotation_period', 'next_rotation_time']);
+                $updateCryptoKeyRequest = (new UpdateCryptoKeyRequest())
+                    ->setCryptoKey($updatedKey)
+                    ->setUpdateMask($updateMask);
 
-                $client->updateCryptoKey($updatedKey, $updateMask);
+                $client->updateCryptoKey($updateCryptoKeyRequest);
             }
+            $listCryptoKeyVersionsRequest = (new ListCryptoKeyVersionsRequest())
+                ->setParent($key->getName())
+                ->setFilter('state != DESTROYED AND state != DESTROY_SCHEDULED');
 
-            $versions = $client->listCryptoKeyVersions($key->getName(), [
-                'filter' => 'state != DESTROYED AND state != DESTROY_SCHEDULED',
-            ]);
+            $versions = $client->listCryptoKeyVersions($listCryptoKeyVersionsRequest);
             foreach ($versions as $version) {
-                $client->destroyCryptoKeyVersion($version->getName());
+                $destroyCryptoKeyVersionRequest = (new DestroyCryptoKeyVersionRequest())
+                    ->setName($version->getName());
+                $client->destroyCryptoKeyVersion($destroyCryptoKeyVersionRequest);
             }
         }
     }
@@ -111,7 +134,11 @@ class kmsTest extends TestCase
         $client = new KeyManagementServiceClient();
         $locationName = $client->locationName(self::$projectId, self::$locationId);
         $keyRing = new KeyRing();
-        return $client->createKeyRing($locationName, $id, $keyRing);
+        $createKeyRingRequest = (new CreateKeyRingRequest())
+            ->setParent($locationName)
+            ->setKeyRingId($id)
+            ->setKeyRing($keyRing);
+        return $client->createKeyRing($createKeyRingRequest);
     }
 
     private static function createAsymmetricDecryptKey(string $id)
@@ -123,7 +150,11 @@ class kmsTest extends TestCase
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_DECRYPT_OAEP_2048_SHA256))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest));
     }
 
     private static function createAsymmetricSignEcKey(string $id)
@@ -135,7 +166,11 @@ class kmsTest extends TestCase
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::EC_SIGN_P256_SHA256))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest2 = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest2));
     }
 
     private static function createAsymmetricSignRsaKey(string $id)
@@ -147,7 +182,11 @@ class kmsTest extends TestCase
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_SIGN_PSS_2048_SHA256))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest3 = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest3));
     }
 
     private static function createHsmKey(string $id)
@@ -160,7 +199,11 @@ class kmsTest extends TestCase
                 ->setProtectionLevel(ProtectionLevel::HSM)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest4 = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest4));
     }
 
     private static function createMacKey(string $id)
@@ -173,7 +216,11 @@ class kmsTest extends TestCase
                 ->setProtectionLevel(ProtectionLevel::HSM)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::HMAC_SHA256))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest5 = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest5));
     }
 
     private static function createSymmetricKey(string $id)
@@ -185,14 +232,20 @@ class kmsTest extends TestCase
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
             ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
-        return self::waitForReady($client->createCryptoKey($keyRingName, $id, $key));
+        $createCryptoKeyRequest6 = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        return self::waitForReady($client->createCryptoKey($createCryptoKeyRequest6));
     }
 
     private static function waitForReady(CryptoKey $key)
     {
         $client = new KeyManagementServiceClient();
         $versionName = $key->getName() . '/cryptoKeyVersions/1';
-        $version = $client->getCryptoKeyVersion($versionName);
+        $getCryptoKeyVersionRequest = (new GetCryptoKeyVersionRequest())
+            ->setName($versionName);
+        $version = $client->getCryptoKeyVersion($getCryptoKeyVersionRequest);
         $attempts = 0;
         while ($version->getState() != CryptoKeyVersionState::ENABLED) {
             if ($attempts > 10) {
@@ -200,7 +253,9 @@ class kmsTest extends TestCase
                 throw new \Exception($msg);
             }
             usleep(500);
-            $version = $client->getCryptoKeyVersion($versionName);
+            $getCryptoKeyVersionRequest2 = (new GetCryptoKeyVersionRequest())
+                ->setName($versionName);
+            $version = $client->getCryptoKeyVersion($getCryptoKeyVersionRequest2);
             $attempts += 1;
         }
         return $key;
@@ -340,7 +395,10 @@ class kmsTest extends TestCase
 
         $client = new KeyManagementServiceClient();
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$symmetricKeyId);
-        $ciphertext = $client->encrypt($keyName, $plaintext)->getCiphertext();
+        $encryptRequest = (new EncryptRequest())
+            ->setName($keyName)
+            ->setPlaintext($plaintext);
+        $ciphertext = $client->encrypt($encryptRequest)->getCiphertext();
 
         list($response, $output) = $this->runFunctionSnippet('decrypt_symmetric', [
             self::$projectId,
@@ -441,7 +499,10 @@ class kmsTest extends TestCase
 
         $client = new KeyManagementServiceClient();
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$symmetricKeyId);
-        $response = $client->decrypt($keyName, $response->getCiphertext());
+        $decryptRequest = (new DecryptRequest())
+            ->setName($keyName)
+            ->setCiphertext($response->getCiphertext());
+        $response = $client->decrypt($decryptRequest);
         $this->assertEquals($plaintext, $response->getPlaintext());
     }
 
@@ -540,14 +601,19 @@ class kmsTest extends TestCase
     {
         $client = new KeyManagementServiceClient();
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, self::$asymmetricDecryptKeyId);
+        $getIamPolicyRequest = (new GetIamPolicyRequest())
+            ->setResource($keyName);
 
-        $policy = $client->getIamPolicy($keyName);
+        $policy = $client->getIamPolicy($getIamPolicyRequest);
         $bindings = $policy->getBindings();
         $bindings[] = (new Binding())
             ->setRole('roles/cloudkms.cryptoKeyEncrypterDecrypter')
             ->setMembers(['group:test@google.com', 'group:tester@google.com']);
         $policy->setBindings($bindings);
-        $client->setIamPolicy($keyName, $policy);
+        $setIamPolicyRequest = (new SetIamPolicyRequest())
+            ->setResource($keyName)
+            ->setPolicy($policy);
+        $client->setIamPolicy($setIamPolicyRequest);
 
         list($policy, $output) = $this->runFunctionSnippet('iam_remove_member', [
             self::$projectId,
@@ -600,7 +666,9 @@ class kmsTest extends TestCase
 
         $client = new KeyManagementServiceClient();
         $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$asymmetricSignEcKeyId, '1');
-        $publicKey = $client->getPublicKey($keyVersionName);
+        $getPublicKeyRequest = (new GetPublicKeyRequest())
+            ->setName($keyVersionName);
+        $publicKey = $client->getPublicKey($getPublicKeyRequest);
         $verified = openssl_verify($message, $signResponse->getSignature(), $publicKey->getPem(), OPENSSL_ALGO_SHA256);
         $this->assertEquals(1, $verified);
     }
@@ -623,7 +691,11 @@ class kmsTest extends TestCase
 
         $client = new KeyManagementServiceClient();
         $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
-        $verifyResponse = $client->macVerify($keyVersionName, $data, $signResponse->getMac());
+        $macVerifyRequest = (new MacVerifyRequest())
+            ->setName($keyVersionName)
+            ->setData($data)
+            ->setMac($signResponse->getMac());
+        $verifyResponse = $client->macVerify($macVerifyRequest);
         $this->assertTrue($verifyResponse->getSuccess());
     }
 
@@ -705,8 +777,11 @@ class kmsTest extends TestCase
 
         $digest = (new Digest())
             ->setSha256(hash('sha256', $message, true));
+        $asymmetricSignRequest = (new AsymmetricSignRequest())
+            ->setName($keyVersionName)
+            ->setDigest($digest);
 
-        $signResponse = $client->asymmetricSign($keyVersionName, $digest);
+        $signResponse = $client->asymmetricSign($asymmetricSignRequest);
 
         list($verified, $output) = $this->runFunctionSnippet('verify_asymmetric_ec', [
           self::$projectId,
@@ -746,8 +821,11 @@ class kmsTest extends TestCase
 
         $client = new KeyManagementServiceClient();
         $keyVersionName = $client->cryptoKeyVersionName(self::$projectId, self::$locationId, self::$keyRingId, self::$macKeyId, '1');
+        $macSignRequest = (new MacSignRequest())
+            ->setName($keyVersionName)
+            ->setData($data);
 
-        $signResponse = $client->macSign($keyVersionName, $data);
+        $signResponse = $client->macSign($macSignRequest);
 
         list($verifyResponse, $output) = $this->runFunctionSnippet('verify_mac', [
           self::$projectId,

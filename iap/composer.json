@@ -2,7 +2,7 @@
     "require": {
         "kelvinmo/simplejwt": "^0.5.1",
         "google/auth":"^1.8.0",
-        "guzzlehttp/guzzle": "~7.5.0"
+        "guzzlehttp/guzzle": "~7.6.0"
     },
     "autoload": {
         "psr-4": {

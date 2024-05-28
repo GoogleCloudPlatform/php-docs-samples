@@ -17,8 +17,11 @@
 
 namespace Google\Cloud\Samples\Monitoring;
 
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\DeleteAlertPolicyRequest;
+use Google\Cloud\Monitoring\V3\DeleteNotificationChannelRequest;
+use Google\Cloud\Monitoring\V3\GetAlertPolicyRequest;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnitRetry\RetryTrait;
@@ -37,7 +40,7 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_policy', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
 
         // Save the policy ID for later
         preg_match($regexp, $output, $matches);
@@ -93,7 +96,7 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
 
         // Save the channel ID for later
         preg_match($regexp, $output, $matches);
@@ -111,14 +114,14 @@ class alertsTest extends TestCase
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId1 = $matches[1];
 
         $output = $this->runFunctionSnippet('alert_create_channel', [
             'projectId' => self::$projectId,
         ]);
-        $this->assertRegexp($regexp, $output);
+        $this->assertMatchesRegularExpression($regexp, $output);
         preg_match($regexp, $output, $matches);
         $channelId2 = $matches[1];
 
@@ -130,7 +133,9 @@ class alertsTest extends TestCase
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
         // verify the new channels have been added to the policy
-        $policy = $alertClient->getAlertPolicy($policyName);
+        $getAlertPolicyRequest = (new GetAlertPolicyRequest())
+            ->setName($policyName);
+        $policy = $alertClient->getAlertPolicy($getAlertPolicyRequest);
         $channels = $policy->getNotificationChannels();
         $this->assertEquals(2, count($channels));
         $this->assertEquals(
@@ -150,7 +155,9 @@ class alertsTest extends TestCase
         $this->assertStringContainsString(sprintf('Updated %s', $policyName), $output);
 
         // verify the new channel replaces the previous channels added to the policy
-        $policy = $alertClient->getAlertPolicy($policyName);
+        $getAlertPolicyRequest2 = (new GetAlertPolicyRequest())
+            ->setName($policyName);
+        $policy = $alertClient->getAlertPolicy($getAlertPolicyRequest2);
         $channels = $policy->getNotificationChannels();
         $this->assertEquals(1, count($channels));
         $this->assertEquals(
@@ -159,8 +166,12 @@ class alertsTest extends TestCase
         );
 
         // remove the old chnnels
-        $channelClient->deleteNotificationChannel($newChannelName1);
-        $channelClient->deleteNotificationChannel($newChannelName2);
+        $deleteNotificationChannelRequest = (new DeleteNotificationChannelRequest())
+            ->setName($newChannelName1);
+        $channelClient->deleteNotificationChannel($deleteNotificationChannelRequest);
+        $deleteNotificationChannelRequest2 = (new DeleteNotificationChannelRequest())
+            ->setName($newChannelName2);
+        $channelClient->deleteNotificationChannel($deleteNotificationChannelRequest2);
     }
 
     /** @depends testCreatePolicy */
@@ -221,9 +232,9 @@ class alertsTest extends TestCase
     {
         // delete the policy first (required in order to delete the channel)
         $alertClient = new AlertPolicyServiceClient();
-        $alertClient->deleteAlertPolicy(
-            $alertClient->alertPolicyName(self::$projectId, self::$policyId)
-        );
+        $deleteAlertPolicyRequest = (new DeleteAlertPolicyRequest())
+            ->setName($alertClient->alertPolicyName(self::$projectId, self::$policyId));
+        $alertClient->deleteAlertPolicy($deleteAlertPolicyRequest);
 
         $output = $this->runFunctionSnippet('alert_delete_channel', [
             'projectId' => self::$projectId,

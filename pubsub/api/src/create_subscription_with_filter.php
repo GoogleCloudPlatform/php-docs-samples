@@ -34,8 +34,12 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $subscriptionName  The Pub/Sub subscription name.
  * @param string $filter  The Pub/Sub subscription filter.
  */
-function create_subscription_with_filter($projectId, $topicName, $subscriptionName, $filter)
-{
+function create_subscription_with_filter(
+    string $projectId,
+    string $topicName,
+    string $subscriptionName,
+    string $filter
+): void {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);

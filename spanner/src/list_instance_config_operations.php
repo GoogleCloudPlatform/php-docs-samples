@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,44 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_list_instance_config_operations]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\Client\InstanceAdminClient;
+use Google\Cloud\Spanner\Admin\Instance\V1\ListInstanceConfigOperationsRequest;
+use Google\Cloud\Spanner\Admin\Instance\V1\UpdateInstanceConfigMetadata;
+use Google\Cloud\Spanner\Admin\Instance\V1\CreateInstanceConfigMetadata;
 
 /**
  * Lists the instance configuration operations for a project.
  * Example:
  * ```
- * list_instance_config_operations();
+ * list_instance_config_operations($projectId);
  * ```
+ *
+ * @param $projectId The Google Cloud Project ID.
  */
-function list_instance_config_operations()
+function list_instance_config_operations(string $projectId): void
 {
-    $spanner = new SpannerClient();
+    $instanceAdminClient = new InstanceAdminClient();
+    $projectName = InstanceAdminClient::projectName($projectId);
+    $listInstanceConfigOperationsRequest = (new ListInstanceConfigOperationsRequest())
+        ->setParent($projectName);
 
-    $operations = $spanner->instanceConfigOperations();
-    foreach ($operations as $operation) {
-        $meta = $operation->info()['metadata'];
-        $instanceConfig = $meta['instanceConfig'];
-        $configName = basename($instanceConfig['name']);
-        $type = $meta['typeUrl'];
+    $instanceConfigOperations = $instanceAdminClient->listInstanceConfigOperations(
+        $listInstanceConfigOperationsRequest
+    );
+
+    foreach ($instanceConfigOperations->iterateAllElements() as $instanceConfigOperation) {
+        $type = $instanceConfigOperation->getMetadata()->getTypeUrl();
+        if (strstr($type, 'CreateInstanceConfigMetadata')) {
+            $obj = new CreateInstanceConfigMetadata();
+        } else {
+            $obj = new UpdateInstanceConfigMetadata();
+        }
+
         printf(
             'Instance config operation for %s of type %s has status %s.' . PHP_EOL,
-            $configName,
+            $instanceConfigOperation->getMetadata()->unpack($obj)->getInstanceConfig()->getName(),
             $type,
-            $operation->done() ? 'done' : 'running'
+            $instanceConfigOperation->getDone() ? 'done' : 'running'
         );
     }
 }

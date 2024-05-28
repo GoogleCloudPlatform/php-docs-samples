@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_usage_report_set]
-use Google\Cloud\Compute\V1\ProjectsClient;
-use Google\Cloud\Compute\V1\UsageExportLocation;
+use Google\Cloud\Compute\V1\Client\ProjectsClient;
 use Google\Cloud\Compute\V1\Operation;
+use Google\Cloud\Compute\V1\SetUsageExportBucketProjectRequest;
+use Google\Cloud\Compute\V1\UsageExportLocation;
 
 /**
  * Set Compute Engine usage export bucket for the Cloud project.
@@ -62,7 +63,10 @@ function set_usage_export_bucket(
 
     // Set the usage export location.
     $projectsClient = new ProjectsClient();
-    $operation = $projectsClient->setUsageExportBucket($projectId, $usageExportLocation);
+    $request = (new SetUsageExportBucketProjectRequest())
+        ->setProject($projectId)
+        ->setUsageExportLocationResource($usageExportLocation);
+    $operation = $projectsClient->setUsageExportBucket($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
@@ -76,7 +80,7 @@ function set_usage_export_bucket(
         );
     } else {
         $error = $operation->getError();
-        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Setting usage export bucket failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_usage_report_set]

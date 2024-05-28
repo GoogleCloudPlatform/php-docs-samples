@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,21 +24,22 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_interleaved_table]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Create an interleaved table on a Spanner PostgreSQL database.
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $parentTable The parent table to create. Defaults to 'Singers'
  * @param string $childTable The child table to create. Defaults to 'Albums'
  */
-function pg_interleaved_table(string $instanceId, string $databaseId, string $parentTable = 'Singers', string $childTable = 'Albums'): void
+function pg_interleaved_table(string $projectId, string $instanceId, string $databaseId, string $parentTable = 'Singers', string $childTable = 'Albums'): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
     // The Spanner PostgreSQL dialect extends the PostgreSQL dialect with certain Spanner
     // specific features, such as interleaved tables.
@@ -58,7 +59,12 @@ function pg_interleaved_table(string $instanceId, string $databaseId, string $pa
         PRIMARY KEY (SingerId, AlbumId)
     ) INTERLEAVE IN PARENT %s ON DELETE CASCADE', $childTable, $parentTable);
 
-    $operation = $database->updateDdlBatch([$parentTableQuery, $childTableQuery]);
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [$parentTableQuery, $childTableQuery]
+    ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

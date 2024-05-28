@@ -42,7 +42,9 @@ function upload_object_from_memory(
     string $contents
 ): void {
     $storage = new StorageClient();
-    $stream = fopen('data://text/plain,' . $contents, 'r');
+    if (!$stream = fopen('data://text/plain,' . $contents, 'r')) {
+        throw new \InvalidArgumentException('Unable to open file for reading');
+    }
     $bucket = $storage->bucket($bucketName);
     $bucket->upload($stream, [
         'name' => $objectName,

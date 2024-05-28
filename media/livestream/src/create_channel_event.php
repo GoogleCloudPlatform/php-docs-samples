@@ -25,8 +25,9 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_create_channel_event]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
 use Google\Cloud\Video\LiveStream\V1\Event;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\CreateEventRequest;
 use Google\Protobuf\Duration;
 
 /**
@@ -56,7 +57,11 @@ function create_channel_event(
         ->setExecuteNow(true);
 
     // Run the channel event creation request.
-    $response = $livestreamClient->createEvent($parent, $event, $eventId);
+    $request = (new CreateEventRequest())
+        ->setParent($parent)
+        ->setEvent($event)
+        ->setEventId($eventId);
+    $response = $livestreamClient->createEvent($request);
     // Print results.
     printf('Channel event: %s' . PHP_EOL, $response->getName());
 }

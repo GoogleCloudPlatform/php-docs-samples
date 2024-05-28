@@ -24,9 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_fields]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
+use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Protobuf\Timestamp;
 
 /**
@@ -37,13 +38,13 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_fields($projectId, $minutesAgo = 20)
+function read_timeseries_fields(string $projectId, int $minutesAgo = 20): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
@@ -56,12 +57,13 @@ function read_timeseries_fields($projectId, $minutesAgo = 20)
     $interval->setEndTime($endTime);
 
     $view = TimeSeriesView::HEADERS;
+    $listTimeSeriesRequest = (new ListTimeSeriesRequest())
+        ->setName($projectName)
+        ->setFilter($filter)
+        ->setInterval($interval)
+        ->setView($view);
 
-    $result = $metrics->listTimeSeries(
-        $projectName,
-        $filter,
-        $interval,
-        $view);
+    $result = $metrics->listTimeSeries($listTimeSeriesRequest);
 
     printf('Found data points for the following instances:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {

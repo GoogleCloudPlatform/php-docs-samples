@@ -24,25 +24,29 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 # [START monitoring_alert_create_channel]
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\CreateNotificationChannelRequest;
 use Google\Cloud\Monitoring\V3\NotificationChannel;
 
 /**
  * @param string $projectId Your project ID
  */
-function alert_create_channel($projectId)
+function alert_create_channel(string $projectId): void
 {
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $channelClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $channel = new NotificationChannel();
     $channel->setDisplayName('Test Notification Channel');
     $channel->setType('email');
     $channel->setLabels(['email_address' => 'fake@example.com']);
+    $createNotificationChannelRequest = (new CreateNotificationChannelRequest())
+        ->setName($projectName)
+        ->setNotificationChannel($channel);
 
-    $channel = $channelClient->createNotificationChannel($projectName, $channel);
+    $channel = $channelClient->createNotificationChannel($createNotificationChannelRequest);
     printf('Created notification channel %s' . PHP_EOL, $channel->getName());
 }
 # [END monitoring_alert_create_channel]

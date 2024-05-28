@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Analytics\Data\Tests;
 use Google\ApiCore\ValidationException;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 
 class analyticsDataTest extends TestCase
 {

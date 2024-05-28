@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\Asset;
 
 # [START asset_quickstart_export_assets]
-use Google\Cloud\Asset\V1\AssetServiceClient;
+use Google\Cloud\Asset\V1\Client\AssetServiceClient;
+use Google\Cloud\Asset\V1\ExportAssetsRequest;
 use Google\Cloud\Asset\V1\GcsDestination;
 use Google\Cloud\Asset\V1\OutputConfig;
 
@@ -35,8 +36,11 @@ function export_assets(string $projectId, string $dumpFilePath)
 
     $gcsDestination = new GcsDestination(['uri' => $dumpFilePath]);
     $outputConfig = new OutputConfig(['gcs_destination' => $gcsDestination]);
+    $request = (new ExportAssetsRequest())
+        ->setParent("projects/$projectId")
+        ->setOutputConfig($outputConfig);
 
-    $resp = $client->exportAssets("projects/$projectId", $outputConfig);
+    $resp = $client->exportAssets($request);
 
     $resp->pollUntilComplete();
 
@@ -44,7 +48,7 @@ function export_assets(string $projectId, string $dumpFilePath)
         print('The result is dumped to $dumpFilePath successfully.' . PHP_EOL);
     } else {
         $error = $resp->getError();
-        printf('There was an error: "%s".' . PHP_EOL, $error->getMessage());
+        printf('There was an error: "%s".' . PHP_EOL, $error?->getMessage());
         // handleError($error)
     }
 }

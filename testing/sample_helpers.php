@@ -8,13 +8,13 @@ function execute_sample(string $file, string $namespace, ?array $argv)
 {
     // Return if sample file is not being executed via CLI
     if (is_null($argv)) {
-        return;
+        return null;
     }
 
     // Return if sample file is being included via PHPUnit
     $argvFile = array_shift($argv);
     if ('.php' != substr($argvFile, -4)) {
-        return;
+        return null;
     }
 
     // Determine the name of the function to execute
@@ -27,7 +27,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
         || count($argv) > $functionReflection->getNumberOfParameters()
     ) {
         print(get_usage(basename($file), $functionReflection));
-        return;
+        return null;
     }
 
     // Require composer autoload for the user
@@ -37,7 +37,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
             'You must run "composer install" in the sample root (%s/)' . PHP_EOL,
             $autoloadDir
         );
-        return;
+        return null;
     }
     require_once $autoloadFile;
 
@@ -59,7 +59,7 @@ function execute_sample(string $file, string $namespace, ?array $argv)
     return call_user_func_array($functionName, $argv);
 }
 
-function get_usage(string $file, ReflectionFunction $functionReflection)
+function get_usage(string $file, ReflectionFunction $functionReflection): string
 {
     // Print basic usage
     $paramNames = [];

@@ -24,7 +24,7 @@ use Google\Cloud\Datastore\DatastoreClient;
  * Mark a task with a given id as done.
  *
  * @param string $projectId The Google Cloud project ID.
- * @param int $taskId
+ * @param string $taskId
  */
 function mark_done(string $projectId, string $taskId)
 {

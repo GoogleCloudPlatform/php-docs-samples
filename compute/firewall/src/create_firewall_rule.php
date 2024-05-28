@@ -24,15 +24,16 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_firewall_create]
-use Google\Cloud\Compute\V1\FirewallsClient;
 use Google\Cloud\Compute\V1\Allowed;
-use Google\Cloud\Compute\V1\Firewall;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
+use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
 
 /**
  * To correctly handle string enums in Cloud Compute library
  * use constants defined in the Enums subfolder.
  */
-use Google\Cloud\Compute\V1\Enums\Firewall\Direction;
+use Google\Cloud\Compute\V1\Firewall;
+use Google\Cloud\Compute\V1\InsertFirewallRequest;
 
 /**
  * Creates a simple firewall rule allowing incoming HTTP and HTTPS access from the entire internet.
@@ -74,7 +75,10 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
     */
 
     //Create the firewall rule using Firewalls Client.
-    $operation = $firewallsClient->insert($firewallResource, $projectId);
+    $request = (new InsertFirewallRequest())
+        ->setFirewallResource($firewallResource)
+        ->setProject($projectId);
+    $operation = $firewallsClient->insert($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();
@@ -82,7 +86,7 @@ function create_firewall_rule(string $projectId, string $firewallRuleName, strin
         printf('Created rule %s.' . PHP_EOL, $firewallRuleName);
     } else {
         $error = $operation->getError();
-        printf('Firewall rule creation failed: %s' . PHP_EOL, $error->getMessage());
+        printf('Firewall rule creation failed: %s' . PHP_EOL, $error?->getMessage());
     }
 }
 # [END compute_firewall_create]
