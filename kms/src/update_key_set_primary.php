@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_update_key_set_primary]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyPrimaryVersionRequest;
 
 function update_key_set_primary(
     string $projectId = 'my-project',
@@ -36,7 +37,10 @@ function update_key_set_primary(
     $keyName = $client->cryptoKeyName($projectId, $locationId, $keyRingId, $keyId);
 
     // Call the API.
-    $updatedKey = $client->updateCryptoKeyPrimaryVersion($keyName, $versionId);
+    $updateCryptoKeyPrimaryVersionRequest = (new UpdateCryptoKeyPrimaryVersionRequest())
+        ->setName($keyName)
+        ->setCryptoKeyVersionId($versionId);
+    $updatedKey = $client->updateCryptoKeyPrimaryVersion($updateCryptoKeyPrimaryVersionRequest);
     printf('Updated primary %s to %s' . PHP_EOL, $updatedKey->getName(), $versionId);
 
     return $updatedKey;

@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_delete_app_profile]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\DeleteAppProfileRequest;
 
 /**
  * Delete an App Profile from a Bigtable instance.
@@ -47,7 +48,10 @@ function delete_app_profile(
 
     try {
         // If $ignoreWarnings is set to false, Bigtable will warn you that all future requests using the AppProfile will fail
-        $instanceAdminClient->deleteAppProfile($appProfileName, $ignoreWarnings);
+        $deleteAppProfileRequest = (new DeleteAppProfileRequest())
+            ->setName($appProfileName)
+            ->setIgnoreWarnings($ignoreWarnings);
+        $instanceAdminClient->deleteAppProfile($deleteAppProfileRequest);
         printf('App Profile %s deleted.' . PHP_EOL, $appProfileId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {

@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_get_resource]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\GetMonitoredResourceDescriptorRequest;
 
 /**
  * Example:
@@ -42,7 +43,9 @@ function get_resource($projectId, $resourceType)
     ]);
 
     $metricName = $metrics->monitoredResourceDescriptorName($projectId, $resourceType);
-    $resource = $metrics->getMonitoredResourceDescriptor($metricName);
+    $getMonitoredResourceDescriptorRequest = (new GetMonitoredResourceDescriptorRequest())
+        ->setName($metricName);
+    $resource = $metrics->getMonitoredResourceDescriptor($getMonitoredResourceDescriptorRequest);
 
     printf('Name: %s' . PHP_EOL, $resource->getName());
     printf('Type: %s' . PHP_EOL, $resource->getType());

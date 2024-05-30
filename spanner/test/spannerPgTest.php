@@ -66,7 +66,7 @@ class spannerPgTest extends TestCase
 
     public function testCreateDatabase()
     {
-        $output = $this->runFunctionSnippet('pg_create_database');
+        $output = $this->runAdminFunctionSnippet('pg_create_database');
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf(
             'Created database %s with dialect POSTGRESQL on instance %s',
@@ -110,8 +110,8 @@ class spannerPgTest extends TestCase
     public function testCreateTableCaseSensitivity()
     {
         $tableName = 'Singers' . time() . rand();
-        $output = $this->runFunctionSnippet('pg_case_sensitivity', [
-            self::$instanceId, self::$databaseId, $tableName
+        $output = $this->runAdminFunctionSnippet('pg_case_sensitivity', [
+            self::$projectId, self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf(
@@ -129,7 +129,7 @@ class spannerPgTest extends TestCase
      */
     public function testInformationSchema()
     {
-        $output = $this->runFunctionSnippet('pg_information_schema');
+        $output = $this->runAdminFunctionSnippet('pg_information_schema');
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString(sprintf('table_catalog: %s', self::$databaseId), $output);
@@ -215,7 +215,7 @@ class spannerPgTest extends TestCase
      */
     public function testAddColumn()
     {
-        $output = $this->runFunctionSnippet('pg_add_column');
+        $output = $this->runAdminFunctionSnippet('pg_add_column');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Added column MarketingBudget on table Albums', $output);
     }
@@ -228,8 +228,8 @@ class spannerPgTest extends TestCase
         $parentTable = 'Singers' . time() . rand();
         $childTable = 'Albumbs' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_interleaved_table', [
-            self::$instanceId, self::$databaseId, $parentTable, $childTable
+        $output = $this->runAdminFunctionSnippet('pg_interleaved_table', [
+            self::$projectId, self::$instanceId, self::$databaseId, $parentTable, $childTable
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -270,8 +270,8 @@ class spannerPgTest extends TestCase
         $op->pollUntilComplete();
 
         // Now run the test
-        $output = $this->runFunctionSnippet('pg_add_jsonb_column', [
-            self::$instanceId, self::$databaseId, self::$jsonbTable
+        $output = $this->runAdminFunctionSnippet('pg_add_jsonb_column', [
+            self::$projectId, self::$instanceId, self::$databaseId, self::$jsonbTable
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -311,8 +311,8 @@ class spannerPgTest extends TestCase
     {
         $tableName = 'Singers' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_order_nulls', [
-            self::$instanceId, self::$databaseId, $tableName
+        $output = $this->runAdminFunctionSnippet('pg_order_nulls', [
+            self::$projectId, self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -337,7 +337,7 @@ class spannerPgTest extends TestCase
 
     public function testIndexCreateSorting()
     {
-        $output = $this->runFunctionSnippet('pg_create_storing_index');
+        $output = $this->runAdminFunctionSnippet('pg_create_storing_index');
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
     }
 
@@ -452,7 +452,7 @@ class spannerPgTest extends TestCase
      */
     public function testCreateSequence()
     {
-        $output = $this->runFunctionSnippet('pg_create_sequence');
+        $output = $this->runAdminFunctionSnippet('pg_create_sequence');
         $this->assertStringContainsString(
             'Created Seq sequence and Customers table, where ' .
             'the key column CustomerId uses the sequence as a default value',
@@ -466,7 +466,7 @@ class spannerPgTest extends TestCase
      */
     public function testAlterSequence()
     {
-        $output = $this->runFunctionSnippet('pg_alter_sequence');
+        $output = $this->runAdminFunctionSnippet('pg_alter_sequence');
         $this->assertStringContainsString(
             'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
             $output
@@ -479,7 +479,7 @@ class spannerPgTest extends TestCase
      */
     public function testDropSequence()
     {
-        $output = $this->runFunctionSnippet('pg_drop_sequence');
+        $output = $this->runAdminFunctionSnippet('pg_drop_sequence');
         $this->assertStringContainsString(
             'Altered Customers table to drop DEFAULT from CustomerId ' .
             'column and dropped the Seq sequence',
@@ -501,6 +501,14 @@ class spannerPgTest extends TestCase
         return $this->traitRunFunctionSnippet(
             $sampleName,
             array_values($params) ?: [self::$instanceId, self::$databaseId]
+        );
+    }
+
+    private function runAdminFunctionSnippet($sampleName, $params = [])
+    {
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_values($params) ?: [self::$projectId, self::$instanceId, self::$databaseId]
         );
     }
 }

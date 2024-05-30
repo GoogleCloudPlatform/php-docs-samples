@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-run": "^0.6.0"
+        "google/cloud-run": "^0.9.0"
     }
 }

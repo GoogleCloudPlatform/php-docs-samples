@@ -24,19 +24,20 @@
 namespace Google\Cloud\Samples\Dlp;
 
 // [START dlp_create_trigger]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\JobTrigger;
-use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
-use Google\Cloud\Dlp\V2\JobTrigger\Status;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\InspectJobConfig;
-use Google\Cloud\Dlp\V2\Schedule;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageOptions;
 use Google\Cloud\Dlp\V2\CloudStorageOptions\FileSet;
-use Google\Cloud\Dlp\V2\StorageConfig;
+use Google\Cloud\Dlp\V2\CreateJobTriggerRequest;
 use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
+use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\JobTrigger;
+use Google\Cloud\Dlp\V2\JobTrigger\Status;
+use Google\Cloud\Dlp\V2\JobTrigger\Trigger;
+use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\Schedule;
+use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\StorageConfig\TimespanConfig;
 use Google\Protobuf\Duration;
 
@@ -125,11 +126,12 @@ function create_trigger(
         ->setDescription($description);
 
     // Run trigger creation request
-    // $parent = "projects/$callingProjectId/locations/global";
     $parent = $dlp->locationName($callingProjectId, 'global');
-    $trigger = $dlp->createJobTrigger($parent, $jobTriggerObject, [
-        'triggerId' => $triggerId
-    ]);
+    $createJobTriggerRequest = (new CreateJobTriggerRequest())
+        ->setParent($parent)
+        ->setJobTrigger($jobTriggerObject)
+        ->setTriggerId($triggerId);
+    $trigger = $dlp->createJobTrigger($createJobTriggerRequest);
 
     // Print results
     printf('Successfully created trigger %s' . PHP_EOL, $trigger->getName());

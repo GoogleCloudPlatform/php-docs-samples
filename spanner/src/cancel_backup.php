@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,40 +24,60 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_cancel_backup_create]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Spanner\Admin\Database\V1\Backup;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateBackupRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\DeleteBackupRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\GetBackupRequest;
+use Google\Protobuf\Timestamp;
 
 /**
  * Cancel a backup operation.
  * Example:
  * ```
- * cancel_backup($instanceId, $databaseId);
+ * cancel_backup($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function cancel_backup(string $instanceId, string $databaseId): void
+function cancel_backup(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseFullName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $instanceFullName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $expireTime = new Timestamp();
+    $expireTime->setSeconds((new \DateTime('+14 days'))->getTimestamp());
     $backupId = uniqid('backup-' . $databaseId . '-cancel');
+    $request = new CreateBackupRequest([
+        'parent' => $instanceFullName,
+        'backup_id' => $backupId,
+        'backup' => new Backup([
+            'database' => $databaseFullName,
+            'expire_time' => $expireTime
+        ])
+    ]);
 
-    $expireTime = new \DateTime('+14 days');
-    $backup = $instance->backup($backupId);
-    $operation = $backup->create($database->name(), $expireTime);
+    $operation = $databaseAdminClient->createBackup($request);
     $operation->cancel();
-    print('Waiting for operation to complete ...' . PHP_EOL);
-    $operation->pollUntilComplete();
 
     // Cancel operations are always successful regardless of whether the operation is
     // still in progress or is complete.
     printf('Cancel backup operation complete.' . PHP_EOL);
 
     // Operation may succeed before cancel() has been called. So we need to clean up created backup.
-    if ($backup->exists()) {
-        $backup->delete();
+    try {
+        $request = new GetBackupRequest();
+        $request->setName($databaseAdminClient->backupName($projectId, $instanceId, $backupId));
+        $info = $databaseAdminClient->getBackup($request);
+    } catch (ApiException $ex) {
+        return;
     }
+    $databaseAdminClient->deleteBackup(new DeleteBackupRequest([
+        'name' => $databaseAdminClient->backupName($projectId, $instanceId, $backupId)
+    ]));
 }
 // [END spanner_cancel_backup_create]
 

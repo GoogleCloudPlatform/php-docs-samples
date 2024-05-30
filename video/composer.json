@@ -2,7 +2,7 @@
     "name": "google/video-sample",
     "type": "project",
     "require": {
-        "google/cloud-videointelligence": "^1.5"
+        "google/cloud-videointelligence": "^1.14"
     },
     "require-dev": {
         "google/cloud-core": "^1.23"

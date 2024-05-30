@@ -18,8 +18,9 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_translate_text_with_glossary]
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use Google\Cloud\Translate\V3\TranslateTextGlossaryConfig;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
 /**
  * @param string $text          The text to translate.
@@ -54,16 +55,14 @@ function v3_translate_text_with_glossary(
     $mimeType = 'text/plain';
 
     try {
-        $response = $translationServiceClient->translateText(
-            $contents,
-            $targetLanguage,
-            $formattedParent,
-            [
-                'sourceLanguageCode' => $sourceLanguage,
-                'glossaryConfig' => $glossaryConfig,
-                'mimeType' => $mimeType
-            ]
-        );
+        $request = (new TranslateTextRequest())
+            ->setContents($contents)
+            ->setTargetLanguageCode($targetLanguage)
+            ->setParent($formattedParent)
+            ->setSourceLanguageCode($sourceLanguage)
+            ->setGlossaryConfig($glossaryConfig)
+            ->setMimeType($mimeType);
+        $response = $translationServiceClient->translateText($request);
         // Display the translation for each input text provided
         foreach ($response->getGlossaryTranslations() as $translation) {
             printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());

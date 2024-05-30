@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_start_instance]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\StartInstanceRequest;
 
 /**
  * Starts a stopped Google Compute Engine instance (with unencrypted disks).
@@ -43,7 +44,11 @@ function start_instance(
 ) {
     // Start the Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->start($instanceName, $projectId, $zone);
+    $request = (new StartInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->start($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

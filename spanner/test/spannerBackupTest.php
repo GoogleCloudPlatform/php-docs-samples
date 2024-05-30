@@ -90,7 +90,7 @@ class spannerBackupTest extends TestCase
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =
-            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -105,8 +105,6 @@ class spannerBackupTest extends TestCase
 
     public function testCreateBackupWithEncryptionKey()
     {
-        $database = self::$instance->database(self::$databaseId);
-
         $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
             self::$databaseId,
             self::$encryptedBackupId,
@@ -149,21 +147,13 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackupOperations()
     {
-        $databaseId2 = self::$databaseId . '-2';
-        $database2 = self::$instance->database($databaseId2);
-        // DB may already exist if the test timed out and retried
-        if (!$database2->exists()) {
-            $database2->create();
-        }
-        $backup = self::$instance->backup(self::$backupId . '-pro');
-        $lro = $backup->create($databaseId2, new \DateTime('+7 hours'));
         $output = $this->runFunctionSnippet('list_backup_operations', [
-            'database_id' => self::$databaseId,
+            self::$databaseId,
+            self::$backupId
         ]);
-        $lro->pollUntilComplete();
 
-        $this->assertStringContainsString(basename($backup->name()), $output);
-        $this->assertStringContainsString($databaseId2, $output);
+        $this->assertStringContainsString(basename(self::$backupId), $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
     /**
@@ -234,7 +224,7 @@ class spannerBackupTest extends TestCase
     public function testListDatabaseOperations()
     {
         $output = $this->runFunctionSnippet('list_database_operations');
-        $this->assertStringContainsString(self::$encryptedRestoredDatabaseId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
     /**
@@ -279,7 +269,7 @@ class spannerBackupTest extends TestCase
     {
         return $this->traitRunFunctionSnippet(
             $sampleName,
-            array_merge([self::$instanceId], array_values($params))
+            array_merge([self::$projectId, self::$instanceId], array_values($params))
         );
     }
 

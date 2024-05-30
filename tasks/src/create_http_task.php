@@ -31,7 +31,8 @@ list($_, $projectId, $locationId, $queueId, $url) = $argv;
 $payload = $argv[5] ?? '';
 
 # [START cloud_tasks_create_http_task]
-use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Google\Cloud\Tasks\V2\Client\CloudTasksClient;
+use Google\Cloud\Tasks\V2\CreateTaskRequest;
 use Google\Cloud\Tasks\V2\HttpMethod;
 use Google\Cloud\Tasks\V2\HttpRequest;
 use Google\Cloud\Tasks\V2\Task;
@@ -63,7 +64,10 @@ $task = new Task();
 $task->setHttpRequest($httpRequest);
 
 // Send request and print the task name.
-$response = $client->createTask($queueName, $task);
+$request = (new CreateTaskRequest())
+    ->setParent($queueName)
+    ->setTask($task);
+$response = $client->createTask($request);
 printf('Created task %s' . PHP_EOL, $response->getName());
 
 # [END cloud_tasks_create_http_task]

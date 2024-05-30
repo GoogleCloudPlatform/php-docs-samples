@@ -27,11 +27,12 @@ namespace Google\Cloud\Samples\Dlp;
 # [START dlp_deidentify_date_shift]
 use DateTime;
 use Exception;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\CryptoKey;
 use Google\Cloud\Dlp\V2\DateShiftConfig;
 use Google\Cloud\Dlp\V2\DeidentifyConfig;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\DeidentifyContentRequest;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\FieldTransformation;
 use Google\Cloud\Dlp\V2\KmsWrappedCryptoKey;
@@ -155,11 +156,11 @@ function deidentify_dates(
     $parent = "projects/$callingProjectId/locations/global";
 
     // Run request
-    $response = $dlp->deidentifyContent([
-        'parent' => $parent,
-        'deidentifyConfig' => $deidentifyConfig,
-        'item' => $item
-    ]);
+    $deidentifyContentRequest = (new DeidentifyContentRequest())
+        ->setParent($parent)
+        ->setDeidentifyConfig($deidentifyConfig)
+        ->setItem($item);
+    $response = $dlp->deidentifyContent($deidentifyContentRequest);
 
     // Check for errors
     foreach ($response->getOverview()->getTransformationSummaries() as $summary) {

@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_list_column_families]
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\GetTableRequest;
 
 /**
  * List column families of a table
@@ -41,8 +42,10 @@ function list_column_families(
     $tableAdminClient = new BigtableTableAdminClient();
 
     $tableName = $tableAdminClient->tableName($projectId, $instanceId, $tableId);
+    $getTableRequest = (new GetTableRequest())
+        ->setName($tableName);
 
-    $table = $tableAdminClient->getTable($tableName);
+    $table = $tableAdminClient->getTable($getTableRequest);
     $columnFamilies = $table->getColumnFamilies()->getIterator();
 
     foreach ($columnFamilies as $k => $columnFamily) {

@@ -24,11 +24,12 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_gc_rule]
-use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
 use Google\Cloud\Bigtable\Admin\V2\GcRule;
-use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 
 /**
  * Update the GC Rule for an existing column family in the table
@@ -56,7 +57,10 @@ function update_gc_rule(
     $columnModification->setUpdate($columnFamily1);
 
     try {
-        $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+        $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+            ->setName($tableName)
+            ->setModifications([$columnModification]);
+        $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Column family %s does not exist.' . PHP_EOL, $familyId);

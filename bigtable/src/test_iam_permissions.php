@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_test_iam_permissions]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Iam\V1\TestIamPermissionsRequest;
 
 /**
  * Test IAM permissions for the current caller
@@ -44,8 +45,11 @@ function test_iam_permissions(
     // information see
     // [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions)
     $permissions = ['bigtable.clusters.create', 'bigtable.tables.create', 'bigtable.tables.list'];
+    $testIamPermissionsRequest = (new TestIamPermissionsRequest())
+        ->setResource($instanceName)
+        ->setPermissions($permissions);
 
-    $response = $instanceAdminClient->testIamPermissions($instanceName, $permissions);
+    $response = $instanceAdminClient->testIamPermissions($testIamPermissionsRequest);
 
     // This array will contain the permissions that are passed for the current caller
     foreach ($response->getPermissions() as $permission) {
