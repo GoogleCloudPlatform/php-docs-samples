@@ -4,7 +4,7 @@
     },
     "require-dev": {
         "monolog/monolog": "^2.0",
-        "nikic/php-parser": "^4.0",
+        "nikic/php-parser": "^5.0",
         "google/cloud-logging": "^1.14"
     }
 }
