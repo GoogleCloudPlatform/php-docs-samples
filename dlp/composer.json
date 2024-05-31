@@ -3,6 +3,6 @@
     "type": "project",
     "require": {
         "google/cloud-dlp": "^1.12",
-        "google/cloud-pubsub": "^1.49"
+        "google/cloud-pubsub": "^2.0"
     }
 }
