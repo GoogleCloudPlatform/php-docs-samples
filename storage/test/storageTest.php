@@ -840,6 +840,28 @@ class storageTest extends TestCase
         $this->assertContains($region2, $info['customPlacementConfig']['dataLocations']);
     }
 
+    public function testCreateBucketHnsEnabled()
+    {
+        $bucketName = uniqid('samples-create-hierarchical-namespace-enabled-');
+        $output = self::runFunctionSnippet('create_bucket_hierarchical_namespace', [
+            $bucketName,
+        ]);
+
+        $bucket = self::$storage->bucket($bucketName);
+        $info = $bucket->reload();
+        $exists = $bucket->exists();
+
+        $this->assertTrue($exists);
+        $this->assertEquals(
+            sprintf(
+                'Created bucket %s with Hierarchical Namespace enabled.',
+                $bucketName,
+            ),
+            $output
+        );
+        $this->assertTrue($info['hierarchicalNamespace']['enabled']);
+    }
+
     public function testObjectCsekToCmek()
     {
         $objectName = uniqid('samples-object-csek-to-cmek-');
