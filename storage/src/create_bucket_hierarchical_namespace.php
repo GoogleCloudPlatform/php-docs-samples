@@ -36,7 +36,7 @@ function create_bucket_hierarchical_namespace(string $bucketName): void
 {
     $storage = new StorageClient();
     $bucket = $storage->createBucket($bucketName, [
-        'hierarchicalNamespace' => ['enabled' => true,],
+        'hierarchicalNamespace' => ['enabled' => true],
         'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
     ]);
 
