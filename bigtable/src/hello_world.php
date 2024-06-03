@@ -127,7 +127,7 @@ $column = 'greeting';
 $columnFamilyId = 'cf1';
 
 $row = $table->readRow($key, [
-    'rowFilter' => $rowFilter
+    'filter' => $rowFilter
 ]);
 printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
 // [END bigtable_hw_get_with_filter]
