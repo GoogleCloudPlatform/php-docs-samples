@@ -40,7 +40,7 @@ function create_bucket_hierarchical_namespace(string $bucketName): void
         'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
     ]);
 
-    printf("Created bucket %s with Hierarchical Namespace enabled.", $bucket->name());
+    printf('Created bucket %s with Hierarchical Namespace enabled.', $bucket->name());
 }
 # [END storage_create_bucket_hierarchical_namespace]
 
