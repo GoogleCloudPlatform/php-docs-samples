@@ -48,7 +48,7 @@ class StorageControlTest extends TestCase
             sprintf('php-gcscontrol-sample-%s', $uniqueBucketId),
             [
                 'location' => self::$location,
-                'hierarchicalNamespace' => ['enabled' => true,],
+                'hierarchicalNamespace' => ['enabled' => true],
                 'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
             ]
         );
