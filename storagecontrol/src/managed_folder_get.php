@@ -48,7 +48,7 @@ function managed_folder_get(string $bucketName, string $managedFolderId): void
 
     $managedFolder = $storageControlClient->getManagedFolder($request);
 
-    printf("Got Managed Folder %s", $managedFolder->getName());
+    printf('Got Managed Folder %s', $managedFolder->getName());
 }
 # [END storage_control_managed_folder_get]
 
