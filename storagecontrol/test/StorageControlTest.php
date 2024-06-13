@@ -31,7 +31,9 @@ class StorageControlTest extends TestCase
 
     private static $sourceBucket;
     private static $folderId;
+    private static $managedFolderId;
     private static $folderName;
+    private static $managedFolderName;
     private static $storage;
     private static $storageControlClient;
     private static $location;
@@ -44,6 +46,7 @@ class StorageControlTest extends TestCase
         self::$location = 'us-west1';
         $uniqueBucketId = time() . rand();
         self::$folderId = time() . rand();
+        self::$managedFolderId = time() . rand();
         self::$sourceBucket = self::$storage->createBucket(
             sprintf('php-gcscontrol-sample-%s', $uniqueBucketId),
             [
@@ -56,6 +59,11 @@ class StorageControlTest extends TestCase
             '_',
             self::$sourceBucket->name(),
             self::$folderId
+        );
+        self::$managedFolderName = self::$storageControlClient->managedFolderName(
+            '_',
+            self::$sourceBucket->name(),
+            self::$managedFolderId
         );
     }
 
@@ -75,6 +83,63 @@ class StorageControlTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf('Created folder: %s', self::$folderName),
+            $output
+        );
+    }
+
+    public function testManagedCreateFolder()
+    {
+        $output = $this->runFunctionSnippet('managed_folder_create', [
+            self::$sourceBucket->name(), self::$managedFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Performed createManagedFolder request for %s', self::$managedFolderName),
+            $output
+        );
+    }
+
+    /**
+     * @depends testCreateFolder
+     */
+    public function testManagedGetFolder()
+    {
+        $output = $this->runFunctionSnippet('managed_folder_get', [
+            self::$sourceBucket->name(), self::$managedFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Got Managed Folder %s', self::$managedFolderName),
+            $output
+        );
+    }
+
+    /**
+     * @depends testManagedGetFolder
+     */
+    public function testManagedListFolders()
+    {
+        $output = $this->runFunctionSnippet('managed_folders_list', [
+            self::$sourceBucket->name()
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('%s bucket has managed folder %s', self::$sourceBucket->name(), self::$managedFolderName),
+            $output
+        );
+    }
+
+    /**
+     * @depends testManagedListFolders
+     */
+    public function testManagedDeleteFolder()
+    {
+        $output = $this->runFunctionSnippet('managed_folder_delete', [
+            self::$sourceBucket->name(), self::$managedFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Deleted Managed Folder %s', self::$managedFolderId),
             $output
         );
     }
