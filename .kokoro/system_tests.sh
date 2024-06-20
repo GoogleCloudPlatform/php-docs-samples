@@ -50,10 +50,26 @@ mkdir -p build/logs
 
 export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
+# Load phpbrew shell
+source /root/.phpbrew/bashrc
+
+# Decide which php version to use.
+if [ "3" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
+  PHP_VERSION="7.3"
+elif [ "1" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
+  PHP_VERSION="7.4"
+elif [ "2" -eq ${GOOGLE_ALT_PROJECT_ID: -1} ]; then
+  PHP_VERSION="8.0"
+else
+  # By default use PHP 7.4
+  PHP_VERSION="7.4"
+fi
+
+phpbrew switch $(phpbrew list | grep $PHP_VERSION | cut -c 2-)
+
 # If we are running REST tests, disable gRPC
 if [ "${RUN_REST_TESTS_ONLY}" = "true" ]; then
-  GRPC_INI=$(php -i | grep grpc.ini | sed 's/^Additional .ini files parsed => //g' | sed 's/,*$//g' )
-  mv $GRPC_INI "${GRPC_INI}.disabled"
+  phpbrew ext disable grpc
 fi
 
 # Install global test dependencies

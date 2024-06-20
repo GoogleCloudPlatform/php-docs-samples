@@ -22,7 +22,7 @@ DIR="${1:-$PROJECT_ROOT}"
 cd "$PROJECT_ROOT"
 
 # install local version of php-cs-fixer 3.0 from composer.json
-composer -q install -d testing/
+composer install -d testing/
 
 # run php-cs-fixer
 PHP_CS_FIXER="php-cs-fixer"
