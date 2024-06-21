@@ -2,7 +2,6 @@
     "require": {
         "google/cloud-bigtable": "^2.0"
     },
-    "minimum-stability": "RC",
     "autoload-dev": {
         "psr-4": {
             "Google\\Cloud\\Samples\\Bigtable\\Tests\\": "test"
