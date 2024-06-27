@@ -42,7 +42,7 @@ function drop_sequence(
     string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 

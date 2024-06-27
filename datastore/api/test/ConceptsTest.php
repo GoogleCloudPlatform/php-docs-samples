@@ -441,10 +441,10 @@ class ConceptsTest extends TestCase
         $this->assertStringContainsString('Query\Query Object', $output);
 
         $this->runEventuallyConsistentTest(
-          function () use ($key1, $output) {
-              $this->assertStringContainsString('Found 1 records', $output);
-              $this->assertStringContainsString($key1->path()[0]['name'], $output);
-          });
+            function () use ($key1, $output) {
+                $this->assertStringContainsString('Found 1 records', $output);
+                $this->assertStringContainsString($key1->path()[0]['name'], $output);
+            });
     }
 
     public function testAscendingSort()
