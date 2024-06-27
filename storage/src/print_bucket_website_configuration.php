@@ -41,9 +41,9 @@ function print_bucket_website_configuration(string $bucketName): void
         printf('Bucket website configuration not set' . PHP_EOL);
     } else {
         printf(
-          'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
-          $info['website']['mainPageSuffix'],
-          $info['website']['notFoundPage'],
+            'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
+            $info['website']['mainPageSuffix'],
+            $info['website']['notFoundPage'],
         );
     }
 }
