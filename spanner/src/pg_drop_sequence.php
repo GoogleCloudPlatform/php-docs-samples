@@ -42,9 +42,8 @@ function pg_drop_sequence(
     string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
-
     $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
     $statements = [
         'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',

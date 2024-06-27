@@ -42,7 +42,7 @@ function create_table_with_foreign_key_delete_cascade(
     string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
