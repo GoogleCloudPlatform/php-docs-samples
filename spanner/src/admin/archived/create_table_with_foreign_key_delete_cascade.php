@@ -39,7 +39,7 @@ use Google\Cloud\Spanner\SpannerClient;
 function create_table_with_foreign_key_delete_cascade(
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);

@@ -3,7 +3,7 @@
 ## Description
 
 All code in the snippets directory demonstrate how to invoke
-[Cloud Storage Control][cloud-storagecontrol] from PHP.
+[Cloud Storage Control][google-cloud-php-storage-control] from PHP.
 
 [cloud-storage-control]: https://cloud.google.com/storage/docs/access-control
 
