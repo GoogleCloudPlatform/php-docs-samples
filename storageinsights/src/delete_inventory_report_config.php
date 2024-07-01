@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_delete_inventory_report_config]
-use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\Client\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\DeleteReportConfigRequest;
 
 /**
  * Delete an inventory report config.
@@ -39,7 +40,9 @@ function delete_inventory_report_config(
     $storageInsightsClient = new StorageInsightsClient();
 
     $reportConfigName = $storageInsightsClient->reportConfigName($projectId, $bucketLocation, $inventoryReportConfigUuid);
-    $storageInsightsClient->deleteReportConfig($reportConfigName);
+    $deleteReportConfigRequest = (new DeleteReportConfigRequest())
+        ->setName($reportConfigName);
+    $storageInsightsClient->deleteReportConfig($deleteReportConfigRequest);
 
     printf('Deleted inventory report config with name %s' . PHP_EOL, $reportConfigName);
 }
