@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_list_inventory_report_configs]
-use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\Client\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\ListReportConfigsRequest;
 
 /**
  * Lists inventory report configs.
@@ -35,7 +36,9 @@ function list_inventory_report_configs(string $projectId, string $location): voi
     $storageInsightsClient = new StorageInsightsClient();
 
     $formattedParent = $storageInsightsClient->locationName($projectId, $location);
-    $configs = $storageInsightsClient->listReportConfigs($formattedParent);
+    $listReportConfigsRequest = (new ListReportConfigsRequest())
+        ->setParent($formattedParent);
+    $configs = $storageInsightsClient->listReportConfigs($listReportConfigsRequest);
 
     printf('Inventory report configs in project %s and location %s:' . PHP_EOL, $projectId, $location);
     foreach ($configs->iterateAllElements() as $config) {
