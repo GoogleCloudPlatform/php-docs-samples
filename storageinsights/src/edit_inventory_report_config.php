@@ -18,7 +18,9 @@
 namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_edit_inventory_report_config]
-use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\Client\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\GetReportConfigRequest;
+use Google\Cloud\StorageInsights\V1\UpdateReportConfigRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -40,15 +42,20 @@ function edit_inventory_report_config(
     $storageInsightsClient = new StorageInsightsClient();
 
     $reportConfigName = $storageInsightsClient->reportConfigName($projectId, $bucketLocation, $inventoryReportConfigUuid);
-    $reportConfig = $storageInsightsClient->getReportConfig($reportConfigName);
+    $getReportConfigRequest = (new GetReportConfigRequest())
+        ->setName($reportConfigName);
+    $reportConfig = $storageInsightsClient->getReportConfig($getReportConfigRequest);
 
     // Set any other fields you want to update here
     $updatedReportConfig = $reportConfig->setDisplayName('Updated Display Name');
     $updateMask = new FieldMask([
         'paths' => ['display_name']
     ]);
+    $updateReportConfigRequest = (new UpdateReportConfigRequest())
+        ->setUpdateMask($updateMask)
+        ->setReportConfig($updatedReportConfig);
 
-    $storageInsightsClient->updateReportConfig($updateMask, $updatedReportConfig);
+    $storageInsightsClient->updateReportConfig($updateReportConfigRequest);
 
     printf('Edited inventory report config with name %s' . PHP_EOL, $reportConfigName);
 }
