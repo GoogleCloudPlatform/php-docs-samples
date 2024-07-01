@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud": "^1.0",
+        "google/cloud": "^1.0-RC1@RC",
         "google/cloud-storage": "^1.9",
         "ext-bcmath":  "*"
     }
