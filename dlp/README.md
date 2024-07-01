@@ -54,7 +54,7 @@ See the [DLP Documentation](https://cloud.google.com/dlp/docs/inspecting-text) f
     export GOOGLE_PROJECT_ID=YOUR_PROJECT_ID
     ```
 - [Create a Google Cloud Storage bucket](https://console.cloud.google.com/storage) and upload [test.txt](src/test/data/test.txt).
-    - Set the `GOOGLE_STORAGE_BUCKET` environment variable. 
+    - Set the `GOOGLE_STORAGE_BUCKET` environment variable.
     - Set the `GCS_PATH` environment variable to point to the path for the bucket file.
     ```
     export GOOGLE_STORAGE_BUCKET=YOUR_BUCKET
@@ -120,7 +120,7 @@ PHP Fatal error:  Uncaught Error: Call to undefined function Google\Protobuf\Int
 You may need to install the bcmath PHP extension.
 e.g. (may depend on your php version)
 ```
-$ sudo apt-get install php8.0-bcmath
+$ sudo apt-get install php8.1-bcmath
 ```
 
 

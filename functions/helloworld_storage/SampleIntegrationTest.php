@@ -108,7 +108,7 @@ class SampleIntegrationTest extends TestCase
         $uri = 'localhost:' . $port;
 
         // https://symfony.com/doc/current/components/process.html#usage
-        self::$process = new Process([$php, '-S', $uri, 'vendor/bin/router.php'], null, [
+        self::$process = new Process([$php, '-S', $uri, 'vendor/google/cloud-functions-framework/router.php'], null, [
             'FUNCTION_SIGNATURE_TYPE' => 'cloudevent',
             'FUNCTION_TARGET' => 'helloGCS',
         ]);

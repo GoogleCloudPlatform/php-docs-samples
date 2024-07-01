@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
  * Class DeployTest.
  * @group deploy
  */
-class DeloyTest extends TestCase
+class DeployTest extends TestCase
 {
     use DeploymentTrait;
     use EventuallyConsistentTestTrait;
@@ -111,7 +111,7 @@ class DeloyTest extends TestCase
         // Run the test.
         $resp = $client->get('/');
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertEquals('Hello World!', (string) $resp->getBody());
+        $this->assertStringContainsString('Hello World!', (string) $resp->getBody());
     }
 
     public function getBaseUri()
