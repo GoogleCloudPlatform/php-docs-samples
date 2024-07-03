@@ -18,14 +18,15 @@
 namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_create_inventory_report_config]
-use Google\Type\Date;
-use Google\Cloud\StorageInsights\V1\CSVOptions;
-use Google\Cloud\StorageInsights\V1\ReportConfig;
-use Google\Cloud\StorageInsights\V1\FrequencyOptions;
-use Google\Cloud\StorageInsights\V1\CloudStorageFilters;
-use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
-use Google\Cloud\StorageInsights\V1\ObjectMetadataReportOptions;
+use Google\Cloud\StorageInsights\V1\Client\StorageInsightsClient;
 use Google\Cloud\StorageInsights\V1\CloudStorageDestinationOptions;
+use Google\Cloud\StorageInsights\V1\CloudStorageFilters;
+use Google\Cloud\StorageInsights\V1\CreateReportConfigRequest;
+use Google\Cloud\StorageInsights\V1\CSVOptions;
+use Google\Cloud\StorageInsights\V1\FrequencyOptions;
+use Google\Cloud\StorageInsights\V1\ObjectMetadataReportOptions;
+use Google\Cloud\StorageInsights\V1\ReportConfig;
+use Google\Type\Date;
 
 /**
  * Creates an inventory report config.
@@ -70,7 +71,10 @@ function create_inventory_report_config(
                 ->setBucket($destinationBucket)));
 
     $formattedParent = $storageInsightsClient->locationName($projectId, $bucketLocation);
-    $response = $storageInsightsClient->createReportConfig($formattedParent, $reportConfig);
+    $createReportConfigRequest = (new CreateReportConfigRequest())
+        ->setParent($formattedParent)
+        ->setReportConfig($reportConfig);
+    $response = $storageInsightsClient->createReportConfig($createReportConfigRequest);
 
     print('Created inventory report config with name:' . PHP_EOL);
     print($response->getName());

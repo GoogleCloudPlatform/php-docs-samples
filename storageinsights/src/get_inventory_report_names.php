@@ -18,7 +18,9 @@
 namespace Google\Cloud\Samples\StorageInsights;
 
 # [START storageinsights_get_inventory_report_names]
-use Google\Cloud\StorageInsights\V1\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\Client\StorageInsightsClient;
+use Google\Cloud\StorageInsights\V1\GetReportConfigRequest;
+use Google\Cloud\StorageInsights\V1\ListReportDetailsRequest;
 
 /**
  * Gets an existing inventory report config.
@@ -39,11 +41,15 @@ function get_inventory_report_names(
     $storageInsightsClient = new StorageInsightsClient();
 
     $reportConfigName = $storageInsightsClient->reportConfigName($projectId, $bucketLocation, $inventoryReportConfigUuid);
-    $reportConfig = $storageInsightsClient->getReportConfig($reportConfigName);
+    $getReportConfigRequest = (new GetReportConfigRequest())
+        ->setName($reportConfigName);
+    $reportConfig = $storageInsightsClient->getReportConfig($getReportConfigRequest);
     $extension = $reportConfig->hasCsvOptions() ? 'csv' : 'parquet';
     print('You can use the Google Cloud Storage Client '
         . 'to download the following objects from Google Cloud Storage:' . PHP_EOL);
-    $listReportConfigs = $storageInsightsClient->listReportDetails($reportConfig->getName());
+    $listReportDetailsRequest = (new ListReportDetailsRequest())
+        ->setParent($reportConfig->getName());
+    $listReportConfigs = $storageInsightsClient->listReportDetails($listReportDetailsRequest);
     foreach ($listReportConfigs->iterateAllElements() as $reportDetail) {
         for ($index = $reportDetail->getShardsCount() - 1; $index >= 0; $index--) {
             printf('%s%d.%s' . PHP_EOL, $reportDetail->getReportPathPrefix(), $index, $extension);

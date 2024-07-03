@@ -44,7 +44,7 @@ function pg_alter_sequence(
     string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
