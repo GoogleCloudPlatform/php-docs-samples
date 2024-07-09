@@ -21,7 +21,14 @@ namespace Google\Cloud\Samples\Media\Stitcher;
 
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\DeleteCdnKeyRequest;
+use Google\Cloud\Video\Stitcher\V1\DeleteLiveConfigRequest;
+use Google\Cloud\Video\Stitcher\V1\DeleteSlateRequest;
+use Google\Cloud\Video\Stitcher\V1\GetLiveSessionRequest;
+use Google\Cloud\Video\Stitcher\V1\ListCdnKeysRequest;
+use Google\Cloud\Video\Stitcher\V1\ListLiveConfigsRequest;
+use Google\Cloud\Video\Stitcher\V1\ListSlatesRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -577,7 +584,9 @@ class videoStitcherTest extends TestCase
 
         $stitcherClient = new VideoStitcherServiceClient();
         $formattedName = $stitcherClient->liveSessionName(self::$projectId, self::$location, self::$liveSessionId);
-        $session = $stitcherClient->getLiveSession($formattedName);
+        $getLiveSessionRequest = (new GetLiveSessionRequest())
+            ->setName($formattedName);
+        $session = $stitcherClient->getLiveSession($getLiveSessionRequest);
         $playUri = $session->getPlayUri();
 
         $manifest = file_get_contents($playUri);
@@ -621,7 +630,9 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listSlates($parent);
+        $listSlatesRequest = (new ListSlatesRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listSlates($listSlatesRequest);
         $slates = $response->iterateAllElements();
 
         $currentTime = time();
@@ -634,7 +645,9 @@ class videoStitcherTest extends TestCase
             $timestamp = intval(end($tmp));
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteSlate($slate->getName());
+                $deleteSlateRequest = (new DeleteSlateRequest())
+                    ->setName($slate->getName());
+                $stitcherClient->deleteSlate($deleteSlateRequest);
             }
         }
     }
@@ -643,7 +656,9 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listCdnKeys($parent);
+        $listCdnKeysRequest = (new ListCdnKeysRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listCdnKeys($listCdnKeysRequest);
         $keys = $response->iterateAllElements();
 
         $currentTime = time();
@@ -656,7 +671,9 @@ class videoStitcherTest extends TestCase
             $timestamp = intval(end($tmp));
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteCdnKey($key->getName());
+                $deleteCdnKeyRequest = (new DeleteCdnKeyRequest())
+                    ->setName($key->getName());
+                $stitcherClient->deleteCdnKey($deleteCdnKeyRequest);
             }
         }
     }
@@ -665,7 +682,9 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listLiveConfigs($parent);
+        $listLiveConfigsRequest = (new ListLiveConfigsRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listLiveConfigs($listLiveConfigsRequest);
         $liveConfigs = $response->iterateAllElements();
 
         $currentTime = time();
@@ -678,7 +697,9 @@ class videoStitcherTest extends TestCase
             $timestamp = intval(end($tmp));
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteLiveConfig($liveConfig->getName());
+                $deleteLiveConfigRequest = (new DeleteLiveConfigRequest())
+                    ->setName($liveConfig->getName());
+                $stitcherClient->deleteLiveConfig($deleteLiveConfigRequest);
             }
         }
     }
