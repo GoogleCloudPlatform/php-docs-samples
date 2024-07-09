@@ -6,6 +6,8 @@ beta_settings:
 
 runtime_config:
   document_root: wordpress
+  operating_system: ubuntu22
+  runtime_version: 8.3
 
-env_variables:
-  WHITELIST_FUNCTIONS: escapeshellarg,escapeshellcmd,exec,pclose,popen,shell_exec,phpversion,php_uname
+build_env_variables:
+  NGINX_SERVES_STATIC_FILES: true
