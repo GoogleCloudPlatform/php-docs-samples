@@ -276,6 +276,15 @@ class firestoreTest extends TestCase
     }
 
     /**
+     * @depends testAddData
+     */
+    public function testChainedInequalityQuery()
+    {
+        $output = $this->runFirestoreSnippet('query_filter_compound_multi_ineq');
+        $this->assertStringContainsString('Document aturing returned by born between 1900 and 1950', $output);
+    }
+
+    /**
      * @depends testQueryCreateExamples
      */
     public function testCompositeIndexChainedQuery()
