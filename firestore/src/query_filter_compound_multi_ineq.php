@@ -26,7 +26,8 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * Create a query with chained clauses.
+ * Example of a query with range and inequality filters on multiple fields.
+ * @see https://cloud.google.com/firestore/docs/query-data/multiple-range-fields
  *
  * @param string $projectId The Google Cloud Project ID
  */
