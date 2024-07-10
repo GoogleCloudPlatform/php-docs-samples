@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Firestore;
 
-use Google\Cloud\Core\Exception\BadRequestException;
 use Google\Cloud\Core\Exception\FailedPreconditionException;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\TestUtils\TestTrait;
