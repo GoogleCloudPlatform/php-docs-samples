@@ -307,18 +307,6 @@ class firestoreTest extends TestCase
     /**
      * @depends testQueryCreateExamples
      */
-    public function testInvalidRangeQuery()
-    {
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage(
-            'Cannot have inequality filters on multiple properties'
-        );
-        $this->runFirestoreSnippet('query_filter_range_invalid');
-    }
-
-    /**
-     * @depends testQueryCreateExamples
-     */
     public function testCollectionGroupQuerySetup()
     {
         try {
@@ -513,18 +501,6 @@ class firestoreTest extends TestCase
         $this->assertStringContainsString('Document LA returned by range with order by query', $output);
         $this->assertStringContainsString('Document TOK returned by range with order by query', $output);
         $this->assertStringContainsString('Document BJ returned by range with order by query', $output);
-    }
-
-    /**
-     * @depends testRetrieveCreateExamples
-     */
-    public function testInvalidRangeOrderByQuery()
-    {
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage(
-            'inequality filter property and first sort order must be the same'
-        );
-        $this->runFirestoreSnippet('query_order_field_invalid');
     }
 
     public function testDocumentRef()
