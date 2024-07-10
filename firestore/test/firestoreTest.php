@@ -275,13 +275,10 @@ class firestoreTest extends TestCase
         $this->assertStringContainsString('Document SF returned by query state=CA and name=San Francisco', $output);
     }
 
-    /**
-     * @depends testAddData
-     */
     public function testChainedInequalityQuery()
     {
         $output = $this->runFirestoreSnippet('query_filter_compound_multi_ineq');
-        $this->assertStringContainsString('Document aturing returned by born between 1900 and 1950', $output);
+        $this->assertStringContainsString('Document person4 returned by age > 35 and heigiht between 60 and 70', $output);
     }
 
     /**
