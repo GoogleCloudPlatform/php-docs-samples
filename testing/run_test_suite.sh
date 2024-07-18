@@ -58,6 +58,7 @@ ALT_PROJECT_TESTS=(
     kms
     logging
     monitoring
+    media/transcoder
     pubsub/api
     pubsub/quickstart
     storage
