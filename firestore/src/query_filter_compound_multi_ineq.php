@@ -52,7 +52,7 @@ function query_filter_compound_multi_ineq(string $projectId): void
     # [END firestore_query_filter_compound_multi_ineq]
     foreach ($chainedQuery->documents() as $document) {
         printf(
-            'Document %s returned by age > 35 and heigiht between 60 and 70' . PHP_EOL,
+            'Document %s returned by age > 35 and height between 60 and 70' . PHP_EOL,
             $document->id()
         );
     }
