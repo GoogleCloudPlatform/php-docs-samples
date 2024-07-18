@@ -35,11 +35,12 @@ use DateTime;
 function query_filter_compound_multi_ineq(string $namespaceId = null): void
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    // [START datastore_query_filter_compound_multi_ineq]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'));
-    // [END datastore_inequality_invalid]
+    // [END datastore_query_filter_compound_multi_ineq]
     $result = $datastore->runQuery($query);
     $found = false;
     foreach ($result as $entity) {
