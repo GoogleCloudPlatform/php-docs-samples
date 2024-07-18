@@ -24,12 +24,13 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Fetch a query cursor.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param int $pageSize
  * @param string $pageCursor
  */
-function cursor_paging(DatastoreClient $datastore, int $pageSize, string $pageCursor = '')
+function cursor_paging(string $namespaceId = null, int $pageSize, string $pageCursor = '')
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     $query = $datastore->query()
         ->kind('Task')
         ->limit($pageSize)

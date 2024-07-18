@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a basic Datastore Gql query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function basic_gql_query(DatastoreClient $datastore)
+function basic_gql_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_basic_gql_query]
     $gql = <<<EOF
 SELECT * from Task

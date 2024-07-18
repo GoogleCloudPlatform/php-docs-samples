@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a projection query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function projection_query(DatastoreClient $datastore)
+function projection_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_projection_query]
     $query = $datastore->query()
         ->kind('Task')

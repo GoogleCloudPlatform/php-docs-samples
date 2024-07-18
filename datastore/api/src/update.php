@@ -22,10 +22,11 @@ use Google\Cloud\Datastore\DatastoreClient;
 /**
  * Update a Datastore entity in a transaction.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function update(DatastoreClient $datastore)
+function update(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_update]
     $transaction = $datastore->transaction();
     $key = $datastore->key('Task', 'sampleTask');

@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create and run a query with readConsistency option.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function eventual_consistent_query(DatastoreClient $datastore)
+function eventual_consistent_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_eventual_consistent_query]
     $query = $datastore->query()
         ->kind('Task')

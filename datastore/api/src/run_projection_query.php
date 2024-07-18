@@ -23,11 +23,12 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Run the given projection query and collect the projected properties.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param Query $query
  */
-function run_projection_query(DatastoreClient $datastore, Query $query = null)
+function run_projection_query(string $namespaceId = null, Query $query = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     if (!isset($query)) {
         $query = $datastore->query()
       ->kind('Task')

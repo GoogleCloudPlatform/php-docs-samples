@@ -24,17 +24,18 @@ use Google\Cloud\Datastore\Key;
 /**
  * Update two entities in a transaction.
  *
- * @param DatastoreClient $datastore
  * @param Key $fromKey
  * @param Key $toKey
- * @param $amount
+ * @param int $amount
+ * @param string $namespaceId
  */
 function transfer_funds(
-    DatastoreClient $datastore,
     Key $fromKey,
     Key $toKey,
-    $amount
+    int $amount,
+    string $namespaceId = null
 ) {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     $transaction = $datastore->transaction();
     // The option 'sort' is important here, otherwise the order of the result
     // might be different from the order of the keys.
@@ -51,6 +52,8 @@ function transfer_funds(
 }
 // [END datastore_transactional_update]
 
-// The following 2 lines are only needed to run the samples
-require_once __DIR__ . '/../../../testing/sample_helpers.php';
-\Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
+if (isset($argv)) {
+    // The following 2 lines are only needed to run the samples
+    require_once __DIR__ . '/../../../testing/sample_helpers.php';
+    \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
+}

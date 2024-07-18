@@ -23,11 +23,12 @@ use Google\Cloud\Datastore\Key;
 /**
  * Delete multiple Datastore entities with the given keys.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param array<Key> $keys
  */
-function batch_delete(DatastoreClient $datastore, array $keys)
+function batch_delete(string $namespaceId = null, array $keys)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_batch_delete]
     $result = $datastore->deleteBatch($keys);
     // [END datastore_batch_delete]

@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a keys-only query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function keys_only_query(DatastoreClient $datastore)
+function keys_only_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_keys_only_query]
     $query = $datastore->query()
         ->keysOnly();

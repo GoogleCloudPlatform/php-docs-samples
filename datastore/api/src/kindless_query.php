@@ -24,11 +24,12 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a kindless query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param Key $lastSeenKey
  */
-function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
+function kindless_query(string $namespaceId = null, Key $lastSeenKey)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_kindless_query]
     $query = $datastore->query()
         ->filter('__key__', '>', $lastSeenKey);

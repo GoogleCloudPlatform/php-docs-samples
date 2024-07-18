@@ -23,11 +23,12 @@ use Google\Cloud\Datastore\EntityInterface;
 /**
  * Upsert multiple Datastore entities.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param array<EntityInterface> $tasks
  */
-function batch_upsert(DatastoreClient $datastore, array $tasks)
+function batch_upsert(string $namespaceId = null, array $tasks)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_batch_upsert]
     $result = $datastore->upsertBatch($tasks);
     // [END datastore_batch_upsert]

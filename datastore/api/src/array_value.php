@@ -23,11 +23,12 @@ use Google\Cloud\Datastore\Key;
 /**
  * Create a Datastore entity with some array properties.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param Key $key
  */
-function array_value(DatastoreClient $datastore, Key $key)
+function array_value(string $namespaceId = null, Key $key)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_array_value]
     $task = $datastore->entity(
         $key,

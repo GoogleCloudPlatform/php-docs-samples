@@ -24,11 +24,12 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Run a given query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param Query|GqlQuery $query
  */
-function run_query(DatastoreClient $datastore, $query)
+function run_query(string $namespaceId = null, $query)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_run_query]
     // [START datastore_run_gql_query]
     $result = $datastore->runQuery($query);

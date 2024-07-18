@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with equality filters.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function array_value_equality(DatastoreClient $datastore)
+function array_value_equality(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_array_value_equality]
     $query = $datastore->query()
         ->kind('Task')

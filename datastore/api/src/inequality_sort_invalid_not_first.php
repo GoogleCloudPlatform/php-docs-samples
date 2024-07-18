@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create an invalid query with an inequality filter and a wrong sort order.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function inequality_sort_invalid_not_first(DatastoreClient $datastore)
+function inequality_sort_invalid_not_first(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_inequality_sort_invalid_not_first]
     $query = $datastore->query()
         ->kind('Task')
@@ -34,7 +35,6 @@ function inequality_sort_invalid_not_first(DatastoreClient $datastore)
         ->order('created')
         ->order('priority');
     // [END datastore_inequality_sort_invalid_not_first]
-    print_r($query);
 
     $result = $datastore->runQuery($query);
     $found = false;

@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create and run a property query with property filtering.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function property_filtering_run_query(DatastoreClient $datastore)
+function property_filtering_run_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_property_filtering_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $startKey = $datastore->key('__property__', 'priority')
