@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,31 +23,26 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_print_bucket_website_configuration]
+# [START storage_create_bucket_hierarchical_namespace]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Print the website configuration for a Cloud Storage bucket.
+ * Create a new bucket with Hierarchical Namespace enabled.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
+ *        (e.g. 'my-bucket')
  */
-function print_bucket_website_configuration(string $bucketName): void
+function create_bucket_hierarchical_namespace(string $bucketName): void
 {
     $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $info = $bucket->info();
+    $bucket = $storage->createBucket($bucketName, [
+        'hierarchicalNamespace' => ['enabled' => true],
+        'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
+    ]);
 
-    if (!array_key_exists('website', $info)) {
-        printf('Bucket website configuration not set' . PHP_EOL);
-    } else {
-        printf(
-            'Index page: %s' . PHP_EOL . '404 page: %s' . PHP_EOL,
-            $info['website']['mainPageSuffix'],
-            $info['website']['notFoundPage'],
-        );
-    }
+    printf('Created bucket %s with Hierarchical Namespace enabled.', $bucket->name());
 }
-# [END storage_print_bucket_website_configuration]
+# [END storage_create_bucket_hierarchical_namespace]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
