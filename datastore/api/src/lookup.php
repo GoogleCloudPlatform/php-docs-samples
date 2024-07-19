@@ -23,15 +23,13 @@ use Google\Cloud\Datastore\Key;
 /**
  * Look up a Datastore entity with the given key.
  *
+ * @param string $keyId
  * @param string $namespaceId
- * @param Key $key
  */
-function lookup(string $namespaceId = null, Key $key = null)
+function lookup(string $keyId, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
-    if (!isset($key)) {
-        $key = $datastore->key('Task', 'sampleTask');
-    }
+    $key = $datastore->key('Task', $keyId);
     // [START datastore_lookup]
     $task = $datastore->lookup($key);
     // [END datastore_lookup]

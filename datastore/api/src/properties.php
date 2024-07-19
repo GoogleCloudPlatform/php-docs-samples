@@ -24,12 +24,13 @@ use Google\Cloud\Datastore\Key;
 /**
  * Create a Datastore entity, giving the excludeFromIndexes option.
  *
+ * @param string $keyId
  * @param string $namespaceId
- * @param Key $key
  */
-function properties(string $namespaceId = null, Key $key)
+function properties(string $keyId, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $key = $datastore->key('Task', $keyId);
     // [START datastore_properties]
     $task = $datastore->entity(
         $key,

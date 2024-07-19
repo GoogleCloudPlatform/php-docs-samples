@@ -24,19 +24,21 @@ use Google\Cloud\Datastore\Key;
 /**
  * Update two entities in a transaction.
  *
- * @param Key $fromKey
- * @param Key $toKey
+ * @param string $fromKeyId
+ * @param string $toKeyId
  * @param int $amount
  * @param string $namespaceId
  */
 function transfer_funds(
-    Key $fromKey,
-    Key $toKey,
+    string $fromKeyId,
+    string $toKeyId,
     int $amount,
     string $namespaceId = null
 ) {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     $transaction = $datastore->transaction();
+    $fromKey = $datastore->key('Account', $fromKeyId);
+    $toKey = $datastore->key('Account', $toKeyId);
     // The option 'sort' is important here, otherwise the order of the result
     // might be different from the order of the keys.
     $result = $transaction->lookupBatch([$fromKey, $toKey], ['sort' => true]);

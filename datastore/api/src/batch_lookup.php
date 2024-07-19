@@ -23,12 +23,13 @@ use Google\Cloud\Datastore\Key;
 /**
  * Lookup multiple entities.
  *
+ * @param array<string> $keyIds
  * @param string $namespaceId
- * @param array<Key> $keys
  */
-function batch_lookup(string $namespaceId = null, array $keys)
+function batch_lookup(array $keyIds, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $keys = array_map(fn($keyId) => $datastore->key('Task', $keyId), $keyIds);
     // [START datastore_batch_lookup]
     $result = $datastore->lookupBatch($keys);
     if (isset($result['found'])) {

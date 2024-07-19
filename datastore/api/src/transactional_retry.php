@@ -24,12 +24,12 @@ use Google\Cloud\Datastore\Key;
  * Call a function and retry upon conflicts for several times.
  *
  * @param string $namespaceId
- * @param Key $fromKey
- * @param Key $toKey
+ * @param string $fromKeyId
+ * @param string $toKeyId
  */
 function transactional_retry(
-    Key $fromKey,
-    Key $toKey,
+    string $fromKeyId,
+    string $toKeyId,
     string $namespaceId = null
 ) {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
@@ -38,7 +38,7 @@ function transactional_retry(
     for ($i = 0; $i < $retries; $i++) {
         try {
             require_once __DIR__ . '/transfer_funds.php';
-            transfer_funds($fromKey, $toKey, 10, $namespaceId);
+            transfer_funds($fromKeyId, $toKeyId, 10, $namespaceId);
         } catch (\Google\Cloud\Core\Exception\ConflictException $e) {
             // if $i >= $retries, the failure is final
             continue;

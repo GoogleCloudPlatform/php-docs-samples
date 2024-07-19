@@ -27,7 +27,7 @@ use Google\Cloud\Datastore\Query\Query;
  * @param string $start a starting namespace (inclusive)
  * @param string $end an ending namespace (exclusive)
  */
-function namespace_run_query(string $namespaceId = null, $start, $end)
+function namespace_run_query(string $start, string $end, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_namespace_run_query]

@@ -27,7 +27,7 @@ use Google\Cloud\Datastore\Query\Query;
  * @param string $namespaceId
  * @param Query|GqlQuery $query
  */
-function run_query(string $namespaceId = null, $query)
+function run_query(Query|GqlQuery $query, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_run_query]

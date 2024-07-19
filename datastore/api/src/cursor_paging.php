@@ -24,11 +24,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Fetch a query cursor.
  *
- * @param string $namespaceId
  * @param int $pageSize
  * @param string $pageCursor
+ * @param string $namespaceId
  */
-function cursor_paging(string $namespaceId = null, int $pageSize, string $pageCursor = '')
+function cursor_paging(int $pageSize, string $pageCursor = '', string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     $query = $datastore->query()
