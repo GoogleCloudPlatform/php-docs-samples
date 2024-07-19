@@ -18,16 +18,17 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 
 /**
  * Create a Datastore entity with some array properties.
  *
- * @param DatastoreClient $datastore
- * @param Key $key
+ * @param string $keyId
+ * @param string $namespaceId
  */
-function array_value(DatastoreClient $datastore, Key $key)
+function array_value(string $keyId, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $key = $datastore->key('Task', $keyId);
     // [START datastore_array_value]
     $task = $datastore->entity(
         $key,

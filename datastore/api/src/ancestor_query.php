@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create an ancestor query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function ancestor_query(DatastoreClient $datastore)
+function ancestor_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_ancestor_query]
     $ancestorKey = $datastore->key('TaskList', 'default');
     $query = $datastore->query()

@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query sorting with multiple properties.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function multi_sort(DatastoreClient $datastore)
+function multi_sort(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_multi_sort]
     $query = $datastore->query()
         ->kind('Task')

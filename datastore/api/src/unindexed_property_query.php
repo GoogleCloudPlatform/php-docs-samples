@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with an equality filter on 'description'.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function unindexed_property_query(DatastoreClient $datastore)
+function unindexed_property_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_unindexed_property_query]
     $query = $datastore->query()
         ->kind('Task')

@@ -18,25 +18,26 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 
 /**
  * Call a function and retry upon conflicts for several times.
  *
- * @param DatastoreClient $datastore
- * @param Key $fromKey
- * @param Key $toKey
+ * @param string $namespaceId
+ * @param string $fromKeyId
+ * @param string $toKeyId
  */
 function transactional_retry(
-    DatastoreClient $datastore,
-    Key $fromKey,
-    Key $toKey
+    string $fromKeyId,
+    string $toKeyId,
+    string $namespaceId = null
 ) {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_transactional_retry]
     $retries = 5;
     for ($i = 0; $i < $retries; $i++) {
         try {
-            transfer_funds($datastore, $fromKey, $toKey, 10);
+            require_once __DIR__ . '/transfer_funds.php';
+            transfer_funds($fromKeyId, $toKeyId, 10, $namespaceId);
         } catch (\Google\Cloud\Core\Exception\ConflictException $e) {
             // if $i >= $retries, the failure is final
             continue;

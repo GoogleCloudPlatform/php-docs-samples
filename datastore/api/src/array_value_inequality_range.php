@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with inequality filters.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function array_value_inequality_range(DatastoreClient $datastore)
+function array_value_inequality_range(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_array_value_inequality_range]
     $query = $datastore->query()
         ->kind('Task')

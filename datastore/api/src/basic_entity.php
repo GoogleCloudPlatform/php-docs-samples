@@ -22,10 +22,11 @@ use Google\Cloud\Datastore\DatastoreClient;
 /**
  * Create a Datastore entity.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function basic_entity(DatastoreClient $datastore)
+function basic_entity(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_basic_entity]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',

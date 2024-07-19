@@ -24,10 +24,12 @@ use Google\Cloud\Datastore\Key;
 /**
  * Insert an entity only if there is no entity with the same key.
  *
- * @param DatastoreClient $datastore
+ * @param EntityInterface $task
+ * @param string $namespaceId
  */
-function get_or_create(DatastoreClient $datastore, EntityInterface $task)
+function get_or_create(EntityInterface $task, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_transactional_get_or_create]
     $transaction = $datastore->transaction();
     $entity = $transaction->lookup($task->key());

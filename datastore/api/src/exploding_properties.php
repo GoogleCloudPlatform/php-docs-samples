@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\DatastoreClient;
 /**
  * Create an entity with two array properties.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function exploding_properties(DatastoreClient $datastore)
+function exploding_properties(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_exploding_properties]
     $task = $datastore->entity(
         $datastore->key('Task'),

@@ -18,17 +18,18 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 use Google\Cloud\Datastore\Query\Query;
 
 /**
  * Create a kindless query.
  *
- * @param DatastoreClient $datastore
- * @param Key $lastSeenKey
+ * @param string $lastSeenKeyId
+ * @param string $namespaceId
  */
-function kindless_query(DatastoreClient $datastore, Key $lastSeenKey)
+function kindless_query(string $lastSeenKeyId, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $lastSeenKey = $datastore->key('Task', $lastSeenKeyId);
     // [START datastore_kindless_query]
     $query = $datastore->query()
         ->filter('__key__', '>', $lastSeenKey);

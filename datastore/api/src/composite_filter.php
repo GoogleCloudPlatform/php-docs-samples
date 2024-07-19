@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with a composite filter.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function composite_filter(DatastoreClient $datastore)
+function composite_filter(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_composite_filter]
     $query = $datastore->query()
         ->kind('Task')
