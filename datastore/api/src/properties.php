@@ -19,7 +19,6 @@ namespace Google\Cloud\Samples\Datastore;
 
 use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 
 /**
  * Create a Datastore entity, giving the excludeFromIndexes option.

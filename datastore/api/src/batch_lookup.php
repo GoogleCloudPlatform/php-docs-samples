@@ -18,7 +18,6 @@
 namespace Google\Cloud\Samples\Datastore;
 
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 
 /**
  * Lookup multiple entities.
@@ -29,7 +28,7 @@ use Google\Cloud\Datastore\Key;
 function batch_lookup(array $keyIds, string $namespaceId = null)
 {
     $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
-    $keys = array_map(fn($keyId) => $datastore->key('Task', $keyId), $keyIds);
+    $keys = array_map(fn ($keyId) => $datastore->key('Task', $keyId), $keyIds);
     // [START datastore_batch_lookup]
     $result = $datastore->lookupBatch($keys);
     if (isset($result['found'])) {
