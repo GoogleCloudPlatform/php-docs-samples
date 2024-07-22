@@ -909,6 +909,38 @@ class ConceptsTest extends TestCase
         });
     }
 
+    public function testChainedInequalityQuery()
+    {
+        // This will show in the query
+        $key1 = self::$datastore->key('Task', $this->generateRandomString());
+        $entity1 = self::$datastore->entity($key1);
+        $entity1['priority'] = 4;
+        $entity1['created'] = new \DateTime();
+
+        // These will not show in the query
+        $key2 = self::$datastore->key('Task', $this->generateRandomString());
+        $entity2 = self::$datastore->entity($key2);
+        $entity2['priority'] = 2;
+        $entity2['created'] = new \DateTime();
+
+        $key3 = self::$datastore->key('Task', $this->generateRandomString());
+        $entity3 = self::$datastore->entity($key3);
+        $entity3['priority'] = 4;
+        $entity3['created'] = new \DateTime('1989');
+
+        self::$keys = [$key1, $key2, $key3];
+        self::$datastore->upsertBatch([$entity1, $entity2, $entity3]);
+
+        $output = $this->runFunctionSnippet('query_filter_compound_multi_ineq', [self::$namespaceId]);
+        $this->assertStringContainsString(sprintf(
+            'Document %s returned by priority > 3 and created > 1990',
+            $key1
+        ), $output);
+
+        $this->assertStringNotContainsString((string) $key2, $output);
+        $this->assertStringNotContainsString((string) $key3, $output);
+    }
+
     public function tearDown(): void
     {
         if (! empty(self::$keys)) {
