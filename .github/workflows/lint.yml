@@ -10,11 +10,12 @@ jobs:
     name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.0'
+        php-version: '8.2'
+
     - name: Run Script
       run: testing/run_cs_check.sh
 
@@ -40,18 +41,23 @@ jobs:
     name: PHPStan Static Analysis
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.0'
-
+        php-version: '8.2'
+    - name: Get changed files
+      id: changedFiles
+      uses: tj-actions/changed-files@v44
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        state: open
     - name: Run Script
       run: |
-        composer global require phpstan/phpstan
-        for dir in $(find * -type d -name src -not -path 'appengine/*' -not -path '*/vendor/*' -exec dirname {} \;);
-        do
-          composer install --working-dir=$dir --ignore-platform-reqs
-          echo "<?php require_once 'testing/sample_helpers.php';require_once '$dir/vendor/autoload.php';" > autoload.php
-          ~/.composer/vendor/bin/phpstan analyse $dir/src --autoload-file=autoload.php
-        done
+        composer install -d testing/
+        git fetch --no-tags --prune --depth=5 origin main
+        bash testing/run_staticanalysis_check.sh
+      env:
+        FILES_CHANGED: ${{ steps.changedFiles.outputs.all_changed_files }}
+        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}

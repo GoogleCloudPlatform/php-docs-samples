@@ -23,6 +23,8 @@
 
 namespace Google\Cloud\Samples\PubSub;
 
+$projectId = '';
+
 /**
  * This file is to be used as an example only!
  *

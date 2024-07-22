@@ -28,7 +28,8 @@
 namespace Google\Cloud\Samples\Analytics\Data;
 
 // [START analyticsdata_get_metadata_by_property_id]
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\GetMetadataRequest;
 use Google\Analytics\Data\V1beta\Metadata;
 use Google\ApiCore\ApiException;
 
@@ -46,9 +47,12 @@ function get_metadata_by_property_id(string $propertyId)
 
     // Make an API call.
     try {
-        $response = $client->getMetadata($formattedName);
+        $request = (new GetMetadataRequest())
+            ->setName($formattedName);
+        $response = $client->getMetadata($request);
     } catch (ApiException $ex) {
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
+        return;
     }
 
     printf(

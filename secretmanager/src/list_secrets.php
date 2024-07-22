@@ -27,7 +27,8 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_list_secrets]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\ListSecretsRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -40,8 +41,11 @@ function list_secrets(string $projectId): void
     // Build the resource name of the parent secret.
     $parent = $client->projectName($projectId);
 
+    // Build the request.
+    $request = ListSecretsRequest::build($parent);
+
     // List all secrets.
-    foreach ($client->listSecrets($parent) as $secret) {
+    foreach ($client->listSecrets($request) as $secret) {
         printf('Found secret %s', $secret->getName());
     }
 }

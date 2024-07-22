@@ -4,7 +4,7 @@ env: flex
 runtime_config:
   document_root: .
 
-# [START configuration]
+# [START endpoints_configuration]
 endpoints_api_service:
   # The following values are to be replaced by information from the output of
   # 'gcloud endpoints services deploy openapi-appengine.yaml' command. If you have
@@ -15,4 +15,4 @@ endpoints_api_service:
   #
   name: ENDPOINTS-SERVICE-NAME
   rollout_strategy: managed
-# [END configuration]
+# [END endpoints_configuration]

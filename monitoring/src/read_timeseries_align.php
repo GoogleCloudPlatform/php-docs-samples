@@ -24,11 +24,12 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_read_timeseries_align]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
-use Google\Cloud\Monitoring\V3\Aggregation\Aligner;
 use Google\Cloud\Monitoring\V3\Aggregation;
-use Google\Cloud\Monitoring\V3\TimeInterval;
+use Google\Cloud\Monitoring\V3\Aggregation\Aligner;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\ListTimeSeriesRequest\TimeSeriesView;
+use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Protobuf\Duration;
 use Google\Protobuf\Timestamp;
 
@@ -40,13 +41,13 @@ use Google\Protobuf\Timestamp;
  *
  * @param string $projectId Your project ID
  */
-function read_timeseries_align($projectId, $minutesAgo = 20)
+function read_timeseries_align(string $projectId, int $minutesAgo = 20): void
 {
     $metrics = new MetricServiceClient([
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
     $filter = 'metric.type="compute.googleapis.com/instance/cpu/utilization"';
 
     $startTime = new Timestamp();
@@ -65,14 +66,14 @@ function read_timeseries_align($projectId, $minutesAgo = 20)
     $aggregation->setPerSeriesAligner(Aligner::ALIGN_MEAN);
 
     $view = TimeSeriesView::FULL;
+    $listTimeSeriesRequest = (new ListTimeSeriesRequest())
+        ->setName($projectName)
+        ->setFilter($filter)
+        ->setInterval($interval)
+        ->setView($view)
+        ->setAggregation($aggregation);
 
-    $result = $metrics->listTimeSeries(
-        $projectName,
-        $filter,
-        $interval,
-        $view,
-        ['aggregation' => $aggregation]
-    );
+    $result = $metrics->listTimeSeries($listTimeSeriesRequest);
 
     printf('CPU utilization:' . PHP_EOL);
     foreach ($result->iterateAllElements() as $timeSeries) {

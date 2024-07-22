@@ -17,9 +17,9 @@
 
 namespace Google\Cloud\Samples\Translate;
 
-use PHPUnit\Framework\TestCase;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit Tests for transcribe commands.

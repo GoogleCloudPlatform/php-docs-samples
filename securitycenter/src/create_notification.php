@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_create_notification_config]
-use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\Client\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\CreateNotificationConfigRequest;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig;
 use Google\Cloud\SecurityCenter\V1\NotificationConfig\StreamingConfig;
 
@@ -35,7 +36,11 @@ function create_notification(
     string $topicName
 ): void {
     $securityCenterClient = new SecurityCenterClient();
-    $organizationName = $securityCenterClient::organizationName($organizationId);
+    // 'parent' must be in one of the following formats:
+    //		"organizations/{orgId}"
+    //		"projects/{projectId}"
+    //		"folders/{folderId}"
+    $parent = $securityCenterClient::organizationName($organizationId);
     $pubsubTopic = $securityCenterClient::topicName($projectId, $topicName);
 
     $streamingConfig = (new StreamingConfig())->setFilter('state = "ACTIVE"');
@@ -43,12 +48,12 @@ function create_notification(
         ->setDescription('A sample notification config')
         ->setPubsubTopic($pubsubTopic)
         ->setStreamingConfig($streamingConfig);
+    $createNotificationConfigRequest = (new CreateNotificationConfigRequest())
+        ->setParent($parent)
+        ->setConfigId($notificationConfigId)
+        ->setNotificationConfig($notificationConfig);
 
-    $response = $securityCenterClient->createNotificationConfig(
-        $organizationName,
-        $notificationConfigId,
-        $notificationConfig
-    );
+    $response = $securityCenterClient->createNotificationConfig($createNotificationConfigRequest);
     printf('Notification config was created: %s' . PHP_EOL, $response->getName());
 }
 // [END securitycenter_create_notification_config]

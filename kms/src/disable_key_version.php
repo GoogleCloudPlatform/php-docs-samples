@@ -20,9 +20,10 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_disable_key_version]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\CryptoKeyVersion;
 use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionState;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyVersionRequest;
 use Google\Protobuf\FieldMask;
 
 function disable_key_version(
@@ -31,7 +32,7 @@ function disable_key_version(
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key',
     string $versionId = '123'
-) {
+): CryptoKeyVersion {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -48,7 +49,10 @@ function disable_key_version(
         ->setPaths(['state']);
 
     // Call the API.
-    $disabledVersion = $client->updateCryptoKeyVersion($keyVersion, $updateMask);
+    $updateCryptoKeyVersionRequest = (new UpdateCryptoKeyVersionRequest())
+        ->setCryptoKeyVersion($keyVersion)
+        ->setUpdateMask($updateMask);
+    $disabledVersion = $client->updateCryptoKeyVersion($updateCryptoKeyVersionRequest);
     printf('Disabled key version: %s' . PHP_EOL, $disabledVersion->getName());
 
     return $disabledVersion;

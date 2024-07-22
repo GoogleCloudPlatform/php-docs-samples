@@ -31,10 +31,11 @@ Usage:
 // [START analytics_data_quickstart]
 require 'vendor/autoload.php';
 
-use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\RunReportRequest;
 
 /**
  * TODO(developer): Replace this variable with your Google Analytics 4
@@ -50,27 +51,23 @@ $client = new BetaAnalyticsDataClient();
 
 // [START analyticsdata_run_report]
 // Make an API call.
-$response = $client->runReport([
-    'property' => 'properties/' . $property_id,
-    'dateRanges' => [
+$request = (new RunReportRequest())
+    ->setProperty('properties/' . $property_id)
+    ->setDateRanges([
         new DateRange([
             'start_date' => '2020-03-31',
             'end_date' => 'today',
         ]),
-    ],
-    'dimensions' => [new Dimension(
-        [
+    ])
+    ->setDimensions([new Dimension([
             'name' => 'city',
-        ]
-    ),
-    ],
-    'metrics' => [new Metric(
-        [
+        ]),
+    ])
+    ->setMetrics([new Metric([
             'name' => 'activeUsers',
-        ]
-    )
-    ]
-]);
+        ])
+    ]);
+$response = $client->runReport($request);
 // [END analyticsdata_run_report]
 
 // [START analyticsdata_run_report_response]

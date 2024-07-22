@@ -37,7 +37,6 @@ REST_TESTS=(
     dialogflow
     dlp
     error_reporting
-    iot
     monitoring
     speech
     video
@@ -56,10 +55,10 @@ ALT_PROJECT_TESTS=(
     dialogflow
     dlp
     error_reporting
-    iot
     kms
     logging
     monitoring
+    media/transcoder
     pubsub/api
     pubsub/quickstart
     storage
@@ -162,7 +161,7 @@ do
         continue
     fi
     if [ "$RUN_DEPLOYMENT_TESTS" != "true" ] &&
-       [[ -z $(find $DIR/test/ -type f -name *Test.php -not -name Deploy*Test.php) ]]; then
+       [[ -z $(find $DIR/test{,s}/ -type f -name *Test.php -not -name Deploy*Test.php 2>/dev/null) ]]; then
         echo "Skipping tests in $DIR (Deployment tests only)"
         continue
     fi

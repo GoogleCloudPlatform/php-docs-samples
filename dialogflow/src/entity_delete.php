@@ -18,7 +18,8 @@
 // [START dialogflow_delete_entity]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\EntityTypesClient;
+use Google\Cloud\Dialogflow\V2\BatchDeleteEntitiesRequest;
+use Google\Cloud\Dialogflow\V2\Client\EntityTypesClient;
 
 /**
 * Delete entity with the given entity type and entity value.
@@ -27,11 +28,12 @@ function entity_delete($projectId, $entityTypeId, $entityValue)
 {
     $entityTypesClient = new EntityTypesClient();
 
-    $parent = $entityTypesClient->entityTypeName(
-        $projectId,
-        $entityTypeId
-    );
-    $entityTypesClient->batchDeleteEntities($parent, [$entityValue]);
+    $parent = $entityTypesClient->entityTypeName($projectId,
+        $entityTypeId);
+    $batchDeleteEntitiesRequest = (new BatchDeleteEntitiesRequest())
+        ->setParent($parent)
+        ->setEntityValues([$entityValue]);
+    $entityTypesClient->batchDeleteEntities($batchDeleteEntitiesRequest);
     printf('Entity deleted: %s' . PHP_EOL, $entityValue);
 
     $entityTypesClient->close();

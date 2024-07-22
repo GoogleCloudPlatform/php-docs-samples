@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_list_vod_stitch_details]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\ListVodStitchDetailsRequest;
 
 /**
  * Lists the stitch details for the specified VOD session.
@@ -43,7 +44,9 @@ function list_vod_stitch_details(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->vodSessionName($callingProjectId, $location, $sessionId);
-    $response = $stitcherClient->listVodStitchDetails($formattedName);
+    $request = (new ListVodStitchDetailsRequest())
+        ->setParent($formattedName);
+    $response = $stitcherClient->listVodStitchDetails($request);
 
     // Print the stitch details list.
     $stitchDetails = $response->iterateAllElements();

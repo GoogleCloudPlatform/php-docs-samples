@@ -32,9 +32,13 @@ list($_, $projectId, $instanceId, $tableId) = $argv;
 
 // [START bigtable_hw_imports]
 use Google\ApiCore\ApiException;
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\BigtableTableAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableTableAdminClient;
 use Google\Cloud\Bigtable\Admin\V2\ColumnFamily;
+use Google\Cloud\Bigtable\Admin\V2\CreateTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\DeleteTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetTableRequest;
+use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest;
 use Google\Cloud\Bigtable\Admin\V2\ModifyColumnFamiliesRequest\Modification;
 use Google\Cloud\Bigtable\Admin\V2\Table;
 use Google\Cloud\Bigtable\Admin\V2\Table\View;
@@ -67,22 +71,28 @@ $table = new Table();
 printf('Creating a Table: %s' . PHP_EOL, $tableId);
 
 try {
-    $tableAdminClient->getTable($tableName, ['view' => View::NAME_ONLY]);
+    $getTableRequest = (new GetTableRequest())
+        ->setName($tableName)
+        ->setView(View::NAME_ONLY);
+    $tableAdminClient->getTable($getTableRequest);
     printf('Table %s already exists' . PHP_EOL, $tableId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {
         printf('Creating the %s table' . PHP_EOL, $tableId);
+        $createTableRequest = (new CreateTableRequest())
+            ->setParent($instanceName)
+            ->setTableId($tableId)
+            ->setTable($table);
 
-        $tableAdminClient->createtable(
-            $instanceName,
-            $tableId,
-            $table
-        );
+        $tableAdminClient->createtable($createTableRequest);
         $columnFamily = new ColumnFamily();
         $columnModification = new Modification();
         $columnModification->setId('cf1');
         $columnModification->setCreate($columnFamily);
-        $tableAdminClient->modifyColumnFamilies($tableName, [$columnModification]);
+        $modifyColumnFamiliesRequest = (new ModifyColumnFamiliesRequest())
+            ->setName($tableName)
+            ->setModifications([$columnModification]);
+        $tableAdminClient->modifyColumnFamilies($modifyColumnFamiliesRequest);
         printf('Created table %s' . PHP_EOL, $tableId);
     } else {
         throw $e;
@@ -117,7 +127,7 @@ $column = 'greeting';
 $columnFamilyId = 'cf1';
 
 $row = $table->readRow($key, [
-    'rowFilter' => $rowFilter
+    'filter' => $rowFilter
 ]);
 printf('%s' . PHP_EOL, $row[$columnFamilyId][$column][0]['value']);
 // [END bigtable_hw_get_with_filter]
@@ -135,7 +145,9 @@ foreach ($partialRows as $row) {
 // [START bigtable_hw_delete_table]
 try {
     printf('Attempting to delete table %s.' . PHP_EOL, $tableId);
-    $tableAdminClient->deleteTable($tableName);
+    $deleteTableRequest = (new DeleteTableRequest())
+        ->setName($tableName);
+    $tableAdminClient->deleteTable($deleteTableRequest);
     printf('Deleted %s table.' . PHP_EOL, $tableId);
 } catch (ApiException $e) {
     if ($e->getStatus() === 'NOT_FOUND') {

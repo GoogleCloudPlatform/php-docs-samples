@@ -24,8 +24,10 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_alert_backup_policies]
-use Google\Cloud\Monitoring\V3\AlertPolicyServiceClient;
-use Google\Cloud\Monitoring\V3\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\Client\AlertPolicyServiceClient;
+use Google\Cloud\Monitoring\V3\Client\NotificationChannelServiceClient;
+use Google\Cloud\Monitoring\V3\ListAlertPoliciesRequest;
+use Google\Cloud\Monitoring\V3\ListNotificationChannelsRequest;
 
 /**
  * Back up alert policies.
@@ -40,18 +42,22 @@ function alert_backup_policies($projectId)
     $channelClient = new NotificationChannelServiceClient([
         'projectId' => $projectId,
     ]);
-    $projectName = $alertClient->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $record = [
         'project_name' => $projectName,
         'policies' => [],
         'channels' => [],
     ];
-    $policies = $alertClient->listAlertPolicies($projectName);
+    $listAlertPoliciesRequest = (new ListAlertPoliciesRequest())
+        ->setName($projectName);
+    $policies = $alertClient->listAlertPolicies($listAlertPoliciesRequest);
     foreach ($policies->iterateAllElements() as $policy) {
         $record['policies'][] = json_decode($policy->serializeToJsonString());
     }
-    $channels = $channelClient->listNotificationChannels($projectName);
+    $listNotificationChannelsRequest = (new ListNotificationChannelsRequest())
+        ->setName($projectName);
+    $channels = $channelClient->listNotificationChannels($listNotificationChannelsRequest);
     foreach ($channels->iterateAllElements() as $channel) {
         $record['channels'][] = json_decode($channel->serializeToJsonString());
     }

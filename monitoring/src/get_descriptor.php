@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_get_descriptor]
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\GetMetricDescriptorRequest;
 
 /**
  * Example:
@@ -42,7 +43,9 @@ function get_descriptor($projectId, $metricId)
     ]);
 
     $metricName = $metrics->metricDescriptorName($projectId, $metricId);
-    $descriptor = $metrics->getMetricDescriptor($metricName);
+    $getMetricDescriptorRequest = (new GetMetricDescriptorRequest())
+        ->setName($metricName);
+    $descriptor = $metrics->getMetricDescriptor($getMetricDescriptorRequest);
 
     printf('Name: ' . $descriptor->getDisplayName() . PHP_EOL);
     printf('Description: ' . $descriptor->getDescription() . PHP_EOL);

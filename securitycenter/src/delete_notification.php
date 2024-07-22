@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_delete_notification_config]
-use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\Client\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\DeleteNotificationConfigRequest;
 
 /**
  * @param string $organizationId        Your org ID
@@ -28,11 +29,14 @@ function delete_notification(string $organizationId, string $notificationConfigI
 {
     $securityCenterClient = new SecurityCenterClient();
     $notificationConfigName = $securityCenterClient::notificationConfigName(
+        // You can also use 'projectId' or 'folderId' instead of the 'organizationId'.
         $organizationId,
         $notificationConfigId
     );
+    $deleteNotificationConfigRequest = (new DeleteNotificationConfigRequest())
+        ->setName($notificationConfigName);
 
-    $response = $securityCenterClient->deleteNotificationConfig($notificationConfigName);
+    $securityCenterClient->deleteNotificationConfig($deleteNotificationConfigRequest);
     print('Notification config was deleted' . PHP_EOL);
 }
 // [END securitycenter_delete_notification_config]

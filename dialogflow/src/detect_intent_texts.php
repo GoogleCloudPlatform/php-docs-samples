@@ -18,9 +18,10 @@
 // [START dialogflow_detect_intent_text]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\SessionsClient;
-use Google\Cloud\Dialogflow\V2\TextInput;
+use Google\Cloud\Dialogflow\V2\Client\SessionsClient;
+use Google\Cloud\Dialogflow\V2\DetectIntentRequest;
 use Google\Cloud\Dialogflow\V2\QueryInput;
+use Google\Cloud\Dialogflow\V2\TextInput;
 
 /**
  * Returns the result of detect intent with texts as inputs.
@@ -46,7 +47,10 @@ function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en
         $queryInput->setText($textInput);
 
         // get response and relevant info
-        $response = $sessionsClient->detectIntent($session, $queryInput);
+        $detectIntentRequest = (new DetectIntentRequest())
+            ->setSession($session)
+            ->setQueryInput($queryInput);
+        $response = $sessionsClient->detectIntent($detectIntentRequest);
         $queryResult = $response->getQueryResult();
         $queryText = $queryResult->getQueryText();
         $intent = $queryResult->getIntent();

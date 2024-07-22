@@ -66,7 +66,7 @@ class spannerPgTest extends TestCase
 
     public function testCreateDatabase()
     {
-        $output = $this->runFunctionSnippet('pg_create_database');
+        $output = $this->runAdminFunctionSnippet('pg_create_database');
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf(
             'Created database %s with dialect POSTGRESQL on instance %s',
@@ -113,8 +113,8 @@ class spannerPgTest extends TestCase
     public function testCreateTableCaseSensitivity()
     {
         $tableName = 'Singers' . time() . rand();
-        $output = $this->runFunctionSnippet('pg_case_sensitivity', [
-            self::$instanceId, self::$databaseId, $tableName
+        $output = $this->runAdminFunctionSnippet('pg_case_sensitivity', [
+            self::$projectId, self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
         $expected = sprintf(
@@ -132,7 +132,7 @@ class spannerPgTest extends TestCase
      */
     public function testInformationSchema()
     {
-        $output = $this->runFunctionSnippet('pg_information_schema');
+        $output = $this->runAdminFunctionSnippet('pg_information_schema');
         self::$lastUpdateDataTimestamp = time();
 
         $this->assertStringContainsString(sprintf('table_catalog: %s', self::$databaseId), $output);
@@ -192,8 +192,7 @@ class spannerPgTest extends TestCase
 
         $db->runTransaction(function (Transaction $t) {
             $t->executeUpdate(
-                'INSERT INTO users (id, name, active)'
-                . ' VALUES ($1, $2, $3), ($4, $5, $6)',
+                'INSERT INTO users (id, name, active) VALUES ($1, $2, $3), ($4, $5, $6)',
                 [
                     'parameters' => [
                         'p1' => 1,
@@ -218,7 +217,7 @@ class spannerPgTest extends TestCase
      */
     public function testAddColumn()
     {
-        $output = $this->runFunctionSnippet('pg_add_column');
+        $output = $this->runAdminFunctionSnippet('pg_add_column');
         self::$lastUpdateDataTimestamp = time();
         $this->assertStringContainsString('Added column MarketingBudget on table Albums', $output);
     }
@@ -231,8 +230,8 @@ class spannerPgTest extends TestCase
         $parentTable = 'Singers' . time() . rand();
         $childTable = 'Albumbs' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_interleaved_table', [
-            self::$instanceId, self::$databaseId, $parentTable, $childTable
+        $output = $this->runAdminFunctionSnippet('pg_interleaved_table', [
+            self::$projectId, self::$instanceId, self::$databaseId, $parentTable, $childTable
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -273,8 +272,8 @@ class spannerPgTest extends TestCase
         $op->pollUntilComplete();
 
         // Now run the test
-        $output = $this->runFunctionSnippet('pg_add_jsonb_column', [
-            self::$instanceId, self::$databaseId, self::$jsonbTable
+        $output = $this->runAdminFunctionSnippet('pg_add_jsonb_column', [
+            self::$projectId, self::$instanceId, self::$databaseId, self::$jsonbTable
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -317,8 +316,8 @@ class spannerPgTest extends TestCase
     {
         $tableName = 'Singers' . time() . rand();
 
-        $output = $this->runFunctionSnippet('pg_order_nulls', [
-            self::$instanceId, self::$databaseId, $tableName
+        $output = $this->runAdminFunctionSnippet('pg_order_nulls', [
+            self::$projectId, self::$instanceId, self::$databaseId, $tableName
         ]);
         self::$lastUpdateDataTimestamp = time();
 
@@ -343,7 +342,7 @@ class spannerPgTest extends TestCase
 
     public function testIndexCreateSorting()
     {
-        $output = $this->runFunctionSnippet('pg_create_storing_index');
+        $output = $this->runAdminFunctionSnippet('pg_create_storing_index');
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
     }
 
@@ -385,41 +384,112 @@ class spannerPgTest extends TestCase
     {
         $output = $this->runFunctionSnippet('pg_insert_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Garcia) inserted');
+        $expectedOutput = sprintf('Melissa Garcia inserted');
         $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (17, Russell, Morales) inserted');
-        $this->assertStringContainsString('Russell', $output);
+        $expectedOutput = sprintf('Russell Morales inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (18, Jacqueline, Long) inserted');
-        $this->assertStringContainsString('Jacqueline', $output);
+        $expectedOutput = sprintf('Jacqueline Long inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
 
-        $expectedOutput = sprintf('Row (19, Dylan, Shaw) inserted');
-        $this->assertStringContainsString('Dylan', $output);
+        $expectedOutput = sprintf('Dylan Shaw inserted');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Inserted row(s) count: 4');
+        $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningInsert
+     * @depends testDmlWithParams
      */
     public function testDmlReturningUpdate()
     {
+        $db = self::$instance->database(self::$databaseId);
+        $db->runTransaction(function (Transaction $t) {
+            $t->update('Albums', [
+                'albumid' => 1,
+                'singerid' => 1,
+                'marketingbudget' => 1000
+            ]);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('pg_update_dml_returning');
 
-        $expectedOutput = sprintf(
-            'Row with singerid 16 updated to (16, Melissa, Missing)'
-        );
+        $expectedOutput = sprintf('MarketingBudget: 2000');
+        $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Updated row(s) count: 1');
         $this->assertStringContainsString($expectedOutput, $output);
     }
 
     /**
-     * @depends testDmlReturningUpdate
+     * @depends testDmlWithParams
      */
     public function testDmlReturningDelete()
     {
+        $db = self::$instance->database(self::$databaseId);
+
+        // Deleting the foreign key dependent entry in the Albums table
+        // before deleting the required row(row which has firstName = Alice)
+        // in the sample.
+        $db->runTransaction(function (Transaction $t) {
+            $spanner = new SpannerClient(['projectId' => self::$projectId]);
+            $keySet = $spanner->keySet([
+                'keys' => [[1, 1]]
+            ]);
+            $t->delete('Albums', $keySet);
+            $t->commit();
+        });
+
         $output = $this->runFunctionSnippet('pg_delete_dml_returning');
 
-        $expectedOutput = sprintf('Row (16, Melissa, Missing) deleted');
+        $expectedOutput = sprintf('1 Alice Henderson');
         $this->assertStringContainsString($expectedOutput, $output);
+
+        $expectedOutput = sprintf('Deleted row(s) count: 1');
+        $this->assertStringContainsString($expectedOutput, $output);
+    }
+
+    /**
+     * @depends testCreateDatabase
+     */
+    public function testCreateSequence()
+    {
+        $output = $this->runAdminFunctionSnippet('pg_create_sequence');
+        $this->assertStringContainsString(
+            'Created Seq sequence and Customers table, where ' .
+            'the key column CustomerId uses the sequence as a default value',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testCreateSequence
+     */
+    public function testAlterSequence()
+    {
+        $output = $this->runAdminFunctionSnippet('pg_alter_sequence');
+        $this->assertStringContainsString(
+            'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
+            $output
+        );
+        $this->assertStringContainsString('Number of customer records inserted is: 3', $output);
+    }
+
+    /**
+     * @depends testAlterSequence
+     */
+    public function testDropSequence()
+    {
+        $output = $this->runAdminFunctionSnippet('pg_drop_sequence');
+        $this->assertStringContainsString(
+            'Altered Customers table to drop DEFAULT from CustomerId ' .
+            'column and dropped the Seq sequence',
+            $output
+        );
     }
 
     public static function tearDownAfterClass(): void
@@ -436,6 +506,14 @@ class spannerPgTest extends TestCase
         return $this->traitRunFunctionSnippet(
             $sampleName,
             array_values($params) ?: [self::$instanceId, self::$databaseId]
+        );
+    }
+
+    private function runAdminFunctionSnippet($sampleName, $params = [])
+    {
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_values($params) ?: [self::$projectId, self::$instanceId, self::$databaseId]
         );
     }
 }

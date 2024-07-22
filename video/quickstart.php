@@ -19,7 +19,8 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # [START video_quickstart]
-use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\Client\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\AnnotateVideoRequest;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
 # Instantiate a client.
@@ -31,7 +32,10 @@ $options = [
     'inputUri' => 'gs://cloud-samples-data/video/cat.mp4',
     'features' => $features
 ];
-$operation = $video->annotateVideo($options);
+$request = (new AnnotateVideoRequest())
+    ->setInputUri($options['inputUri'])
+    ->setFeatures($options['features']);
+$operation = $video->annotateVideo($request);
 
 # Wait for the request to complete.
 $operation->pollUntilComplete();

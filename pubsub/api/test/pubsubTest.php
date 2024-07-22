@@ -133,7 +133,7 @@ class PubSubTest extends TestCase
         $output = $this->runFunctionSnippet('list_topics', [
             self::$projectId,
         ]);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 
     public function testCreateAndDeleteTopic()
@@ -144,16 +144,16 @@ class PubSubTest extends TestCase
             $topic,
         ]);
 
-        $this->assertRegExp('/Topic created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
 
         $output = $this->runFunctionSnippet('delete_topic', [
             self::$projectId,
             $topic,
         ]);
 
-        $this->assertRegExp('/Topic deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $topic), $output);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 
     public function testTopicMessage()
@@ -166,7 +166,36 @@ class PubSubTest extends TestCase
             'This is a test message',
         ]);
 
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+    }
+
+    public function testTopicMessageWithRetrySettings()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_retry_settings', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->assertMatchesRegularExpression('/Message published with retry settings/', $output);
+    }
+
+    public function testTopicMessageWithCompressionEnabled()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publisher_with_compression', [
+            self::$projectId,
+            $topic,
+            'This is a test message',
+        ]);
+
+        $this->assertStringContainsString(
+            'Published a compressed message of message ID: ',
+            $output
+        );
     }
 
     public function testListSubscriptions()
@@ -177,7 +206,7 @@ class PubSubTest extends TestCase
             self::$projectId,
         ]);
 
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDeleteSubscription()
@@ -190,16 +219,16 @@ class PubSubTest extends TestCase
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         $output = $this->runFunctionSnippet('delete_subscription', [
             self::$projectId,
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDeleteSubscriptionWithFilter()
@@ -258,16 +287,16 @@ class PubSubTest extends TestCase
             $fakeUrl,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         $output = $this->runFunctionSnippet('delete_subscription', [
             self::$projectId,
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDeleteBigQuerySubscription()
@@ -284,16 +313,41 @@ class PubSubTest extends TestCase
             $table,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         $output = $this->runFunctionSnippet('delete_subscription', [
             self::$projectId,
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
+    public function testCreateAndDeleteStorageSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $bucket = $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET');
+
+        $output = $this->runFunctionSnippet('create_cloud_storage_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+            $bucket,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testCreateAndDetachSubscription()
@@ -306,16 +360,16 @@ class PubSubTest extends TestCase
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription created:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         $output = $this->runFunctionSnippet('detach_subscription', [
             self::$projectId,
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription detached:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription detached:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
         // delete test resource
         $output = $this->runFunctionSnippet('delete_subscription', [
@@ -323,8 +377,8 @@ class PubSubTest extends TestCase
             $subscription,
         ]);
 
-        $this->assertRegExp('/Subscription deleted:/', $output);
-        $this->assertRegExp(sprintf('/%s/', $subscription), $output);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
     public function testPullMessages()
@@ -338,14 +392,14 @@ class PubSubTest extends TestCase
             'This is a test message',
         ]);
 
-        $this->assertRegExp('/Message published/', $output);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
 
         $this->runEventuallyConsistentTest(function () use ($subscription) {
             $output = $this->runFunctionSnippet('pull_messages', [
                 self::$projectId,
                 $subscription,
             ]);
-            $this->assertRegExp('/This is a test message/', $output);
+            $this->assertMatchesRegularExpression('/This is a test message/', $output);
         });
     }
 
@@ -366,7 +420,7 @@ class PubSubTest extends TestCase
             $messageData,
         ]);
 
-        $this->assertRegExp('/Messages enqueued for publication/', $output);
+        $this->assertMatchesRegularExpression('/Messages enqueued for publication/', $output);
 
         $this->runEventuallyConsistentTest(function () use ($subscription, $messageData) {
             $output = $this->runFunctionSnippet('pull_messages', [
@@ -408,7 +462,26 @@ class PubSubTest extends TestCase
 
             // There should be at least one acked message
             // pulled from the subscription.
-            $this->assertRegExp('/Acknowledged message:/', $output);
+            $this->assertMatchesRegularExpression('/Acknowledged message:/', $output);
         });
+    }
+
+    public function testPublishAndSubscribeWithOrderingKeys()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+
+        $output = $this->runFunctionSnippet('publish_with_ordering_keys', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+
+        $output = $this->runFunctionSnippet('enable_subscription_ordering', [
+            self::$projectId,
+            $topic,
+            'subscriberWithOrdering' . rand(),
+        ]);
+        $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
+        $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
 }

@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_list_configs]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\ListUptimeCheckConfigsRequest;
 
 /**
  * Example:
@@ -32,15 +33,16 @@ use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
  * list_uptime_checks($projectId);
  * ```
  */
-function list_uptime_checks($projectId)
+function list_uptime_checks(string $projectId): void
 {
+    $projectName = 'projects/' . $projectId;
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $listUptimeCheckConfigsRequest = (new ListUptimeCheckConfigsRequest())
+        ->setParent($projectName);
 
-    $pages = $uptimeCheckClient->listUptimeCheckConfigs(
-        $uptimeCheckClient->projectName($projectId)
-    );
+    $pages = $uptimeCheckClient->listUptimeCheckConfigs($listUptimeCheckConfigsRequest);
 
     foreach ($pages->iteratePages() as $page) {
         foreach ($page as $uptimeCheck) {

@@ -1,5 +1,0 @@
-{
-    "require": {
-        "google/cloud-compute": "^1.0.2"
-    }
-}

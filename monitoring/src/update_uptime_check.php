@@ -24,7 +24,9 @@
 namespace Google\Cloud\Samples\Monitoring;
 
 // [START monitoring_uptime_check_update]
-use Google\Cloud\Monitoring\V3\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\Client\UptimeCheckServiceClient;
+use Google\Cloud\Monitoring\V3\GetUptimeCheckConfigRequest;
+use Google\Cloud\Monitoring\V3\UpdateUptimeCheckConfigRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -33,24 +35,33 @@ use Google\Protobuf\FieldMask;
  * update_uptime_checks($projectId);
  * ```
  */
-function update_uptime_checks($projectId, $configName, $newDisplayName = null, $newHttpCheckPath = null)
-{
+function update_uptime_checks(
+    string $projectId,
+    string $configName,
+    string $newDisplayName = null,
+    string $newHttpCheckPath = null
+): void {
     $uptimeCheckClient = new UptimeCheckServiceClient([
         'projectId' => $projectId,
     ]);
+    $getUptimeCheckConfigRequest = (new GetUptimeCheckConfigRequest())
+        ->setName($configName);
 
-    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($configName);
+    $uptimeCheck = $uptimeCheckClient->getUptimeCheckConfig($getUptimeCheckConfigRequest);
     $fieldMask = new FieldMask();
     if ($newDisplayName) {
         $fieldMask->getPaths()[] = 'display_name';
         $uptimeCheck->setDisplayName($newDisplayName);
     }
     if ($newHttpCheckPath) {
-        $fieldMask->getPaths()[] = 'http_check.path';
+        $paths = $fieldMask->getPaths()[] = 'http_check.path';
         $uptimeCheck->getHttpCheck()->setPath($newHttpCheckPath);
     }
+    $updateUptimeCheckConfigRequest = (new UpdateUptimeCheckConfigRequest())
+        ->setUptimeCheckConfig($uptimeCheck)
+        ->setUpdateMask($fieldMask);
 
-    $uptimeCheckClient->updateUptimeCheckConfig($uptimeCheck, $fieldMask);
+    $uptimeCheckClient->updateUptimeCheckConfig($updateUptimeCheckConfigRequest);
 
     print($uptimeCheck->serializeToString() . PHP_EOL);
 }

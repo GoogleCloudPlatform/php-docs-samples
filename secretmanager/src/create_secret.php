@@ -27,10 +27,11 @@ namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_create_secret]
 // Import the Secret Manager client library.
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
@@ -44,19 +45,20 @@ function create_secret(string $projectId, string $secretId): void
     // Build the resource name of the parent project.
     $parent = $client->projectName($projectId);
 
+    $secret = new Secret([
+        'replication' => new Replication([
+            'automatic' => new Automatic(),
+        ]),
+    ]);
+
+    // Build the request.
+    $request = CreateSecretRequest::build($parent, $secretId, $secret);
+
     // Create the secret.
-    $secret = $client->createSecret(
-        $parent,
-        $secretId,
-        new Secret([
-            'replication' => new Replication([
-                'automatic' => new Automatic(),
-            ]),
-        ])
-    );
+    $newSecret = $client->createSecret($request);
 
     // Print the new secret name.
-    printf('Created secret: %s', $secret->getName());
+    printf('Created secret: %s', $newSecret->getName());
 }
 // [END secretmanager_create_secret]
 

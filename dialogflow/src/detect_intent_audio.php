@@ -18,8 +18,9 @@
 // [START dialogflow_detect_intent_audio]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\SessionsClient;
 use Google\Cloud\Dialogflow\V2\AudioEncoding;
+use Google\Cloud\Dialogflow\V2\Client\SessionsClient;
+use Google\Cloud\Dialogflow\V2\DetectIntentRequest;
 use Google\Cloud\Dialogflow\V2\InputAudioConfig;
 use Google\Cloud\Dialogflow\V2\QueryInput;
 
@@ -49,7 +50,11 @@ function detect_intent_audio($projectId, $path, $sessionId, $languageCode = 'en-
     $queryInput->setAudioConfig($audioConfig);
 
     // get response and relevant info
-    $response = $sessionsClient->detectIntent($session, $queryInput, ['inputAudio' => $inputAudio]);
+    $detectIntentRequest = (new DetectIntentRequest())
+        ->setSession($session)
+        ->setQueryInput($queryInput)
+        ->setInputAudio($inputAudio);
+    $response = $sessionsClient->detectIntent($detectIntentRequest);
     $queryResult = $response->getQueryResult();
     $queryText = $queryResult->getQueryText();
     $intent = $queryResult->getIntent();

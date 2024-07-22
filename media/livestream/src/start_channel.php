@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\LiveStream;
 
 // [START livestream_start_channel]
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\StartChannelRequest;
 
 /**
  * Starts a channel.
@@ -44,7 +45,9 @@ function start_channel(
     $formattedName = $livestreamClient->channelName($callingProjectId, $location, $channelId);
 
     // Run the channel start request. The response is a long-running operation ID.
-    $operationResponse = $livestreamClient->startChannel($formattedName);
+    $request = (new StartChannelRequest())
+        ->setName($formattedName);
+    $operationResponse = $livestreamClient->startChannel($request);
     $operationResponse->pollUntilComplete();
     if ($operationResponse->operationSucceeded()) {
         // Print results

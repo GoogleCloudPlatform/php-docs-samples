@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,34 +24,38 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_table_with_timestamp_column]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Creates a table with a commit timestamp column.
  * Example:
  * ```
- * create_table_with_timestamp_column($instanceId, $databaseId);
+ * create_table_with_timestamp_column($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_table_with_timestamp_column(string $instanceId, string $databaseId): void
+function create_table_with_timestamp_column(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $statement = 'CREATE TABLE Performances (
+        SingerId	INT64 NOT NULL,
+        VenueId		INT64 NOT NULL,
+        EventDate	DATE,
+        Revenue		INT64,
+        LastUpdateTime	TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
+    ) PRIMARY KEY (SingerId, VenueId, EventDate),
+    INTERLEAVE IN PARENT Singers on DELETE CASCADE';
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [$statement]
+    ]);
 
-    $operation = $database->updateDdl(
-        'CREATE TABLE Performances (
-    		SingerId	INT64 NOT NULL,
-    		VenueId		INT64 NOT NULL,
-    		EventDate	DATE,
-    		Revenue		INT64,
-    		LastUpdateTime	TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
-    	) PRIMARY KEY (SingerId, VenueId, EventDate),
-    	INTERLEAVE IN PARENT Singers on DELETE CASCADE'
-    );
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

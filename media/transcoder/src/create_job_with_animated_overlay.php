@@ -26,12 +26,13 @@ namespace Google\Cloud\Samples\Media\Transcoder;
 
 # [START transcoder_create_job_with_animated_overlay]
 use Google\Cloud\Video\Transcoder\V1\AudioStream;
+use Google\Cloud\Video\Transcoder\V1\Client\TranscoderServiceClient;
+use Google\Cloud\Video\Transcoder\V1\CreateJobRequest;
 use Google\Cloud\Video\Transcoder\V1\ElementaryStream;
 use Google\Cloud\Video\Transcoder\V1\Job;
 use Google\Cloud\Video\Transcoder\V1\JobConfig;
 use Google\Cloud\Video\Transcoder\V1\MuxStream;
 use Google\Cloud\Video\Transcoder\V1\Overlay;
-use Google\Cloud\Video\Transcoder\V1\TranscoderServiceClient;
 use Google\Cloud\Video\Transcoder\V1\VideoStream;
 use Google\Protobuf\Duration;
 
@@ -41,7 +42,7 @@ use Google\Protobuf\Duration;
  * @param string $projectId The ID of your Google Cloud Platform project.
  * @param string $location The location of the job.
  * @param string $inputUri Uri of the video in the Cloud Storage bucket.
- * @param string $overlayImageUri Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
+ * @param string $overlayImageUri Uri of the image for the overlay in the Cloud Storage bucket.
  * @param string $outputUri Uri of the video output folder in the Cloud Storage bucket.
  */
 function create_job_with_animated_overlay($projectId, $location, $inputUri, $overlayImageUri, $outputUri)
@@ -115,8 +116,11 @@ function create_job_with_animated_overlay($projectId, $location, $inputUri, $ove
         ->setInputUri($inputUri)
         ->setOutputUri($outputUri)
         ->setConfig($jobConfig);
+    $request = (new CreateJobRequest())
+        ->setParent($formattedParent)
+        ->setJob($job);
 
-    $response = $transcoderServiceClient->createJob($formattedParent, $job);
+    $response = $transcoderServiceClient->createJob($request);
 
     // Print job name.
     printf('Job: %s' . PHP_EOL, $response->getName());

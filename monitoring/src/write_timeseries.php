@@ -26,7 +26,8 @@ namespace Google\Cloud\Samples\Monitoring;
 // [START monitoring_write_timeseries]
 use Google\Api\Metric;
 use Google\Api\MonitoredResource;
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\CreateTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\Point;
 use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Cloud\Monitoring\V3\TimeSeries;
@@ -47,7 +48,7 @@ function write_timeseries($projectId)
         'projectId' => $projectId,
     ]);
 
-    $projectName = $metrics->projectName($projectId);
+    $projectName = 'projects/' . $projectId;
 
     $endTime = new Timestamp();
     $endTime->setSeconds(time());
@@ -76,11 +77,11 @@ function write_timeseries($projectId)
     $timeSeries->setMetric($metric);
     $timeSeries->setResource($resource);
     $timeSeries->setPoints($points);
+    $createTimeSeriesRequest = (new CreateTimeSeriesRequest())
+        ->setName($projectName)
+        ->setTimeSeries([$timeSeries]);
 
-    $result = $metrics->createTimeSeries(
-        $projectName,
-        [$timeSeries]
-    );
+    $metrics->createTimeSeries($createTimeSeriesRequest);
 
     printf('Done writing time series data.' . PHP_EOL);
 }

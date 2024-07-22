@@ -25,8 +25,9 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_create_cdn_key]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
 use Google\Cloud\Video\Stitcher\V1\CdnKey;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\CreateCdnKeyRequest;
 use Google\Cloud\Video\Stitcher\V1\GoogleCdnKey;
 use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
 
@@ -45,7 +46,7 @@ use Google\Cloud\Video\Stitcher\V1\MediaCdnKey;
  *                                    https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn
  *                                    for more information. For a Cloud CDN key,
  *                                    this is a base64-encoded string secret.
- * @param boolean $isMediaCdn         If true, create a Media CDN key. If false,
+ * @param bool    $isMediaCdn         If true, create a Media CDN key. If false,
  *                                    create a Cloud CDN key.
  */
 function create_cdn_key(
@@ -55,7 +56,7 @@ function create_cdn_key(
     string $hostname,
     string $keyName,
     string $privateKey,
-    string $isMediaCdn
+    bool $isMediaCdn
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
@@ -75,10 +76,20 @@ function create_cdn_key(
     $cloudCdn->setPrivateKey($privateKey);
 
     // Run CDN key creation request
-    $response = $stitcherClient->createCdnKey($parent, $cdnKey, $cdnKeyId);
-
-    // Print results
-    printf('CDN key: %s' . PHP_EOL, $response->getName());
+    $request = (new CreateCdnKeyRequest())
+        ->setParent($parent)
+        ->setCdnKey($cdnKey)
+        ->setCdnKeyId($cdnKeyId);
+    $operationResponse = $stitcherClient->createCdnKey($request);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        $result = $operationResponse->getResult();
+        // Print results
+        printf('CDN key: %s' . PHP_EOL, $result->getName());
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_create_cdn_key]
 

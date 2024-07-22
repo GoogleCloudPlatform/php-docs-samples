@@ -18,12 +18,13 @@
 // [START dialogflow_create_intent]
 namespace Google\Cloud\Samples\Dialogflow;
 
-use Google\Cloud\Dialogflow\V2\IntentsClient;
-use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase\Part;
-use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase;
-use Google\Cloud\Dialogflow\V2\Intent\Message\Text;
-use Google\Cloud\Dialogflow\V2\Intent\Message;
+use Google\Cloud\Dialogflow\V2\Client\IntentsClient;
+use Google\Cloud\Dialogflow\V2\CreateIntentRequest;
 use Google\Cloud\Dialogflow\V2\Intent;
+use Google\Cloud\Dialogflow\V2\Intent\Message;
+use Google\Cloud\Dialogflow\V2\Intent\Message\Text;
+use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase;
+use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase\Part;
 
 /**
 * Create an intent of the given intent type.
@@ -64,7 +65,10 @@ function intent_create(
         ->setMessages([$message]);
 
     // create intent
-    $response = $intentsClient->createIntent($parent, $intent);
+    $createIntentRequest = (new CreateIntentRequest())
+        ->setParent($parent)
+        ->setIntent($intent);
+    $response = $intentsClient->createIntent($createIntentRequest);
     printf('Intent created: %s' . PHP_EOL, $response->getName());
 
     $intentsClient->close();

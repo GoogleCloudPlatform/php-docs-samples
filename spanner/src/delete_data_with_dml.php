@@ -39,7 +39,7 @@ function delete_data_with_dml(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    $database->runTransaction(function (Transaction $t) use ($spanner) {
+    $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
             "DELETE FROM Singers WHERE FirstName = 'Alice'"
         );

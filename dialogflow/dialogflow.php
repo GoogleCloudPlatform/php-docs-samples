@@ -17,12 +17,12 @@
 
 namespace Google\Cloud\Samples\Dialogflow;
 
+use Google\Cloud\Dialogflow\V2\EntityType\Kind;
+use Google\Cloud\Dialogflow\V2\SessionEntityType\EntityOverrideMode;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Google\Cloud\Dialogflow\V2\EntityType\Kind;
-use Google\Cloud\Dialogflow\V2\SessionEntityType\EntityOverrideMode;
 
 # includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';

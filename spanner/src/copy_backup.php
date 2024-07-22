@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,57 +24,59 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_copy_backup]
-use Google\Cloud\Spanner\Backup;
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CopyBackupRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Protobuf\Timestamp;
 
 /**
  * Create a copy backup from another source backup.
  * Example:
  * ```
- * copy_backup($destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId);
+ * copy_backup($projectId, $destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $destInstanceId The Spanner instance ID where the copy backup will reside.
  * @param string $destBackupId The Spanner backup ID of the new backup to be created.
  * @param string $sourceInstanceId The Spanner instance ID of the source backup.
  * @param string $sourceBackupId The Spanner backup ID of the source.
  */
 function copy_backup(
+    string $projectId,
     string $destInstanceId,
     string $destBackupId,
     string $sourceInstanceId,
     string $sourceBackupId
 ): void {
-    $spanner = new SpannerClient();
+    $databaseAdminClient = new DatabaseAdminClient();
 
-    $destInstance = $spanner->instance($destInstanceId);
-    $sourceInstance = $spanner->instance($sourceInstanceId);
-    $sourceBackup = $sourceInstance->backup($sourceBackupId);
-    $destBackup = $destInstance->backup($destBackupId);
+    $destInstanceFullName = DatabaseAdminClient::instanceName($projectId, $destInstanceId);
+    $expireTime = new Timestamp();
+    $expireTime->setSeconds((new \DateTime('+8 hours'))->getTimestamp());
+    $sourceBackupFullName = DatabaseAdminClient::backupName($projectId, $sourceInstanceId, $sourceBackupId);
+    $request = new CopyBackupRequest([
+        'source_backup' => $sourceBackupFullName,
+        'parent' => $destInstanceFullName,
+        'backup_id' => $destBackupId,
+        'expire_time' => $expireTime
+    ]);
 
-    $expireTime = new \DateTime('+8 hours');
-    $operation = $sourceBackup->createCopy($destBackup, $expireTime);
+    $operationResponse = $databaseAdminClient->copyBackup($request);
+    $operationResponse->pollUntilComplete();
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-
-    $operation->pollUntilComplete();
-    $destBackup->reload();
-
-    $ready = ($destBackup->state() == Backup::STATE_READY);
-
-    if ($ready) {
-        print('Backup is ready!' . PHP_EOL);
-        $info = $destBackup->info();
+    if ($operationResponse->operationSucceeded()) {
+        $destBackupInfo = $operationResponse->getResult();
         printf(
-            'Backup %s of size %d bytes was copied at %s from the source backup %s' . PHP_EOL,
-            basename($info['name']),
-            $info['sizeBytes'],
-            $info['createTime'],
+            'Backup %s of size %d bytes was copied at %d from the source backup %s' . PHP_EOL,
+            basename($destBackupInfo->getName()),
+            $destBackupInfo->getSizeBytes(),
+            $destBackupInfo->getCreateTime()->getSeconds(),
             $sourceBackupId
         );
-        printf('Version time of the copied backup: %s' . PHP_EOL, $info['versionTime']);
+        printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
     } else {
-        printf('Unexpected state: %s' . PHP_EOL, $destBackup->state());
+        $error = $operationResponse->getError();
+        printf('Backup not created due to error: %s.' . PHP_EOL, $error->getMessage());
     }
 }
 // [END spanner_copy_backup]

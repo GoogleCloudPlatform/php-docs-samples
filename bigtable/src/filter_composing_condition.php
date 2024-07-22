@@ -47,7 +47,7 @@ function filter_composing_condition(
 
     $filter = Filter::condition(
         Filter::chain()
-            ->addFilter(Filter::value()->exactMatch(unpack('C*', 1)))
+            ->addFilter(Filter::value()->exactMatch('1'))
             ->addFilter(Filter::qualifier()->exactMatch('data_plan_10gb'))
     )
         ->then(Filter::label('passed-filter'))
@@ -66,7 +66,7 @@ function filter_composing_condition(
 // [END bigtable_filters_composing_condition]
 
 // Helper function for printing the row data
-function print_row($key, $row)
+function print_row(string $key, array $row): void
 {
     printf('Reading data for row %s' . PHP_EOL, $key);
     foreach ((array) $row as $family => $cols) {

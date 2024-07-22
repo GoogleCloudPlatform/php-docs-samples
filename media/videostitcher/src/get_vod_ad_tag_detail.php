@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_get_vod_ad_tag_detail]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\GetVodAdTagDetailRequest;
 
 /**
  * Gets the specified ad tag detail for the VOD session.
@@ -45,7 +46,9 @@ function get_vod_ad_tag_detail(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->vodAdTagDetailName($callingProjectId, $location, $sessionId, $adTagDetailId);
-    $adTagDetail = $stitcherClient->getVodAdTagDetail($formattedName);
+    $request = (new GetVodAdTagDetailRequest())
+        ->setName($formattedName);
+    $adTagDetail = $stitcherClient->getVodAdTagDetail($request);
 
     // Print results
     printf('VOD ad tag detail: %s' . PHP_EOL, $adTagDetail->getName());

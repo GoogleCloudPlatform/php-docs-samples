@@ -25,7 +25,8 @@
 namespace Google\Cloud\Samples\Media\Stitcher;
 
 // [START videostitcher_delete_cdn_key]
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\DeleteCdnKeyRequest;
 
 /**
  * Deletes a CDN key.
@@ -43,10 +44,17 @@ function delete_cdn_key(
     $stitcherClient = new VideoStitcherServiceClient();
 
     $formattedName = $stitcherClient->cdnKeyName($callingProjectId, $location, $cdnKeyId);
-    $stitcherClient->deleteCdnKey($formattedName);
-
-    // Print status
-    printf('Deleted CDN key %s' . PHP_EOL, $cdnKeyId);
+    $request = (new DeleteCdnKeyRequest())
+        ->setName($formattedName);
+    $operationResponse = $stitcherClient->deleteCdnKey($request);
+    $operationResponse->pollUntilComplete();
+    if ($operationResponse->operationSucceeded()) {
+        // Print status
+        printf('Deleted CDN key %s' . PHP_EOL, $cdnKeyId);
+    } else {
+        $error = $operationResponse->getError();
+        // handleError($error)
+    }
 }
 // [END videostitcher_delete_cdn_key]
 

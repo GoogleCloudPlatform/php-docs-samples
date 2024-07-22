@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,50 +24,33 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_postgres_database]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
+use Google\Cloud\Spanner\Admin\Database\V1\GetDatabaseRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Creates a database that uses Postgres dialect
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function pg_create_database(string $instanceId, string $databaseId): void
+function pg_create_database(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
-
-    // A DB with PostgreSQL dialect does not support extra DDL statements in the
-    // `createDatabase` call.
-    $operation = $instance->createDatabase($databaseId, [
-        'databaseDialect' => DatabaseDialect::POSTGRESQL
-    ]);
-
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
-
-    $database = $instance->database($databaseId);
-    $dialect = DatabaseDialect::name($database->info()['databaseDialect']);
-
-    printf(
-        'Created database %s with dialect %s on instance %s' . PHP_EOL,
-        $databaseId,
-        $dialect,
-        $instanceId
-    );
+    $databaseAdminClient = new DatabaseAdminClient();
+    $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
+    $databaseName = $databaseAdminClient->databaseName($projectId, $instanceId, $databaseId);
 
     $table1Query = 'CREATE TABLE Singers (
         SingerId   bigint NOT NULL PRIMARY KEY,
         FirstName  varchar(1024),
         LastName   varchar(1024),
-        SingerInfo bytea
+        SingerInfo bytea,
+        FullName character varying(2048) GENERATED
+        ALWAYS AS (FirstName || \' \' || LastName) STORED
     )';
-
     $table2Query = 'CREATE TABLE Albums (
         AlbumId      bigint NOT NULL,
         SingerId     bigint NOT NULL REFERENCES Singers (SingerId),
@@ -75,9 +58,33 @@ function pg_create_database(string $instanceId, string $databaseId): void
         PRIMARY KEY(SingerId, AlbumId)
     )';
 
-    // You can execute the DDL queries in a call to updateDdl/updateDdlBatch
-    $operation = $database->updateDdlBatch([$table1Query, $table2Query]);
+    $operation = $databaseAdminClient->createDatabase(
+        new CreateDatabaseRequest([
+            'parent' => $instance,
+            'create_statement' => sprintf('CREATE DATABASE "%s"', $databaseId),
+            'extra_statements' => [],
+            'database_dialect' => DatabaseDialect::POSTGRESQL
+        ])
+    );
+
+    print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
+
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [$table1Query, $table2Query]
+    ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
+    $operation->pollUntilComplete();
+
+    $database = $databaseAdminClient->getDatabase(
+        new GetDatabaseRequest(['name' => $databaseAdminClient->databaseName($projectId, $instanceId, $databaseId)])
+    );
+    $dialect = DatabaseDialect::name($database->getDatabaseDialect());
+
+    printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
+        $databaseId, $dialect, $instanceId);
 }
 // [END spanner_create_postgres_database]
 

@@ -20,8 +20,9 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_update_key_add_rotation_schedule]
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
 use Google\Cloud\Kms\V1\CryptoKey;
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\UpdateCryptoKeyRequest;
 use Google\Protobuf\Duration;
 use Google\Protobuf\FieldMask;
 use Google\Protobuf\Timestamp;
@@ -31,7 +32,7 @@ function update_key_add_rotation(
     string $locationId = 'us-east1',
     string $keyRingId = 'my-key-ring',
     string $keyId = 'my-key'
-) {
+): CryptoKey {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -55,7 +56,10 @@ function update_key_add_rotation(
         ->setPaths(['rotation_period', 'next_rotation_time']);
 
     // Call the API.
-    $updatedKey = $client->updateCryptoKey($key, $updateMask);
+    $updateCryptoKeyRequest = (new UpdateCryptoKeyRequest())
+        ->setCryptoKey($key)
+        ->setUpdateMask($updateMask);
+    $updatedKey = $client->updateCryptoKey($updateCryptoKeyRequest);
     printf('Updated key: %s' . PHP_EOL, $updatedKey->getName());
 
     return $updatedKey;

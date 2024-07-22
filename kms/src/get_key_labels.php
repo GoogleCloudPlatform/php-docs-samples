@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_get_key_labels]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\GetCryptoKeyRequest;
 
 function get_key_labels(
     string $projectId = 'my-project',
@@ -35,7 +36,9 @@ function get_key_labels(
     $keyName = $client->cryptoKeyName($projectId, $locationId, $keyRingId, $keyId);
 
     // Call the API.
-    $key = $client->getCryptoKey($keyName);
+    $getCryptoKeyRequest = (new GetCryptoKeyRequest())
+        ->setName($keyName);
+    $key = $client->getCryptoKey($getCryptoKeyRequest);
 
     // Example of iterating over labels.
     foreach ($key->getLabels() as $k => $v) {

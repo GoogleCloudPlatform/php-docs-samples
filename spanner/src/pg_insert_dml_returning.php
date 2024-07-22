@@ -39,24 +39,30 @@ function pg_insert_dml_returning(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // DML returning postgresql insert query
-    $sql = 'INSERT INTO singers (singerid, firstname, lastname) '
-      . "VALUES (16, 'Melissa', 'Garcia'), "
-      . "(17, 'Russell', 'Morales'), "
-      . "(18, 'Jacqueline', 'Long'), "
-      . "(19, 'Dylan', 'Shaw') "
-      . 'RETURNING *';
+    // Insert records into SINGERS table and returns the generated column
+    // FullName of the inserted records using ‘RETURNING FullName’. It is also
+    // possible to return all columns of all the inserted records by using
+    // ‘RETURNING *’.
+
+    $sql = 'INSERT INTO Singers (Singerid, FirstName, LastName) '
+      . "VALUES (12, 'Melissa', 'Garcia'), "
+      . "(13, 'Russell', 'Morales'), "
+      . "(14, 'Jacqueline', 'Long'), "
+      . "(15, 'Dylan', 'Shaw') "
+      . 'RETURNING FullName';
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) inserted' . PHP_EOL,
-            $row['singerid'],
-            $row['firstname'],
-            $row['lastname']
+            '%s inserted.' . PHP_EOL,
+            $row['fullname'],
         );
     }
+    printf(
+        'Inserted row(s) count: %d' . PHP_EOL,
+        $result->stats()['rowCountExact']
+    );
     $transaction->commit();
 }
 // [END spanner_postgresql_insert_dml_returning]

@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager\Test;
 
 use Google\ApiCore\ApiException as GaxApiException;
-use Google\Cloud\SecretManager\V1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +42,9 @@ class quickstartTest extends TestCase
         $name = $client->secretName(self::$projectId, self::$secretId);
 
         try {
-            $client->deleteSecret($name);
+            $deleteSecretRequest = (new DeleteSecretRequest())
+                ->setName($name);
+            $client->deleteSecret($deleteSecretRequest);
         } catch (GaxApiException $e) {
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;

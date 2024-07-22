@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,56 +24,67 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_backup_with_encryption_key]
+use Google\Cloud\Spanner\Admin\Database\V1\Backup;
+use \Google\Cloud\Spanner\Admin\Database\V1\Backup\State;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateBackupEncryptionConfig;
-use Google\Cloud\Spanner\Backup;
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateBackupRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\GetBackupRequest;
+use Google\Protobuf\Timestamp;
 
 /**
  * Create an encrypted backup.
  * Example:
  * ```
- * create_backup_with_encryption_key($instanceId, $databaseId, $backupId, $kmsKeyName);
+ * create_backup_with_encryption_key($projectId, $instanceId, $databaseId, $backupId, $kmsKeyName);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  * @param string $backupId The Spanner backup ID.
  * @param string $kmsKeyName The KMS key used for encryption.
  */
 function create_backup_with_encryption_key(
+    string $projectId,
     string $instanceId,
     string $databaseId,
     string $backupId,
     string $kmsKeyName
 ): void {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-
-    $expireTime = new \DateTime('+14 days');
-    $backup = $instance->backup($backupId);
-    $operation = $backup->create($database->name(), $expireTime, [
-        'encryptionConfig' => [
-            'kmsKeyName' => $kmsKeyName,
-            'encryptionType' => CreateBackupEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
-        ]
+    $databaseAdminClient = new DatabaseAdminClient();
+    $instanceFullName = DatabaseAdminClient::instanceName($projectId, $instanceId);
+    $databaseFullName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $expireTime = new Timestamp();
+    $expireTime->setSeconds((new \DateTime('+14 days'))->getTimestamp());
+    $request = new CreateBackupRequest([
+        'parent' => $instanceFullName,
+        'backup_id' => $backupId,
+        'encryption_config' => new CreateBackupEncryptionConfig([
+            'kms_key_name' => $kmsKeyName,
+            'encryption_type' => CreateBackupEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
+        ]),
+        'backup' => new Backup([
+            'database' => $databaseFullName,
+            'expire_time' => $expireTime
+        ])
     ]);
+
+    $operation = $databaseAdminClient->createBackup($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    $backup->reload();
-    $ready = ($backup->state() == Backup::STATE_READY);
-
-    if ($ready) {
-        print('Backup is ready!' . PHP_EOL);
-        $info = $backup->info();
+    $request = new GetBackupRequest();
+    $request->setName($databaseAdminClient->backupName($projectId, $instanceId, $backupId));
+    $info = $databaseAdminClient->getBackup($request);
+    if (State::name($info->getState()) == 'READY') {
         printf(
-            'Backup %s of size %d bytes was created at %s using encryption key %s' . PHP_EOL,
-            basename($info['name']),
-            $info['sizeBytes'],
-            $info['createTime'],
-            $kmsKeyName
+            'Backup %s of size %d bytes was created at %d using encryption key %s' . PHP_EOL,
+            basename($info->getName()),
+            $info->getSizeBytes(),
+            $info->getCreateTime()->getSeconds(),
+            $info->getEncryptionInfo()->getKmsKeyVersion()
         );
     } else {
         print('Backup is not ready!' . PHP_EOL);
@@ -81,5 +92,6 @@ function create_backup_with_encryption_key(
 }
 // [END spanner_create_backup_with_encryption_key]
 
+// The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
