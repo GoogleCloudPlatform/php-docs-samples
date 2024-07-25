@@ -37,22 +37,17 @@ function query_filter_compound_multi_ineq(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $collection = $db->collection('samples/php/users');
-    // Setup the data before querying for it
-    $collection->document('person1')->set(['age' => 23, 'height' => 65]);
-    $collection->document('person2')->set(['age' => 37, 'height' => 55]);
-    $collection->document('person3')->set(['age' => 40, 'height' => 75]);
-    $collection->document('person4')->set(['age' => 40, 'height' => 65]);
+    $collection = $db->collection('samples/php/cities');
 
     # [START firestore_query_filter_compound_multi_ineq]
     $chainedQuery = $collection
-        ->where('age', '>', 35)
-        ->where('height', '>', 60)
-        ->where('height', '<', 70);
+        ->where('population', '>', 1000000)
+        ->where('density', '<', 10000);
+
     # [END firestore_query_filter_compound_multi_ineq]
     foreach ($chainedQuery->documents() as $document) {
         printf(
-            'Document %s returned by age > 35 and height between 60 and 70' . PHP_EOL,
+            'Document %s returned by population > 1000000 and density < 10000' . PHP_EOL,
             $document->id()
         );
     }
