@@ -43,35 +43,41 @@ function data_get_dataset(string $projectId): void
         'state' => 'CA',
         'country' => 'USA',
         'capital' => false,
-        'population' => 860000
+        'population' => 860000,
+        'density' => 18000,
     ]);
     $citiesRef->document('LA')->set([
         'name' => 'Los Angeles',
         'state' => 'CA',
         'country' => 'USA',
         'capital' => false,
-        'population' => 3900000
+        'population' => 3900000,
+        'density' => 8000,
     ]);
     $citiesRef->document('DC')->set([
         'name' => 'Washington D.C.',
         'state' => null,
         'country' => 'USA',
         'capital' => true,
-        'population' => 680000
+        'population' => 680000,
+        'density' => 11000,
     ]);
     $citiesRef->document('TOK')->set([
         'name' => 'Tokyo',
         'state' => null,
         'country' => 'Japan',
         'capital' => true,
-        'population' => 9000000
+        'population' => 9000000,
+        'density' => 16000,
+
     ]);
     $citiesRef->document('BJ')->set([
         'name' => 'Beijing',
         'state' => null,
         'country' => 'China',
         'capital' => true,
-        'population' => 21500000
+        'population' => 21500000,
+        'density' => 3500,
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);
     # [END firestore_data_get_dataset]
