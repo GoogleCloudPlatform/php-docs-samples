@@ -50,6 +50,12 @@ class spannerTest extends TestCase
     /** @var string lowCostInstanceId */
     protected static $lowCostInstanceId;
 
+    /** @var string instancePartitionInstanceId */
+    protected static $instancePartitionInstanceId;
+
+    /** @var Instance instancePartitionInstance */
+    protected static $instancePartitionInstance;
+
     /** @var string databaseId */
     protected static $databaseId;
 
@@ -123,6 +129,8 @@ class spannerTest extends TestCase
         self::$autoscalingInstanceId = 'test-' . time() . rand();
         self::$instanceId = 'test-' . time() . rand();
         self::$lowCostInstanceId = 'test-' . time() . rand();
+        self::$instancePartitionInstanceId = 'test-' . time() . rand();
+        self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
@@ -234,6 +242,33 @@ class spannerTest extends TestCase
                 'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
             ),
             $output);
+    }
+
+    public function testCreateInstancePartition()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $instanceConfig = $spanner->instanceConfiguration('regional-us-central1');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            self::$instancePartitionInstanceId,
+            [
+                'displayName' => 'Instance partitions test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+        $output = $this->runAdminFunctionSnippet('create_instance_partition', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$instancePartitionInstanceId,
+            'instance_partition_id' => 'my-instance-partition'
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance partition my-instance-partition', $output);
     }
 
     /**
@@ -1260,10 +1295,13 @@ class spannerTest extends TestCase
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
-        $database = self::$multiInstance->database(self::$databaseId);
-        $database->drop();
+        if (self::$multiInstance->exists()) {//Clean up database
+            $database = self::$multiInstance->database(self::$databaseId);
+            $database->drop();
+        }
         self::$instance->delete();
         self::$lowCostInstance->delete();
+        self::$instancePartitionInstance->delete();
         if (self::$customInstanceConfig->exists()) {
             self::$customInstanceConfig->delete();
         }
