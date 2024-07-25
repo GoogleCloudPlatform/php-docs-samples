@@ -278,6 +278,7 @@ class firestoreTest extends TestCase
     {
         $output = $this->runFirestoreSnippet('query_filter_compound_multi_ineq');
         $this->assertStringContainsString('Document LA returned by population > 1000000 and density < 10000', $output);
+        $this->assertStringContainsString('Document BJ returned by population > 1000000 and density < 10000', $output);
     }
 
     /**
