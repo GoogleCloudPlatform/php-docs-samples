@@ -37,9 +37,9 @@ function query_filter_compound_multi_ineq(string $projectId): void
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $collection = $db->collection('samples/php/cities');
 
     # [START firestore_query_filter_compound_multi_ineq]
+    $collection = $db->collection('samples/php/cities');
     $chainedQuery = $collection
         ->where('population', '>', 1000000)
         ->where('density', '<', 10000);
