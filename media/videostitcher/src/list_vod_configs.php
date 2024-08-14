@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2022 Google LLC.
+ * Copyright 2024 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,49 +19,41 @@
 /**
  * For instructions on how to run the samples:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/master/media/videostitcher/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/media/videostitcher/README.md
  */
 
 namespace Google\Cloud\Samples\Media\Stitcher;
 
-// [START videostitcher_create_vod_session]
-use Google\Cloud\Video\Stitcher\V1\AdTracking;
+// [START videostitcher_list_vod_configs]
 use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
-use Google\Cloud\Video\Stitcher\V1\CreateVodSessionRequest;
-use Google\Cloud\Video\Stitcher\V1\VodSession;
+use Google\Cloud\Video\Stitcher\V1\ListVodConfigsRequest;
 
 /**
- * Creates a VOD session. VOD sessions are ephemeral resources that expire
- * after a few hours.
+ * Lists all VOD configs for a location.
  *
  * @param string $callingProjectId     The project ID to run the API call under
- * @param string $location             The location of the session
- * @param string $vodConfigId          The name of the VOD config to use for the session
+ * @param string $location             The location of the VOD configs
  */
-function create_vod_session(
+function list_vod_configs(
     string $callingProjectId,
-    string $location,
-    string $vodConfigId
+    string $location
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
-    $vodConfig = $stitcherClient->vodConfigName($callingProjectId, $location, $vodConfigId);
-    $vodSession = new VodSession();
-    $vodSession->setVodConfig($vodConfig);
-    $vodSession->setAdTracking(AdTracking::SERVER);
+    $request = (new ListVodConfigsRequest())
+        ->setParent($parent);
+    $response = $stitcherClient->listVodConfigs($request);
 
-    // Run VOD session creation request
-    $request = (new CreateVodSessionRequest())
-        ->setParent($parent)
-        ->setVodSession($vodSession);
-    $response = $stitcherClient->createVodSession($request);
-
-    // Print results
-    printf('VOD session: %s' . PHP_EOL, $response->getName());
+    // Print the VOD config list.
+    $vodConfigs = $response->iterateAllElements();
+    print('VOD configs:' . PHP_EOL);
+    foreach ($vodConfigs as $vodConfig) {
+        printf('%s' . PHP_EOL, $vodConfig->getName());
+    }
 }
-// [END videostitcher_create_vod_session]
+// [END videostitcher_list_vod_configs]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../../testing/sample_helpers.php';
