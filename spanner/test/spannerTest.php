@@ -62,6 +62,9 @@ class spannerTest extends TestCase
     /** @var string encryptedDatabaseId */
     protected static $encryptedDatabaseId;
 
+    /** @var string $encryptedMRCMEKDatabaseId */
+    protected static $encryptedMRCMEKDatabaseId;
+
     /** @var string backupId */
     protected static $backupId;
 
@@ -88,6 +91,12 @@ class spannerTest extends TestCase
 
     /** @var string kmsKeyName */
     protected static $kmsKeyName;
+
+    /** @var string kmsKeyName2 */
+    protected static $kmsKeyName2;
+
+    /** @var string kmsKeyName3 */
+    protected static $kmsKeyName3;
 
     /**
      * Low cost instance with less than 1000 processing units.
@@ -132,11 +141,16 @@ class spannerTest extends TestCase
         self::$instancePartitionInstanceId = 'test-' . time() . rand();
         self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
-        self::$encryptedDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedDatabaseId = 'en-mr-cmek-test-' . time() . rand();
+        self::$encryptedMRCMEKDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
             'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        self::$kmsKeyName2 =
+            'projects/' . self::$projectId . '/locations/us-east1/keyRings/spanner-test-keyring2/cryptoKeys/spanner-test-cmek2';
+        self::$kmsKeyName3 =
+            'projects/' . self::$projectId . '/locations/us-east4/keyRings/spanner-test-keyring3/cryptoKeys/spanner-test-cmek3';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
         self::$multiInstanceId = 'kokoro-multi-instance';
@@ -294,6 +308,22 @@ class spannerTest extends TestCase
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database en-test-', $output);
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testCreateDatabaseWithMRCMEK()
+    {
+        $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
+        $output = $this->runAdminFunctionSnippet('create_database_with_MR_CMEK', [
+            self::$projectId,
+            self::$instanceId,
+            self::$encryptedMRCMEKDatabaseId,
+            self::$kmsKeyNames,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database en-mr-cmek-test-', $output);
     }
 
     /**
