@@ -205,6 +205,25 @@ class spannerBackupTest extends TestCase
     /**
      * @depends testCreateBackup
      */
+    public function testCopyBackupWithMRCMEK()
+    {
+        $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
+
+        $output = $this->runFunctionSnippet('create_backup_with_MR_CMEK', [
+            $newBackupId,
+            self::$instanceId,
+            self::$backupId,
+            $kmsKeyNames
+        ]);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
+        $this->assertMatchesRegularExpression(sprintf($regex, $newBackupId, self::$backupId), $output);
+    }
+
+    /**
+     * @depends testCreateBackup
+     */
     public function testListBackups()
     {
         $output = $this->runFunctionSnippet('list_backups');
