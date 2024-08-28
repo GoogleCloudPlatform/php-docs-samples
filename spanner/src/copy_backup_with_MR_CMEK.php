@@ -25,8 +25,9 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_copy_backup_with_MR_CMEK]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
-use Google\Cloud\Spanner\Admin\Database\V1\CopyBackupEncryptionConfig;
 use Google\Cloud\Spanner\Admin\Database\V1\CopyBackupRequest;
+use Google\Cloud\Spanner\Admin\Database\V1\CopyBackupEncryptionConfig;
+use Google\Protobuf\Timestamp;
 
 /**
  * Copy a MR CMEK backup.
@@ -40,48 +41,62 @@ use Google\Cloud\Spanner\Admin\Database\V1\CopyBackupRequest;
  * @param string $backupId The Spanner backup ID.
  * @param string[] $kmsKeyNames The KMS keys used for encryption.
  */
+/**
+ * Create a copy MR CMEK backup from another source backup.
+ * Example:
+ * ```
+ * copy_backup_with_MR_CMEK($projectId, $destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId, $kmsKeyNames);
+ * ```
+ *
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $destInstanceId The Spanner instance ID where the copy backup will reside.
+ * @param string $destBackupId The Spanner backup ID of the new backup to be created.
+ * @param string $sourceInstanceId The Spanner instance ID of the source backup.
+ * @param string $sourceBackupId The Spanner backup ID of the source.
+* @param string[] $kmsKeyNames The KMS keys used for encryption.
+ */
 function copy_backup_with_MR_CMEK(
     string $projectId,
-    string $instanceId,
-    string $sourceBackupId,
-    string $backupId,
+    string $destInstanceId,
+    string $destBackupId,
+    string $sourceInstanceId,
+    string $sourceBackupId
     array $kmsKeyNames
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
-    $instanceFullName = DatabaseAdminClient::instanceName($projectId, $instanceId);
-    $sourceBackupFullName = DatabaseAdminClient::backupName($projectId, $instanceId, $sourceBackupId);
-    $newExpireTime = new Timestamp();
-    $newExpireTime->setSeconds((new \DateTime('+30 days'))->getTimestamp());
+
+    $destInstanceFullName = DatabaseAdminClient::instanceName($projectId, $destInstanceId);
+    $expireTime = new Timestamp();
+    $expireTime->setSeconds((new \DateTime('+8 hours'))->getTimestamp());
+    $sourceBackupFullName = DatabaseAdminClient::backupName($projectId, $sourceInstanceId, $sourceBackupId);
     $request = new CopyBackupRequest([
-        'parent' => $instanceFullName,
-        'backup_id' => $backupId,
         'source_backup' => $sourceBackupFullName,
-        'expire_time' => $newExpireTime
+        'parent' => $destInstanceFullName,
+        'backup_id' => $destBackupId,
+        'expire_time' => $expireTime,
         'encryption_config' => new CopyBackupEncryptionConfig([
             'kms_key_names' => $kmsKeyNames,
             'encryption_type' => RestoreDatabaseEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
         ])
     ]);
 
-    // Create copy operation
-    $operation = $databaseAdminClient->copyBackup($request);
+    $operationResponse = $databaseAdminClient->copyBackup($request);
+    $operationResponse->pollUntilComplete();
 
-    print('Waiting for operation to complete...' . PHP_EOL);
-    $operation->pollUntilComplete();
-
-    $request = new GetBackupRequest();
-    $request->setName($databaseAdminClient->backupName($projectId, $instanceId, $backupId));
-    $info = $databaseAdminClient->getBackup($request);
-    if (State::name($info->getState()) == 'READY') {
+    if ($operationResponse->operationSucceeded()) {
+        $destBackupInfo = $operationResponse->getResult();
         printf(
-            'Backup %s of size %d bytes was created at %d using encryption keys %s' . PHP_EOL,
-            basename($info->getName()),
-            $info->getSizeBytes(),
-            $info->getCreateTime()->getSeconds(),
+            'Backup %s of size %d bytes was copied at %d from the source backup %s using encryption keys %s' . PHP_EOL,
+            basename($destBackupInfo->getName()),
+            $destBackupInfo->getSizeBytes(),
+            $destBackupInfo->getCreateTime()->getSeconds(),
+            $sourceBackupId,
             print_r($info->getEncryptionInfo()->getKmsKeyVersions(), true)
         );
+        printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
     } else {
-        print('Backup is not ready!' . PHP_EOL);
+        $error = $operationResponse->getError();
+        printf('Backup not created due to error: %s.' . PHP_EOL, $error->getMessage());
     }
 }
 // [END spanner_copy_backup_with_MR_CMEK]
