@@ -51,7 +51,7 @@ class regionalsecretmanagerTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $options = ['apiEndpoint' => "secretmanager." . self::$locationId . ".rep.googleapis.com" ];
+        $options = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com' ];
         self::$client = new SecretManagerServiceClient($options);
 
         self::$testSecret = self::createSecret();
@@ -83,7 +83,7 @@ class regionalsecretmanagerTest extends TestCase
 
     private static function createSecret(): Secret
     {
-        $parent = self::$clent->locationName(self::$projectId, self::$locationId);
+        $parent = self::$client->locationName(self::$projectId, self::$locationId);
         $secretId = self::randomSecretId();
         $createSecretRequest = (new CreateSecretRequest())
             ->setParent($parent)
