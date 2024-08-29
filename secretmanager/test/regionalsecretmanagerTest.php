@@ -40,7 +40,6 @@ class regionalsecretmanagerTest extends TestCase
     private static $testSecretToDelete;
     private static $testSecretWithVersions;
     private static $testSecretToCreateName;
-    private static $testUmmrSecretToCreateName;
     private static $testSecretVersion;
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;
@@ -57,9 +56,7 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecret = self::createSecret();
         self::$testSecretToDelete = self::createSecret();
         self::$testSecretWithVersions = self::createSecret();
-        self::$testSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
-        self::$testUmmrSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
-
+        self::$testSecretToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDisable = self::addSecretVersion(self::$testSecretWithVersions);
@@ -69,11 +66,13 @@ class regionalsecretmanagerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
+        $options = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com' ];
+        self::$client = new SecretManagerServiceClient($options);
+        
         self::deleteSecret(self::$testSecret->getName());
         self::deleteSecret(self::$testSecretToDelete->getName());
         self::deleteSecret(self::$testSecretWithVersions->getName());
         self::deleteSecret(self::$testSecretToCreateName);
-        self::deleteSecret(self::$testUmmrSecretToCreateName);
     }
 
     private static function randomSecretId(): string
