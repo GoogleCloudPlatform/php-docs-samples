@@ -68,7 +68,7 @@ class regionalsecretmanagerTest extends TestCase
     {
         $options = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com' ];
         self::$client = new SecretManagerServiceClient($options);
-        
+
         self::deleteSecret(self::$testSecret->getName());
         self::deleteSecret(self::$testSecretToDelete->getName());
         self::deleteSecret(self::$testSecretWithVersions->getName());
@@ -290,7 +290,7 @@ class regionalsecretmanagerTest extends TestCase
     {
         $name = self::$client->parseName(self::$testSecret->getName());
 
-        $output = $this->runFunctionSnippet('list_regional_secret', [
+        $output = $this->runFunctionSnippet('list_regional_secrets', [
             $name['project'],
             $name['location'],
         ]);
