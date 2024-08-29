@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
-// [START secretmanager_list_regional_secret]
+// [START secretmanager_list_regional_secrets]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\ListSecretsRequest;
@@ -34,7 +34,7 @@ use Google\Cloud\SecretManager\V1\ListSecretsRequest;
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
  * @param string $locationId Your secret Location (e.g. "us-central1")
  */
-function list_regional_secret(string $projectId, string $locationId): void
+function list_regional_secrets(string $projectId, string $locationId): void
 {
     # Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
@@ -53,7 +53,7 @@ function list_regional_secret(string $projectId, string $locationId): void
         printf('Found secret %s', $secret->getName());
     }
 }
-// [END secretmanager_list_regional_secret]
+// [END secretmanager_list_regional_secrets]
 
 // The following 2 lines are only needed to execute the samples on the CLI
 require_once __DIR__ . '/../../testing/sample_helpers.php';
