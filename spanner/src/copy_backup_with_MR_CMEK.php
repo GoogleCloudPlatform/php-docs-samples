@@ -60,7 +60,7 @@ function copy_backup_with_MR_CMEK(
     string $destInstanceId,
     string $destBackupId,
     string $sourceInstanceId,
-    string $sourceBackupId
+    string $sourceBackupId,
     array $kmsKeyNames
 ): void {
     $databaseAdminClient = new DatabaseAdminClient();
@@ -83,21 +83,21 @@ function copy_backup_with_MR_CMEK(
     $operationResponse = $databaseAdminClient->copyBackup($request);
     $operationResponse->pollUntilComplete();
 
-    if ($operationResponse->operationSucceeded()) {
-        $destBackupInfo = $operationResponse->getResult();
-        printf(
-            'Backup %s of size %d bytes was copied at %d from the source backup %s using encryption keys %s' . PHP_EOL,
-            basename($destBackupInfo->getName()),
-            $destBackupInfo->getSizeBytes(),
-            $destBackupInfo->getCreateTime()->getSeconds(),
-            $sourceBackupId,
-            print_r($info->getEncryptionInfo()->getKmsKeyVersions(), true)
-        );
-        printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
-    } else {
+    if (!$operationResponse->operationSucceeded()) {
         $error = $operationResponse->getError();
         printf('Backup not created due to error: %s.' . PHP_EOL, $error->getMessage());
+        return;
     }
+    $destBackupInfo = $operationResponse->getResult();
+    printf(
+        'Backup %s of size %d bytes was copied at %d from the source backup %s using encryption keys %s' . PHP_EOL,
+        basename($destBackupInfo->getName()),
+        $destBackupInfo->getSizeBytes(),
+        $destBackupInfo->getCreateTime()->getSeconds(),
+        $sourceBackupId,
+        print_r($info->getEncryptionInfo()->getKmsKeyVersions(), true)
+    );
+    printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
 }
 // [END spanner_copy_backup_with_MR_CMEK]
 
