@@ -89,13 +89,17 @@ function copy_backup_with_MR_CMEK(
         return;
     }
     $destBackupInfo = $operationResponse->getResult();
+    $kmsKeyVersions = [];
+    foreach ($destBackupInfo->getEncryptionInformation() as $encryptionInfo) {
+        $kmsKeyVersions[] = $encryptionInfo->getKmsKeyVersion();
+    }
     printf(
         'Backup %s of size %d bytes was copied at %d from the source backup %s using encryption keys %s' . PHP_EOL,
         basename($destBackupInfo->getName()),
         $destBackupInfo->getSizeBytes(),
         $destBackupInfo->getCreateTime()->getSeconds(),
         $sourceBackupId,
-        print_r($destBackupInfo->getEncryptionInfo()->getKmsKeyVersions(), true)
+        print_r($kmsKeyVersions, true)
     );
     printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
 }
