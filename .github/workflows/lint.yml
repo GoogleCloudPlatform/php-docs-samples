@@ -9,7 +9,15 @@ jobs:
 
   style:
     name: PHP Style Check
-    uses: GoogleCloudPlatform/php-tools/.github/workflows/code-standards.yml@main
+    uses: GoogleCloudPlatform/php-tools/.github/workflows/code-standards.yml@add-rules-for-cs-fixer
+    with:
+      add_rules: |
+        {
+          "method_argument_space": {
+              "keep_multiple_spaces_after_comma": true,
+              "on_multiline": "ignore"
+          }
+        }
 
   staticanalysis:
     runs-on: ubuntu-latest
