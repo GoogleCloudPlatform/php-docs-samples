@@ -75,7 +75,7 @@ function restore_backup_with_MR_CMEK(
     $encryptionConfig = $database->getEncryptionConfig();
     printf(
         'Database %s restored from backup %s using encryption keys %s' . PHP_EOL,
-        $sourceDatabase, $sourceBackup, print_r($encryptionConfig->getKmsKeyName(), true)
+        $sourceDatabase, $sourceBackup, print_r($encryptionConfig->getKmsKeyNames(), true)
     );
 }
 // [END spanner_restore_backup_with_MR_CMEK]
