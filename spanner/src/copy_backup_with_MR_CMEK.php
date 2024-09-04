@@ -95,7 +95,7 @@ function copy_backup_with_MR_CMEK(
         $destBackupInfo->getSizeBytes(),
         $destBackupInfo->getCreateTime()->getSeconds(),
         $sourceBackupId,
-        print_r($info->getEncryptionInfo()->getKmsKeyVersions(), true)
+        print_r($destBackupInfo->getEncryptionInfo()->getKmsKeyVersions(), true)
     );
     printf('Version time of the copied backup: %d' . PHP_EOL, $destBackupInfo->getVersionTime()->getSeconds());
 }
