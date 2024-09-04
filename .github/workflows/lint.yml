@@ -16,7 +16,9 @@ jobs:
           "method_argument_space": {
               "keep_multiple_spaces_after_comma": true,
               "on_multiline": "ignore"
-          }
+          },
+          "ordered_imports": false,
+          "new_with_parentheses": false
         }
 
   staticanalysis:
