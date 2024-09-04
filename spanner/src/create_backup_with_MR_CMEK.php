@@ -79,12 +79,16 @@ function create_backup_with_MR_CMEK(
     $request->setName($databaseAdminClient->backupName($projectId, $instanceId, $backupId));
     $info = $databaseAdminClient->getBackup($request);
     if (State::name($info->getState()) == 'READY') {
+        $kmsKeyVersions = [];
+        foreach ($info->getEncryptionInformation() as $encryptionInfo) {
+            $kmsKeyVersions[] = $encryptionInfo->getKmsKeyVersion();
+        }
         printf(
             'Backup %s of size %d bytes was created at %d using encryption keys %s' . PHP_EOL,
             basename($info->getName()),
             $info->getSizeBytes(),
             $info->getCreateTime()->getSeconds(),
-            print_r($info->getEncryptionInfo()->getKmsKeyVersions(), true)
+            print_r($kmsKeyVersions, true)
         );
     } else {
         print('Backup is not ready!' . PHP_EOL);
