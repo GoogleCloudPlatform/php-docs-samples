@@ -76,7 +76,7 @@ function copy_backup_with_MR_CMEK(
         'expire_time' => $expireTime,
         'encryption_config' => new CopyBackupEncryptionConfig([
             'kms_key_names' => $kmsKeyNames,
-            'encryption_type' => RestoreDatabaseEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
+            'encryption_type' => CopyBackupEncryptionConfig\EncryptionType::CUSTOMER_MANAGED_ENCRYPTION
         ])
     ]);
 
