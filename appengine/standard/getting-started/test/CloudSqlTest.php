@@ -56,7 +56,7 @@ class CloudSqlTest extends TestCase
     {
         $model = $this->model;
         // Iterate over the existing books and count the rows.
-        $fetch = array('cursor' => null);
+        $fetch = ['cursor' => null];
         $rowCount = 0;
         do {
             $fetch = $model->listBooks(10, $fetch['cursor']);
@@ -64,23 +64,23 @@ class CloudSqlTest extends TestCase
         } while ($fetch['cursor']);
 
         // Insert two books.
-        $breakfastId = $model->create(array(
+        $breakfastId = $model->create([
             'title' => 'Breakfast of Champions',
             'author' => 'Kurt Vonnegut',
             'published_date' => 'April 20th, 2016'
 
-        ));
+        ]);
 
-        $bellId = $model->create(array(
+        $bellId = $model->create([
             'title' => 'For Whom the Bell Tolls',
             'author' => 'Ernest Hemingway'
-        ));
+        ]);
 
         // Try to create a book with a bad property name.
         try {
-            $model->create(array(
+            $model->create([
                 'bogus' => 'Teach your owl to drive!'
-            ));
+            ]);
             $this->fail('Should have thrown exception');
         } catch (\Exception $e) {
             // Good.  An exception is expected.

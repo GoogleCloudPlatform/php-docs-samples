@@ -68,7 +68,7 @@ function dml_batch_update_request_priority(string $instanceId, string $databaseI
                 . 'SET MarketingBudget = MarketingBudget * 2 '
                 . 'WHERE SingerId = 2 and AlbumId = 3'
             ],
-        ], array('priority' => $priority));
+        ], ['priority' => $priority]);
         $t->commit();
         $rowCounts = count($result->rowCounts());
         printf('Executed %s SQL statements using Batch DML with PRIORITY_LOW.' . PHP_EOL,

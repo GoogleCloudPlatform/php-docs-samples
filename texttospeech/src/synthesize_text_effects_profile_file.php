@@ -54,7 +54,7 @@ function synthesize_text_effects_profile_file(string $path, string $effectsProfi
 
     $audioConfig = (new AudioConfig())
         ->setAudioEncoding(AudioEncoding::MP3)
-        ->setEffectsProfileId(array($effectsProfileId));
+        ->setEffectsProfileId([$effectsProfileId]);
     $request = (new SynthesizeSpeechRequest())
         ->setInput($inputText)
         ->setVoice($voice)

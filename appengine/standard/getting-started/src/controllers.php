@@ -46,7 +46,7 @@ $app->get('/books', function (Request $request, Response $response) use ($contai
 $app->get('/books/add', function (Request $request, Response $response) use ($container) {
     return $container->get('view')->render($response, 'form.html.twig', [
         'action' => 'Add',
-        'book' => array(),
+        'book' => [],
     ]);
 });
 

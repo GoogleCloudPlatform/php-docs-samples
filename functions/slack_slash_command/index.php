@@ -88,7 +88,7 @@ function formatSlackMessage(Google_Service_Kgsearch_SearchResponse $kgResponse, 
         $attachmentJson['image_url'] = $imageJson['contentUrl'];
     }
 
-    $responseJson['attachments'] = array($attachmentJson);
+    $responseJson['attachments'] = [$attachmentJson];
 
     return json_encode($responseJson);
 }

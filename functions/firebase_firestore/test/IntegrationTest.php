@@ -49,8 +49,8 @@ class IntegrationTest extends TestCase
                     'type' => 'google.cloud.firestore.document.v1.created',
                     'data' => [
                         'resource' => 'projects/_/instances/my-instance/refs/messages',
-                        'oldValue' => array('old' => 'value'),
-                        'value' => array('new' => 'value'),
+                        'oldValue' => ['old' => 'value'],
+                        'value' => ['new' => 'value'],
                     ],
                 ]),
                 'statusCode' => '200',
