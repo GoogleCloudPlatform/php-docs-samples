@@ -69,9 +69,7 @@ function create_database_with_MR_CMEK(
 
     if (!empty($kmsKeyNames)) {
         $encryptionConfig = new EncryptionConfig();
-        foreach ($kmsKeyNames as $kmsKeyName) {
-            $encryptionConfig->addKmsKeyNames($kmsKeyName);
-        }
+        $encryptionConfig->setKmsKeyNames($kmsKeyNames);
         $createDatabaseRequest->setEncryptionConfig($encryptionConfig);
     }
 
