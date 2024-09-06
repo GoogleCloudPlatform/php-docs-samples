@@ -56,12 +56,12 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
     print('--Allowed--' . PHP_EOL);
     foreach ($response->getAllowed() as $item) {
         printf('Protocol: %s' . PHP_EOL, $item->getIPProtocol());
-        foreach ($item->getPorts()as $ports) {
+        foreach ($item->getPorts() as $ports) {
             printf(' - Ports: %s' . PHP_EOL, $ports);
         }
     }
     print('--Source Ranges--' . PHP_EOL);
-    foreach ($response->getSourceRanges()as $ranges) {
+    foreach ($response->getSourceRanges() as $ranges) {
         printf(' - Range: %s' . PHP_EOL, $ranges);
     }
 }
