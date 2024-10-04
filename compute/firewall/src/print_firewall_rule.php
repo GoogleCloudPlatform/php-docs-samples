@@ -61,7 +61,7 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
         }
     }
     print('--Source Ranges--' . PHP_EOL);
-    foreach ($response->getSourceRanges()as $ranges) {
+    foreach ($response->getSourceRanges() as $ranges) {
         printf(' - Range: %s' . PHP_EOL, $ranges);
     }
 }
