@@ -56,7 +56,7 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
     print('--Allowed--' . PHP_EOL);
     foreach ($response->getAllowed() as $item) {
         printf('Protocol: %s' . PHP_EOL, $item->getIPProtocol());
-        foreach ($item->getPorts()as $ports) {
+        foreach ($item->getPorts() as $ports) {
             printf(' - Ports: %s' . PHP_EOL, $ports);
         }
     }
