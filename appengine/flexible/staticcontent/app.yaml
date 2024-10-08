@@ -3,3 +3,8 @@ env: flex
 
 runtime_config:
   document_root: web
+  operating_system: ubuntu22
+  runtime_version: 8.3
+
+build_env_variables:
+  NGINX_SERVES_STATIC_FILES: true
