@@ -53,7 +53,7 @@ function request_metadata_using_curl($metadataKey)
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Metadata-Flavor: Google'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Metadata-Flavor: Google']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     return curl_exec($ch);

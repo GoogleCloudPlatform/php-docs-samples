@@ -46,7 +46,7 @@ class intentTest extends TestCase
 
         $this->assertStringContainsString(self::$displayName, $output);
 
-        $response = str_replace(array("\r", "\n"), '', $response);
+        $response = str_replace(["\r", "\n"], '', $response);
         $response = explode('/', $response);
         $intentId = end($response);
         return $intentId;

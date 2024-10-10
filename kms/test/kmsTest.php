@@ -423,10 +423,10 @@ class kmsTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Destroyed key version', $output);
-        $this->assertContains($version->getState(), array(
+        $this->assertContains($version->getState(), [
             CryptoKeyVersionState::DESTROYED,
             CryptoKeyVersionState::DESTROY_SCHEDULED,
-        ));
+        ]);
 
         list($version, $output) = $this->runFunctionSnippet('restore_key_version', [
             self::$projectId,

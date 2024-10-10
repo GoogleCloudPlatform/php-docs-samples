@@ -46,7 +46,7 @@ function data_set_from_map_nested(string $projectId): void
         'booleanExample' => true,
         'numberExample' => 3.14159265,
         'dateExample' => new Timestamp(new DateTime()),
-        'arrayExample' => array(5, true, 'hello'),
+        'arrayExample' => [5, true, 'hello'],
         'nullExample' => null,
         'objectExample' => ['a' => 5, 'b' => true],
         'documentReferenceExample' => $db->collection('samples/php/data')->document('two'),
