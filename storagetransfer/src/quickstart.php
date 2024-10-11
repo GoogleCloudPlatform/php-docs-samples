@@ -41,7 +41,7 @@ function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
     $transferJob = new TransferJob([
         'project_id' => $projectId,
         'transfer_spec' => new TransferSpec([
-            'gcs_data_sink' => new GcsData(['bucket_name' => $sourceGcsBucketName]),
+            'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName]),
             'gcs_data_source' => new GcsData(['bucket_name' => $sourceGcsBucketName])
         ]),
         'status' => Status::ENABLED
