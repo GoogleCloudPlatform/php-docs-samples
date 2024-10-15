@@ -36,7 +36,7 @@ use Google\Protobuf\Timestamp;
  * Create a CMEK backup.
  * Example:
  * ```
- * create_backup_with_MR_CMEK($projectId, $instanceId, $databaseId, $backupId, $kmsKeyNames);
+ * create_backup_with_mr_cmek($projectId, $instanceId, $databaseId, $backupId, $kmsKeyNames);
  * ```
  *
  * @param string $projectId The Google Cloud project ID.
@@ -45,7 +45,7 @@ use Google\Protobuf\Timestamp;
  * @param string $backupId The Spanner backup ID.
  * @param string[] $kmsKeyNames The KMS keys used for encryption.
  */
-function create_backup_with_MR_CMEK(
+function create_backup_with_mr_cmek(
     string $projectId,
     string $instanceId,
     string $databaseId,
