@@ -47,8 +47,8 @@ class spannerBackupTest extends TestCase
     /** @var string encryptedBackupId */
     protected static $encryptedBackupId;
 
-    /** @var string encryptedMRCMEKBackupId */
-    protected static $encryptedMRCMEKBackupId;
+    /** @var string encryptedMrCmekBackupId */
+    protected static $encryptedMrCmekBackupId;
 
     /** @var string databaseId */
     protected static $databaseId;
@@ -62,8 +62,8 @@ class spannerBackupTest extends TestCase
     /** @var string encryptedRestoredDatabaseId */
     protected static $encryptedRestoredDatabaseId;
 
-    /** @var string encryptedMRCMEKRestoredDatabaseId */
-    protected static $encryptedMRCMEKRestoredDatabaseId;
+    /** @var string encryptedMrCmekRestoredDatabaseId */
+    protected static $encryptedMrCmekRestoredDatabaseId;
 
     /** @var $instance Instance */
     protected static $instance;
@@ -97,10 +97,10 @@ class spannerBackupTest extends TestCase
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$encryptedBackupId = 'en-backup-' . self::$databaseId;
-        self::$encryptedMRCMEKBackupId = 'en-mr-cmek-backup-' . self::$databaseId;
+        self::$encryptedMrCmekBackupId = 'en-mr-cmek-backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-r';
         self::$encryptedRestoredDatabaseId = self::$databaseId . '-en-r';
-        self::$encryptedMRCMEKRestoredDatabaseId = self::$databaseId . '-en-mr-cmek-r';
+        self::$encryptedMrCmekRestoredDatabaseId = self::$databaseId . '-en-mr-cmek-r';
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =
@@ -131,15 +131,15 @@ class spannerBackupTest extends TestCase
         $this->assertStringContainsString(self::$backupId, $output);
     }
 
-    public function testCreateBackupWithMRCMEK()
+    public function testCreateBackupWithMrCmek()
     {
         $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
-        $output = $this->runFunctionSnippet('create_backup_with_MR_CMEK', [
+        $output = $this->runFunctionSnippet('create_backup_with_mr_cmek', [
             self::$databaseId,
-            self::$encryptedMRCMEKBackupId,
+            self::$encryptedMrCmekBackupId,
             self::$kmsKeyNames,
         ]);
-        $this->assertStringContainsString(self::$encryptedMRCMEKBackupId, $output);
+        $this->assertStringContainsString(self::$encryptedMrCmekBackupId, $output);
     }
 
     /**
@@ -205,12 +205,12 @@ class spannerBackupTest extends TestCase
     /**
      * @depends testCreateBackup
      */
-    public function testCopyBackupWithMRCMEK()
+    public function testCopyBackupWithMrCmek()
     {
         $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
         $newBackupId = 'copy-' . self::$backupId . '-' . time();
 
-        $output = $this->runFunctionSnippet('create_backup_with_MR_CMEK', [
+        $output = $this->runFunctionSnippet('create_backup_with_mr_cmek', [
             $newBackupId,
             self::$instanceId,
             self::$backupId,
@@ -267,17 +267,17 @@ class spannerBackupTest extends TestCase
     }
 
     /**
-     * @depends testCreateBackupWithMRCMEK
+     * @depends testCreateBackupWithMrCmek
      */
-    public function testRestoreBackupWithMRCMEK()
+    public function testRestoreBackupWithMrCmek()
     {
         $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
-        $output = $this->runFunctionSnippet('restore_backup_with_MR_CMEK', [
+        $output = $this->runFunctionSnippet('restore_backup_with_mr_cmek', [
             self::$encryptedRestoredDatabaseId,
             self::$encryptedBackupId,
             self::$kmsKeyNames,
         ]);
-        $this->assertStringContainsString(self::$encryptedMRCMEKBackupId, $output);
+        $this->assertStringContainsString(self::$encryptedMrCmekBackupId, $output);
         $this->assertStringContainsString(self::$databaseId, $output);
     }
 
