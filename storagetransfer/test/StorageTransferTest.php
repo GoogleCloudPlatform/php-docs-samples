@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 namespace Google\Cloud\Samples\StorageTransfer;
 
+use DateTime;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
 use Google\Cloud\StorageTransfer\V1\GetGoogleServiceAccountRequest;
@@ -30,10 +31,10 @@ class StorageTransferTest extends TestCase
 {
     use TestTrait;
 
+    private static $sts;
+    private static $storage;
     private static $sourceBucket;
     private static $sinkBucket;
-    private static $storage;
-    private static $sts;
 
     public static function setUpBeforeClass(): void
     {
@@ -63,11 +64,49 @@ class StorageTransferTest extends TestCase
         $output = $this->runFunctionSnippet('quickstart', [
             self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
         ]);
+        $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+
+        self::deleteTransferJob($output);
+    }
+
+    public function testCheckLatestTransferOperation()
+    {
+        $transferData = $this->runFunctionSnippet('quickstart', [
+            self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
+        ]);
+        preg_match('/transferJobs\/\d+/', $transferData, $match);
+        $jobName = $match[0];
+
+        $output = $this->runFunctionSnippet('check_latest_transfer_operation', [
+            self::$projectId, $jobName
+        ]);
 
         $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
 
+        self::deleteTransferJob($output);
+    }
+
+    public function testNearlineRequest()
+    {
+        $description = sprintf('My transfer job from %s -> %s', self::$sourceBucket->name(), self::$sinkBucket->name());
+        $date = new DateTime('now');
+        $startDate = $date->format('Y-m-d H:i:s');
+
+        $output = $this->runFunctionSnippet('nearline_request', [
+            self::$projectId, $description, self::$sourceBucket->name(), self::$sinkBucket->name(), $startDate
+        ]);
+
+        $this->assertMatchesRegularExpression('/Created and ran transfer job : transferJobs\/.*/', $output);
+
+        self::deleteTransferJob($output);
+    }
+
+    // deletes a transfer job created by a sample to clean up
+    private static function deleteTransferJob($output)
+    {
         preg_match('/transferJobs\/\d+/', $output, $match);
         $jobName = $match[0];
+
         $transferJob = new TransferJob([
             'name' => $jobName,
             'status' => Status::DELETED
