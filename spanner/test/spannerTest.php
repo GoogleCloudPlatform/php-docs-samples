@@ -62,8 +62,8 @@ class spannerTest extends TestCase
     /** @var string encryptedDatabaseId */
     protected static $encryptedDatabaseId;
 
-    /** @var string $encryptedMRCMEKDatabaseId */
-    protected static $encryptedMRCMEKDatabaseId;
+    /** @var string $encryptedMrCmekDatabaseId */
+    protected static $encryptedMrCmekDatabaseId;
 
     /** @var string backupId */
     protected static $backupId;
@@ -142,7 +142,7 @@ class spannerTest extends TestCase
         self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-mr-cmek-test-' . time() . rand();
-        self::$encryptedMRCMEKDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedMrCmekDatabaseId = 'en-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
@@ -313,13 +313,13 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateInstance
      */
-    public function testCreateDatabaseWithMRCMEK()
+    public function testCreateDatabaseWithMrCmek()
     {
         $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
-        $output = $this->runAdminFunctionSnippet('create_database_with_MR_CMEK', [
+        $output = $this->runAdminFunctionSnippet('create_database_with_mr_cmek', [
             self::$projectId,
             self::$instanceId,
-            self::$encryptedMRCMEKDatabaseId,
+            self::$encryptedMrCmekDatabaseId,
             self::$kmsKeyNames,
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
