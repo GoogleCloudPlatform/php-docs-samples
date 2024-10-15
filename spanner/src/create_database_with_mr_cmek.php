@@ -32,7 +32,7 @@ use Google\Cloud\Spanner\Admin\Database\V1\EncryptionConfig;
  * Creates a MR CMEK database with tables for sample data.
  * Example:
  * ```
- * create_database_with_MR_CMEK($projectId, $instanceId, $databaseId, $kmsKeyNames);
+ * create_database_with_mr_cmek($projectId, $instanceId, $databaseId, $kmsKeyNames);
  * ```
  *
  * @param string $projectId The Google Cloud project ID.
@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\Admin\Database\V1\EncryptionConfig;
  * @param string $databaseId The Spanner database ID.
  * @param string[] $kmsKeyNames The KMS keys used for encryption.
  */
-function create_database_with_MR_CMEK(
+function create_database_with_mr_cmek(
     string $projectId,
     string $instanceId,
     string $databaseId,
