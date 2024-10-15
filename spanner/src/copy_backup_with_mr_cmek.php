@@ -33,7 +33,7 @@ use Google\Protobuf\Timestamp;
  * Copy a MR CMEK backup.
  * Example:
  * ```
- * copy_backup_with_MR_CMEK($projectId, $instanceId, $sourceBackupId, $backupId, $kmsKeyNames);
+ * copy_backup_with_mr_cmek($projectId, $instanceId, $sourceBackupId, $backupId, $kmsKeyNames);
  * ```
  * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
@@ -45,7 +45,7 @@ use Google\Protobuf\Timestamp;
  * Create a copy MR CMEK backup from another source backup.
  * Example:
  * ```
- * copy_backup_with_MR_CMEK($projectId, $destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId, $kmsKeyNames);
+ * copy_backup_with_mr_cmek($projectId, $destInstanceId, $destBackupId, $sourceInstanceId, $sourceBackupId, $kmsKeyNames);
  * ```
  *
  * @param string $projectId The Google Cloud project ID.
@@ -55,7 +55,7 @@ use Google\Protobuf\Timestamp;
  * @param string $sourceBackupId The Spanner backup ID of the source.
 * @param string[] $kmsKeyNames The KMS keys used for encryption.
  */
-function copy_backup_with_MR_CMEK(
+function copy_backup_with_mr_cmek(
     string $projectId,
     string $destInstanceId,
     string $destBackupId,
