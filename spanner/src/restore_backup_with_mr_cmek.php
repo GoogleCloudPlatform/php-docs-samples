@@ -32,7 +32,7 @@ use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseRequest;
  * Restore a MR CMEK database from a backup.
  * Example:
  * ```
- * restore_backup_with_MR_CMEK($projectId, $instanceId, $databaseId, $backupId, $kmsKeyNames);
+ * restore_backup_with_mr_cmek($projectId, $instanceId, $databaseId, $backupId, $kmsKeyNames);
  * ```
  * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
@@ -40,7 +40,7 @@ use Google\Cloud\Spanner\Admin\Database\V1\RestoreDatabaseRequest;
  * @param string $backupId The Spanner backup ID.
  * @param string[] $kmsKeyNames The KMS keys used for encryption.
  */
-function restore_backup_with_MR_CMEK(
+function restore_backup_with_mr_cmek(
     string $projectId,
     string $instanceId,
     string $databaseId,
