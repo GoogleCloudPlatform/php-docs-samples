@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,32 +17,69 @@
 
 namespace Google\Cloud\Samples\StorageTransfer;
 
-# [START storagetransfer_quickstart]
+# [START storagetransfer_transfer_to_nearline]
+
+use DateTime;
 use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
 use Google\Cloud\StorageTransfer\V1\CreateTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\GcsData;
+use Google\Cloud\StorageTransfer\V1\ObjectConditions;
 use Google\Cloud\StorageTransfer\V1\RunTransferJobRequest;
+use Google\Cloud\StorageTransfer\V1\Schedule;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
 use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
+use Google\Cloud\StorageTransfer\V1\TransferOptions;
 use Google\Cloud\StorageTransfer\V1\TransferSpec;
+use Google\Protobuf\Duration as ProtobufDuration;
+use Google\Type\Date;
+use Google\Type\TimeOfDay;
 
 /**
- * Creates and runs a transfer job between two GCS buckets
+ * Create a daily migration from a GCS bucket to another GCS bucket for objects untouched for 30+ days.
  *
  * @param string $projectId Your Google Cloud project ID.
+ * @param string $description A useful description for your transfer job.
  * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
+ * @param string $startDate Date to start daily migration.
  */
-function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
+function nearline_request($projectId, $description, $sourceGcsBucketName, $sinkGcsBucketName, $startDate)
 {
     // $project = 'my-project-id';
+    // $description = 'My transfer job';
     // $sourceGcsBucketName = 'my-source-bucket';
     // $sinkGcsBucketName = 'my-sink-bucket';
+    // $startDate = new DateTime();
+
+    $dateTime = new DateTime($startDate);
+    $date = new Date([
+        'year' => $dateTime->format('Y'),
+        'month' => $dateTime->format('m') + 1,
+        'day' => $dateTime->format('d'),
+    ]);
+
+    $time = new TimeOfDay([
+        'hours' => $dateTime->format('H'),
+        'minutes' => $dateTime->format('i'),
+        'seconds' => $dateTime->format('s'),
+    ]);
+
     $transferJob = new TransferJob([
         'project_id' => $projectId,
+        'description' => $description,
+        'schedule' => new Schedule([
+            'schedule_start_date' => $date,
+            'start_time_of_day' => $time
+        ]),
         'transfer_spec' => new TransferSpec([
+            'gcs_data_source' => new GcsData(['bucket_name' => $sourceGcsBucketName]),
             'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName]),
-            'gcs_data_source' => new GcsData(['bucket_name' => $sourceGcsBucketName])
+            'object_conditions' => new ObjectConditions([
+                'min_time_elapsed_since_last_modification' => new ProtobufDuration([
+                    'seconds' => 2592000
+                ])
+            ]),
+            'transfer_options' => new TransferOptions(['delete_objects_from_source_after_transfer' => true])
         ]),
         'status' => Status::ENABLED
     ]);
@@ -56,9 +93,9 @@ function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
         ->setProjectId($projectId);
     $client->runTransferJob($request2);
 
-    printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $sourceGcsBucketName, $sinkGcsBucketName, $response->getName());
+    printf('Created and ran transfer job : %s' . PHP_EOL, $response->getName());
 }
-# [END storagetransfer_quickstart]
+# [END storagetransfer_transfer_to_nearline]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
