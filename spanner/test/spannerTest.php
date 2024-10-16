@@ -141,8 +141,8 @@ class spannerTest extends TestCase
         self::$instancePartitionInstanceId = 'test-' . time() . rand();
         self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
-        self::$encryptedDatabaseId = 'en-mr-cmek-test-' . time() . rand();
-        self::$encryptedMrCmekDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedMrCmekDatabaseId = 'en-mr-cmek-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
