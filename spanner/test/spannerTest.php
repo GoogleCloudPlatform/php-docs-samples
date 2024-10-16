@@ -312,6 +312,9 @@ class spannerTest extends TestCase
 
     public function testCreateDatabaseWithMrCmek()
     {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
         $mrCmekInstanceId = 'test-mr-' . time() . rand();
         $operation = $spanner->createInstance(
             $instanceConfig,
