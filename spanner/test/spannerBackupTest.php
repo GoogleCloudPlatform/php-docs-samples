@@ -207,12 +207,27 @@ class spannerBackupTest extends TestCase
      */
     public function testCopyBackupWithMrCmek()
     {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
         $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $newBackupId = 'copy-' . self::$backupId . '-' . time();
 
-        $output = $this->runFunctionSnippet('create_backup_with_mr_cmek', [
+        $output = $this->runFunctionSnippet('copy_backup_with_mr_cmek', [
             $newBackupId,
-            self::$instanceId,
+            self::mrCmekInstanceId,
             self::$backupId,
             $kmsKeyNames
         ]);
