@@ -211,6 +211,7 @@ class spannerBackupTest extends TestCase
             'projectId' => self::$projectId,
         ]);
         $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
         $operation = $spanner->createInstance(
             $instanceConfig,
             $mrCmekInstanceId,
@@ -222,6 +223,7 @@ class spannerBackupTest extends TestCase
                 ]
             ]
         );
+        $operation->pollUntilComplete();
         $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $newBackupId = 'copy-' . self::$backupId . '-' . time();
 
