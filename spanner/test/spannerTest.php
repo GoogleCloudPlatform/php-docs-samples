@@ -310,15 +310,25 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Created database en-test-', $output);
     }
 
-    /**
-     * @depends testCreateInstance
-     */
     public function testCreateDatabaseWithMrCmek()
     {
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
         $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $output = $this->runAdminFunctionSnippet('create_database_with_mr_cmek', [
             self::$projectId,
-            self::$instanceId,
+            $mrCmekInstanceId,
             self::$encryptedMrCmekDatabaseId,
             $kmsKeyNames,
         ]);
