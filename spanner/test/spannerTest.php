@@ -315,12 +315,12 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabaseWithMrCmek()
     {
-        $kmsKeyNames = array($kmsKeyName, kmsKeyName2, kmsKeyName3);
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $output = $this->runAdminFunctionSnippet('create_database_with_mr_cmek', [
             self::$projectId,
             self::$instanceId,
             self::$encryptedMrCmekDatabaseId,
-            self::$kmsKeyNames,
+            $kmsKeyNames,
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database en-mr-cmek-test-', $output);
