@@ -142,7 +142,7 @@ class spannerTest extends TestCase
         self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-test-' . time() . rand();
-        self::$encryptedMrCmekDatabaseId = 'en-mr-cmek-test-' . time() . rand();
+        self::$encryptedMrCmekDatabaseId = 'mr-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
@@ -323,7 +323,7 @@ class spannerTest extends TestCase
             $kmsKeyNames,
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
-        $this->assertStringContainsString('Created database en-mr-cmek-test-', $output);
+        $this->assertStringContainsString('Created database mr-test-', $output);
     }
 
     /**
