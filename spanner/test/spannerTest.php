@@ -316,8 +316,9 @@ class spannerTest extends TestCase
             'projectId' => self::$projectId,
         ]);
         $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
         $operation = $spanner->createInstance(
-            self::$instanceConfig
+            $instanceConfig,
             $mrCmekInstanceId,
             [
                 'displayName' => 'Mr Cmek test.',
