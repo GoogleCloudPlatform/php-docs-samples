@@ -150,6 +150,32 @@ class StorageTransferTest extends TestCase
         }
     }
 
+    public function testPosixRequest()
+    {
+        try {
+            $rootDirectory = sys_get_temp_dir() . '/sts-manifest-request-test';
+            if (!is_dir($rootDirectory)) {
+                mkdir($rootDirectory, 0700, true);
+            }
+            $tempFile = $rootDirectory . '/text.txt';
+
+            // Write test data to the temporary file
+            $testData = 'test data';
+            file_put_contents($tempFile, $testData);
+
+            $output = $this->runFunctionSnippet('posix_request', [
+                self::$projectId, self::$sourceAgentPoolName, $rootDirectory, self::$sinkBucket->name()
+            ]);
+
+            $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+        } finally {
+            unlink($tempFile);
+            rmdir($rootDirectory);
+            preg_match('/transferJobs\/\w+/', $output, $match);
+            self::deleteTransferJob($match[0]);
+        }
+    }
+
     // deletes a transfer job created by a sample to clean up
     private static function deleteTransferJob($jobName)
     {
