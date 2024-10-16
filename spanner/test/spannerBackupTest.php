@@ -133,8 +133,28 @@ class spannerBackupTest extends TestCase
 
     public function testCreateBackupWithMrCmek()
     {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+
         $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $output = $this->runFunctionSnippet('create_backup_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
             self::$databaseId,
             self::$encryptedMrCmekBackupId,
             $kmsKeyNames,
@@ -228,8 +248,10 @@ class spannerBackupTest extends TestCase
         $newBackupId = 'copy-' . self::$backupId . '-' . time();
 
         $output = $this->runFunctionSnippet('copy_backup_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
             $newBackupId,
-            self::mrCmekInstanceId,
+            $mrCmekInstanceId,
             self::$backupId,
             $kmsKeyNames
         ]);
@@ -288,10 +310,30 @@ class spannerBackupTest extends TestCase
      */
     public function testRestoreBackupWithMrCmek()
     {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+
         $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
         $output = $this->runFunctionSnippet('restore_backup_with_mr_cmek', [
-            self::$encryptedRestoredDatabaseId,
-            self::$encryptedBackupId,
+            self::$projectId,
+            $mrCmekInstanceId,
+            self::$encryptedMrCmekRestoredDatabaseId,
+            self::$encryptedMrCmekBackupId,
             $kmsKeyNames,
         ]);
         $this->assertStringContainsString(self::$encryptedMrCmekBackupId, $output);
