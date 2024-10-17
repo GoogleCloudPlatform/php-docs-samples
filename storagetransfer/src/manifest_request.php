@@ -57,13 +57,13 @@ function manifest_request($projectId, $sourceAgentPoolName, $rootDirectory, $sin
     ]);
 
     $client = new StorageTransferServiceClient();
-    $request = (new CreateTransferJobRequest())
+    $createRequest = (new CreateTransferJobRequest())
         ->setTransferJob($transferJob);
-    $response = $client->createTransferJob($request);
-    $request2 = (new RunTransferJobRequest())
+    $response = $client->createTransferJob($createRequest);
+    $runRequest = (new RunTransferJobRequest())
         ->setJobName($response->getName())
         ->setProjectId($projectId);
-    $client->runTransferJob($request2);
+    $client->runTransferJob($runRequest);
 
     printf('Created and ran transfer job from %s to %s using manifest %s with name %s ' . PHP_EOL, $rootDirectory, $sinkGcsBucketName, $manifestLocation, $response->getName());
 }
