@@ -26,11 +26,11 @@ function fluentd_exception_handler(Exception $e)
 {
     global $logger;
 
-    $msg = array(
+    $msg = [
         'message' => $e->getMessage(),
-        'serviceContext' => array('service' => 'myapp'),
+        'serviceContext' => ['service' => 'myapp'],
         // ... add more metadata
-    );
+    ];
     $logger->post('myapp.errors', $msg);
 }
 

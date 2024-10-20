@@ -56,7 +56,7 @@ $app->get('/vars', function (Request $request, Response $response) {
         'MEMCACHE_PORT_11211_TCP_ADDR',
         'MEMCACHE_PORT_11211_TCP_PORT'
     ];
-    $lines = array();
+    $lines = [];
     foreach ($vars as $var) {
         $val = getenv($var);
         array_push($lines, "$var = $val");

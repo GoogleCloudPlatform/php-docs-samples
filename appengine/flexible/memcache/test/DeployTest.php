@@ -71,7 +71,7 @@ class DeployTest extends TestCase
     {
         $url = join('/', [trim(self::$gcloudWrapper->getBaseUrl(), '/'),
             trim($path, '/')]);
-        $request = new \GuzzleHttp\Psr7\Request('PUT', $url, array(), $body);
+        $request = new \GuzzleHttp\Psr7\Request('PUT', $url, [], $body);
         $this->client->send($request);
     }
 

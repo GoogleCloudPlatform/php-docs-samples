@@ -13,9 +13,9 @@ $loop = Factory::create();
 $server = new Server(function (ServerRequestInterface $request) {
     return new Response(
         200,
-        array(
+        [
             'Content-Type' => 'text/plain'
-        ),
+        ],
         "Hello World!\n"
     );
 });
