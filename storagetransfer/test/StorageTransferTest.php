@@ -35,6 +35,7 @@ class StorageTransferTest extends TestCase
     private static $storage;
     private static $sourceBucket;
     private static $sinkBucket;
+    private static $sourceAgentPoolName;
 
     public static function setUpBeforeClass(): void
     {
@@ -48,6 +49,7 @@ class StorageTransferTest extends TestCase
         self::$sinkBucket = self::$storage->createBucket(
             sprintf('php-sink-bucket-%s', $uniqueBucketId)
         );
+        self::$sourceAgentPoolName = '';
 
         self::grantStsPermissions(self::$sourceBucket);
         self::grantStsPermissions(self::$sinkBucket);
@@ -66,7 +68,8 @@ class StorageTransferTest extends TestCase
         ]);
         $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
 
-        self::deleteTransferJob($output);
+        preg_match('/transferJobs\/\d+/', $output, $match);
+        self::deleteTransferJob($match[0]);
     }
 
     public function testCheckLatestTransferOperation()
@@ -83,7 +86,8 @@ class StorageTransferTest extends TestCase
 
         $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
 
-        self::deleteTransferJob($output);
+        preg_match('/transferJobs\/\d+/', $output, $match);
+        self::deleteTransferJob($match[0]);
     }
 
     public function testNearlineRequest()
@@ -98,15 +102,57 @@ class StorageTransferTest extends TestCase
 
         $this->assertMatchesRegularExpression('/Created and ran transfer job : transferJobs\/.*/', $output);
 
-        self::deleteTransferJob($output);
+        preg_match('/transferJobs\/\d+/', $output, $match);
+        self::deleteTransferJob($match[0]);
+    }
+
+    public function testManifestRequest()
+    {
+        try {
+            $manifestName = 'manifest.csv';
+            $rootDirectory = sys_get_temp_dir() . '/sts-manifest-request-test';
+            if (!is_dir($rootDirectory)) {
+                mkdir($rootDirectory, 0700, true);
+            }
+            $tempFile = $rootDirectory . '/text.txt';
+
+            // Write test data to the temporary file
+            $testData = 'test data';
+            file_put_contents($tempFile, $testData);
+
+            // Escape double quotes for CSV content
+            $csvContent = '"' . str_replace('"', '""', 'text.txt') . '"';
+            $tempManifestObject = fopen('php://temp', 'r+'); // Create a temporary file stream
+
+            // Write CSV content to the temporary manifest
+            fwrite($tempManifestObject, $csvContent);
+
+            // Upload the temporary manifest to GCS bucket (replace with your library)
+            self::$sinkBucket->upload(
+                $tempManifestObject,
+                [
+                    'name' => $manifestName
+                ]
+            );
+            $manifestLocation = sprintf('gs://%s/%s', self::$sinkBucket->name(), $manifestName);
+
+            $output = $this->runFunctionSnippet('manifest_request', [
+                self::$projectId, self::$sourceAgentPoolName, $rootDirectory, self::$sinkBucket->name(), $manifestLocation
+            ]);
+
+            $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+        } finally {
+            unlink($tempFile);
+            rmdir($rootDirectory);
+            self::$sinkBucket->object($manifestName)->delete();
+            preg_match('/transferJobs\/\w+/', $output, $match);
+            self::deleteTransferJob($match[0]);
+        }
     }
 
     // deletes a transfer job created by a sample to clean up
-    private static function deleteTransferJob($output)
+    private static function deleteTransferJob($jobName)
     {
-        preg_match('/transferJobs\/\d+/', $output, $match);
-        $jobName = $match[0];
-
         $transferJob = new TransferJob([
             'name' => $jobName,
             'status' => Status::DELETED
