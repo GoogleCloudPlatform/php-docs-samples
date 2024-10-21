@@ -24,11 +24,11 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_streaming]
-use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
 
 /**
  * @param string $audioFile path to an audio file
