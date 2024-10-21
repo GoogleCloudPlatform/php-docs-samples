@@ -32,6 +32,7 @@ class StorageTransferTest extends TestCase
     use TestTrait;
 
     private static $sts;
+    private static $root;
     private static $storage;
     private static $sourceBucket;
     private static $sinkBucket;
@@ -39,6 +40,7 @@ class StorageTransferTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::$root = sys_get_temp_dir();
         self::checkProjectEnvVars();
         self::$storage = new StorageClient();
         self::$sts = new StorageTransferServiceClient();
@@ -110,7 +112,7 @@ class StorageTransferTest extends TestCase
     {
         try {
             $manifestName = 'manifest.csv';
-            $rootDirectory = sys_get_temp_dir() . '/sts-manifest-request-test';
+            $rootDirectory = self::$root . '/sts-manifest-request-test';
             if (!is_dir($rootDirectory)) {
                 mkdir($rootDirectory, 0700, true);
             }
@@ -145,6 +147,32 @@ class StorageTransferTest extends TestCase
             unlink($tempFile);
             rmdir($rootDirectory);
             self::$sinkBucket->object($manifestName)->delete();
+            preg_match('/transferJobs\/\w+/', $output, $match);
+            self::deleteTransferJob($match[0]);
+        }
+    }
+
+    public function testPosixRequest()
+    {
+        try {
+            $rootDirectory = self::$root . '/sts-manifest-request-test';
+            if (!is_dir($rootDirectory)) {
+                mkdir($rootDirectory, 0700, true);
+            }
+            $tempFile = $rootDirectory . '/text.txt';
+
+            // Write test data to the temporary file
+            $testData = 'test data';
+            file_put_contents($tempFile, $testData);
+
+            $output = $this->runFunctionSnippet('posix_request', [
+                self::$projectId, self::$sourceAgentPoolName, $rootDirectory, self::$sinkBucket->name()
+            ]);
+
+            $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+        } finally {
+            unlink($tempFile);
+            rmdir($rootDirectory);
             preg_match('/transferJobs\/\w+/', $output, $match);
             self::deleteTransferJob($match[0]);
         }
