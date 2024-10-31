@@ -85,13 +85,13 @@ function nearline_request($projectId, $description, $sourceGcsBucketName, $sinkG
     ]);
 
     $client = new StorageTransferServiceClient();
-    $request = (new CreateTransferJobRequest())
+    $createRequest = (new CreateTransferJobRequest())
         ->setTransferJob($transferJob);
-    $response = $client->createTransferJob($request);
-    $request2 = (new RunTransferJobRequest())
+    $response = $client->createTransferJob($createRequest);
+    $runRequest = (new RunTransferJobRequest())
         ->setJobName($response->getName())
         ->setProjectId($projectId);
-    $client->runTransferJob($request2);
+    $client->runTransferJob($runRequest);
 
     printf('Created and ran transfer job : %s' . PHP_EOL, $response->getName());
 }

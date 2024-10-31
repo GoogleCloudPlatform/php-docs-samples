@@ -17,7 +17,7 @@
 
 namespace Google\Cloud\Samples\StorageTransfer;
 
-# [START storagetransfer_manifest_request]
+# [START storagetransfer_transfer_posix_to_posix]
 
 use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
 use Google\Cloud\StorageTransfer\V1\CreateTransferJobRequest;
@@ -26,32 +26,34 @@ use Google\Cloud\StorageTransfer\V1\PosixFilesystem;
 use Google\Cloud\StorageTransfer\V1\RunTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
 use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
-use Google\Cloud\StorageTransfer\V1\TransferManifest;
 use Google\Cloud\StorageTransfer\V1\TransferSpec;
 
 /**
- * Creates and runs a transfer from the local file system to the sink bucket
+ * Creates a request to transfer from the local file system to the sink bucket
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $sourceAgentPoolName The agent pool associated with the POSIX data source.
+ * @param string $sourceAgentPoolName The agent pool associated with the POSIX data source. Defaults to the default agent
+ * @param string $sinkAgentPoolName The agent pool associated with the POSIX data sink. Defaults to the default agent
  * @param string $rootDirectory The root directory path on the source filesystem.
- * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
- * @param string $manifestLocation Transfer manifest location. Must be a `gs:` URL.
+ * @param string $destinationDirectory The root directory path on the sink filesystem.
+ * @param string $bucketName The ID of the GCS bucket for intermediate storage.
  */
-function manifest_request($projectId, $sourceAgentPoolName, $rootDirectory, $sinkGcsBucketName, $manifestLocation)
+function posix_to_posix_request($projectId, $sourceAgentPoolName, $sinkAgentPoolName, $rootDirectory, $destinationDirectory, $bucketName)
 {
     // $project = 'my-project-id';
     // $sourceAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
+    // $sinkAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
     // $rootDirectory = '/directory/to/transfer/source';
-    // $sinkGcsBucketName = 'my-sink-bucket';
-    // $manifestLocation = 'gs://my-bucket/sample_manifest.csv';
+    // $destinationDirectory = '/directory/to/transfer/sink';
+    // $bucketName = 'my-intermediate-bucket';
     $transferJob = new TransferJob([
         'project_id' => $projectId,
         'transfer_spec' => new TransferSpec([
             'source_agent_pool_name' => $sourceAgentPoolName,
+            'sink_agent_pool_name' => $sinkAgentPoolName,
             'posix_data_source' => new PosixFilesystem(['root_directory' => $rootDirectory]),
-            'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName]),
-            'transfer_manifest' => new TransferManifest(['location' => $manifestLocation])
+            'posix_data_sink' => new PosixFilesystem(['root_directory' => $destinationDirectory]),
+            'gcs_intermediate_data_location' => new GcsData(['bucket_name' => $bucketName])
         ]),
         'status' => Status::ENABLED
     ]);
@@ -65,9 +67,9 @@ function manifest_request($projectId, $sourceAgentPoolName, $rootDirectory, $sin
         ->setProjectId($projectId);
     $client->runTransferJob($runRequest);
 
-    printf('Created and ran transfer job from %s to %s using manifest %s with name %s ' . PHP_EOL, $rootDirectory, $sinkGcsBucketName, $manifestLocation, $response->getName());
+    printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $rootDirectory, $destinationDirectory, $response->getName());
 }
-# [END storagetransfer_manifest_request]
+# [END storagetransfer_transfer_posix_to_posix]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
