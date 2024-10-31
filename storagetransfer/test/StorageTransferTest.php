@@ -210,6 +210,41 @@ class StorageTransferTest extends TestCase
         }
     }
 
+    public function testDownloadToPosix()
+    {
+        try {
+            $tempFileName = 'text.txt';
+            $sinkAgentPoolName = '';
+            $rootDirectory = self::$root . '/sts-download-to-posix-test';
+            $gcsSourcePath = 'sts-manifest-request-test/';
+            if (!is_dir($rootDirectory)) {
+                mkdir($rootDirectory, 0700, true);
+            }
+            $tempFile = $rootDirectory . '/' . $tempFileName;
+            file_put_contents($tempFile, 'test data');
+
+            // Upload the temporary file to GCS
+            self::$sourceBucket->upload(
+                fopen($tempFile, 'r'),
+                [
+                    'name' => $tempFileName
+                ]
+            );
+
+            $output = $this->runFunctionSnippet('posix_download', [
+                self::$projectId, $sinkAgentPoolName, self::$sourceBucket->name(), $gcsSourcePath, $rootDirectory
+            ]);
+
+            $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+        } finally {
+            unlink($tempFile);
+            rmdir($rootDirectory);
+            self::$sourceBucket->object($tempFileName)->delete();
+            preg_match('/transferJobs\/\w+/', $output, $match);
+            self::deleteTransferJob($match[0]);
+        }
+    }
+
     // deletes a transfer job created by a sample to clean up
     private static function deleteTransferJob($jobName)
     {
