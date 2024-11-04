@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2024 Google Inc.
  *
@@ -37,8 +38,13 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
  * @param string $gcsSourcePath An optional path on the Google Cloud Storage bucket to download from.
  * @param string $rootDirectory The root directory path on the destination filesystem.
  */
-function posix_download($projectId, $sinkAgentPoolName, $gcsSourceBucket, $gcsSourcePath, $rootDirectory)
-{
+function posix_download(
+    string $projectId,
+    string $sinkAgentPoolName,
+    string $gcsSourceBucket,
+    string $gcsSourcePath,
+    string $rootDirectory
+): void {
     // $project = 'my-project-id';
     // $sinkAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
     // $gcsSourceBucket = 'my-gcs-source-bucket';

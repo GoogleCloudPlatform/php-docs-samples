@@ -36,8 +36,12 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
  * @param string $rootDirectory The root directory path on the source filesystem.
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  */
-function posix_request($projectId, $sourceAgentPoolName, $rootDirectory, $sinkGcsBucketName)
-{
+function posix_request(
+    string $projectId,
+    string $sourceAgentPoolName,
+    string $rootDirectory,
+    string $sinkGcsBucketName
+): void {
     // $project = 'my-project-id';
     // $sourceAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
     // $rootDirectory = '/directory/to/transfer/source';

@@ -33,8 +33,11 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
  * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  */
-function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
-{
+function quickstart(
+    string $projectId,
+    string $sourceGcsBucketName,
+    string $sinkGcsBucketName
+): void {
     // $project = 'my-project-id';
     // $sourceGcsBucketName = 'my-source-bucket';
     // $sinkGcsBucketName = 'my-sink-bucket';

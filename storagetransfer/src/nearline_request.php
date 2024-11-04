@@ -43,8 +43,13 @@ use Google\Type\TimeOfDay;
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  * @param string $startDate Date to start daily migration.
  */
-function nearline_request($projectId, $description, $sourceGcsBucketName, $sinkGcsBucketName, $startDate)
-{
+function nearline_request(
+    string $projectId,
+    string $description,
+    string $sourceGcsBucketName,
+    string $sinkGcsBucketName,
+    string $startDate
+): void {
     // $project = 'my-project-id';
     // $description = 'My transfer job';
     // $sourceGcsBucketName = 'my-source-bucket';

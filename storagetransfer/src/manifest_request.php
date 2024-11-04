@@ -38,8 +38,13 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  * @param string $manifestLocation Transfer manifest location. Must be a `gs:` URL.
  */
-function manifest_request($projectId, $sourceAgentPoolName, $rootDirectory, $sinkGcsBucketName, $manifestLocation)
-{
+function manifest_request(
+    string $projectId,
+    string $sourceAgentPoolName,
+    string $rootDirectory,
+    string $sinkGcsBucketName,
+    string $manifestLocation
+): void {
     // $project = 'my-project-id';
     // $sourceAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
     // $rootDirectory = '/directory/to/transfer/source';

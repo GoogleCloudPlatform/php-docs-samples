@@ -27,8 +27,10 @@ use Google\Cloud\StorageTransfer\V1\GetTransferJobRequest;
  * @param string $projectId Your Google Cloud project ID.
  * @param string $jobName Storage Transfer Service job name.
  */
-function check_latest_transfer_operation($projectId, $jobName)
-{
+function check_latest_transfer_operation(
+    string $projectId,
+    string $jobName
+): void {
     // $project = 'my-project-id';
     // $jobName = 'myJob/1234567890';
     $transferJob = new GetTransferJobRequest([
@@ -40,7 +42,7 @@ function check_latest_transfer_operation($projectId, $jobName)
     $request = $client->getTransferJob($transferJob);
     $latestOperationName = $request->getLatestOperationName();
 
-    if($latestOperationName){
+    if ($latestOperationName) {
         $transferOperation = $client->getOperationsClient()->getOperation($latestOperationName);
 
         $operation = $transferOperation->getMetadata();

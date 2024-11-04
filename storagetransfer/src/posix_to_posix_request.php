@@ -38,8 +38,14 @@ use Google\Cloud\StorageTransfer\V1\TransferSpec;
  * @param string $destinationDirectory The root directory path on the sink filesystem.
  * @param string $bucketName The ID of the GCS bucket for intermediate storage.
  */
-function posix_to_posix_request($projectId, $sourceAgentPoolName, $sinkAgentPoolName, $rootDirectory, $destinationDirectory, $bucketName)
-{
+function posix_to_posix_request(
+    string $projectId,
+    string $sourceAgentPoolName,
+    string $sinkAgentPoolName,
+    string $rootDirectory,
+    string $destinationDirectory,
+    string $bucketName
+): void {
     // $project = 'my-project-id';
     // $sourceAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
     // $sinkAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
