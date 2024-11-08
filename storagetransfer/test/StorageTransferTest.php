@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2024 Google Inc.
  *
@@ -18,6 +19,7 @@
 namespace Google\Cloud\Samples\StorageTransfer;
 
 use DateTime;
+use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
 use Google\Cloud\StorageTransfer\V1\GetGoogleServiceAccountRequest;
@@ -33,7 +35,10 @@ class StorageTransferTest extends TestCase
 
     private static $sts;
     private static $root;
+    private static $topic;
+    private static $pubsub;
     private static $storage;
+    private static $subscription;
     private static $sourceBucket;
     private static $sinkBucket;
     private static $sourceAgentPoolName;
@@ -41,6 +46,7 @@ class StorageTransferTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$root = sys_get_temp_dir();
+        self::$pubsub = new PubSubClient();
         self::checkProjectEnvVars();
         self::$storage = new StorageClient();
         self::$sts = new StorageTransferServiceClient();
@@ -55,18 +61,33 @@ class StorageTransferTest extends TestCase
 
         self::grantStsPermissions(self::$sourceBucket);
         self::grantStsPermissions(self::$sinkBucket);
+
+        self::$topic = self::$pubsub->createTopic(
+            sprintf('php-pubsub-sts-topic-%s', $uniqueBucketId)
+        );
+
+        self::$subscription = self::$topic->subscription(
+            sprintf('php-pubsub-sts-subscription-%s', $uniqueBucketId)
+        );
+        self::$subscription->create();
+
+        self::grantStsPubSubPermissions();
     }
 
     public static function tearDownAfterClass(): void
     {
         self::$sourceBucket->delete();
         self::$sinkBucket->delete();
+        self::$topic->delete();
+        self::$subscription->delete();
     }
 
     public function testQuickstart()
     {
         $output = $this->runFunctionSnippet('quickstart', [
-            self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
+            self::$projectId,
+            self::$sinkBucket->name(),
+            self::$sourceBucket->name()
         ]);
         $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
 
@@ -77,13 +98,16 @@ class StorageTransferTest extends TestCase
     public function testCheckLatestTransferOperation()
     {
         $transferData = $this->runFunctionSnippet('quickstart', [
-            self::$projectId, self::$sinkBucket->name(), self::$sourceBucket->name()
+            self::$projectId,
+            self::$sinkBucket->name(),
+            self::$sourceBucket->name()
         ]);
         preg_match('/transferJobs\/\d+/', $transferData, $match);
         $jobName = $match[0];
 
         $output = $this->runFunctionSnippet('check_latest_transfer_operation', [
-            self::$projectId, $jobName
+            self::$projectId,
+            $jobName
         ]);
 
         $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
@@ -99,7 +123,11 @@ class StorageTransferTest extends TestCase
         $startDate = $date->format('Y-m-d H:i:s');
 
         $output = $this->runFunctionSnippet('nearline_request', [
-            self::$projectId, $description, self::$sourceBucket->name(), self::$sinkBucket->name(), $startDate
+            self::$projectId,
+            $description,
+            self::$sourceBucket->name(),
+            self::$sinkBucket->name(),
+            $startDate
         ]);
 
         $this->assertMatchesRegularExpression('/Created and ran transfer job : transferJobs\/.*/', $output);
@@ -139,7 +167,11 @@ class StorageTransferTest extends TestCase
             $manifestLocation = sprintf('gs://%s/%s', self::$sinkBucket->name(), $manifestName);
 
             $output = $this->runFunctionSnippet('manifest_request', [
-                self::$projectId, self::$sourceAgentPoolName, $rootDirectory, self::$sinkBucket->name(), $manifestLocation
+                self::$projectId,
+                self::$sourceAgentPoolName,
+                $rootDirectory,
+                self::$sinkBucket->name(),
+                $manifestLocation
             ]);
 
             $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
@@ -166,7 +198,10 @@ class StorageTransferTest extends TestCase
             file_put_contents($tempFile, $testData);
 
             $output = $this->runFunctionSnippet('posix_request', [
-                self::$projectId, self::$sourceAgentPoolName, $rootDirectory, self::$sinkBucket->name()
+                self::$projectId,
+                self::$sourceAgentPoolName,
+                $rootDirectory,
+                self::$sinkBucket->name()
             ]);
 
             $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
@@ -197,7 +232,12 @@ class StorageTransferTest extends TestCase
             file_put_contents($tempFile, $testData);
 
             $output = $this->runFunctionSnippet('posix_to_posix_request', [
-                self::$projectId, self::$sourceAgentPoolName, $sinkAgentPoolName, $rootDirectory, $destinationDirectory, self::$sinkBucket->name()
+                self::$projectId,
+                self::$sourceAgentPoolName,
+                $sinkAgentPoolName,
+                $rootDirectory,
+                $destinationDirectory,
+                self::$sinkBucket->name()
             ]);
 
             $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
@@ -232,7 +272,11 @@ class StorageTransferTest extends TestCase
             );
 
             $output = $this->runFunctionSnippet('posix_download', [
-                self::$projectId, $sinkAgentPoolName, self::$sourceBucket->name(), $gcsSourcePath, $rootDirectory
+                self::$projectId,
+                $sinkAgentPoolName,
+                self::$sourceBucket->name(),
+                $gcsSourcePath,
+                $rootDirectory
             ]);
 
             $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
@@ -240,6 +284,23 @@ class StorageTransferTest extends TestCase
             unlink($tempFile);
             rmdir($rootDirectory);
             self::$sourceBucket->object($tempFileName)->delete();
+            preg_match('/transferJobs\/\w+/', $output, $match);
+            self::deleteTransferJob($match[0]);
+        }
+    }
+
+    public function testEventDrivenGCSRequest()
+    {
+        try {
+            $output = $this->runFunctionSnippet('event_driven_gcs_transfer', [
+                self::$projectId,
+                self::$sourceBucket->name(),
+                self::$sinkBucket->name(),
+                self::$subscription->name()
+            ]);
+
+            $this->assertMatchesRegularExpression('/transferJobs\/.*/', $output);
+        } finally {
             preg_match('/transferJobs\/\w+/', $output, $match);
             self::deleteTransferJob($match[0]);
         }
@@ -279,5 +340,28 @@ class StorageTransferTest extends TestCase
         );
 
         $bucket->iam()->setPolicy($policy);
+    }
+
+    private static function grantStsPubSubPermissions()
+    {
+        $request2 = (new GetGoogleServiceAccountRequest())
+            ->setProjectId(self::$projectId);
+        $googleServiceAccount = self::$sts->getGoogleServiceAccount($request2);
+        $email = $googleServiceAccount->getAccountEmail();
+        $members = ['serviceAccount:' . $email];
+
+        $topicPolicy = self::$topic->iam()->policy();
+        $topicPolicy['bindings'][] = [
+            'role' => 'roles/pubsub.publisher',
+            'members' => $members
+        ];
+        self::$topic->iam()->setPolicy($topicPolicy);
+
+        $subscriptionPolicy = self::$subscription->iam()->policy();
+        $subscriptionPolicy['bindings'][] = [
+            'role' => 'roles/pubsub.subscriber',
+            'members' => $members
+        ];
+        self::$subscription->iam()->setPolicy($subscriptionPolicy);
     }
 }

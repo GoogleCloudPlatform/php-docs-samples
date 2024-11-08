@@ -4,6 +4,7 @@
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
-        "google/cloud-storage": "^1.20.1"
+        "google/cloud-storage": "^1.20.1",
+        "google/cloud-pubsub": "^2.0"
     }
 }
