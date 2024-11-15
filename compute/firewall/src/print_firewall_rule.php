@@ -54,7 +54,7 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
     printf('Self Link: %s' . PHP_EOL, $response->getSelfLink());
     printf('Logging Enabled: %s' . PHP_EOL, var_export($response->getLogConfig()->getEnable(), true));
     print('--Allowed--' . PHP_EOL);
-    foreach ($response->getAllowed()as $item) {
+    foreach ($response->getAllowed() as $item) {
         printf('Protocol: %s' . PHP_EOL, $item->getIPProtocol());
         foreach ($item->getPorts() as $ports) {
             printf(' - Ports: %s' . PHP_EOL, $ports);
