@@ -24,7 +24,6 @@
 namespace Google\Cloud\Samples\Auth;
 
 use Google\ApiCore\ApiException;
-use Google\ApiCore\InsecureCredentialsWrapper;
 use Google\ApiCore\PagedListResponse;
 use Google\Cloud\Vision\V1\Client\ProductSearchClient;
 use Google\Cloud\Vision\V1\ListProductsRequest;
