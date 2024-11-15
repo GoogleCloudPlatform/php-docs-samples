@@ -20,7 +20,7 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
-# [START auth_cloud_apikey]
+# [START apikeys_authenticate_api_key]
 namespace Google\Cloud\Samples\Auth;
 
 use Google\ApiCore\ApiException;
@@ -64,7 +64,7 @@ function auth_cloud_apikey(string $projectId, string $location, string $apiKey):
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
     }
 }
-# [END auth_cloud_apikey]
+# [END apikeys_authenticate_api_key]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
