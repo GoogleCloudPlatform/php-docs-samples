@@ -24,6 +24,7 @@
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /storage/                 @GoogleCloudPlatform/cloud-storage-dpe @GoogleCloudPlatform/php-samples-reviewers
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
+/secretmanager/           @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
 
 # Serverless, Orchestration, DevOps
 
