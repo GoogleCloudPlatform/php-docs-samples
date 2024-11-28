@@ -49,10 +49,10 @@ class IntegrationTest extends TestCase
                     'type' => 'google.firebase.remoteconfig.v1.updated',
                     'data' => [
                         // eventDim is a list of dictionaries
-                        'eventDim' => array([
+                        'eventDim' => [[
                             'name' => 'test_event',
                             'timestampMicros' => time() * 1000,
-                        ]),
+                        ]],
                         'userDim' => [
                             'geoInfo' => [
                                 'city' => 'San Francisco',
