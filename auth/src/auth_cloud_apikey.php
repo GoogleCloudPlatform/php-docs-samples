@@ -20,11 +20,10 @@
  * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/auth/README.md
  */
 
-# [START auth_cloud_apikey]
+# [START apikeys_authenticate_api_key]
 namespace Google\Cloud\Samples\Auth;
 
 use Google\ApiCore\ApiException;
-use Google\ApiCore\InsecureCredentialsWrapper;
 use Google\ApiCore\PagedListResponse;
 use Google\Cloud\Vision\V1\Client\ProductSearchClient;
 use Google\Cloud\Vision\V1\ListProductsRequest;
@@ -44,8 +43,7 @@ function auth_cloud_apikey(string $projectId, string $location, string $apiKey):
 
     // Create a client.
     $productSearchClient = new ProductSearchClient([
-        // STEP 1: Use an insecure credentials wrapper to bypass the application default credentials.
-        'credentials' => new InsecureCredentialsWrapper(),
+        'apiKey' => $apiKey,
     ]);
 
     // Prepare the request message.
@@ -55,10 +53,7 @@ function auth_cloud_apikey(string $projectId, string $location, string $apiKey):
     // Call the API and handle any network failures.
     try {
         /** @var PagedListResponse $response */
-        $response = $productSearchClient->listProducts($request, [
-            // STEP 2: Pass in the API key with each RPC call as a "Call Option"
-            'headers' => ['x-goog-api-key' => [$apiKey]],
-        ]);
+        $response = $productSearchClient->listProducts($request);
 
         /** @var Product $element */
         foreach ($response as $element) {
@@ -68,7 +63,7 @@ function auth_cloud_apikey(string $projectId, string $location, string $apiKey):
         printf('Call failed with message: %s' . PHP_EOL, $ex->getMessage());
     }
 }
-# [END auth_cloud_apikey]
+# [END apikeys_authenticate_api_key]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
