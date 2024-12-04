@@ -36,7 +36,7 @@ use Google\Cloud\SecretManager\V1\ListSecretsRequest;
  */
 function list_regional_secrets(string $projectId, string $locationId): void
 {
-    # Specify regional endpoint.
+    // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
     // Create the Secret Manager client.

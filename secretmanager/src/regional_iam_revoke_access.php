@@ -39,7 +39,7 @@ use Google\Cloud\Iam\V1\SetIamPolicyRequest;
  */
 function regional_iam_revoke_access(string $projectId, string $locationId, string $secretId, string $member): void
 {
-    # Specify regional endpoint.
+    // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
     // Create the Secret Manager client.

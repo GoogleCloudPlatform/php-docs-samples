@@ -38,7 +38,7 @@ use Google\Cloud\SecretManager\V1\SecretPayload;
  */
 function add_regional_secret_version(string $projectId, string $locationId, string $secretId): void
 {
-    # Specify regional endpoint.
+    // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
     // Create the Secret Manager client.

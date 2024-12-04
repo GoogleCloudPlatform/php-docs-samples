@@ -37,7 +37,7 @@ use Google\Cloud\SecretManager\V1\ListSecretVersionsRequest;
  */
 function list_regional_secret_versions(string $projectId, string $locationId, string $secretId): void
 {
-    # Specify regional endpoint.
+    // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
     // Create the Secret Manager client.

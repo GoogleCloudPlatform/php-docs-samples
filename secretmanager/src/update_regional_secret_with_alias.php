@@ -39,7 +39,7 @@ use Google\Protobuf\FieldMask;
  */
 function update_regional_secret_with_alias(string $projectId, string $locationId, string $secretId): void
 {
-    # Specify regional endpoint.
+    // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
     // Create the Secret Manager client.
