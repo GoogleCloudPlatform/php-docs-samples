@@ -57,8 +57,8 @@ function create_backup_schedule(
     $databaseFullName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
     printf('%s', $databaseFullName);
 
-    $encryptionConfig = ( new CreateBackupEncryptionConfig() )
-        -> setEncryptionType(EncryptionType::USE_DATABASE_ENCRYPTION);
+    $encryptionConfig = (new CreateBackupEncryptionConfig())
+        ->setEncryptionType(EncryptionType::USE_DATABASE_ENCRYPTION);
     $backupSchedule = new BackupSchedule([
         'full_backup_spec' => new FullBackupSpec(),
         'retention_duration' => (new Duration())
@@ -78,11 +78,10 @@ function create_backup_schedule(
 
     $operation = $databaseAdminClient->createBackupSchedule($request);
 
-    printf('Created backup scehedule %s'  . PHP_EOL, $operation->getName());
+    printf('Created backup scehedule %s' . PHP_EOL, $operation->getName());
 }
 // [END spanner_create_backup_schedule]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
-

@@ -49,11 +49,12 @@ function delete_backup_schedule(
     $databaseAdminClient = new DatabaseAdminClient();
 
     $backupScheduleName = sprintf(
-        'projects/%s/instances/%s/databases/%s/backupSchedules/%s', 
+        'projects/%s/instances/%s/databases/%s/backupSchedules/%s',
         $projectId,
         $instanceId,
         $databaseId,
-        $backupScheduleId);
+        $backupScheduleId
+    );
     $request = new DeleteBackupScheduleRequest([
         'name' => strval($backupScheduleName),
     ]);

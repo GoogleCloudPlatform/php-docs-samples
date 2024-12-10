@@ -53,7 +53,7 @@ function list_backup_schedules(
     $operation = $databaseAdminClient->listBackupSchedules($request);
 
     printf("Backup schedules for database %s" . PHP_EOL, $databaseFullName);
-    foreach($operation as $schedule) {
+    foreach ($operation as $schedule) {
         printf("Backup schedule: %s" . PHP_EOL, $schedule->getName());
     }
 }
@@ -62,4 +62,3 @@ function list_backup_schedules(
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
-
