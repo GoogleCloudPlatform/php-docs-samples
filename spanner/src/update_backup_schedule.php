@@ -60,11 +60,12 @@ function update_backup_schedule(
         'encryption_type' => EncryptionType::USE_DATABASE_ENCRYPTION,
     ]);
     $backupScheduleName = sprintf(
-        'projects/%s/instances/%s/databases/%s/backupSchedules/%s', 
+        'projects/%s/instances/%s/databases/%s/backupSchedules/%s',
         $projectId,
         $instanceId,
         $databaseId,
-        $backupScheduleId);
+        $backupScheduleId
+    );
     $backupSchedule = new BackupSchedule([
         'name' => $backupScheduleName,
         'full_backup_spec' => new FullBackupSpec(),
@@ -82,7 +83,7 @@ function update_backup_schedule(
             'retention_duration',
             'spec.cron_spec.text',
             'encryption_config',
-    ]);
+        ]);
 
     $request = new UpdateBackupScheduleRequest([
         'backup_schedule' => $backupSchedule,
@@ -91,11 +92,10 @@ function update_backup_schedule(
 
     $operation = $databaseAdminClient->updateBackupSchedule($request);
 
-    printf('Updated backup scehedule %s'  . PHP_EOL, $operation->getName());
+    printf('Updated backup scehedule %s' . PHP_EOL, $operation->getName());
 }
 // [END spanner_update_backup_schedule]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
 \Google\Cloud\Samples\execute_sample(__FILE__, __NAMESPACE__, $argv);
-
