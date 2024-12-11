@@ -52,9 +52,9 @@ function list_backup_schedules(
     ]);
     $operation = $databaseAdminClient->listBackupSchedules($request);
 
-    printf("Backup schedules for database %s" . PHP_EOL, $databaseFullName);
+    printf('Backup schedules for database %s' . PHP_EOL, $databaseFullName);
     foreach ($operation as $schedule) {
-        printf("Backup schedule: %s" . PHP_EOL, $schedule->getName());
+        printf('Backup schedule: %s' . PHP_EOL, $schedule->getName());
     }
 }
 // [END spanner_list_backup_schedules]
