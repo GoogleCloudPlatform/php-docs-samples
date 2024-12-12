@@ -59,9 +59,9 @@ function get_backup_schedule(
         'name' => $backupScheduleName,
     ]);
 
-    $operation = $databaseAdminClient->getBackupSchedule($request);
+    $backup_schedule = $databaseAdminClient->getBackupSchedule($request);
 
-    printf('Fetched backup scehedule %s' . PHP_EOL, $operation->getName());
+    printf('Fetched backup scehedule %s' . PHP_EOL, $backup_schedule->getName());
 }
 // [END spanner_get_backup_schedule]
 

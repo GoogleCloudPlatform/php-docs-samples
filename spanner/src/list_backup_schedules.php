@@ -50,10 +50,10 @@ function list_backup_schedules(
     $request = new ListBackupSchedulesRequest([
         'parent' => $databaseFullName,
     ]);
-    $operation = $databaseAdminClient->listBackupSchedules($request);
+    $backup_schedules = $databaseAdminClient->listBackupSchedules($request);
 
     printf('Backup schedules for database %s' . PHP_EOL, $databaseFullName);
-    foreach ($operation as $schedule) {
+    foreach ($backup_schedules as $schedule) {
         printf('Backup schedule: %s' . PHP_EOL, $schedule->getName());
     }
 }

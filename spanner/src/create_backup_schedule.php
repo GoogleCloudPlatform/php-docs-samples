@@ -76,9 +76,9 @@ function create_backup_schedule(
         'backup_schedule' => $backupSchedule,
     ]);
 
-    $operation = $databaseAdminClient->createBackupSchedule($request);
+    $created_backup_schedule = $databaseAdminClient->createBackupSchedule($request);
 
-    printf('Created backup scehedule %s' . PHP_EOL, $operation->getName());
+    printf('Created backup scehedule %s' . PHP_EOL, $created_backup_schedule->getName());
 }
 // [END spanner_create_backup_schedule]
 

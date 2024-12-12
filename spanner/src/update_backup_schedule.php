@@ -90,9 +90,9 @@ function update_backup_schedule(
         'update_mask' => $fieldMask,
     ]);
 
-    $operation = $databaseAdminClient->updateBackupSchedule($request);
+    $updated_backup_schedule = $databaseAdminClient->updateBackupSchedule($request);
 
-    printf('Updated backup scehedule %s' . PHP_EOL, $operation->getName());
+    printf('Updated backup scehedule %s' . PHP_EOL, $updated_backup_schedule->getName());
 }
 // [END spanner_update_backup_schedule]
 
