@@ -36,8 +36,12 @@ use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
  * @param string $versionId Your version ID (e.g. 'latest' or '5');
  */
-function disable_regional_secret_version(string $projectId, string $locationId, string $secretId, string $versionId): void
-{
+function disable_regional_secret_version(
+    string $projectId,
+    string $locationId,
+    string $secretId,
+    string $versionId
+): void {
     // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
 
