@@ -59,7 +59,7 @@ function nearline_request(
     $dateTime = new DateTime($startDate);
     $date = new Date([
         'year' => $dateTime->format('Y'),
-        'month' => $dateTime->format('m') + 1,
+        'month' => $dateTime->format('m'),
         'day' => $dateTime->format('d'),
     ]);
 

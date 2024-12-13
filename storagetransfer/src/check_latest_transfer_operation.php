@@ -43,9 +43,8 @@ function check_latest_transfer_operation(
     $latestOperationName = $request->getLatestOperationName();
 
     if ($latestOperationName) {
-        $transferOperation = $client->getOperationsClient()->getOperation($latestOperationName);
-
-        $operation = $transferOperation->getMetadata();
+        $transferOperation = $client->resumeOperation($latestOperationName);
+        $operation = $transferOperation->getLastProtoResponse();
 
         printf('Latest transfer operation for %s is: %s ' . PHP_EOL, $jobName, $operation->serializeToJsonString());
     } else {
