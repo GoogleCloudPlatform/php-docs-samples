@@ -1,9 +1,10 @@
 {
     "require": {
-        "google/cloud-storage-transfer": "^1.4",
+        "google/cloud-storage-transfer": "^2.0",
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
-        "google/cloud-storage": "^1.20.1"
+        "google/cloud-storage": "^1.20.1",
+        "google/cloud-pubsub": "^2.0"
     }
 }

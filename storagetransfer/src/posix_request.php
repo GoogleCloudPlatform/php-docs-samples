@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +17,41 @@
 
 namespace Google\Cloud\Samples\StorageTransfer;
 
-# [START storagetransfer_quickstart]
+# [START storagetransfer_transfer_from_posix]
+
 use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
 use Google\Cloud\StorageTransfer\V1\CreateTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\GcsData;
+use Google\Cloud\StorageTransfer\V1\PosixFilesystem;
 use Google\Cloud\StorageTransfer\V1\RunTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
 use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
 use Google\Cloud\StorageTransfer\V1\TransferSpec;
 
 /**
- * Creates and runs a transfer job between two GCS buckets
+ * Creates and runs a transfer from the local file system to the sink bucket
  *
  * @param string $projectId Your Google Cloud project ID.
- * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
+ * @param string $sourceAgentPoolName The agent pool associated with the POSIX data source.
+ * @param string $rootDirectory The root directory path on the source filesystem.
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  */
-function quickstart(
+function posix_request(
     string $projectId,
-    string $sourceGcsBucketName,
+    string $sourceAgentPoolName,
+    string $rootDirectory,
     string $sinkGcsBucketName
 ): void {
     // $project = 'my-project-id';
-    // $sourceGcsBucketName = 'my-source-bucket';
+    // $sourceAgentPoolName = 'projects/my-project/agentPools/transfer_service_default';
+    // $rootDirectory = '/directory/to/transfer/source';
     // $sinkGcsBucketName = 'my-sink-bucket';
     $transferJob = new TransferJob([
         'project_id' => $projectId,
         'transfer_spec' => new TransferSpec([
-            'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName]),
-            'gcs_data_source' => new GcsData(['bucket_name' => $sourceGcsBucketName])
+            'source_agent_pool_name' => $sourceAgentPoolName,
+            'posix_data_source' => new PosixFilesystem(['root_directory' => $rootDirectory]),
+            'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName])
         ]),
         'status' => Status::ENABLED
     ]);
@@ -59,9 +65,9 @@ function quickstart(
         ->setProjectId($projectId);
     $client->runTransferJob($runRequest);
 
-    printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $sourceGcsBucketName, $sinkGcsBucketName, $response->getName());
+    printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $rootDirectory, $sinkGcsBucketName, $response->getName());
 }
-# [END storagetransfer_quickstart]
+# [END storagetransfer_transfer_from_posix]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
