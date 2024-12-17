@@ -54,16 +54,13 @@ class spannerBackupScheduleTest extends TestCase
         if (!extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if ('true' !== getenv('GOOGLE_SPANNER_RUN_BACKUP_SCHEDULE_TESTS')) {
-            self::markTestSkipped('Skipping backup schedule tests.');
-        }
         self::$instanceId = self::requireEnv('GOOGLE_SPANNER_INSTANCE_ID');
 
         $spanner = new SpannerClient([
             'projectId' => self::$projectId,
         ]);
 
-        self::$databaseId = 'your-database-id';
+        self::$databaseId = self::requireEnv('GOOGLE_SPANNER_DATABASE_ID');
         self::$backupScheduleId = 'backup-schedule-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
     }
