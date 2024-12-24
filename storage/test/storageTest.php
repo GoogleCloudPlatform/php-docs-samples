@@ -147,6 +147,12 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Bucket:', $output);
     }
 
+    public function testListSoftDeletedBuckets()
+    {
+        $output = $this->runFunctionSnippet('list_soft_deleted_buckets');
+        $this->assertStringContainsString('Bucket:', $output);
+    }
+
     public function testCreateGetDeleteBuckets()
     {
         $bucketName = sprintf('test-bucket-%s-%s', time(), rand());
@@ -934,6 +940,46 @@ class storageTest extends TestCase
         );
         $this->assertStringContainsString(
             sprintf('Autoclass terminal storage class is set to %s', 'ARCHIVE'),
+            $output
+        );
+    }
+
+    public function testGetRestoreSoftDeletedBucket()
+    {
+        $bucketName = sprintf('test-soft-deleted-bucket-%s-%s', time(), rand());
+        $bucket = self::$storage->createBucket($bucketName);
+
+        $this->assertTrue($bucket->exists());
+        $generation = $bucket->info()['generation'];
+        $bucket->delete();
+
+        $this->assertFalse($bucket->exists());
+
+        $info = $bucket->reload(['softDeleted' => true, 'generation' => $generation]);
+        $output = self::runFunctionSnippet('get_soft_deleted_bucket', [
+            $bucketName,
+            $generation
+        ]);
+        $outputString = <<<EOF
+        Bucket: {$bucketName}
+        Generation: {$info['generation']}
+        SoftDeleteTime: {$info['softDeleteTime']}
+        HardDeleteTime: {$info['hardDeleteTime']}
+
+        EOF;
+        $this->assertEquals($outputString, $output);
+
+        $output = self::runFunctionSnippet('restore_soft_deleted_bucket', [
+            $bucketName,
+            $generation
+        ]);
+
+        $this->assertTrue($bucket->exists());
+        $this->assertEquals(
+            sprintf(
+                'Soft deleted bucket %s was restored.' . PHP_EOL,
+                $bucketName
+            ),
             $output
         );
     }
