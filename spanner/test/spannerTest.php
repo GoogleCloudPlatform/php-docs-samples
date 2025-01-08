@@ -62,6 +62,9 @@ class spannerTest extends TestCase
     /** @var string encryptedDatabaseId */
     protected static $encryptedDatabaseId;
 
+    /** @var string $encryptedMrCmekDatabaseId */
+    protected static $encryptedMrCmekDatabaseId;
+
     /** @var string backupId */
     protected static $backupId;
 
@@ -88,6 +91,12 @@ class spannerTest extends TestCase
 
     /** @var string kmsKeyName */
     protected static $kmsKeyName;
+
+    /** @var string kmsKeyName2 */
+    protected static $kmsKeyName2;
+
+    /** @var string kmsKeyName3 */
+    protected static $kmsKeyName3;
 
     /**
      * Low cost instance with less than 1000 processing units.
@@ -133,10 +142,15 @@ class spannerTest extends TestCase
         self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedMrCmekDatabaseId = 'mr-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
             'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        self::$kmsKeyName2 =
+            'projects/' . self::$projectId . '/locations/us-east1/keyRings/spanner-test-keyring2/cryptoKeys/spanner-test-cmek2';
+        self::$kmsKeyName3 =
+            'projects/' . self::$projectId . '/locations/us-east4/keyRings/spanner-test-keyring3/cryptoKeys/spanner-test-cmek3';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
         self::$multiInstanceId = 'kokoro-multi-instance';
@@ -294,6 +308,36 @@ class spannerTest extends TestCase
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database en-test-', $output);
+    }
+
+    public function testCreateDatabaseWithMrCmek()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
+        $output = $this->runAdminFunctionSnippet('create_database_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
+            self::$encryptedMrCmekDatabaseId,
+            $kmsKeyNames,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database mr-test-', $output);
     }
 
     /**

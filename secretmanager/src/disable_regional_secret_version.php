@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2022 Google LLC.
+ * Copyright 2024 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,52 +25,42 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
+// [START secretmanager_disable_regional_secret_version]
 // Import the Secret Manager client library.
-use Google\Cloud\SecretManager\V1\CreateSecretRequest;
-use Google\Cloud\SecretManager\V1\Replication;
-use Google\Cloud\SecretManager\V1\Replication\UserManaged;
-use Google\Cloud\SecretManager\V1\Replication\UserManaged\Replica;
-use Google\Cloud\SecretManager\V1\Secret;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
 
 /**
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $locationId Your secret Location (e.g. "us-central1")
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
- * @param array  $locations Replication locations (e.g. array('us-east1', 'us-east4'))
+ * @param string $versionId Your version ID (e.g. 'latest' or '5');
  */
-function create_secret_with_user_managed_replication(
+function disable_regional_secret_version(
     string $projectId,
+    string $locationId,
     string $secretId,
-    array $locations
+    string $versionId
 ): void {
+    // Specify regional endpoint.
+    $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];
+
     // Create the Secret Manager client.
-    $client = new SecretManagerServiceClient();
+    $client = new SecretManagerServiceClient($options);
 
-    // Build the resource name of the parent project.
-    $parent = $client->projectName($projectId);
-
-    $replicas = [];
-    foreach ($locations as $location) {
-        $replicas[] = new Replica(['location' => $location]);
-    }
-
-    $secret = new Secret([
-        'replication' => new Replication([
-            'user_managed' => new UserManaged([
-                'replicas' => $replicas
-            ]),
-        ]),
-    ]);
+    // Build the resource name of the secret version.
+    $name = $client->projectLocationSecretSecretVersionName($projectId, $locationId, $secretId, $versionId);
 
     // Build the request.
-    $request = CreateSecretRequest::build($parent, $secretId, $secret);
+    $request = DisableSecretVersionRequest::build($name);
 
-    // Create the secret.
-    $newSecret = $client->createSecret($request);
+    // Disable the secret version.
+    $response = $client->disableSecretVersion($request);
 
-    // Print the new secret name.
-    printf('Created secret: %s', $newSecret->getName());
+    // Print a success message.
+    printf('Disabled secret version: %s', $response->getName());
 }
+// [END secretmanager_disable_regional_secret_version]
 
 // The following 2 lines are only needed to execute the samples on the CLI
 require_once __DIR__ . '/../../testing/sample_helpers.php';
