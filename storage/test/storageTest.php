@@ -565,6 +565,7 @@ class storageTest extends TestCase
             $output,
         );
     }
+
     public function testBucketVersioning()
     {
         $output = self::runFunctionSnippet('enable_versioning', [
