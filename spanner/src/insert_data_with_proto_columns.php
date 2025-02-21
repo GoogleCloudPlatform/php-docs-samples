@@ -25,6 +25,7 @@ namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_insert_data_with_proto_columns]
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Proto;
 use Testing\Data\User;
 use Testing\Data\Book;
 
@@ -45,7 +46,7 @@ use Testing\Data\Book;
 function insert_data_with_proto_columns(
     string $instanceId,
     string $databaseId,
-    int $userId,
+    int $userId = 1,
 ): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
@@ -57,9 +58,17 @@ function insert_data_with_proto_columns(
     $address->setState('CA');
     $user->setAddress($address);
 
+    $book1 = new Book(['title' => 'Book 1', 'author' => 'Author 1']);
+    $book2 = new Book(['title' => 'Book 2', 'author' => 'Author 2']);
+
     $books = [
-        new Book(['title' => 'Book 1', 'author' => 'Author 1']),
-        new Book(['title' => 'Book 2', 'author' => 'Author 2']),
+        // insert using the proto message
+        $book1,
+        // insert using the Proto wrapper class
+        new Proto(
+            base64_encode($book2->serializeToString()),
+            'testing.data.Book'
+        ),
     ];
 
     $transaction = $database->transaction(['singleUse' => true])

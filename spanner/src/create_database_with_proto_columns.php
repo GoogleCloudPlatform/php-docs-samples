@@ -38,8 +38,11 @@ use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_database_with_proto_columns(string $projectId, string $instanceId, string $databaseId): void
-{
+function create_database_with_proto_columns(
+    string $projectId,
+    string $instanceId,
+    string $databaseId
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
 

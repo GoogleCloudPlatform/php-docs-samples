@@ -24,6 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Proto;
 use Testing\Data\User;
 use Testing\Data\Book;
 
@@ -31,39 +32,46 @@ use Testing\Data\Book;
  * Queries sample data from the database using proto columns.
  * Example:
  * ```
- * query_data_with_proto_columns($instanceId, $databaseId);
+ * query_data_with_proto_columns($instanceId, $databaseId, $userId);
  * ```
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
+ * @param int $userId The ID of the user to query.
  */
-function query_data_with_proto_columns(string $instanceId, string $databaseId): void
-{
+function query_data_with_proto_columns(
+    string $instanceId,
+    string $databaseId,
+    int $userId = 1
+): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // this ensures that the User class has been loaded into the descriptor pool
-    \GPBMetadata\Data\User::initOnce();
-
-    $nameValue = 'TestUser 3';
     // [START spanner_query_data_with_proto_columns]
+    $userProto = (new User())
+        ->setName('Test User ' . $userId);
+
     $results = $database->execute(
-        'SELECT * FROM Users '
-        . 'WHERE User.name = @name',
+        'SELECT * FROM Users, UNNEST(Books) as Book '
+        . 'WHERE User.name = @user.name '
+        . 'AND Book.title = @bookTitle',
         [
             'parameters' => [
-                'name' => $nameValue
+                'user' => $userProto,
+                'bookTitle' => 'Book 1',
             ],
         ]
     );
     foreach ($results as $row) {
         /** @var User $user */
-        $user = $row['User'];
+        $user = $row['User']->get();
+        // Print the decoded Protobuf message as JSON
         printf('User: %s' . PHP_EOL, $user->serializeToJsonString());
-        /** @var Book $book */
+        /** @var Proto<Book> $book */
         foreach ($row['Books'] ?? [] as $book) {
-            printf('Book: %s' . PHP_EOL, $book->serializeToJsonString());
+            // Print the raw row value
+            printf('Book: %s' . PHP_EOL, $book->getValue());
         }
     }
     // [END spanner_query_data_with_proto_columns]
