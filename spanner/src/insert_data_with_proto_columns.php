@@ -49,14 +49,14 @@ function insert_data_with_proto_columns(
     int $userId = 1,
 ): void {
     $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-    $user = new User();
-    $user->setName('Test User ' . $userId);
-    $address = new User\Address();
-    $address->setCity('San Francisco');
-    $address->setState('CA');
-    $user->setAddress($address);
+    $database = $spanner->instance($instanceId)->database($databaseId);
+
+    $address = (new User\Address())
+        ->setCity('San Francisco')
+        ->setState('CA');
+    $user = (new User())
+        ->setName('Test User ' . $userId)
+        ->setAddress($address);
 
     $book1 = new Book(['title' => 'Book 1', 'author' => 'Author 1']);
     $book2 = new Book(['title' => 'Book 2', 'author' => 'Author 2']);

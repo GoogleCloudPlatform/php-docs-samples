@@ -44,11 +44,10 @@ function query_data_with_proto_columns(
     string $databaseId,
     int $userId = 1
 ): void {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-
     // [START spanner_query_data_with_proto_columns]
+    $spanner = new SpannerClient();
+    $database = $spanner->instance($instanceId)->database($databaseId);
+
     $userProto = (new User())
         ->setName('Test User ' . $userId);
 
@@ -71,7 +70,7 @@ function query_data_with_proto_columns(
         /** @var Proto<Book> $book */
         foreach ($row['Books'] ?? [] as $book) {
             // Print the raw row value
-            printf('Book: %s' . PHP_EOL, $book->getValue());
+            printf('Book: %s (%s)' . PHP_EOL, $book->getValue(), $book->getProtoTypeFqn());
         }
     }
     // [END spanner_query_data_with_proto_columns]

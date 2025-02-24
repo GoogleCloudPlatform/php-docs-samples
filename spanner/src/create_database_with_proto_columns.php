@@ -43,6 +43,9 @@ function create_database_with_proto_columns(
     string $instanceId,
     string $databaseId
 ): void {
+    // The result of running `protoc` with `--descriptor_set_out` on your proto file(s)
+    $fileDescriptorSet = file_get_contents('data/user.pb');
+
     $databaseAdminClient = new DatabaseAdminClient();
     $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
 
@@ -50,7 +53,7 @@ function create_database_with_proto_columns(
         new CreateDatabaseRequest([
             'parent' => $instance,
             'create_statement' => sprintf('CREATE DATABASE `%s`', $databaseId),
-            'proto_descriptors' => file_get_contents('data/user.pb'),
+            'proto_descriptors' => $fileDescriptorSet,
             'extra_statements' => [
                 'CREATE PROTO BUNDLE (' .
                     'testing.data.User,' .
@@ -69,8 +72,7 @@ function create_database_with_proto_columns(
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    printf('Created database %s on instance %s' . PHP_EOL, $databaseId, $instanceId);
 }
 // [END spanner_create_database_with_proto_columns]
 
