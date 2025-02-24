@@ -867,6 +867,7 @@ class storageTest extends TestCase
             $output
         );
         $this->assertTrue($info['hierarchicalNamespace']['enabled']);
+        $this->runFunctionSnippet('delete_bucket', [$bucketName]);
     }
 
     public function testObjectCsekToCmek()
@@ -948,7 +949,11 @@ class storageTest extends TestCase
     public function testGetRestoreSoftDeletedBucket()
     {
         $bucketName = sprintf('test-soft-deleted-bucket-%s-%s', time(), rand());
-        $bucket = self::$storage->createBucket($bucketName);
+        $bucket = self::$storage->createBucket($bucketName, [
+            'softDeletePolicy' => [
+                'retentionDuration' => 604800,
+            ],
+        ]);
 
         $this->assertTrue($bucket->exists());
         $generation = $bucket->info()['generation'];
@@ -983,6 +988,7 @@ class storageTest extends TestCase
             ),
             $output
         );
+        $this->runFunctionSnippet('delete_bucket', [$bucketName]);
     }
 
     public function testSetBucketWithAutoclass()
