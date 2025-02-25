@@ -960,7 +960,7 @@ class storageTest extends TestCase
         $softDeletedBucket = self::$storage->bucket($bucketName);
         $options = ['softDeleted' => true, 'generation' => $generation];
         $info = $softDeletedBucket->info($options);
-        
+
         $output = self::runFunctionSnippet('get_soft_deleted_bucket', [
             $bucketName,
             $generation
