@@ -949,11 +949,7 @@ class storageTest extends TestCase
     public function testGetRestoreSoftDeletedBucket()
     {
         $bucketName = sprintf('test-soft-deleted-bucket-%s-%s', time(), rand());
-        $bucket = self::$storage->createBucket($bucketName, [
-            'softDeletePolicy' => [
-                'retentionDuration' => 604800,
-            ],
-        ]);
+        $bucket = self::$storage->createBucket($bucketName);
 
         $this->assertTrue($bucket->exists());
         $generation = $bucket->info()['generation'];
@@ -961,7 +957,10 @@ class storageTest extends TestCase
 
         $this->assertFalse($bucket->exists());
 
-        $info = $bucket->reload(['softDeleted' => true, 'generation' => $generation]);
+        $softDeletedBucket = self::$storage->bucket($bucketName);
+        $options = ['softDeleted' => true, 'generation' => $generation];
+        $info = $softDeletedBucket->info($options);
+        
         $output = self::runFunctionSnippet('get_soft_deleted_bucket', [
             $bucketName,
             $generation
