@@ -25,10 +25,7 @@ namespace Google\Cloud\Samples\Spanner;
 
 use Google\Cloud\Spanner\SpannerClient;
 use Google\Cloud\Spanner\Database;
-use Google\Cloud\Spanner\Proto;
 use Google\Cloud\Spanner\StructType;
-use Google\Cloud\Spanner\StructValue;
-use Testing\Data\User;
 use Testing\Data\Book;
 
 /**
@@ -40,12 +37,10 @@ use Testing\Data\Book;
  *
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
- * @param int $userId The ID of the user to query.
  */
 function query_data_with_struct_proto_columns(
     string $instanceId,
     string $databaseId,
-    int $userId = 1
 ): void {
     // [START spanner_query_data_with_struct_proto_columns]
     $spanner = new SpannerClient();
