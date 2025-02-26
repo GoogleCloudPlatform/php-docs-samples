@@ -19,9 +19,9 @@ class Book extends \Google\Protobuf\Internal\Message
      */
     protected $title = '';
     /**
-     * Generated from protobuf field <code>string author = 2;</code>
+     * Generated from protobuf field <code>.testing.data.User author = 2;</code>
      */
-    protected $author = '';
+    protected $author = null;
 
     /**
      * Constructor.
@@ -30,7 +30,7 @@ class Book extends \Google\Protobuf\Internal\Message
      *     Optional. Data for populating the Message object.
      *
      *     @type string $title
-     *     @type string $author
+     *     @type \Testing\Data\User $author
      * }
      */
     public function __construct($data = NULL) {
@@ -61,22 +61,32 @@ class Book extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string author = 2;</code>
-     * @return string
+     * Generated from protobuf field <code>.testing.data.User author = 2;</code>
+     * @return \Testing\Data\User|null
      */
     public function getAuthor()
     {
         return $this->author;
     }
 
+    public function hasAuthor()
+    {
+        return isset($this->author);
+    }
+
+    public function clearAuthor()
+    {
+        unset($this->author);
+    }
+
     /**
-     * Generated from protobuf field <code>string author = 2;</code>
-     * @param string $var
+     * Generated from protobuf field <code>.testing.data.User author = 2;</code>
+     * @param \Testing\Data\User $var
      * @return $this
      */
     public function setAuthor($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkMessage($var, \Testing\Data\User::class);
         $this->author = $var;
 
         return $this;

@@ -38,5 +38,5 @@ message User {
 message Book {
   string title = 1;
 
-  string author = 2;
+  User author = 2;
 }

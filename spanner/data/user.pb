@@ -1,5 +1,5 @@
 
-ç
+°
 data/user.prototesting.data"≠
 User
 id (Rid
@@ -8,7 +8,7 @@
 address (2.testing.data.User.AddressRaddress3
 Address
 city (	Rcity
-state (	Rstate"4
+state (	Rstate"H
 Book
-title (	Rtitle
-author (	Rauthorbproto3
+title (	Rtitle*
+author (2.testing.data.UserRauthorbproto3

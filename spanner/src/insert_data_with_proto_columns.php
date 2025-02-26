@@ -58,8 +58,14 @@ function insert_data_with_proto_columns(
         ->setName('Test User ' . $userId)
         ->setAddress($address);
 
-    $book1 = new Book(['title' => 'Book 1', 'author' => 'Author 1']);
-    $book2 = new Book(['title' => 'Book 2', 'author' => 'Author 2']);
+    $book1 = new Book([
+        'title' => 'Book 1',
+        'author' => new User(['name' => 'Author of Book 1']),
+    ]);
+    $book2 = new Book([
+        'title' => 'Book 2',
+        'author' => new User(['name' => 'Author of Book 2']),
+    ]);
 
     $books = [
         // insert using the proto message
