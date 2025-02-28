@@ -31,7 +31,7 @@ use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\DeleteParameterVersionRequest;
 
 /**
- * deletes a regional parameter version using the Parameter Manager SDK for GCP.
+ * Deletes a regional parameter version using the Parameter Manager SDK for GCP.
  *
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $locationId The Parameter Location (e.g. 'us-central1')

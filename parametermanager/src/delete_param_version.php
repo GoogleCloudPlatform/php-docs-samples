@@ -31,7 +31,8 @@ use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\DeleteParameterVersionRequest;
 
 /**
- * deletes a parameter version using the Parameter Manager SDK for GCP.
+ * Deletes a parameter version using the Parameter Manager SDK for GCP.
+ * 
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $parameterId The Parameter ID (e.g. 'my-param')
  * @param string $versionId The Version ID (e.g. 'my-param-version')

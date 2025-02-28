@@ -38,7 +38,7 @@ use Google\Cloud\ParameterManager\V1\ParameterVersionPayload;
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $parameterId The Parameter ID (e.g. 'my-param')
  * @param string $versionId The Version ID (e.g. 'my-param-version')
- * @param string $secretId                                                              The ID of the secret to be referenced (e.g. 'projects/my-project/secrets/my-secret/versions/latest')
+ * @param string $secretId The ID of the secret to be referenced (e.g. 'projects/my-project/secrets/my-secret/versions/latest')
  */
 function create_param_version_with_secret(string $projectId, string $parameterId, string $versionId, string $secretId): void
 {

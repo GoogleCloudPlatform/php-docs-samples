@@ -31,7 +31,7 @@ use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\DeleteParameterRequest;
 
 /**
- * deletes a parameter using the Parameter Manager SDK for GCP.
+ * Deletes a parameter using the Parameter Manager SDK for GCP.
  *
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $parameterId The Parameter ID (e.g. 'my-param')
