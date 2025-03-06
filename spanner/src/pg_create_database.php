@@ -23,7 +23,7 @@
 
 namespace Google\Cloud\Samples\Spanner;
 
-// [START spanner_postgres_create_database]
+// [START spanner_postgresql_create_database]
 use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
 use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 use Google\Cloud\Spanner\Admin\Database\V1\DatabaseDialect;
@@ -86,7 +86,7 @@ function pg_create_database(string $projectId, string $instanceId, string $datab
     printf('Created database %s with dialect %s on instance %s' . PHP_EOL,
         $databaseId, $dialect, $instanceId);
 }
-// [END spanner_postgres_create_database]
+// [END spanner_postgresql_create_database]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
