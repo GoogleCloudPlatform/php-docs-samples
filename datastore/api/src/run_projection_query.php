@@ -36,8 +36,8 @@ function run_projection_query(Query $query = null, string $namespaceId = null)
     }
 
     // [START datastore_run_query_projection]
-    $priorities = array();
-    $percentCompletes = array();
+    $priorities = [];
+    $percentCompletes = [];
     $result = $datastore->runQuery($query);
     /* @var Entity $task */
     foreach ($result as $task) {
@@ -46,7 +46,7 @@ function run_projection_query(Query $query = null, string $namespaceId = null)
     }
     // [END datastore_run_query_projection]
 
-    print_r(array($priorities, $percentCompletes));
+    print_r([$priorities, $percentCompletes]);
 }
 
 // The following 2 lines are only needed to run the samples

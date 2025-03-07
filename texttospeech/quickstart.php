@@ -47,7 +47,7 @@ $effectsProfileId = 'telephony-class-application';
 // select the type of audio file you want returned
 $audioConfig = (new AudioConfig())
     ->setAudioEncoding(AudioEncoding::MP3)
-    ->setEffectsProfileId(array($effectsProfileId));
+    ->setEffectsProfileId([$effectsProfileId]);
 
 // perform text-to-speech request on the text input with selected voice
 // parameters and audio file type

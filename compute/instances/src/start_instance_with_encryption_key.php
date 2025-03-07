@@ -75,7 +75,7 @@ function start_instance_with_encryption_key(
 
     // Set request with one disk.
     $instancesStartWithEncryptionKeyRequest = (new InstancesStartWithEncryptionKeyRequest())
-        ->setDisks(array($diskData));
+        ->setDisks([$diskData]);
 
     // Start the instance with encrypted disk.
     $request2 = (new StartWithEncryptionKeyInstanceRequest())
