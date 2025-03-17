@@ -35,7 +35,7 @@ class CloudSqlDataModel
     {
         $this->pdo = $pdo;
 
-        $columns = array(
+        $columns = [
             'id serial PRIMARY KEY ',
             'title VARCHAR(255)',
             'author VARCHAR(255)',
@@ -44,7 +44,7 @@ class CloudSqlDataModel
             'description VARCHAR(255)',
             'created_by VARCHAR(255)',
             'created_by_id VARCHAR(255)',
-        );
+        ];
 
         $this->columnNames = array_map(function ($columnDefinition) {
             return explode(' ', $columnDefinition)[0];
@@ -83,7 +83,7 @@ class CloudSqlDataModel
         // while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         //     var_dump($row);
         // }
-        $rows = array();
+        $rows = [];
         $nextCursor = null;
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             array_push($rows, $row);

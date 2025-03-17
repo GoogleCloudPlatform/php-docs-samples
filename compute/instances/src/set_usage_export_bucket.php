@@ -48,10 +48,10 @@ function set_usage_export_bucket(
     string $reportNamePrefix = ''
 ) {
     // Initialize UsageExportLocation object with provided bucket name and no report name prefix.
-    $usageExportLocation = new UsageExportLocation(array(
+    $usageExportLocation = new UsageExportLocation([
         'bucket_name' => $bucketName,
         'report_name_prefix' => $reportNamePrefix
-    ));
+    ]);
 
     if (strlen($reportNamePrefix) == 0) {
         // Sending empty value for report_name_prefix results in the next usage report

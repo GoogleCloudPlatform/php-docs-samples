@@ -42,7 +42,7 @@ class entityTypeTest extends TestCase
 
         $this->assertStringContainsString(self::$entityTypeDisplayName, $output);
 
-        $response = str_replace(array("\r", "\n"), '', $response);
+        $response = str_replace(["\r", "\n"], '', $response);
         $response = explode('/', $response);
         $entityTypeId = end($response);
         return $entityTypeId;

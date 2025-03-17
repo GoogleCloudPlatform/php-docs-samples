@@ -6,17 +6,20 @@ on:
   pull_request:
 
 jobs:
-  styles:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
 
-    - name: Run Script
-      run: testing/run_cs_check.sh
+  style:
+    name: PHP Style Check
+    uses: GoogleCloudPlatform/php-tools/.github/workflows/code-standards.yml@main
+    with:
+      add_rules: |
+        {
+          "method_argument_space": {
+              "keep_multiple_spaces_after_comma": true,
+              "on_multiline": "ignore"
+          },
+          "ordered_imports": false,
+          "new_with_parentheses": false
+        }
 
   staticanalysis:
     runs-on: ubuntu-latest

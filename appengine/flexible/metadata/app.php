@@ -35,7 +35,7 @@ function get_external_ip_using_curl()
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Metadata-Flavor: Google'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Metadata-Flavor: Google']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     return curl_exec($ch);
 }
