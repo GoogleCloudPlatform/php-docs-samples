@@ -78,7 +78,7 @@ class spannerProtoTest extends TestCase
 
     public function testCreateDatabaseWithProtoColumns()
     {
-        $output = $this->runAdminFunctionSnippet('create_database_with_proto_columns', [
+        $output = $this->runFunctionSnippet('create_database_with_proto_columns', [
             self::$projectId,
             self::$instanceId,
             self::$databaseId
@@ -117,22 +117,6 @@ class spannerProtoTest extends TestCase
         $this->assertStringContainsString('Test User 1', $output);
         $this->assertStringContainsString('Book:', $output);
         $this->assertStringContainsString('testing.data.Book', $output);
-    }
-
-    private function runFunctionSnippet($sampleName, $params = [])
-    {
-        return $this->traitRunFunctionSnippet(
-            $sampleName,
-            array_values($params) ?: [self::$instanceId, self::$databaseId]
-        );
-    }
-
-    private function runAdminFunctionSnippet($sampleName, $params = [])
-    {
-        return $this->traitRunFunctionSnippet(
-            $sampleName,
-            array_values($params) ?: [self::$projectId, self::$instanceId, self::$databaseId]
-        );
     }
 
     public static function tearDownAfterClass(): void
