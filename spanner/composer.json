@@ -1,18 +1,5 @@
 {
     "require": {
-        "google/cloud-spanner": "1.200"
-    },
-    "autoload": {
-        "psr-4": {
-            "GPBMetadata\\": "generated/GPBMetadata",
-            "Testing\\": "generated/Testing"
-        }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../../google-cloud-php/Spanner",
-            "options": { "versions": { "google/cloud-spanner":"1.200.0"} }
-        }
-    ]
+        "google/cloud-spanner": "^1.97"
+    }
 }
