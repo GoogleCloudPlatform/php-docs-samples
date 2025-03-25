@@ -19,10 +19,10 @@ namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_with_multi_region_gcs]
 # Imports the Google Cloud client library
-use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V1\SpeechClient;
 
 /**
  * @param string $uri The Cloud Storage object to transcribe
