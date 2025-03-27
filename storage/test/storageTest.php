@@ -957,9 +957,9 @@ class storageTest extends TestCase
 
         $this->assertFalse($bucket->exists());
 
-        $options = ['softDeleted' => true, 'generation' => $generation];
-        $softDeletedBucket = self::$storage->bucket($bucketName, options: $options);
-        $info = $softDeletedBucket->info();
+        $options = ['generation' => $generation, 'softDeleted' => true];
+        $softDeletedBucket = self::$storage->bucket($bucketName);
+        $info = $softDeletedBucket->info($options);
 
         $output = self::runFunctionSnippet('get_soft_deleted_bucket', [
             $bucketName,
