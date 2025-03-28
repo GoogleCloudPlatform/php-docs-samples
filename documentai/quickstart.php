@@ -32,11 +32,11 @@ $projectId = 'YOUR_PROJECT_ID';
 $location = 'us';
 
 # Your Processor ID as hexadecimal characters.
-# Not to be confused with the Processor Name.
+# Not to be confused with the Processor Display Name.
 $processorId = 'YOUR_PROCESSOR_ID';
 
 # Path for the file to read.
-$documentPath = 'resources/invoice.pdf';
+$documentPath = '../resources/invoice.pdf';
 
 # Create Client.
 $client = new DocumentProcessorServiceClient();
