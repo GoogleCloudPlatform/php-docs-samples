@@ -36,7 +36,7 @@ $location = 'us';
 $processorId = 'YOUR_PROCESSOR_ID';
 
 # Path for the file to read.
-$documentPath = '../resources/invoice.pdf';
+$documentPath = 'resources/invoice.pdf';
 
 # Create Client.
 $client = new DocumentProcessorServiceClient();
