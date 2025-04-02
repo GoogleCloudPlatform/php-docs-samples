@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud-document-ai": "^1.0.1"
+        "php": "^8.1",
+        "google/cloud-document-ai": "^2.1.3"
     }
 }
