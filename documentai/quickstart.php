@@ -47,7 +47,7 @@ $contents = fread($handle, filesize($documentPath));
 fclose($handle);
 
 # Load file contents into a RawDocument.
-$rawDocument = new RawDocument()
+$rawDocument = (new RawDocument())
     ->setContent($contents)
     ->SetMimeType('application/pdf');
 
@@ -55,7 +55,7 @@ $rawDocument = new RawDocument()
 $fullProcessorName = $client->processorName($projectId, $location, $processorId);
 
 # Send a ProcessRequest and get a ProcessResponse.
-$request = new ProcessRequest()
+$request = (new ProcessRequest())
     ->setName($fullProcessorName)
     ->setRawDocument($rawDocument);
 
