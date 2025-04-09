@@ -25,6 +25,7 @@
 /storage/                 @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/php-samples-reviewers
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
 /secretmanager/           @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
+/parametermanager/        @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team @GoogleCloudPlatform/cloud-parameters-team
 
 # Serverless, Orchestration, DevOps
 
