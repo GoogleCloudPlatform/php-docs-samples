@@ -18,7 +18,9 @@
 namespace Google\Cloud\Samples\Translate;
 
 // [START translate_v3_translate_text]
+// [START translate_v3_import_client_library]
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+// [END translate_v3_import_client_library]
 use Google\Cloud\Translate\V3\TranslateTextRequest;
 
 /**
@@ -42,6 +44,7 @@ function v3_translate_text(
             ->setTargetLanguageCode($targetLanguage)
             ->setParent($formattedParent);
         $response = $translationServiceClient->translateText($request);
+
         // Display the translation for each input text provided
         foreach ($response->getTranslations() as $translation) {
             printf('Translated text: %s' . PHP_EOL, $translation->getTranslatedText());
