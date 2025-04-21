@@ -35,6 +35,6 @@ FunctionsFramework::cloudEvent('helloworldPubsub', function helloworldPubsub(Clo
 
     $name = $pubSubData ? htmlspecialchars($pubSubData) : 'World';
     fwrite($log, "Hello, $name!" . PHP_EOL);
-})
+});
 // [END functions_helloworld_pubsub]
 // [END functions_cloudevent_pubsub]

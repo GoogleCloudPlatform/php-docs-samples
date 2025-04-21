@@ -38,7 +38,7 @@ FunctionsFramework::cloudEvent('helloGCS', function helloGCS(CloudEventInterface
     fwrite($log, 'Metageneration: ' . $data['metageneration'] . PHP_EOL);
     fwrite($log, 'Created: ' . $data['timeCreated'] . PHP_EOL);
     fwrite($log, 'Updated: ' . $data['updated'] . PHP_EOL);
-})
+});
 
 // [END functions_cloudevent_storage]
 // [END functions_helloworld_storage]
