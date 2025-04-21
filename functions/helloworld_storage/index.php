@@ -26,7 +26,7 @@ use Google\CloudFunctions\FunctionsFramework;
 // This enables omitting the `FUNCTIONS_SIGNATURE_TYPE=cloudevent` environment
 // variable when deploying. The `FUNCTION_TARGET` environment variable should
 // match the first parameter.
-FunctionsFramework::cloudEvent('helloGCS', function helloGCS(CloudEventInterface $cloudevent)
+FunctionsFramework::cloudEvent('helloGCS', function(CloudEventInterface $cloudevent)
 {
     // This function supports all Cloud Storage event types.
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');

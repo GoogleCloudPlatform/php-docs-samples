@@ -26,7 +26,7 @@ use Google\CloudFunctions\FunctionsFramework;
 // This enables omitting the `FUNCTIONS_SIGNATURE_TYPE=cloudevent` environment
 // variable when deploying. The `FUNCTION_TARGET` environment variable should
 // match the first parameter.
-FunctionsFramework::cloudEvent('helloworldPubsub', function helloworldPubsub(CloudEventInterface $event)
+FunctionsFramework::cloudEvent('helloworldPubsub', function(CloudEventInterface $event)
 {
     $log = fopen(getenv('LOGGER_OUTPUT') ?: 'php://stderr', 'wb');
 
