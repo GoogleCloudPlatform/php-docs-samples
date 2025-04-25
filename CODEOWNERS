@@ -22,7 +22,7 @@
 /cloud_sql/**/*.php       @GoogleCloudPlatform/cloud-sql-connectors @GoogleCloudPlatform/php-samples-reviewers
 /datastore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
 /firestore/**/*.php       @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/php-samples-reviewers
-/storage/                 @GoogleCloudPlatform/cloud-storage-dpe @GoogleCloudPlatform/php-samples-reviewers
+/storage/                 @GoogleCloudPlatform/gcs-sdk-team @GoogleCloudPlatform/php-samples-reviewers
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
 /secretmanager/           @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
 
@@ -32,10 +32,6 @@
 /functions/               @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
 /run/                     @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
 /eventarc/                @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/php-samples-reviewers
-
-# Functions samples owned by the Firebase team
-
-/functions/firebase_analytics   @schandel
 
 # DLP samples owned by DLP team
 
