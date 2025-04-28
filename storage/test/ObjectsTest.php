@@ -153,8 +153,9 @@ EOF;
 
     public function testMoveObjectAtomic()
     {
-        $bucketName = self::$bucketName . '-hns';
-        $objectName = 'test-object-' . time();
+        $time = time();
+        $bucketName = self::$bucketName . '-hns-' . $time;
+        $objectName = 'test-object-' . $time;
         $newObjectName = $objectName . '-moved';
         $bucket = self::$storage->createBucket($bucketName, [
             'hierarchicalNamespace' => ['enabled' => true],
