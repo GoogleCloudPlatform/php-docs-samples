@@ -37,7 +37,7 @@ use Google\Cloud\Spanner\Admin\Instance\V1\ListInstanceConfigsRequest;
  *
  * @param string $projectId The Google Cloud project ID.
  */
-function list_instance_configs(string $projectId = null): void
+function list_instance_configs(string $projectId): void
 {
     $instanceAdminClient = new InstanceAdminClient();
     $projectName = InstanceAdminClient::projectName($projectId);
