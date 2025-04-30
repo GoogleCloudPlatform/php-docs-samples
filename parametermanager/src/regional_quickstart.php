@@ -66,7 +66,7 @@ $newParameter = $client->createParameter($request);
 printf('Created regional parameter %s with format %s' . PHP_EOL, $newParameter->getName(), ParameterFormat::name($newParameter->getFormat()));
 
 // Create a new ParameterVersionPayload object and set the json data.
-$payload = '{"username": "test-user", "host": "localhost"}';
+$payload = json_encode(['username' => 'test-user', 'host' => 'localhost']);
 $parameterVersionPayload = new ParameterVersionPayload();
 $parameterVersionPayload->setData($payload);
 

@@ -49,7 +49,10 @@ function create_param_version_with_secret(string $projectId, string $parameterId
     $parent = $client->parameterName($projectId, 'global', $parameterId);
 
     // Build payload.
-    $payload = sprintf('{"username": "test-user", "password": "__REF__(//secretmanager.googleapis.com/%s)"}', $secretId);
+    $payload = json_encode([
+        'username' => 'test-user',
+        'password' => sprintf('__REF__(//secretmanager.googleapis.com/%s)', $secretId)
+    ], JSON_UNESCAPED_SLASHES);
 
     // Create a new ParameterVersionPayload object and set the payload with secret reference.
     $parameterVersionPayload = new ParameterVersionPayload();
