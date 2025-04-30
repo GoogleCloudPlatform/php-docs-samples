@@ -151,6 +151,44 @@ EOF;
         $this->assertEquals($output, $outputString);
     }
 
+    public function testMoveObjectAtomic()
+    {
+        $bucketName = self::$bucketName . '-hns';
+        $objectName = 'test-object-' . time();
+        $newObjectName = $objectName . '-moved';
+        $bucket = self::$storage->createBucket($bucketName, [
+            'hierarchicalNamespace' => ['enabled' => true],
+            'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
+        ]);
+
+        $object = $bucket->upload('test', ['name' => $objectName]);
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('move_object_atomic', [
+            $bucketName,
+            $objectName,
+            $newObjectName
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
+                $bucketName,
+                $objectName,
+                $bucketName,
+                $newObjectName
+            ),
+            $output
+        );
+
+        $this->assertFalse($object->exists());
+        $movedObject = $bucket->object($newObjectName);
+        $this->assertTrue($movedObject->exists());
+
+        $bucket->object($newObjectName)->delete();
+        $bucket->delete();
+    }
+
     public function testCompose()
     {
         $bucket = self::$storage->bucket(self::$bucketName);
