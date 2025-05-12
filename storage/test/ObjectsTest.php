@@ -410,4 +410,24 @@ EOF;
         $this->assertStringNotContainsString('Custom Time', $output);
         $this->assertStringNotContainsString('Retention Expiration Time', $output);
     }
+
+    public function testListSoftDeletedObjects()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDuration' => '604800s',
+            ],
+        ]);
+
+        $objectName = uniqid('soft-deleted-object-');
+        $object = $bucket->upload('content', ['name' => $objectName]);
+        $object->delete();
+
+        $output = self::runFunctionSnippet('list_soft_deleted_objects', [
+            self::$bucketName,
+        ]);
+        
+        $this->assertStringContainsString('Object:', $output);
+    }
 }
