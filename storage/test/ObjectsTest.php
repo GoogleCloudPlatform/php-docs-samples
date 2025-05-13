@@ -456,4 +456,37 @@ EOF;
         $this->assertStringContainsString($objectName1, $output);
         $this->assertStringNotContainsString($objectName2, $output);
     }
+
+    public function testRestoreSoftDeletedObject()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDuration' => '60s',
+            ],
+        ]);
+
+        $objectName = uniqid('soft-deleted-object-');
+        $object = $bucket->upload('content', ['name' => $objectName]);
+        $info = $object->reload();
+        $object->delete();
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('restore_soft_deleted_object', [
+            self::$bucketName,
+            $objectName,
+            $info['generation']
+        ]);
+
+        $object = $bucket->object($objectName);
+        $this->assertTrue($object->exists());
+        $this->assertEquals(
+            sprintf(
+                'Soft deleted object %s was restored.' . PHP_EOL,
+                $objectName
+            ),
+            $output
+        );
+    }
 }
