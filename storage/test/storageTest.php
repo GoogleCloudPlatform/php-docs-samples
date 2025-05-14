@@ -969,6 +969,39 @@ class storageTest extends TestCase
         );
     }
 
+    public function testGetSoftDeletePolicy()
+    {
+        $bucketName = uniqid('samples-get-soft-delete-policy-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'softDeletePolicy' => [
+                'retentionDurationSeconds' => 604800,
+            ],
+        ]);
+
+        $output = self::runFunctionSnippet('get_soft_delete_policy', [
+            $bucketName,
+        ]);
+        $info = $bucket->info();
+        $bucket->delete();
+
+        if ($info['softDeletePolicy']['retentionDurationSeconds'] === '0') {
+            $this->assertStringContainsString(
+                sprintf('Bucket %s soft delete policy was disabled', $bucketName),
+                $output
+            );  
+        } else {
+            $duration = $info['softDeletePolicy']['retentionDurationSeconds'];
+            $effectiveTime = $info['softDeletePolicy']['effectiveTime'];
+            $outputString = <<<EOF
+                Soft delete Policy for $bucketName
+                Soft delete Period: $duration seconds
+                Effective Time: $effectiveTime
+
+                EOF;
+            $this->assertEquals($output, $outputString);
+        }
+    }
+
     public function testDeleteFileArchivedGeneration()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-delete-file-archived-generation-'), [
