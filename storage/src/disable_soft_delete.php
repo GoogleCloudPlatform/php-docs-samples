@@ -23,33 +23,32 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START storage_get_soft_delete_policy]
+# [START storage_disable_soft_delete]
 use Google\Cloud\Storage\StorageClient;
 
 /**
- * Gets a bucket soft delete policy.
+ * Disable bucket's soft delete.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  *        (e.g. 'my-bucket')
  */
-function get_soft_delete_policy(string $bucketName): void
+function disable_soft_delete(string $bucketName): void
 {
-    $storage = new StorageClient();
-    $bucket = $storage->bucket($bucketName);
-    $bucket->reload();
-
-    if ($bucket->info()['softDeletePolicy']['retentionDurationSeconds'] === '0') {
+    try {
+        $storage = new StorageClient();
+        $bucket = $storage->bucket($bucketName);
+        $x = $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDurationSeconds' => 0,
+            ],
+        ]);
         printf('Bucket %s soft delete policy was disabled' . PHP_EOL, $bucketName);
-    } else {
-        printf('Soft delete Policy for ' . $bucketName . PHP_EOL);
-        printf('Soft delete Period: %d seconds' . PHP_EOL, $bucket->info()['softDeletePolicy']['retentionDurationSeconds']);
-        if ($bucket->info()['softDeletePolicy']['effectiveTime']) {
-            printf('Effective Time: ' . $bucket->info()['softDeletePolicy']['effectiveTime'] . PHP_EOL);
-        }
+    } catch (\Throwable $th) {
+        print_r($th);
     }
 
 }
-# [END storage_get_soft_delete_policy]
+# [END storage_disable_soft_delete]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';

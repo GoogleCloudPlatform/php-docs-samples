@@ -988,7 +988,7 @@ class storageTest extends TestCase
             $this->assertStringContainsString(
                 sprintf('Bucket %s soft delete policy was disabled', $bucketName),
                 $output
-            );  
+            );
         } else {
             $duration = $info['softDeletePolicy']['retentionDurationSeconds'];
             $effectiveTime = $info['softDeletePolicy']['effectiveTime'];
@@ -1019,6 +1019,34 @@ class storageTest extends TestCase
         $this->assertStringContainsString(
             sprintf(
                 'Bucket %s soft delete policy set to 10 days',
+                $bucketName
+            ),
+            $output
+        );
+    }
+
+    public function testDisableSoftDelete()
+    {
+        $bucketName = uniqid('samples-disable-soft-delete-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'softDeletePolicy' => [
+                'retentionDurationSeconds' => 604800,
+            ],
+        ]);
+        $info = $bucket->reload();
+
+        $this->assertEquals('604800', $info['softDeletePolicy']['retentionDurationSeconds']);
+
+        $output = self::runFunctionSnippet('disable_soft_delete', [
+            $bucketName
+        ]);
+        $info = $bucket->reload();
+        $this->assertEquals('0', $info['softDeletePolicy']['retentionDurationSeconds']);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Bucket %s soft delete policy was disabled',
                 $bucketName
             ),
             $output

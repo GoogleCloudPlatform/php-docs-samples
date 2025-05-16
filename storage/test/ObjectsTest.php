@@ -427,7 +427,7 @@ EOF;
         $output = self::runFunctionSnippet('list_soft_deleted_objects', [
             self::$bucketName,
         ]);
-        
+
         $this->assertStringContainsString('Object:', $output);
     }
 
@@ -452,7 +452,7 @@ EOF;
             self::$bucketName,
             $objectName1
         ]);
-        
+
         $this->assertStringContainsString($objectName1, $output);
         $this->assertStringNotContainsString($objectName2, $output);
     }
