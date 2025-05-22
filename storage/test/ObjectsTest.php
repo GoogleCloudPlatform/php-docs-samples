@@ -416,7 +416,7 @@ EOF;
         $bucket = self::$storage->bucket(self::$bucketName);
         $bucket->update([
             'softDeletePolicy' => [
-                'retentionDuration' => '604800s',
+                'retentionDuration' => 604800,
             ],
         ]);
 
@@ -436,7 +436,7 @@ EOF;
         $bucket = self::$storage->bucket(self::$bucketName);
         $bucket->update([
             'softDeletePolicy' => [
-                'retentionDuration' => '604800s',
+                'retentionDuration' => 604800,
             ],
         ]);
 
@@ -462,7 +462,7 @@ EOF;
         $bucket = self::$storage->bucket(self::$bucketName);
         $bucket->update([
             'softDeletePolicy' => [
-                'retentionDuration' => '60s',
+                'retentionDuration' => 60,
             ],
         ]);
 
