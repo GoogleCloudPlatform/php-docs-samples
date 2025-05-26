@@ -37,10 +37,10 @@ use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
 use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
 
-/** Uncomment and populate these variables in your code */
-// $projectId = "YOUR_GOOGLE_CLOUD_PROJECT"; (e.g. 'my-project');
-// $locationId = 'YOUR_LOCATION_ID'; (e.g. 'my-location');
-// $templateId = 'YOUR_TEMPLATE_ID'; (e.g. 'my-template');
+/** Uncomment and populate these variables in your code. */
+// $projectId = "YOUR_GOOGLE_CLOUD_PROJECT"; // e.g. 'my-project';
+// $locationId = 'YOUR_LOCATION_ID'; // e.g. 'us-central1';
+// $templateId = 'YOUR_TEMPLATE_ID'; // e.g. 'my-template';
 
 // Specify regional endpoint.
 $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
