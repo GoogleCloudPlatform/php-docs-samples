@@ -17,7 +17,7 @@
  
 <phpunit bootstrap="../testing/bootstrap.php">
   <testsuites>
-    <testsuite name="PHP Secret Manager test">
+    <testsuite name="PHP Model Armor test">
       <directory>test</directory>
     </testsuite>
   </testsuites>
