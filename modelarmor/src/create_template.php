@@ -58,11 +58,17 @@ $parent = $client->locationName($projectId, $locationId);
 
 $raiFilters = [
     (new RaiFilter())
+        ->setFilterType(RaiFilterType::DANGEROUS)
+        ->setConfidenceLevel(DetectionConfidenceLevel::HIGH),
+    (new RaiFilter())
         ->setFilterType(RaiFilterType::HATE_SPEECH)
         ->setConfidenceLevel(DetectionConfidenceLevel::HIGH),
     (new RaiFilter())
         ->setFilterType(RaiFilterType::SEXUALLY_EXPLICIT)
-        ->setConfidenceLevel(DetectionConfidenceLevel::MEDIUM_AND_ABOVE)
+        ->setConfidenceLevel(DetectionConfidenceLevel::LOW_AND_ABOVE),
+    (new RaiFilter())
+        ->setFilterType(RaiFilterType::HARASSMENT)
+        ->setConfidenceLevel(DetectionConfidenceLevel::MEDIUM_AND_ABOVE),
 ];
 
 $raiFilterSetting = (new RaiFilterSettings())->setRaiFilters($raiFilters);
