@@ -487,4 +487,28 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
+
+    public function testCreateTopicWithAwsMskIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_aws_msk_ingestion', [
+            self::$projectId,
+            $topic,
+            'arn:aws:kafka:us-east-1:111111111111:cluster/fake-cluster-name/11111111-1111-1',
+            'fake-msk-topic-name',
+            self::$awsRoleArn,
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
 }
