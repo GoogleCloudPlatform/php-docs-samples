@@ -487,4 +487,28 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
+
+    public function testUpdateTopicType()
+    {
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('update_topic_type', [
+            self::$projectId,
+            $topic,
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name',
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name/consumer/consumer-1:1111111111',
+            self::$awsRoleArn,
+            self::$gcpServiceAccount
+        ]);
+
+        $this->assertMatchesRegularExpression('/Topic updated:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
 }
