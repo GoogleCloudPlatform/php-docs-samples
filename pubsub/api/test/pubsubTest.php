@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -32,6 +33,8 @@ class PubSubTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     private static $eodSubscriptionId;
+    private static $awsRoleArn = 'arn:aws:iam::111111111111:role/fake-role-name';
+    private static $gcpServiceAccount = 'fake-service-account@project.iam.gserviceaccount.com';
 
     public static function setUpBeforeClass(): void
     {
