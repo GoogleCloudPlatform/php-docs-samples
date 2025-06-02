@@ -38,7 +38,7 @@ class updateProjectFloorSettingsTest extends TestCase
             self::$projectId,
         ]);
 
-        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $expectedResponseString = 'Floor setting updated:';
         $this->assertStringContainsString($expectedResponseString, $output);
     }
 }

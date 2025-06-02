@@ -38,7 +38,7 @@ class updateOrganizationFloorSettings extends TestCase
             self::$organizationId,
         ]);
 
-        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $expectedResponseString = 'Floor setting updated:';
         $this->assertStringContainsString($expectedResponseString, $output);
     }
 }
