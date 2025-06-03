@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -32,6 +33,8 @@ class PubSubTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     private static $eodSubscriptionId;
+    private static $awsRoleArn = 'arn:aws:iam::111111111111:role/fake-role-name';
+    private static $gcpServiceAccount = 'fake-service-account@project.iam.gserviceaccount.com';
 
     public static function setUpBeforeClass(): void
     {
@@ -483,5 +486,30 @@ class PubSubTest extends TestCase
         ]);
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
+    }
+
+    public function testCreateTopicWithConfluentCloudIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_confluent_cloud_ingestion', [
+            self::$projectId,
+            $topic,
+            'fake-bootstrap-server-id.us-south1.gcp.confluent.cloud:9092',
+            'fake-cluster-id',
+            'fake-confluent-topic-name',
+            'fake-identity-pool-id',
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 }
