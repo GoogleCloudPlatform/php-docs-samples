@@ -64,6 +64,67 @@ Usage: create_topic.php $projectId $topicName
 	@param string $topicName  The Pub/Sub topic name.
 ```
 
+## PHPUnit Tests
+
+At this time, the GitHub actions in this repo fail to run the tests written in this folder. The developer is responsible for locally running and confirming their samples and corresponding tests.
+
+### PubSub Emulator
+Some tests in the pubsubTest.php requires PubSub emulator. These tests start with ```$this->requireEnv('PUBSUB_EMULATOR_HOST')```.
+
+#### Prerequisites
+- Python
+```
+xcode-select --install
+brew install pyenv
+pyenv install <version>
+python3 --version
+```
+- JDK
+```
+brew install openjdk
+export JAVA_HOME=<path to openjdk folder>
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+Once python, JDK, and GCloud CLI are installed, follow [these instructions](https://cloud.google.com/pubsub/docs/emulator) to run the emulator.
+
+### Setting up environment variables
+Open a new tab in terminal, separate from the one running your emulator.
+
+```
+// php-docs-samples/testing folder
+$ cd ../../../testing
+
+$ export GOOGLE_PROJECT_ID=<project id>
+$ export GOOGLE_PUBSUB_TOPIC=<topic name>
+$ export GOOGLE_PUBSUB_STORAGE_BUCKET=<bucket name>
+$ export GOOGLE_PUBSUB_SUBSCRIPTION=<subscription name>
+
+// only set if your test requires the emulator
+$ export PUBSUB_EMULATOR_HOST=localhost:<emulator port>
+
+// unset the PUBSUB emulator host variable if you want to run a test that doesn't require an emulator
+$ unset PUBSUB_EMULATOR
+```
+
+### Running the tests
+Run your test(s) like so in the same terminal tab that you set your env variables in the previous step.
+
+```
+// Run all tests in pubsubTest.php. --verbose tag is recommended to see any issues or stack trace
+$ php-docs-samples/testing/vendor/bin/phpunit ../pubsub/api/test/pubsubTest.php --verbose
+
+// Run a single test in pubsubTest.php
+$ php-docs-samples/testing/vendor/bin/phpunit ../pubsub/api/test/pubsubTest.php --filter testSubscriptionPolicy --verbose
+```
+
+## Fixing Styling Errors
+If you create a PR and the Lint / styles (pull_request) check fails, this is a quick fix.
+
+```
+$ php-docs-samples/testing/vendor/bin/php-cs-fixer fix <path to your file>
+```
+
 ## Troubleshooting
 
 If you get the following error, set the environment variable `GCLOUD_PROJECT` to your project ID:
