@@ -107,4 +107,19 @@ class StorageBatchOperationsTest extends TestCase
             $output
         );
     }
+
+    /**
+     * @depends testListJobs
+     */
+    public function testCancelJob()
+    {
+        $output = $this->runFunctionSnippet('cancel_job', [
+            self::$projectId, self::$jobId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Cancelled job: %s', self::$jobName),
+            $output
+        );
+    }
 }
