@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -32,6 +33,8 @@ class PubSubTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     private static $eodSubscriptionId;
+    private static $awsRoleArn = 'arn:aws:iam::111111111111:role/fake-role-name';
+    private static $gcpServiceAccount = 'fake-service-account@project.iam.gserviceaccount.com';
 
     public static function setUpBeforeClass(): void
     {
@@ -483,5 +486,29 @@ class PubSubTest extends TestCase
         ]);
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
+    }
+
+    public function testCreateTopicWithKinesisIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_kinesis_ingestion', [
+            self::$projectId,
+            $topic,
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name',
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name/consumer/consumer-1:1111111111',
+            self::$awsRoleArn,
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
 }
