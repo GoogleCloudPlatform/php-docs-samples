@@ -487,4 +487,42 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
+
+    public function testOptimisticSubscribe()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subcriptionId = 'test-subscription-' . rand();
+
+        $output = $this->runFunctionSnippet('optimistic_subscribe', [
+            self::$projectId,
+            $topic,
+            $subcriptionId
+        ]);
+        $this->assertMatchesRegularExpression('/Exception Message/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/Resource not found \(resource=%s\)/',  $subcriptionId), $output);
+
+        $testMessage = 'This is a test message';
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            $testMessage,
+        ]);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+        $output = $this->runFunctionSnippet('optimistic_subscribe', [
+            self::$projectId,
+            $topic,
+            $subcriptionId
+        ]);
+        $this->assertMatchesRegularExpression(sprintf('/PubSub Message: %s/', $testMessage), $output);
+        $this->assertDoesNotMatchRegularExpression('/Exception Message/', $output);
+        $this->assertDoesNotMatchRegularExpression(sprintf('/Resource not found \(resource=%s\)/', $subcriptionId), $output);
+
+        // Delete subscription
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subcriptionId,
+        ]);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subcriptionId), $output);
+    }
 }
