@@ -122,4 +122,49 @@ class StorageBatchOperationsTest extends TestCase
             $output
         );
     }
+
+    /**
+     * @depends testCancelJob
+     */
+    public function testDeleteJob()
+    {
+        $attempt = 0;
+        $maxAttempts = 10;
+        $jobReadyForDeletion = false;
+        while ($attempt < $maxAttempts && !$jobReadyForDeletion) {
+            $attempt++;
+            $request = new GetJobRequest([
+                'name' => self::$jobName,
+            ]);
+
+            $response = self::$storageBatchOperationsClient->getJob($request);
+            $state = $response->getState();
+            $status = \Google\Cloud\StorageBatchOperations\V1\Job\State::name($state);
+
+            // A job is typically deletable if it's not in a creating/pending/running state
+            // Consider PENDING or IN_PROGRESS as states to wait out.
+            // For immediate deletion, maybe it needs to be SUCCEEDED or FAILED or CANCELED.
+            if ($status !== 'STATE_UNSPECIFIED' && $status !== 'RUNNING') {
+                $jobReadyForDeletion = true;
+            }
+
+            if (!$jobReadyForDeletion && $attempt < $maxAttempts) {
+                sleep(10);   // Wait 10 seconds
+            }
+        }
+
+        if (!$jobReadyForDeletion) {
+            $this->fail("Job did not reach a deletable state within the allowed time.");
+        }
+
+        // Now attempt to delete the job
+        $output = $this->runFunctionSnippet('delete_job', [
+            self::$projectId, self::$jobId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Deleted job: %s', self::$jobName),
+            $output
+        );
+    }
 }
