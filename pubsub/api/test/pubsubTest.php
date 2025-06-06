@@ -488,6 +488,28 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
 
+    public function testCreateAndDeleteUnwrappedSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $output = $this->runFunctionSnippet('create_unwrapped_push_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Unwrapped push subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+  
     public function testSubscriberErrorListener()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
@@ -495,10 +517,7 @@ class PubSubTest extends TestCase
 
         // Create subscription
         $output = $this->runFunctionSnippet('create_subscription', [
-            self::$projectId,
-            $topic,
-            $subscription,
-        ]);
+
         $this->assertMatchesRegularExpression('/Subscription created:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
@@ -522,10 +541,7 @@ class PubSubTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/Exception Message/', $output);
 
         // Delete subscription
-        $output = $this->runFunctionSnippet('delete_subscription', [
-            self::$projectId,
-            $subscription,
-        ]);
+
         $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
