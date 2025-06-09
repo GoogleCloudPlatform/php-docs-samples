@@ -509,7 +509,7 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
-  
+
     public function testSubscriberErrorListener()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
@@ -517,7 +517,10 @@ class PubSubTest extends TestCase
 
         // Create subscription
         $output = $this->runFunctionSnippet('create_subscription', [
-
+            self::$projectId,
+            $topic,
+            $subscription,
+        ]);
         $this->assertMatchesRegularExpression('/Subscription created:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
@@ -541,7 +544,10 @@ class PubSubTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/Exception Message/', $output);
 
         // Delete subscription
-
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
         $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
 
