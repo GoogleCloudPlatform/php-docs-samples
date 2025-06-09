@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -32,6 +33,8 @@ class PubSubTest extends TestCase
     use EventuallyConsistentTestTrait;
 
     private static $eodSubscriptionId;
+    private static $awsRoleArn = 'arn:aws:iam::111111111111:role/fake-role-name';
+    private static $gcpServiceAccount = 'fake-service-account@project.iam.gserviceaccount.com';
 
     public static function setUpBeforeClass(): void
     {
@@ -483,5 +486,27 @@ class PubSubTest extends TestCase
         ]);
         $this->assertMatchesRegularExpression('/Created subscription with ordering/', $output);
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
+    }
+
+    public function testCreateAndDeleteUnwrappedSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $output = $this->runFunctionSnippet('create_unwrapped_push_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Unwrapped push subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 }
