@@ -49,7 +49,9 @@ function update_topic_type(
         'projectId' => $projectId,
     ]);
 
-    $topic = $pubsub->topic($topicName, [
+    $topic = $pubsub->topic($topicName);
+
+    $topic->update([
         'ingestionDataSourceSettings' => [
             'aws_kinesis' => [
                 'stream_arn' => $streamArn,
@@ -58,10 +60,10 @@ function update_topic_type(
                 'gcp_service_account' => $gcpServiceAccount
             ]
         ]
-    ]);
-
-    $topic->update([], [
-        'updateMask' => [ 'ingestionDataSourceSettings' ]
+    ], [
+        'updateMask' => [
+            'ingestionDataSourceSettings'
+        ]
     ]);
 
     printf('Topic updated: %s' . PHP_EOL, $topic->name());
