@@ -624,7 +624,6 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Topic updated:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
-  
     public function testCreateTopicWithCloudStorageIngestion()
     {
         $this->requireEnv('PUBSUB_EMULATOR_HOST');
