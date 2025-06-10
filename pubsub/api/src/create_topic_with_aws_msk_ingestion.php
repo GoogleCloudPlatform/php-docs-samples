@@ -35,11 +35,11 @@ use Google\Cloud\PubSub\PubSubClient;
  * @param string $clusterArn  The Amazon Resource Name (ARN) that uniquely identifies the cluster.
  * @param string $mskTopic  The name of the topic in the Amazon MSK cluster that Pub/Sub will import from.
  * @param string $awsRoleArn  AWS role ARN to be used for Federated Identity authentication with Amazon MSK.
-                 Check the Pub/Sub docs for how to set up this role and the required permissions that need to be
-                 attached to it.
+ *               Check the Pub/Sub docs for how to set up this role and the required permissions that need to be
+ *               attached to it.
  * @param string $gcpServiceAccount  The GCP service account to be used for Federated Identity authentication
-                 with Amazon MSK (via a AssumeRoleWithWebIdentity call for the provided role). The aws_role_arn
-                 must be set up with accounts.google.com:sub equals to this service account number.
+ *               with Amazon MSK (via a AssumeRoleWithWebIdentity call for the provided role). The aws_role_arn
+ *               must be set up with accounts.google.com:sub equals to this service account number.
  */
 function create_topic_with_aws_msk_ingestion(
     string $projectId,
