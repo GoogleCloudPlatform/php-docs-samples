@@ -1,5 +1,9 @@
 {
     "require": {
-        "google/cloud-bigquerydatatransfer": "^1.0"
+        "google/cloud-bigquerydatatransfer": "^2.0"
+    },
+    "require-dev": {
+        "google/cloud-tools": "^0.15.0",
+        "friendsofphp/php-cs-fixer": "^3.21"
     }
 }
