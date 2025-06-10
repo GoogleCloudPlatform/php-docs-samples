@@ -43,7 +43,7 @@ function delete_endpoint(
     $endpointName = RegistrationServiceClient::endpointName($projectId, $locationId, $namespaceId, $serviceId, $endpointId);
     $deleteEndpointRequest = (new DeleteEndpointRequest())
         ->setName($endpointName);
-    $endpoint = $client->deleteEndpoint($deleteEndpointRequest);
+    $client->deleteEndpoint($deleteEndpointRequest);
 
     // Print results.
     printf('Deleted Endpoint: %s' . PHP_EOL, $endpointName);
