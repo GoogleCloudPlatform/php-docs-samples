@@ -673,4 +673,29 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
+
+    public function testCreateTopicWithConfluentCloudIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_confluent_cloud_ingestion', [
+            self::$projectId,
+            $topic,
+            'fake-bootstrap-server-id.us-south1.gcp.confluent.cloud:9092',
+            'fake-cluster-id',
+            'fake-confluent-topic-name',
+            'fake-identity-pool-id',
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
 }
