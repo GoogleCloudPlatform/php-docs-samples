@@ -1,6 +1,5 @@
 {
     "require": {
         "google/cloud-bigquerydatatransfer": "^2.0"
-    },
     }
 }
