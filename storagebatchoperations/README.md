@@ -47,7 +47,7 @@ This sample uses the [Cloud Storage Batch Operations Client Library for PHP][goo
 You can read the documentation for more details on API usage and use GitHub
 to [browse the source][google-cloud-php-source] and  [report issues][google-cloud-php-issues].
 
-[google-cloud-php-storage-batch-operations]: https://cloud.google.com/storage/docs/reference/rpc
+[google-cloud-php-storage-batch-operations]: https://cloud.google.com/php/docs/reference/cloud-storagebatchoperations/latest
 [google-cloud-php-source]: https://github.com/GoogleCloudPlatform/google-cloud-php
 [google-cloud-php-issues]: https://github.com/GoogleCloudPlatform/google-cloud-php/issues
 [google-cloud-sdk]: https://cloud.google.com/sdk/
