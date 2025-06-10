@@ -38,9 +38,9 @@ use Google\Protobuf\Timestamp;
  * @param string $topicName  The Pub/Sub topic name.
  * @param string $bucket  Cloud Storage bucket.
  * @param string $inputFormat  Input format for the Cloud Storage data. Must be one of text, avro, or pubsub_avro.
+ * @param string $minimumObjectCreatedTime  Only objects with a larger or equal creation timestamp will be ingested.
  * @param string $textDelimiter  Delimiter for text format input.
  * @param string $matchGlob  Glob pattern used to match objects that will be ingested. If unset, all objects will be ingested.
- * @param string $minimumObjectCreatedTime  Only objects with a larger or equal creation timestamp will be ingested.
  */
 function create_topic_with_cloud_storage_ingestion(
     string $projectId,
