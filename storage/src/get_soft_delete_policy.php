@@ -42,12 +42,17 @@ function get_soft_delete_policy(string $bucketName): void
         printf('Bucket %s soft delete policy was disabled' . PHP_EOL, $bucketName);
     } else {
         printf('Soft delete Policy for ' . $bucketName . PHP_EOL);
-        printf('Soft delete Period: %d seconds' . PHP_EOL, $bucket->info()['softDeletePolicy']['retentionDurationSeconds']);
+        printf(
+            'Soft delete Period: %d seconds' . PHP_EOL,
+            $bucket->info()['softDeletePolicy']['retentionDurationSeconds']
+        );
         if ($bucket->info()['softDeletePolicy']['effectiveTime']) {
-            printf('Effective Time: ' . $bucket->info()['softDeletePolicy']['effectiveTime'] . PHP_EOL);
+            printf(
+                'Effective Time: %s' . PHP_EOL,
+                $bucket->info()['softDeletePolicy']['effectiveTime']
+            );
         }
     }
-
 }
 # [END storage_get_soft_delete_policy]
 
