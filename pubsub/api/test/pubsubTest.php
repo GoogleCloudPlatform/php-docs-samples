@@ -698,4 +698,31 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
     }
+
+    public function testCreateTopicWithAzureEventHubsIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_azure_event_hubs_ingestion', [
+            self::$projectId,
+            $topic,
+            'fake-resource-group',
+            'fake-namespace',
+            'fake-event-hub',
+            '11111111-1111-1111-1111-11111111111',
+            '22222222-2222-2222-2222-222222222222',
+            '33333333-3333-3333-3333-333333333333',
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
 }
