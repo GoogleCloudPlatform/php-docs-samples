@@ -488,6 +488,192 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression('/\"enableMessageOrdering\":true/', $output);
     }
 
+    public function testCreateAndDeleteUnwrappedSubscription()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+        $output = $this->runFunctionSnippet('create_unwrapped_push_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Unwrapped push subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+    }
+
+    public function testSubscriberErrorListener()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subscription = 'test-subscription-' . rand();
+
+        // Create subscription
+        $output = $this->runFunctionSnippet('create_subscription', [
+            self::$projectId,
+            $topic,
+            $subscription,
+        ]);
+        $this->assertMatchesRegularExpression('/Subscription created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        // Publish Message
+        $testMessage = 'This is a test message';
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            $testMessage,
+        ]);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+
+        // Pull messages from subscription with error listener
+        $output = $this->runFunctionSnippet('subscriber_error_listener', [
+            self::$projectId,
+            $topic,
+            $subscription
+        ]);
+        // Published message should be received as expected and no exception should be thrown
+        $this->assertMatchesRegularExpression(sprintf('/PubSub Message: %s/', $testMessage), $output);
+        $this->assertDoesNotMatchRegularExpression('/Exception Message/', $output);
+
+        // Delete subscription
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subscription,
+        ]);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
+
+        // Pull messages from a non-existent subscription with error listener
+        $subscription = 'test-subscription-' . rand();
+        $output = $this->runFunctionSnippet('subscriber_error_listener', [
+            self::$projectId,
+            $topic,
+            $subscription
+        ]);
+        // NotFound exception should be caught and printed
+        $this->assertMatchesRegularExpression('/Exception Message/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/Resource not found \(resource=%s\)/', $subscription), $output);
+    }
+
+    public function testOptimisticSubscribe()
+    {
+        $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
+        $subcriptionId = 'test-subscription-' . rand();
+
+        $output = $this->runFunctionSnippet('optimistic_subscribe', [
+            self::$projectId,
+            $topic,
+            $subcriptionId
+        ]);
+        $this->assertMatchesRegularExpression('/Exception Message/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/Resource not found \(resource=%s\)/',  $subcriptionId), $output);
+
+        $testMessage = 'This is a test message';
+        $output = $this->runFunctionSnippet('publish_message', [
+            self::$projectId,
+            $topic,
+            $testMessage,
+        ]);
+        $this->assertMatchesRegularExpression('/Message published/', $output);
+        $output = $this->runFunctionSnippet('optimistic_subscribe', [
+            self::$projectId,
+            $topic,
+            $subcriptionId
+        ]);
+        $this->assertMatchesRegularExpression(sprintf('/PubSub Message: %s/', $testMessage), $output);
+        $this->assertDoesNotMatchRegularExpression('/Exception Message/', $output);
+        $this->assertDoesNotMatchRegularExpression(sprintf('/Resource not found \(resource=%s\)/', $subcriptionId), $output);
+
+        // Delete subscription
+        $output = $this->runFunctionSnippet('delete_subscription', [
+            self::$projectId,
+            $subcriptionId,
+        ]);
+        $this->assertMatchesRegularExpression('/Subscription deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $subcriptionId), $output);
+    }
+
+    public function testUpdateTopicType()
+    {
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('update_topic_type', [
+            self::$projectId,
+            $topic,
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name',
+            'arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name/consumer/consumer-1:1111111111',
+            self::$awsRoleArn,
+            self::$gcpServiceAccount
+        ]);
+
+        $this->assertMatchesRegularExpression('/Topic updated:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
+
+    public function testCreateTopicWithCloudStorageIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_cloud_storage_ingestion', [
+            self::$projectId,
+            $topic,
+            $this->requireEnv('GOOGLE_PUBSUB_STORAGE_BUCKET'),
+            'text',
+            '1970-01-01T00:00:00Z',
+            "\n",
+            '**.txt'
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
+
+    public function testCreateTopicWithAwsMskIngestion()
+    {
+        $this->requireEnv('PUBSUB_EMULATOR_HOST');
+
+        $topic = 'test-topic-' . rand();
+        $output = $this->runFunctionSnippet('create_topic_with_aws_msk_ingestion', [
+            self::$projectId,
+            $topic,
+            'arn:aws:kafka:us-east-1:111111111111:cluster/fake-cluster-name/11111111-1111-1',
+            'fake-msk-topic-name',
+            self::$awsRoleArn,
+            self::$gcpServiceAccount
+        ]);
+        $this->assertMatchesRegularExpression('/Topic created:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+
+        $output = $this->runFunctionSnippet('delete_topic', [
+            self::$projectId,
+            $topic,
+        ]);
+        $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
+        $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
+    }
+
     public function testCreateTopicWithConfluentCloudIngestion()
     {
         $this->requireEnv('PUBSUB_EMULATOR_HOST');
