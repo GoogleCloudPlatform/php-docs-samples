@@ -24,19 +24,21 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_datastore_send_to_scc]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Action;
+use Google\Cloud\Dlp\V2\Action\PublishSummaryToCscc;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DatastoreOptions;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectConfig\FindingLimits;
-use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\Likelihood;
-use Google\Cloud\Dlp\V2\Action;
-use Google\Cloud\Dlp\V2\Action\PublishSummaryToCscc;
-use Google\Cloud\Dlp\V2\DatastoreOptions;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\KindExpression;
+use Google\Cloud\Dlp\V2\Likelihood;
 use Google\Cloud\Dlp\V2\PartitionId;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\StorageConfig;
 
 /**
  * (DATASTORE) Send Cloud DLP scan results to Security Command Center.
@@ -93,15 +95,18 @@ function inspect_datastore_send_to_scc(
 
     // Send the job creation request and process the response.
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJobConfig
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setInspectJob($inspectJobConfig);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
         sleep(10);
-        $job = $dlp->getDlpJob($job->getName());
+        $getDlpJobRequest = (new GetDlpJobRequest())
+            ->setName($job->getName());
+        $job = $dlp->getDlpJob($getDlpJobRequest);
         if ($job->getState() == JobState::DONE) {
             break;
         }

@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-service-directory": "^1.0.0"
+        "google/cloud-service-directory": "^2.0.0"
     }
 }

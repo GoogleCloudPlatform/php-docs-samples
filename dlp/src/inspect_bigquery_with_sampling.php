@@ -26,18 +26,20 @@ namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_inspect_bigquery_with_sampling]
 
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\BigQueryOptions;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InspectConfig;
-use Google\Cloud\Dlp\V2\StorageConfig;
-use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\PublishToPubSub;
+use Google\Cloud\Dlp\V2\BigQueryOptions;
 use Google\Cloud\Dlp\V2\BigQueryOptions\SampleMethod;
+use Google\Cloud\Dlp\V2\BigQueryTable;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
+use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
@@ -113,9 +115,10 @@ function inspect_bigquery_with_sampling(
 
     // Submit request
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'inspectJob' => $inspectJob
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setInspectJob($inspectJob);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     // Poll Pub/Sub using exponential backoff until job finishes
     // Consider using an asynchronous execution model such as Cloud Functions
@@ -130,7 +133,9 @@ function inspect_bigquery_with_sampling(
                 $subscription->acknowledge($message);
                 // Get the updated job. Loop to avoid race condition with DLP API.
                 do {
-                    $job = $dlp->getDlpJob($job->getName());
+                    $getDlpJobRequest = (new GetDlpJobRequest())
+                        ->setName($job->getName());
+                    $job = $dlp->getDlpJob($getDlpJobRequest);
                 } while ($job->getState() == JobState::RUNNING);
                 break 2; // break from parent do while
             }
