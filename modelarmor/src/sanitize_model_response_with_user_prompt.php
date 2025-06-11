@@ -33,7 +33,13 @@ use Google\Cloud\ModelArmor\V1\DataItem;
  * @param string $modelResponse The model response to sanitize (e.g. 'my-model-response').
  * @param string $userPrompt The user prompt for the model response (e.g. 'my-user-prompt').
  */
-function sanitize_model_response_with_user_prompt($projectId, $locationId, $templateId, $modelResponse, $userPrompt):void
+function sanitize_model_response_with_user_prompt(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $modelResponse,
+    string $userPrompt
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

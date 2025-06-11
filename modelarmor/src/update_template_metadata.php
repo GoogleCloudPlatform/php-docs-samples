@@ -37,7 +37,7 @@ use Google\Cloud\ModelArmor\V1\Template;
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
  */
-function update_template_metadata($projectId, $locationId, $templateId): void
+function update_template_metadata(string $projectId, string $locationId, string $templateId): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

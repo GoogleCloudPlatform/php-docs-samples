@@ -33,10 +33,18 @@ use Google\Cloud\ModelArmor\V1\SdpFilterSettings;
  * @param string $projectId The ID of the project (e.g. 'my-project').
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
- * @param string $inspectTemplate The resource name of the inspect template. (e.g. 'organizations/{organization}/inspectTemplates/{inspect_template}')
- * @param string $deidentifyTemplate The resource name of the de-identify template. (e.g. 'organizations/{organization}/deidentifyTemplates/{deidentify_template}')
+ * @param string $inspectTemplate The resource name of the inspect template.
+          (e.g. 'organizations/{organization}/inspectTemplates/{inspect_template}')
+ * @param string $deidentifyTemplate The resource name of the de-identify template. 
+          (e.g. 'organizations/{organization}/deidentifyTemplates/{deidentify_template}')
  */
-function create_template_with_advanced_sdp(string $projectId, string $locationId, string $templateId, string $inspectTemplate, string $deidentifyTemplate):void
+function create_template_with_advanced_sdp(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $inspectTemplate,
+    string $deidentifyTemplate
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

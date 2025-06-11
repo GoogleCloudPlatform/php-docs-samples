@@ -29,7 +29,7 @@ use Google\Cloud\ModelArmor\V1\GetFloorSettingRequest;
  * @param string $projectId The project Id for which the floor settings is to be retrieved.
  *
  */
-function get_project_floor_settings($projectId)
+function get_project_floor_settings(string $projectId): void
 {
     $client = new ModelArmorClient();
 

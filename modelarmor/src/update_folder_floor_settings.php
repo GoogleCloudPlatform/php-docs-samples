@@ -19,14 +19,6 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ModelArmor;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s FOLDER_ID\n", basename(__FILE__));
-}
-list($_, $folderId) = $argv;
-
-
 // [START modelarmor_update_folder_floor_settings]
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
@@ -43,7 +35,8 @@ use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
  * @param string $folderId The folder Id for which the floor settings is to be updated.
  *
  */
-function update_folder_floor_settings($folderId) {
+function update_folder_floor_settings(string $folderId): void
+{
     $client = new ModelArmorClient();
 
     $floorSettingsName = sprintf('folders/%s/locations/global/floorSetting', $folderId);

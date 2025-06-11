@@ -19,14 +19,6 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ModelArmor;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-if (count($argv) != 2) {
-    return printf("Usage: php %s ORGANIZATION_ID\n", basename(__FILE__));
-}
-list($_, $organizationId) = $argv;
-
-
 // [START modelarmor_update_organization_floor_settings]
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
@@ -43,7 +35,8 @@ use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
  * @param string $organizationId The organization Id for which the floor settings is to be updated.
  *
  */
-function update_organization_floor_settings($organizationId) {
+function update_organization_floor_settings(string $organizationId)
+{
     $client = new ModelArmorClient();
 
     $floorSettingsName = sprintf('organizations/%s/locations/global/floorSetting', $organizationId);

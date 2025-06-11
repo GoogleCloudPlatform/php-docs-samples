@@ -30,7 +30,7 @@ use Google\Cloud\ModelArmor\V1\DeleteTemplateRequest;
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
  */
-function delete_template($projectId, $locationId, $templateId) :void
+function delete_template(string $projectId, string $locationId, string $templateId): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

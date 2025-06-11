@@ -41,7 +41,12 @@ use Google\Cloud\ModelArmor\V1\DataItem;
  * @param string $templateId The ID of the template to use for the screener (e.g. 'my-template').
  * @param string $filePath The path to the PDF file to screen (e.g. 'path/to/file.pdf').
  */
-function screen_pdf_file($projectId, $locationId, $templateId, $filePath):void
+function screen_pdf_file(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $filePath
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

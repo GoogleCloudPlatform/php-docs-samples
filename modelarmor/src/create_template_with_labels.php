@@ -38,7 +38,13 @@ use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
  * @param string $labelKey The key of the label to add. (e.g. 'my-label-key').
  * @param string $labelValue The value of the label to add. (e.g. 'my-label-value').
  */
-function create_template_with_labels(string $projectId, string $locationId, string $templateId, string $labelKey, string $labelValue):void
+function create_template_with_labels(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $labelKey,
+    string $labelValue
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

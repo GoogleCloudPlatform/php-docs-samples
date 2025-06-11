@@ -29,7 +29,7 @@ use Google\Cloud\ModelArmor\V1\ListTemplatesRequest;
  * @param string $projectId The ID of your Google Cloud Platform project (e.g. 'my-project').
  * @param string $locationId The ID of the location where the templates are stored (e.g. 'us-central1').
  */
-function list_templates($projectId, $locationId): void
+function list_templates(string $projectId, string $locationId): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
 

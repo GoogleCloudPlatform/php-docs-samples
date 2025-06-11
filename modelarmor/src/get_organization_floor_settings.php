@@ -29,7 +29,7 @@ use Google\Cloud\ModelArmor\V1\GetFloorSettingRequest;
  * @param string $organizationId The organization Id for which the floor settings is to be retrieved.
  *
  */
-function get_organization_floor_settings($organizationId)
+function get_organization_floor_settings(string $organizationId): void
 {
     $client = new ModelArmorClient();
 

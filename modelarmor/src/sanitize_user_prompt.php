@@ -32,7 +32,12 @@ use Google\Cloud\ModelArmor\V1\DataItem;
  * @param string $templateId The ID of the template (e.g. 'my-template').
  * @param string $userPrompt The user prompt to sanitize (e.g. 'my-user-prompt').
  */
-function sanitize_user_prompt($projectId, $locationId, $templateId, $userPrompt):void
+function sanitize_user_prompt(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $userPrompt
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

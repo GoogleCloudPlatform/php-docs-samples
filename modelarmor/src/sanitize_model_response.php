@@ -32,7 +32,12 @@ use Google\Cloud\ModelArmor\V1\DataItem;
  * @param string $templateId The ID of the template (e.g. 'my-template').
  * @param string $modelResponse The model response to sanitize (e.g. 'my-model-response').
  */
-function sanitize_model_response($projectId, $locationId, $templateId, $modelResponse):void
+function sanitize_model_response(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $modelRespons
+): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

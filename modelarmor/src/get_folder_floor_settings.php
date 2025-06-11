@@ -29,7 +29,7 @@ use Google\Cloud\ModelArmor\V1\GetFloorSettingRequest;
  * @param string $folderId The folder Id for which the floor settings is to be retrieved.
  *
  */
-function get_folder_floor_settings($folderId) 
+function get_folder_floor_settings(string $folderId): void
 {
     $client = new ModelArmorClient();
 

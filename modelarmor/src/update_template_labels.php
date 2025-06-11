@@ -34,7 +34,13 @@ use Google\Protobuf\FieldMask;
  * @param string $labelKey The key of the label to add (e.g. 'my-label-key').
  * @param string $labelValue The value of the label to add (e.g. 'my-label-value').
  */
-function update_template_labels($projectId, $locationId, $templateId, $labelKey, $labelValue) {
+function update_template_labels(
+    string $projectId,
+    string $locationId,
+    string $templateId,
+    string $labelKey,
+    string $labelValue
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
 

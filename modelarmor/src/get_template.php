@@ -35,7 +35,7 @@ use Google\Cloud\ModelArmor\V1\GetTemplateRequest;
  * @param string $locationId The ID of the location where the template is stored (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
  */
-function get_template($projectId, $locationId, $templateId): void
+function get_template(string $projectId, string $locationId, string $templateId): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);

@@ -42,7 +42,8 @@ function create_template(string $projectId, string $locationId, string $template
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);
 
-    /** Build the Model Armor template with preferred filters.
+    /**
+     * Build the Model Armor template with preferred filters.
      * For more details on filters, refer to:
      * https://cloud.google.com/security-command-center/docs/key-concepts-model-armor#ma-filters
      */
