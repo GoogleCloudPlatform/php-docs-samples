@@ -24,12 +24,13 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_update_trigger]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InspectConfig;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\JobTrigger;
 use Google\Cloud\Dlp\V2\Likelihood;
+use Google\Cloud\Dlp\V2\UpdateJobTriggerRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -69,11 +70,12 @@ function update_trigger(
 
     // Send the update job trigger request and process the response.
     $name = "projects/$callingProjectId/locations/global/jobTriggers/" . $jobTriggerName;
+    $updateJobTriggerRequest = (new UpdateJobTriggerRequest())
+        ->setName($name)
+        ->setJobTrigger($jobTrigger)
+        ->setUpdateMask($fieldMask);
 
-    $response = $dlp->updateJobTrigger($name, [
-        'jobTrigger' => $jobTrigger,
-        'updateMask' => $fieldMask
-    ]);
+    $response = $dlp->updateJobTrigger($updateJobTriggerRequest);
 
     // Print results.
     printf('Successfully update trigger %s' . PHP_EOL, $response->getName());

@@ -22,4 +22,12 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
         . 'project root before running "phpunit" to run the samples tests.');
 }
 
+// Make sure that while testing we bypass the `final` keyword for the GAPIC client.
+DG\BypassFinals::allowPaths([
+    '*/src/V*/Client/*',
+]);
+
+DG\BypassFinals::enable();
+
 require_once __DIR__ . '/vendor/autoload.php';
+
