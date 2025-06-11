@@ -24,10 +24,11 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_sync_gcs]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionAudio;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
  * @param string $uri The Cloud Storage object to transcribe (gs://your-bucket-name/your-object-name)
@@ -53,7 +54,9 @@ function transcribe_sync_gcs(string $uri)
     $client = new SpeechClient();
 
     try {
-        $response = $client->recognize($config, $audio);
+        $recognizeRequest = (new RecognizeRequest())
+            ->setRecognizer($config);
+        $response = $client->recognize($recognizeRequest);
         foreach ($response->getResults() as $result) {
             $alternatives = $result->getAlternatives();
             $mostLikely = $alternatives[0];

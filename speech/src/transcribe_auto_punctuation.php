@@ -24,10 +24,11 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_auto_punctuation]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionAudio;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
  * @param string $audioFile path to an audio file
@@ -57,7 +58,9 @@ function transcribe_auto_punctuation(string $audioFile)
     $client = new SpeechClient();
 
     // make the API call
-    $response = $client->recognize($config, $audio);
+    $recognizeRequest = (new RecognizeRequest())
+        ->setRecognizer($config);
+    $response = $client->recognize($recognizeRequest);
     $results = $response->getResults();
 
     // print results

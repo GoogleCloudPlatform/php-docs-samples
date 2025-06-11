@@ -20,10 +20,11 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionAudio;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 # The name of the audio file to transcribe
 $gcsURI = 'gs://cloud-samples-data/speech/brooklyn_bridge.raw';
@@ -43,7 +44,9 @@ $config = new RecognitionConfig([
 $client = new SpeechClient();
 
 # Detects speech in the audio file
-$response = $client->recognize($config, $audio);
+$recognizeRequest = (new RecognizeRequest())
+    ->setRecognizer($config);
+$response = $client->recognize($recognizeRequest);
 
 # Print most likely transcription
 foreach ($response->getResults() as $result) {
