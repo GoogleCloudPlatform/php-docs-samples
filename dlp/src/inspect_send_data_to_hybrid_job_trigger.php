@@ -26,12 +26,16 @@ namespace Google\Cloud\Samples\Dlp;
 # [START dlp_inspect_send_data_to_hybrid_job_trigger]
 
 use Google\ApiCore\ApiException;
+use Google\Cloud\Dlp\V2\ActivateJobTriggerRequest;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\Container;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
 use Google\Cloud\Dlp\V2\ContentItem;
 use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
 use Google\Cloud\Dlp\V2\HybridContentItem;
 use Google\Cloud\Dlp\V2\HybridFindingDetails;
+use Google\Cloud\Dlp\V2\HybridInspectJobTriggerRequest;
+use Google\Cloud\Dlp\V2\ListDlpJobsRequest;
 
 /**
  * Inspect data hybrid job trigger.
@@ -76,23 +80,31 @@ function inspect_send_data_to_hybrid_job_trigger(
 
     $triggerJob = null;
     try {
-        $triggerJob = $dlp->activateJobTrigger($name);
+        $activateJobTriggerRequest = (new ActivateJobTriggerRequest())
+            ->setName($name);
+        $triggerJob = $dlp->activateJobTrigger($activateJobTriggerRequest);
     } catch (ApiException $e) {
-        $result = $dlp->listDlpJobs($parent, ['filter' => 'trigger_name=' . $name]);
+        $listDlpJobsRequest = (new ListDlpJobsRequest())
+            ->setParent($parent)
+            ->setFilter('trigger_name=' . $name);
+        $result = $dlp->listDlpJobs($listDlpJobsRequest);
         foreach ($result as $job) {
             $triggerJob = $job;
         }
     }
+    $hybridInspectJobTriggerRequest = (new HybridInspectJobTriggerRequest())
+        ->setName($name)
+        ->setHybridItem($hybridItem);
 
-    $dlp->hybridInspectJobTrigger($name, [
-        'hybridItem' => $hybridItem,
-    ]);
+    $dlp->hybridInspectJobTrigger($hybridInspectJobTriggerRequest);
 
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
         sleep(10);
-        $job = $dlp->getDlpJob($triggerJob->getName());
+        $getDlpJobRequest = (new GetDlpJobRequest())
+            ->setName($triggerJob->getName());
+        $job = $dlp->getDlpJob($getDlpJobRequest);
         if ($job->getState() != JobState::RUNNING) {
             break;
         }

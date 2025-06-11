@@ -24,11 +24,12 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_update_stored_infotype]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStorageFileSet;
 use Google\Cloud\Dlp\V2\CloudStoragePath;
 use Google\Cloud\Dlp\V2\LargeCustomDictionaryConfig;
 use Google\Cloud\Dlp\V2\StoredInfoTypeConfig;
+use Google\Cloud\Dlp\V2\UpdateStoredInfoTypeRequest;
 use Google\Protobuf\FieldMask;
 
 /**
@@ -74,10 +75,11 @@ function update_stored_infotype(
         ]);
 
     // Run request
-    $response = $dlp->updateStoredInfoType($name, [
-        'config' => $storedInfoTypeConfig,
-        'updateMask' => $fieldMask
-    ]);
+    $updateStoredInfoTypeRequest = (new UpdateStoredInfoTypeRequest())
+        ->setName($name)
+        ->setConfig($storedInfoTypeConfig)
+        ->setUpdateMask($fieldMask);
+    $response = $dlp->updateStoredInfoType($updateStoredInfoTypeRequest);
 
     // Print results
     printf('Successfully update Stored InforType : %s' . PHP_EOL, $response->getName());
