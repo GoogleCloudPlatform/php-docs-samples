@@ -41,7 +41,7 @@ function get_template($projectId, $locationId, $templateId): void
     $client = new ModelArmorClient($options);
     $name = sprintf('projects/%s/locations/%s/templates/%s', $projectId, $locationId, $templateId);
 
-    $getTemplateRequest = new GetTemplateRequest()->setName($name);
+    $getTemplateRequest = (new GetTemplateRequest())->setName($name);
 
     $response = $client->getTemplate($getTemplateRequest);
 

@@ -53,7 +53,7 @@ function screen_pdf_file($projectId, $locationId, $templateId, $filePath):void
     $userPromptRequest = (new SanitizeUserPromptRequest())
         ->setName("projects/$projectId/locations/$locationId/templates/$templateId")
         ->setUserPromptData((new DataItem())
-            ->setByteItem(new ByteDataItem()->setByteData($pdfContentBase64)
+            ->setByteItem((new ByteDataItem())->setByteData($pdfContentBase64)
                 ->setByteDataType(ByteItemType::PDF)));
 
     $response = $client->sanitizeUserPrompt($userPromptRequest);

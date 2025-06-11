@@ -36,7 +36,7 @@ function list_templates($projectId, $locationId): void
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);
 
-    $listTemplatesrequest = new ListTemplatesRequest()->setParent($parent);
+    $listTemplatesrequest = (new ListTemplatesRequest())->setParent($parent);
 
     $templates = iterator_to_array($client->listTemplates($listTemplatesrequest)->iterateAllElements());
 

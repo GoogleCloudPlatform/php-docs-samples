@@ -36,7 +36,7 @@ function delete_template($projectId, $locationId, $templateId) :void
     $client = new ModelArmorClient($options);
     $templateName = sprintf('projects/%s/locations/%s/templates/%s', $projectId, $locationId, $templateId);
 
-    $dltTemplateRequest = new DeleteTemplateRequest()->setName($templateName);
+    $dltTemplateRequest = (new DeleteTemplateRequest())->setName($templateName);
 
     $client->deleteTemplate($dltTemplateRequest);
 

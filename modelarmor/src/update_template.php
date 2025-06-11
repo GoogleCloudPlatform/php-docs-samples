@@ -41,7 +41,7 @@ function update_template(string $projectId, string $locationId, string $template
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
 
-    $templateFilterConfig = new FilterConfig()
+    $templateFilterConfig =( new FilterConfig())
         ->setPiAndJailbreakFilterSettings(
             (new PiAndJailbreakFilterSettings())
                 ->setFilterEnforcement(PiAndJailbreakFilterEnforcement::ENABLED)
