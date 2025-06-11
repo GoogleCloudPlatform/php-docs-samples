@@ -696,4 +696,6 @@ class modelarmorTest extends TestCase
             }
         }
     }
+
+    # TODO: Add tests for floor settings once API issues are resolved.
 }
