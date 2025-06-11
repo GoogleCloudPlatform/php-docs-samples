@@ -27,7 +27,6 @@ if (count($argv) != 4) {
 list($_, $projectId, $locationId, $templateId) = $argv;
 
 // [START modelarmor_quickstart]
-// Import the Model Armor client library.
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
 use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
@@ -45,13 +44,8 @@ use Google\Cloud\ModelArmor\V1\SanitizeUserPromptRequest;
 // $locationId = 'YOUR_LOCATION_ID'; (e.g. 'us-central1');
 // $templateId = 'YOUR_TEMPLATE_ID'; (e.g. 'my-template');
 
-// Specify regional endpoint.
 $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
-
-// Instantiates a client.
 $client = new ModelArmorClient($options);
-
-// Build the resource name of the parent location.
 $parent = $client->locationName($projectId, $locationId);
 
 /** Build the Model Armor template with preferred filters.
@@ -80,7 +74,6 @@ $templateFilterConfig = (new FilterConfig())->setRaiSettings($raiFilterSetting);
 
 $template = (new Template())->setFilterConfig($templateFilterConfig);
 
-// Prepare the create template request.
 $request = (new CreateTemplateRequest())
     ->setParent($parent)
     ->setTemplateId($templateId)

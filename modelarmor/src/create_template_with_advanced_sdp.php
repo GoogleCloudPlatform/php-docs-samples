@@ -19,65 +19,56 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ModelArmor;
 
-// [START modelarmor_create_template]
+// [START modelarmor_create_template_with_advanced_sdp]
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
+use Google\Cloud\ModelArmor\V1\SdpAdvancedConfig;
 use Google\Cloud\ModelArmor\V1\Template;
-use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
 use Google\Cloud\ModelArmor\V1\FilterConfig;
-use Google\Cloud\ModelArmor\V1\RaiFilterType;
-use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
-use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
-use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
+use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
+use Google\Cloud\ModelArmor\V1\SdpFilterSettings;
 
 /**
- * Create a Model Armor template.
+ * Create a Model Armor template with an Advanced SDP Filter.
  *
  * @param string $projectId The ID of the project (e.g. 'my-project').
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
+ * @param string $inspectTemplate The resource name of the inspect template. (e.g. 'organizations/{organization}/inspectTemplates/{inspect_template}')
+ * @param string $deidentifyTemplate The resource name of the de-identify template. (e.g. 'organizations/{organization}/deidentifyTemplates/{deidentify_template}')
  */
-function create_template(string $projectId, string $locationId, string $templateId): void
+function create_template_with_advanced_sdp(string $projectId, string $locationId, string $templateId, string $inspectTemplate, string $deidentifyTemplate):void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);
 
-    /** Build the Model Armor template with preferred filters.
-     * For more details on filters, refer to:
-     * https://cloud.google.com/security-command-center/docs/key-concepts-model-armor#ma-filters
-     */
+    // Build the Model Armor template with Advanced SDP Filter.
 
-    $raiFilters = [
-        (new RaiFilter())
-            ->setFilterType(RaiFilterType::DANGEROUS)
-            ->setConfidenceLevel(DetectionConfidenceLevel::HIGH),
-        (new RaiFilter())
-            ->setFilterType(RaiFilterType::HATE_SPEECH)
-            ->setConfidenceLevel(DetectionConfidenceLevel::HIGH),
-        (new RaiFilter())
-            ->setFilterType(RaiFilterType::SEXUALLY_EXPLICIT)
-            ->setConfidenceLevel(DetectionConfidenceLevel::LOW_AND_ABOVE),
-        (new RaiFilter())
-            ->setFilterType(RaiFilterType::HARASSMENT)
-            ->setConfidenceLevel(DetectionConfidenceLevel::MEDIUM_AND_ABOVE),
-    ];
+    // Note: If you specify only Inspect template, Model Armor reports the filter matches if
+    // sensitive data is detected. If you specify Inspect template and De-identify template, Model
+    // Armor returns the de-identified sensitive data and sanitized version of prompts or
+    // responses in the deidentifyResult.data.text field of the finding.
+    $sdpAdvancedConfig = (new SdpAdvancedConfig())
+        ->setInspectTemplate($inspectTemplate)
+        ->setDeidentifyTemplate($deidentifyTemplate);
 
-    $raiFilterSetting = (new RaiFilterSettings())->setRaiFilters($raiFilters);
+    $sdpSettings = (new SdpFilterSettings())->setAdvancedConfig($sdpAdvancedConfig);
 
-    $templateFilterConfig = (new FilterConfig())->setRaiSettings($raiFilterSetting);
+    $templateFilterConfig = (new FilterConfig())
+        ->setSdpSettings($sdpSettings);
 
     $template = (new Template())->setFilterConfig($templateFilterConfig);
 
-    $request = (new CreateTemplateRequest)
+    $request = (new CreateTemplateRequest())
         ->setParent($parent)
         ->setTemplateId($templateId)
         ->setTemplate($template);
 
     $response = $client->createTemplate($request);
 
-    printf("Template created: %s" . PHP_EOL, $response->getName());
+    printf('Template created: %s' . PHP_EOL, $response->getName());
 }
-// [END modelarmor_create_template]
+// [END modelarmor_create_template_with_advanced_sdp]
 
 // The following 2 lines are only needed to execute the samples on the CLI.
 require_once __DIR__ . '/../../testing/sample_helpers.php';

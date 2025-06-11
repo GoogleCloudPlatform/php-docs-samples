@@ -19,33 +19,30 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ModelArmor;
 
-// [START modelarmor_create_template]
+// [START modelarmor_create_template_with_labels]
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\Template;
 use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
 use Google\Cloud\ModelArmor\V1\FilterConfig;
-use Google\Cloud\ModelArmor\V1\RaiFilterType;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
+use Google\Cloud\ModelArmor\V1\RaiFilterType;
 use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
 
 /**
- * Create a Model Armor template.
+ * Create a Model Armor template with labels.
  *
  * @param string $projectId The ID of the project (e.g. 'my-project').
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
+ * @param string $labelKey The key of the label to add. (e.g. 'my-label-key').
+ * @param string $labelValue The value of the label to add. (e.g. 'my-label-value').
  */
-function create_template(string $projectId, string $locationId, string $templateId): void
+function create_template_with_labels(string $projectId, string $locationId, string $templateId, string $labelKey, string $labelValue):void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);
-
-    /** Build the Model Armor template with preferred filters.
-     * For more details on filters, refer to:
-     * https://cloud.google.com/security-command-center/docs/key-concepts-model-armor#ma-filters
-     */
 
     $raiFilters = [
         (new RaiFilter())
@@ -62,22 +59,24 @@ function create_template(string $projectId, string $locationId, string $template
             ->setConfidenceLevel(DetectionConfidenceLevel::MEDIUM_AND_ABOVE),
     ];
 
-    $raiFilterSetting = (new RaiFilterSettings())->setRaiFilters($raiFilters);
+    $raiSettings = (new RaiFilterSettings())->setRaiFilters($raiFilters);
+    $filterConfig = (new FilterConfig())->setRaiSettings($raiSettings);
 
-    $templateFilterConfig = (new FilterConfig())->setRaiSettings($raiFilterSetting);
+    // Build template with filters and labels.
+    $template = (new Template())
+        ->setFilterConfig($filterConfig)
+        ->setLabels([$labelKey => $labelValue]);
 
-    $template = (new Template())->setFilterConfig($templateFilterConfig);
-
-    $request = (new CreateTemplateRequest)
+    $request = (new CreateTemplateRequest())
         ->setParent($parent)
         ->setTemplateId($templateId)
         ->setTemplate($template);
 
     $response = $client->createTemplate($request);
 
-    printf("Template created: %s" . PHP_EOL, $response->getName());
+    printf('Template created: %s' . PHP_EOL, $response->getName());
 }
-// [END modelarmor_create_template]
+// [END modelarmor_create_template_with_labels]
 
 // The following 2 lines are only needed to execute the samples on the CLI.
 require_once __DIR__ . '/../../testing/sample_helpers.php';

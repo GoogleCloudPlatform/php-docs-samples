@@ -17,25 +17,50 @@
 
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\ModelArmor;
+use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
+use Google\Cloud\ModelArmor\V1\DeleteTemplateRequest;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class quickstartTest extends BaseTestCase
+class quickstartTest extends TestCase
 {
-    protected static function getTemplatePrefix(): string
+    use TestTrait;
+
+    protected static $client;
+    protected static $templateId;
+    protected static $locationId = 'us-central1';
+
+    public static function setUpBeforeClass(): void
     {
-        return 'php-quickstart-';
+        $options = ['apiEndpoint' => 'modelarmor.' . self::$locationId . '.rep.googleapis.com'];
+        self::$client = new ModelArmorClient($options);
+        self::$templateId = uniqid('php-quickstart-');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        $templateName = self::$client->templateName(self::$projectId, self::$locationId, self::$templateId);
+        try {
+            $request = (new DeleteTemplateRequest())->setName($templateName);
+            self::$client->deleteTemplate($request);
+        } catch (GaxApiException $e) {
+            if ($e->getStatus() != 'NOT_FOUND') {
+                throw $e;
+            }
+        }
+        self::$client->close();
     }
 
     public function testQuickstart()
     {
-        $projectId = self::getProjectId();
-        $output = $this->runSnippetfile('quickstart', [
-            $projectId,
+        $output = $this->runSnippet('quickstart', [
+            self::$projectId,
             self::$locationId,
             self::$templateId,
         ]);
 
-        $expectedTemplateString = "Template created: projects/" . $projectId . "/locations/" . self::$locationId . "/templates/" . self::$templateId;
+        $expectedTemplateString = "Template created: projects/" . self::$projectId . "/locations/" . self::$locationId . "/templates/" . self::$templateId;
         $this->assertStringContainsString($expectedTemplateString, $output);
         $this->assertStringContainsString('Result for User Prompt Sanitization:', $output);
         $this->assertStringContainsString('Result for Model Response Sanitization:', $output);

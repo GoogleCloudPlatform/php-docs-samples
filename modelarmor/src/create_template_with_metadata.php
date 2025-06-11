@@ -19,33 +19,29 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ModelArmor;
 
-// [START modelarmor_create_template]
+// [START modelarmor_create_template_with_metadata]
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
-use Google\Cloud\ModelArmor\V1\Template;
-use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
-use Google\Cloud\ModelArmor\V1\FilterConfig;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
+use Google\Cloud\ModelArmor\V1\Template;
+use Google\Cloud\ModelArmor\V1\FilterConfig;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
+use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
 use Google\Cloud\ModelArmor\V1\DetectionConfidenceLevel;
+use Google\Cloud\ModelArmor\V1\Template\TemplateMetadata;
 
 /**
- * Create a Model Armor template.
+ * Create a Model Armor template with template metadata.
  *
  * @param string $projectId The ID of the project (e.g. 'my-project').
  * @param string $locationId The ID of the location (e.g. 'us-central1').
  * @param string $templateId The ID of the template (e.g. 'my-template').
  */
-function create_template(string $projectId, string $locationId, string $templateId): void
+function create_template_with_metadata(string $projectId, string $locationId, string $templateId): void
 {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);
-
-    /** Build the Model Armor template with preferred filters.
-     * For more details on filters, refer to:
-     * https://cloud.google.com/security-command-center/docs/key-concepts-model-armor#ma-filters
-     */
 
     $raiFilters = [
         (new RaiFilter())
@@ -62,22 +58,32 @@ function create_template(string $projectId, string $locationId, string $template
             ->setConfidenceLevel(DetectionConfidenceLevel::MEDIUM_AND_ABOVE),
     ];
 
-    $raiFilterSetting = (new RaiFilterSettings())->setRaiFilters($raiFilters);
+    $raiSettings = (new RaiFilterSettings())->setRaiFilters($raiFilters);
+    $filterConfig = (new FilterConfig())->setRaiSettings($raiSettings);
 
-    $templateFilterConfig = (new FilterConfig())->setRaiSettings($raiFilterSetting);
+    /** Add template metadata to the template.
+     * For more details on template metadata, please refer to the following doc:
+     * https://cloud.google.com/security-command-center/docs/reference/model-armor/rest/v1/projects.locations.templates#templatemetadata
+     */
+    $templateMetadata = (new TemplateMetadata())
+        ->setLogTemplateOperations(true)
+        ->setLogSanitizeOperations(true);
 
-    $template = (new Template())->setFilterConfig($templateFilterConfig);
+    // Build template with filters and Metadata.
+    $template = (new Template())
+        ->setFilterConfig($filterConfig)
+        ->setTemplateMetadata($templateMetadata);
 
-    $request = (new CreateTemplateRequest)
+    $request = (new CreateTemplateRequest())
         ->setParent($parent)
         ->setTemplateId($templateId)
         ->setTemplate($template);
 
     $response = $client->createTemplate($request);
 
-    printf("Template created: %s" . PHP_EOL, $response->getName());
+    printf('Template created: %s' . PHP_EOL, $response->getName());
 }
-// [END modelarmor_create_template]
+// [END modelarmor_create_template_with_metadata]
 
 // The following 2 lines are only needed to execute the samples on the CLI.
 require_once __DIR__ . '/../../testing/sample_helpers.php';

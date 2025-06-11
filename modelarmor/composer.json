@@ -1,10 +1,6 @@
 {
     "require": {
+        "google/cloud-dlp": "^2.4",
         "google/cloud-modelarmor": "^0.1.0"
-    },
-    "autoload": {
-     "psr-4": {
-       "Google\\Cloud\\Samples\\ModelArmor\\": "test"
-     }
-  }
+    }
 }
