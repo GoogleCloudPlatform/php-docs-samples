@@ -20,7 +20,8 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\BigQuery\DataTransfer\V1\DataTransferServiceClient;
+use Google\Cloud\BigQuery\DataTransfer\V1\Client\DataTransferServiceClient;
+use Google\Cloud\BigQuery\DataTransfer\V1\ListDataSourcesRequest;
 
 # Instantiates a client
 $bqdtsClient = new DataTransferServiceClient();
@@ -31,7 +32,9 @@ $parent = sprintf('projects/%s/locations/us', $projectId);
 
 try {
     echo 'Supported Data Sources:', PHP_EOL;
-    $pagedResponse = $bqdtsClient->listDataSources($parent);
+    $listDataSourcesRequest = (new ListDataSourcesRequest())
+        ->setParent($parent);
+    $pagedResponse = $bqdtsClient->listDataSources($listDataSourcesRequest);
     foreach ($pagedResponse->iterateAllElements() as $dataSource) {
         echo 'Data source: ', $dataSource->getDisplayName(), PHP_EOL;
         echo 'ID: ', $dataSource->getDataSourceId(), PHP_EOL;
