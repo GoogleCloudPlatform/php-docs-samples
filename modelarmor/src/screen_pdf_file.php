@@ -20,18 +20,11 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\ModelArmor;
 
 // [START modelarmor_screen_pdf_file]
-use Google\Cloud\ModelArmor\V1\CLient\ModelArmorClient;
+use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\SanitizeUserPromptRequest;
 use Google\Cloud\ModelArmor\V1\ByteDataItem;
 use Google\Cloud\ModelArmor\V1\ByteDataItem\ByteItemType;
 use Google\Cloud\ModelArmor\V1\DataItem;
-
-/** Uncomment and populate these variables in your code. */
-// $projectId = "YOUR_GOOGLE_CLOUD_PROJECT"; // e.g. 'my-project';
-// $locationId = 'YOUR_LOCATION_ID'; // e.g. 'us-central1';
-// $templateId = 'YOUR_TEMPLATE_ID'; // e.g. 'my-template';
-// $userPrompt = 'YOUR_USER_PROMPT'; // e.g. 'my-user-prompt';
-// $filePath = 'YOUR_PDF_FILE_NAME'; // e.g. ''path/to/file.pdf';
 
 /**
  * Screens a PDF file using the ModelArmor service.
@@ -46,8 +39,7 @@ function screen_pdf_file(
     string $locationId,
     string $templateId,
     string $filePath
-): void
-{
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
 

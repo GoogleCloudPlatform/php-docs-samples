@@ -151,7 +151,7 @@ class modelarmorTest extends TestCase
             self::$testCreateTemplateId,
         ]);
 
-        $expectedTemplateString = "Template created: projects/" . self::$projectId . "/locations/" . self::$locationId . "/templates/" . self::$testCreateTemplateId;
+        $expectedTemplateString = 'Template created: projects/' . self::$projectId . '/locations/' . self::$locationId . '/templates/' . self::$testCreateTemplateId;
         $this->assertStringContainsString($expectedTemplateString, $output);
     }
 
@@ -642,7 +642,6 @@ class modelarmorTest extends TestCase
         $template = (new Template())->setFilterConfig($templateFilterConfig);
         self::createTemplate(self::$testPIandJailbreakTemplateId, $template);
     }
-
 
     public static function createTemplateWithMaliciousURI()
     {

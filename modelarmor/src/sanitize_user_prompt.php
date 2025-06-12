@@ -37,8 +37,7 @@ function sanitize_user_prompt(
     string $locationId,
     string $templateId,
     string $userPrompt
-): void
-{
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
 

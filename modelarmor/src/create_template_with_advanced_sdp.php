@@ -35,7 +35,7 @@ use Google\Cloud\ModelArmor\V1\SdpFilterSettings;
  * @param string $templateId The ID of the template (e.g. 'my-template').
  * @param string $inspectTemplate The resource name of the inspect template.
           (e.g. 'organizations/{organization}/inspectTemplates/{inspect_template}')
- * @param string $deidentifyTemplate The resource name of the de-identify template. 
+ * @param string $deidentifyTemplate The resource name of the de-identify template.
           (e.g. 'organizations/{organization}/deidentifyTemplates/{deidentify_template}')
  */
 function create_template_with_advanced_sdp(
@@ -44,8 +44,7 @@ function create_template_with_advanced_sdp(
     string $templateId,
     string $inspectTemplate,
     string $deidentifyTemplate
-): void
-{
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);

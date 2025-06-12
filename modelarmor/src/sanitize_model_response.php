@@ -37,8 +37,7 @@ function sanitize_model_response(
     string $locationId,
     string $templateId,
     string $modelResponse
-): void
-{
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
 

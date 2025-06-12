@@ -44,8 +44,7 @@ function create_template_with_labels(
     string $templateId,
     string $labelKey,
     string $labelValue
-): void
-{
+): void {
     $options = ['apiEndpoint' => "modelarmor.$locationId.rep.googleapis.com"];
     $client = new ModelArmorClient($options);
     $parent = $client->locationName($projectId, $locationId);

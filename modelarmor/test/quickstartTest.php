@@ -60,7 +60,12 @@ class quickstartTest extends TestCase
             self::$templateId,
         ]);
 
-        $expectedTemplateString = "Template created: projects/" . self::$projectId . "/locations/" . self::$locationId . "/templates/" . self::$templateId;
+        $expectedTemplateString = sprintf(
+            'Template created: projects/%s/locations/%s/templates/%s',
+            self::$projectId,
+            self::$locationId,
+            self::$templateId,
+        );
         $this->assertStringContainsString($expectedTemplateString, $output);
         $this->assertStringContainsString('Result for User Prompt Sanitization:', $output);
         $this->assertStringContainsString('Result for Model Response Sanitization:', $output);

@@ -23,11 +23,6 @@ namespace Google\Cloud\Samples\ModelArmor;
 use Google\Cloud\ModelArmor\V1\Client\ModelArmorClient;
 use Google\Cloud\ModelArmor\V1\GetTemplateRequest;
 
-/** Uncomment and populate these variables in your code. */
-// $projectId = "YOUR_GOOGLE_CLOUD_PROJECT"; // eg. 'my-project'
-// $locationId = 'YOUR_LOCATION_ID'; // eg. 'us-central1'
-// $templateId = 'YOUR_TEMPLATE_ID'; // eg. 'my-template'
-
 /**
  * Gets a Model Armor template.
  *

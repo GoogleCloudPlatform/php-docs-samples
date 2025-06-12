@@ -76,7 +76,7 @@ function create_template(string $projectId, string $locationId, string $template
 
     $response = $client->createTemplate($request);
 
-    printf("Template created: %s" . PHP_EOL, $response->getName());
+    printf('Template created: %s' . PHP_EOL, $response->getName());
 }
 // [END modelarmor_create_template]
 
