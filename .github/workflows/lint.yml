@@ -29,10 +29,6 @@ jobs:
     - name: Get changed files
       id: changedFiles
       uses: tj-actions/changed-files@v46
-    - uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-      with:
-        state: open
     - name: Run Script
       run: |
         composer install -d testing/
@@ -40,4 +36,4 @@ jobs:
         bash testing/run_staticanalysis_check.sh
       env:
         FILES_CHANGED: ${{ steps.changedFiles.outputs.all_changed_files }}
-        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
