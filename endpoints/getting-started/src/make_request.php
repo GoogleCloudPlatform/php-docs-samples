@@ -77,7 +77,7 @@ function make_request(
             $oauth->setClientSecret($config['installed']['client_secret']);
             $oauth->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
             $authUrl = $oauth->buildFullAuthorizationUri(['access_type' => 'offline']);
-            `open '$authUrl'`;
+            exec('open "$authUrl"');
 
             // prompt for the auth code
             $authCode = readline('Enter the authCode: ');

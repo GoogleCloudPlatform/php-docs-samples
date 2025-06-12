@@ -19,8 +19,10 @@
 // Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-use Google\Cloud\BigQuery\Storage\V1\BigQueryReadClient;
+use Google\Cloud\BigQuery\Storage\V1\Client\BigQueryReadClient;
+use Google\Cloud\BigQuery\Storage\V1\CreateReadSessionRequest;
 use Google\Cloud\BigQuery\Storage\V1\DataFormat;
+use Google\Cloud\BigQuery\Storage\V1\ReadRowsRequest;
 use Google\Cloud\BigQuery\Storage\V1\ReadSession;
 use Google\Cloud\BigQuery\Storage\V1\ReadSession\TableModifiers;
 use Google\Cloud\BigQuery\Storage\V1\ReadSession\TableReadOptions;
@@ -62,17 +64,14 @@ if (!empty($snapshotMillis)) {
 }
 
 try {
-    $session = $client->createReadSession(
-        $project,
-        $readSession,
-        [
-            // We'll use only a single stream for reading data from the table.
-            // However, if you wanted to fan out multiple readers you could do so
-            // by having a reader process each individual stream.
-            'maxStreamCount' => 1
-        ]
-    );
-    $stream = $client->readRows($session->getStreams()[0]->getName());
+    $createReadSessionRequest = (new CreateReadSessionRequest())
+        ->setParent($project)
+        ->setReadSession($readSession)
+        ->setMaxStreamCount(1);
+    $session = $client->createReadSession($createReadSessionRequest);
+    $readRowsRequest = (new ReadRowsRequest())
+        ->setReadStream($session->getStreams()[0]->getName());
+    $stream = $client->readRows($readRowsRequest);
     // Do any local processing by iterating over the responses. The
     // google-cloud-bigquery-storage client reconnects to the API after any
     // transient network errors or timeouts.

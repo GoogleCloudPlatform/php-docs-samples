@@ -24,7 +24,8 @@ if ($argc != 3) {
 list($_, $projectId, $locationId) = $argv;
 
 // [START servicedirectory_quickstart]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\ListNamespacesRequest;
 
 /** Uncomment and populate these variables in your code */
 // $projectId = '[YOUR_PROJECT_ID]';
@@ -35,7 +36,9 @@ $client = new RegistrationServiceClient();
 
 // Run request.
 $locationName = RegistrationServiceClient::locationName($projectId, $locationId);
-$pagedResponse = $client->listNamespaces($locationName);
+$listNamespacesRequest = (new ListNamespacesRequest())
+    ->setParent($locationName);
+$pagedResponse = $client->listNamespaces($listNamespacesRequest);
 
 // Iterate over each namespace and print its name.
 print('Namespaces: ' . PHP_EOL);
