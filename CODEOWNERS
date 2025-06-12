@@ -26,6 +26,7 @@
 /spanner/                 @GoogleCloudPlatform/api-spanner @GoogleCloudPlatform/php-samples-reviewers
 /secretmanager/           @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
 /parametermanager/        @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team @GoogleCloudPlatform/cloud-parameters-team
+/modelarmor/              @GoogleCloudPlatform/php-samples-reviewers @GoogleCloudPlatform/cloud-modelarmor-team  
 
 # Serverless, Orchestration, DevOps
 
