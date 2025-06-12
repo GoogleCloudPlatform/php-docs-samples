@@ -53,6 +53,7 @@ class TasksTest extends TestCase
 
     public function testCreateHttpTaskWithToken()
     {
+        self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
         $jsonKey = CredentialsLoader::fromEnv();
         $output = $this->runSnippet('create_http_task_with_token', [
             self::$location,
