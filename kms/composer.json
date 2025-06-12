@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-kms": "^1.20"
+        "google/cloud-kms": "^2.0"
     }
 }
