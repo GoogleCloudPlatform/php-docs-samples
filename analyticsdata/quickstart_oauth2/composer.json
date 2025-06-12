@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/analytics-data": "^0.18.0",
+        "google/analytics-data": "^0.22.0",
         "ext-bcmath":  "*"
     }
 }

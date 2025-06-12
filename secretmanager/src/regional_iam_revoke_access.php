@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
-// [START secretmanager_regional_iam_revoke_access]
+// [START secretmanager_iam_revoke_access_with_regional_secret]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\Iam\V1\GetIamPolicyRequest;
@@ -76,7 +76,7 @@ function regional_iam_revoke_access(string $projectId, string $locationId, strin
     // Print out a success message.
     printf('Updated IAM policy for %s', $secretId);
 }
-// [END secretmanager_regional_iam_revoke_access]
+// [END secretmanager_iam_revoke_access_with_regional_secret]
 
 // The following 2 lines are only needed to execute the samples on the CLI
 require_once __DIR__ . '/../../testing/sample_helpers.php';
