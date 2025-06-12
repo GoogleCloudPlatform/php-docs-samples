@@ -25,6 +25,6 @@
   ],
   "branchPrefix": "renovate/",
   "additionalBranchPrefix": "{{parentDir}}-",
-  "prConcurrentLimit": 10,
+  "prConcurrentLimit": 20,
   "dependencyDashboard": true
 }
