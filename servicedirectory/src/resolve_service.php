@@ -19,8 +19,9 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_resolve_service]
-use Google\Cloud\ServiceDirectory\V1beta1\LookupServiceClient;
-use Google\Cloud\ServiceDirectory\V1beta1\Service;
+use Google\Cloud\ServiceDirectory\V1\Client\LookupServiceClient;
+use Google\Cloud\ServiceDirectory\V1\ResolveServiceRequest;
+use Google\Cloud\ServiceDirectory\V1\Service;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -39,7 +40,9 @@ function resolve_service(
 
     // Run request.
     $serviceName = LookupServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-    $service = $client->resolveService($serviceName)->getService();
+    $resolveServiceRequest = (new ResolveServiceRequest())
+        ->setName($serviceName);
+    $service = $client->resolveService($resolveServiceRequest)->getService();
 
     // Print results.
     printf('Resolved Service: %s' . PHP_EOL, $service->getName());
