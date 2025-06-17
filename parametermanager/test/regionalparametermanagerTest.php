@@ -19,16 +19,26 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\ParameterManager;
 
-use Google\Cloud\TestUtils\TestTrait;
+use Exception;
+use Google\ApiCore\ApiException;
 use Google\ApiCore\ApiException as GaxApiException;
-use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
-use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
-use Google\Cloud\SecretManager\V1\CreateSecretRequest;
-use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
-use PHPUnit\Framework\TestCase;
-use Google\Cloud\SecretManager\V1\Secret;
-use Google\Cloud\SecretManager\V1\SecretVersion;
-use Google\Cloud\SecretManager\V1\SecretPayload;
+use Google\Cloud\Iam\V1\Binding;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\CreateCryptoKeyRequest;
+use Google\Cloud\Kms\V1\CreateKeyRingRequest;
+use Google\Cloud\Kms\V1\CryptoKey;
+use Google\Cloud\Kms\V1\CryptoKey\CryptoKeyPurpose;
+use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionAlgorithm;
+use Google\Cloud\Kms\V1\CryptoKeyVersion\CryptoKeyVersionState;
+use Google\Cloud\Kms\V1\CryptoKeyVersionTemplate;
+use Google\Cloud\Kms\V1\DestroyCryptoKeyVersionRequest;
+use Google\Cloud\Kms\V1\GetCryptoKeyVersionRequest;
+use Google\Cloud\Kms\V1\KeyRing;
+use Google\Cloud\Kms\V1\ListCryptoKeysRequest;
+use Google\Cloud\Kms\V1\ListCryptoKeyVersionsRequest;
+use Google\Cloud\Kms\V1\ProtectionLevel;
 use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\CreateParameterRequest;
 use Google\Cloud\ParameterManager\V1\CreateParameterVersionRequest;
@@ -38,9 +48,15 @@ use Google\Cloud\ParameterManager\V1\Parameter;
 use Google\Cloud\ParameterManager\V1\ParameterFormat;
 use Google\Cloud\ParameterManager\V1\ParameterVersion;
 use Google\Cloud\ParameterManager\V1\ParameterVersionPayload;
-use Google\Cloud\Iam\V1\Binding;
-use Google\Cloud\Iam\V1\GetIamPolicyRequest;
-use Google\Cloud\Iam\V1\SetIamPolicyRequest;
+use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\CreateSecretRequest;
+use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
+use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\SecretPayload;
+use Google\Cloud\SecretManager\V1\SecretVersion;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 class regionalparametermanagerTest extends TestCase
 {
@@ -51,6 +67,7 @@ class regionalparametermanagerTest extends TestCase
     public const SECRET_ID = 'projects/project-id/locations/us-central1/secrets/secret-id/versions/latest';
 
     private static $secretClient;
+    private static $kmsClient;
     private static $client;
     private static $locationId = 'us-central1';
 
@@ -76,12 +93,18 @@ class regionalparametermanagerTest extends TestCase
     private static $testParameterToDeleteVersion;
     private static $testParameterVersionToDelete;
 
+    private static $keyRingId;
+    private static $cryptoKey;
+    private static $cryptoUpdatedKey;
+    private static $testParameterNameWithKms;
+
     public static function setUpBeforeClass(): void
     {
         $optionsForSecretManager = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com'];
         self::$secretClient = new SecretManagerServiceClient($optionsForSecretManager);
         $options = ['apiEndpoint' => 'parametermanager.' . self::$locationId . '.rep.googleapis.com'];
         self::$client = new ParameterManagerClient($options);
+        self::$kmsClient = new KeyManagementServiceClient();
 
         self::$testParameterName = self::$client->parameterName(self::$projectId, self::$locationId, self::randomId());
         self::$testParameterNameWithFormat = self::$client->parameterName(self::$projectId, self::$locationId, self::randomId());
@@ -113,10 +136,37 @@ class regionalparametermanagerTest extends TestCase
         $testParameterId = self::randomId();
         self::$testParameterToDeleteVersion = self::createParameter($testParameterId, ParameterFormat::JSON);
         self::$testParameterVersionToDelete = self::createParameterVersion($testParameterId, self::randomId(), self::JSON_PAYLOAD);
+
+        self::$testParameterNameWithKms = self::$client->parameterName(self::$projectId, self::$locationId, self::randomId());
+
+        self::$keyRingId = self::createKeyRing();
+        $hsmKey = self::randomId();
+        self::createHsmKey($hsmKey);
+
+        $hsmUdpatedKey = self::randomId();
+        self::createUpdatedHsmKey($hsmUdpatedKey);
     }
 
     public static function tearDownAfterClass(): void
     {
+        $keyRingName = self::$kmsClient->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $listCryptoKeysRequest = (new ListCryptoKeysRequest())
+            ->setParent($keyRingName);
+        $keys = self::$kmsClient->listCryptoKeys($listCryptoKeysRequest);
+        foreach ($keys as $key) {
+            $listCryptoKeyVersionsRequest = (new ListCryptoKeyVersionsRequest())
+                ->setParent($key->getName())
+                ->setFilter('state != DESTROYED AND state != DESTROY_SCHEDULED');
+
+            $versions = self::$kmsClient->listCryptoKeyVersions($listCryptoKeyVersionsRequest);
+            foreach ($versions as $version) {
+                $destroyCryptoKeyVersionRequest = (new DestroyCryptoKeyVersionRequest())
+                    ->setName($version->getName());
+                self::$kmsClient->destroyCryptoKeyVersion($destroyCryptoKeyVersionRequest);
+            }
+        }
+
+        self::deleteParameter(self::$testParameterNameWithKms);
         self::deleteParameter(self::$testParameterName);
         self::deleteParameter(self::$testParameterNameWithFormat);
 
@@ -252,6 +302,84 @@ class regionalparametermanagerTest extends TestCase
             ->setResource($secretName)
             ->setPolicy($policy);
         self::$secretClient->setIamPolicy($request);
+    }
+
+    private static function createKeyRing()
+    {
+        $id = 'test-pm-snippets';
+        $locationName = self::$kmsClient->locationName(self::$projectId, self::$locationId);
+        $keyRing = new KeyRing();
+        try {
+            $createKeyRingRequest = (new CreateKeyRingRequest())
+                ->setParent($locationName)
+                ->setKeyRingId($id)
+                ->setKeyRing($keyRing);
+            $keyRing = self::$kmsClient->createKeyRing($createKeyRingRequest);
+            return $keyRing->getName();
+        } catch (ApiException $e) {
+            if ($e->getStatus() == 'ALREADY_EXISTS') {
+                return $id;
+            }
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    private static function createHsmKey(string $id)
+    {
+        $keyRingName = self::$kmsClient->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $key = (new CryptoKey())
+            ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
+            ->setVersionTemplate((new CryptoKeyVersionTemplate)
+                ->setProtectionLevel(ProtectionLevel::HSM)
+                ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
+            ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
+        $createCryptoKeyRequest = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        $cryptoKey = self::$kmsClient->createCryptoKey($createCryptoKeyRequest);
+        self::$cryptoKey = $cryptoKey->getName();
+        return self::waitForReady($cryptoKey);
+    }
+
+    private static function createUpdatedHsmKey(string $id)
+    {
+        $keyRingName = self::$kmsClient->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $key = (new CryptoKey())
+            ->setPurpose(CryptoKeyPurpose::ENCRYPT_DECRYPT)
+            ->setVersionTemplate((new CryptoKeyVersionTemplate)
+                ->setProtectionLevel(ProtectionLevel::HSM)
+                ->setAlgorithm(CryptoKeyVersionAlgorithm::GOOGLE_SYMMETRIC_ENCRYPTION))
+            ->setLabels(['foo' => 'bar', 'zip' => 'zap']);
+        $createCryptoKeyRequest = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($id)
+            ->setCryptoKey($key);
+        $cryptoKey = self::$kmsClient->createCryptoKey($createCryptoKeyRequest);
+        self::$cryptoUpdatedKey = $cryptoKey->getName();
+        return self::waitForReady($cryptoKey);
+    }
+
+    private static function waitForReady(CryptoKey $key)
+    {
+        $versionName = $key->getName() . '/cryptoKeyVersions/1';
+        $getCryptoKeyVersionRequest = (new GetCryptoKeyVersionRequest())
+            ->setName($versionName);
+        $version = self::$kmsClient->getCryptoKeyVersion($getCryptoKeyVersionRequest);
+        $attempts = 0;
+        while ($version->getState() != CryptoKeyVersionState::ENABLED) {
+            if ($attempts > 10) {
+                $msg = sprintf('key version %s was not ready after 10 attempts', $versionName);
+                throw new \Exception($msg);
+            }
+            usleep(500);
+            $getCryptoKeyVersionRequest = (new GetCryptoKeyVersionRequest())
+                ->setName($versionName);
+            $version = self::$kmsClient->getCryptoKeyVersion($getCryptoKeyVersionRequest);
+            $attempts += 1;
+        }
+        return $key;
     }
 
     public function testCreateRegionalParam()
@@ -444,5 +572,48 @@ class regionalparametermanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Deleted regional parameter version', $output);
+    }
+
+    public function testCreateRegionalParamWithKmsKey()
+    {
+        $name = self::$client->parseName(self::$testParameterNameWithKms);
+
+        $output = $this->runFunctionSnippet('create_regional_param_with_kms_key', [
+            $name['project'],
+            $name['location'],
+            $name['parameter'],
+            self::$cryptoKey,
+        ]);
+
+        $this->assertStringContainsString('Created regional parameter', $output);
+        $this->assertStringContainsString('with kms key ' . self::$cryptoKey, $output);
+    }
+
+    public function testUpdateRegionalParamKmsKey()
+    {
+        $name = self::$client->parseName(self::$testParameterNameWithKms);
+
+        $output = $this->runFunctionSnippet('update_regional_param_kms_key', [
+            $name['project'],
+            $name['location'],
+            $name['parameter'],
+            self::$cryptoUpdatedKey,
+        ]);
+
+        $this->assertStringContainsString('Updated regional parameter ', $output);
+        $this->assertStringContainsString('with kms key ' . self::$cryptoUpdatedKey, $output);
+    }
+
+    public function testRemoveRegionalParamKmsKey()
+    {
+        $name = self::$client->parseName(self::$testParameterNameWithKms);
+
+        $output = $this->runFunctionSnippet('remove_regional_param_kms_key', [
+            $name['project'],
+            $name['location'],
+            $name['parameter'],
+        ]);
+
+        $this->assertStringContainsString('Removed kms key for regional parameter ', $output);
     }
 }
