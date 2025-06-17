@@ -24,7 +24,7 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\InfoType;
 use Google\Cloud\Dlp\V2\InfoTypeStats;
 use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
