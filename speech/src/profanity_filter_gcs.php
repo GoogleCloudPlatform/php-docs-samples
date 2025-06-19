@@ -15,10 +15,11 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_profanity_filter_gcs]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionAudio;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
  * @param string $uri The Cloud Storage object to transcribe (gs://your-bucket-name/your-object-name)
@@ -46,7 +47,9 @@ function profanity_filter_gcs(string $uri)
     $client = new SpeechClient();
 
     # Detects speech in the audio file
-    $response = $client->recognize($config, $audio);
+    $recognizeRequest = (new RecognizeRequest())
+        ->setRecognizer($config);
+    $response = $client->recognize($recognizeRequest);
 
     # Print most likely transcription
     foreach ($response->getResults() as $result) {
