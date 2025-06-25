@@ -50,7 +50,7 @@ function create_regional_secret_with_tags(string $projectId, string $locationId,
     $parent = $client->locationName($projectId, $locationId);
 
     $secret = new Secret();
-    
+
     // set the tags.
     $tags = [$tagKey => $tagValue];
     $secret ->setTags($tags);

@@ -52,7 +52,7 @@ function create_secret_with_tags(string $projectId, string $secretId, string $ta
             'automatic' => new Automatic(),
         ]),
     ]);
-    
+
     // set the tags.
     $tags = [$tagKey => $tagValue];
     $secret->setTags($tags);

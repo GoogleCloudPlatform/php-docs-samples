@@ -170,7 +170,7 @@ class regionalsecretmanagerTest extends TestCase
         } else {
             $error = $operation->getError();
             printf("Error creating tag key: %s\n", $error->getMessage());
-            return "";
+            return '';
         }
     }
 
@@ -194,7 +194,7 @@ class regionalsecretmanagerTest extends TestCase
         } else {
             $error = $operation->getError();
             printf("Error creating tag value: %s\n", $error->getMessage());
-            return "";
+            return '';
         }
     }
 
@@ -207,7 +207,7 @@ class regionalsecretmanagerTest extends TestCase
         $operation->pollUntilComplete();
 
         if ($operation->operationSucceeded()) {
-            printf("Tag key deleted: %s\n",self::$testTagValue);
+            printf("Tag key deleted: %s\n", self::$testTagValue);
         } else {
             $error = $operation->getError();
             printf("Error deleting tag key: %s\n", $error->getMessage());
@@ -218,7 +218,7 @@ class regionalsecretmanagerTest extends TestCase
     {
         $request = (new DeleteTagValueRequest())
             ->setName(self::$testTagValue);
-    
+
         $operation = self::$tagValuesClient->deleteTagValue($request);
         $operation->pollUntilComplete();
 
