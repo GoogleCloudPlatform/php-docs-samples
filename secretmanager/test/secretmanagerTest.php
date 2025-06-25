@@ -20,6 +20,14 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\ResourceManager\V3\DeleteTagKeyRequest;
+use Google\Cloud\ResourceManager\V3\DeleteTagValueRequest;
+use Google\Cloud\ResourceManager\V3\Client\TagKeysClient;
+use Google\Cloud\ResourceManager\V3\CreateTagKeyRequest;
+use Google\Cloud\ResourceManager\V3\TagKey;
+use Google\Cloud\ResourceManager\V3\Client\TagValuesClient;
+use Google\Cloud\ResourceManager\V3\CreateTagValueRequest;
+use Google\Cloud\ResourceManager\V3\TagValue;
 use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
@@ -38,6 +46,9 @@ class secretmanagerTest extends TestCase
     use TestTrait;
 
     private static $client;
+    private static $tagKeyClient;
+    private static $tagValuesClient;
+
     private static $testSecret;
     private static $testSecretToDelete;
     private static $testSecretWithVersions;
@@ -47,24 +58,36 @@ class secretmanagerTest extends TestCase
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;
     private static $testSecretVersionToEnable;
+    private static $testSecretWithTagToCreateName;
+    private static $testSecretBindTagToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
+
+    private static $testTagKey;
+    private static $testTagValue;
 
     public static function setUpBeforeClass(): void
     {
         self::$client = new SecretManagerServiceClient();
+        self::$tagKeyClient = new TagKeysClient();
+        self::$tagValuesClient = new TagValuesClient();
 
         self::$testSecret = self::createSecret();
         self::$testSecretToDelete = self::createSecret();
         self::$testSecretWithVersions = self::createSecret();
         self::$testSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testUmmrSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithTagToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretBindTagToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDisable = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToEnable = self::addSecretVersion(self::$testSecretWithVersions);
         self::disableSecretVersion(self::$testSecretVersionToEnable);
+
+        self::$testTagKey = self::createTagKey(self::randomSecretId());
+        self::$testTagValue = self::createTagValue(self::randomSecretId());
     }
 
     public static function tearDownAfterClass(): void
@@ -74,6 +97,11 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithVersions->getName());
         self::deleteSecret(self::$testSecretToCreateName);
         self::deleteSecret(self::$testUmmrSecretToCreateName);
+        self::deleteSecret(self::$testSecretWithTagToCreateName);
+        self::deleteSecret(self::$testSecretBindTagToCreateName);
+        sleep(15);
+        self::deleteTagValue();
+        self::deleteTagKey();
     }
 
     private static function randomSecretId(): string
@@ -124,6 +152,86 @@ class secretmanagerTest extends TestCase
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;
             }
+        }
+    }
+
+    private static function createTagKey(string $short_name): string
+    {
+        $parent = self::$client->projectName(self::$projectId);
+        $tagKey = (new TagKey())
+            ->setParent($parent)
+            ->setShortName($short_name);
+
+        $request = (new CreateTagKeyRequest())
+            ->setTagKey($tagKey);
+
+        $operation = self::$tagKeyClient->createTagKey($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            $createdTagKey = $operation->getResult();
+            printf("Tag key created: %s\n", $createdTagKey->getName());
+            return $createdTagKey->getName();
+        } else {
+            $error = $operation->getError();
+            printf("Error creating tag key: %s\n", $error->getMessage());
+            return "";
+        }
+    }
+
+    private static function createTagValue(string $short_name): string
+    {
+        $tagValuesClient = new TagValuesClient();
+        $tagValue = (new TagValue())
+            ->setParent(self::$testTagKey)
+            ->setShortName($short_name);
+
+        $request = (new CreateTagValueRequest())
+            ->setTagValue($tagValue);
+
+        $operation = self::$tagValuesClient->createTagValue($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            $createdTagValue = $operation->getResult();
+            printf("Tag value created: %s\n", $createdTagValue->getName());
+            return $createdTagValue->getName();
+        } else {
+            $error = $operation->getError();
+            printf("Error creating tag value: %s\n", $error->getMessage());
+            return "";
+        }
+    }
+
+    private static function deleteTagKey()
+    {
+        $request = (new DeleteTagKeyRequest())
+            ->setName(self::$testTagKey);
+
+        $operation = self::$tagKeyClient->deleteTagKey($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            printf("Tag key deleted: %s\n",self::$testTagValue);
+        } else {
+            $error = $operation->getError();
+            printf("Error deleting tag key: %s\n", $error->getMessage());
+        }
+    }
+
+    private static function deleteTagValue()
+    {
+        $request = (new DeleteTagValueRequest())
+            ->setName(self::$testTagValue);
+    
+        $operation = self::$tagValuesClient->deleteTagValue($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            printf("Tag value deleted: %s\n", self::$testTagValue);
+        } else {
+            $error = $operation->getError();
+            printf("Error deleting tag value: %s\n", $error->getMessage());
         }
     }
 
@@ -327,5 +435,33 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testCreateSecretWithTags()
+    {
+        $name = self::$client->parseName(self::$testSecretWithTagToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_tags', [
+            $name['project'],
+            $name['secret'],
+            self::$testTagKey,
+            self::$testTagValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testBindTagsToSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('bind_tags_to_secret', [
+            $name['project'],
+            $name['secret'],
+            self::$testTagValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+        $this->assertStringContainsString('Tag binding created for secret', $output);
     }
 }
