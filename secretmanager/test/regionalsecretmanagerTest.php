@@ -98,7 +98,7 @@ class regionalsecretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretToCreateName);
         self::deleteSecret(self::$testSecretWithTagToCreateName);
         self::deleteSecret(self::$testSecretBindTagToCreateName);
-        sleep(15);
+        sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
     }
