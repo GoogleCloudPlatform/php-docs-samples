@@ -128,7 +128,7 @@ class modelarmorTest extends TestCase
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testMaliciousTemplateId);
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testPIandJailbreakTemplateId);
         self::deleteDlpTemplates(self::$inspectTemplateName, self::$deidentifyTemplateName, self::$locationId);
-        
+
         // Reset floor settings after tests
         if (self::$projectId) {
             self::resetProjectFloorSettings();
@@ -139,7 +139,7 @@ class modelarmorTest extends TestCase
         if (self::$organizationId) {
             self::resetOrganizationFloorSettings();
         }
-        
+
         self::$client->close();
     }
 
@@ -169,23 +169,23 @@ class modelarmorTest extends TestCase
         try {
             $client = new ModelArmorClient();
             $floorSettingsName = sprintf('projects/%s/locations/global/floorSetting', self::$projectId);
-            
+
             // Create an empty filter config
             $filterConfig = new FilterConfig();
-            
+
             // Create floor setting with enforcement disabled
             $floorSetting = (new FloorSetting())
                 ->setName($floorSettingsName)
                 ->setFilterConfig($filterConfig)
                 ->setEnableFloorSettingEnforcement(false);
-            
+
             $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
             $response = $client->updateFloorSetting($updateRequest);
-            
-            echo "Floor settings reset for project " . self::$projectId . "\n";
+
+            echo 'Floor settings reset for project ' . self::$projectId . "\n";
         } catch (\Exception $e) {
             // Log but don't fail teardown if reset fails
-            echo "Warning: Failed to reset project floor settings: " . $e->getMessage() . "\n";
+            echo 'Warning: Failed to reset project floor settings: ' . $e->getMessage() . "\n";
         }
     }
 
@@ -197,23 +197,23 @@ class modelarmorTest extends TestCase
         try {
             $client = new ModelArmorClient();
             $floorSettingsName = sprintf('folders/%s/locations/global/floorSetting', self::$folderId);
-            
+
             // Create an empty filter config
             $filterConfig = new FilterConfig();
-            
+
             // Create floor setting with enforcement disabled
             $floorSetting = (new FloorSetting())
                 ->setName($floorSettingsName)
                 ->setFilterConfig($filterConfig)
                 ->setEnableFloorSettingEnforcement(false);
-            
+
             $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
             $response = $client->updateFloorSetting($updateRequest);
-            
-            echo "Floor settings reset for folder " . self::$folderId . "\n";
+
+            echo 'Floor settings reset for folder ' . self::$folderId . "\n";
         } catch (\Exception $e) {
             // Log but don't fail teardown if reset fails
-            echo "Warning: Failed to reset folder floor settings: " . $e->getMessage() . "\n";
+            echo 'Warning: Failed to reset folder floor settings: ' . $e->getMessage() . "\n";
         }
     }
 
@@ -225,23 +225,23 @@ class modelarmorTest extends TestCase
         try {
             $client = new ModelArmorClient();
             $floorSettingsName = sprintf('organizations/%s/locations/global/floorSetting', self::$organizationId);
-            
+
             // Create an empty filter config
             $filterConfig = new FilterConfig();
-            
+
             // Create floor setting with enforcement disabled
             $floorSetting = (new FloorSetting())
                 ->setName($floorSettingsName)
                 ->setFilterConfig($filterConfig)
                 ->setEnableFloorSettingEnforcement(false);
-            
+
             $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
             $response = $client->updateFloorSetting($updateRequest);
-            
-            echo "Floor settings reset for organization " . self::$organizationId . "\n";
+
+            echo 'Floor settings reset for organization ' . self::$organizationId . "\n";
         } catch (\Exception $e) {
             // Log but don't fail teardown if reset fails
-            echo "Warning: Failed to reset organization floor settings: " . $e->getMessage() . "\n";
+            echo 'Warning: Failed to reset organization floor settings: ' . $e->getMessage() . "\n";
         }
     }
 
