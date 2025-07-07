@@ -50,6 +50,8 @@ use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
+use Google\Cloud\ModelArmor\V1\FloorSetting;
+use Google\Cloud\ModelArmor\V1\UpdateFloorSettingRequest;
 
 class modelarmorTest extends TestCase
 {
@@ -76,6 +78,8 @@ class modelarmorTest extends TestCase
     protected static $testRaiTemplateId;
     protected static $testMaliciousTemplateId;
     protected static $testPIandJailbreakTemplateId;
+    protected static $organizationId;
+    protected static $folderId;
 
     public static function setUpBeforeClass(): void
     {
@@ -96,7 +100,9 @@ class modelarmorTest extends TestCase
         self::$testSanitizeModelResponseUserPromptId = self::getTemplateId('php-sanitize-model-response-user-prompt-');
         self::$testRaiTemplateId = self::getTemplateId('php-rai-template-');
         self::$testMaliciousTemplateId = self::getTemplateId('php-malicious-template-');
-        self::$testPIandJailbreakTemplateId = self::getTemplateId('php-pi-and-jailbreak-template-');
+        self::$testPIandJailbreakTemplateId = self::getTemplateId('php-template-with-pijailbreak-');
+        self::$organizationId = getenv('MA_ORG_ID');
+        self::$folderId = getenv('MA_FOLDER_ID');
         self::createTemplateWithMaliciousURI();
         self::createTemplateWithPIJailbreakFilter();
         self::createTemplateWithRAI();
@@ -122,6 +128,18 @@ class modelarmorTest extends TestCase
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testMaliciousTemplateId);
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testPIandJailbreakTemplateId);
         self::deleteDlpTemplates(self::$inspectTemplateName, self::$deidentifyTemplateName, self::$locationId);
+        
+        // Reset floor settings after tests
+        if (self::$projectId) {
+            self::resetProjectFloorSettings();
+        }
+        if (self::$folderId) {
+            self::resetFolderFloorSettings();
+        }
+        if (self::$organizationId) {
+            self::resetOrganizationFloorSettings();
+        }
+        
         self::$client->close();
     }
 
@@ -141,6 +159,90 @@ class modelarmorTest extends TestCase
     public static function getTemplateId(string $testId): string
     {
         return uniqid($testId);
+    }
+
+    /**
+     * Reset project floor settings to default values
+     */
+    protected static function resetProjectFloorSettings(): void
+    {
+        try {
+            $client = new ModelArmorClient();
+            $floorSettingsName = sprintf('projects/%s/locations/global/floorSetting', self::$projectId);
+            
+            // Create an empty filter config
+            $filterConfig = new FilterConfig();
+            
+            // Create floor setting with enforcement disabled
+            $floorSetting = (new FloorSetting())
+                ->setName($floorSettingsName)
+                ->setFilterConfig($filterConfig)
+                ->setEnableFloorSettingEnforcement(false);
+            
+            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
+            $response = $client->updateFloorSetting($updateRequest);
+            
+            echo "Floor settings reset for project " . self::$projectId . "\n";
+        } catch (\Exception $e) {
+            // Log but don't fail teardown if reset fails
+            echo "Warning: Failed to reset project floor settings: " . $e->getMessage() . "\n";
+        }
+    }
+
+    /**
+     * Reset folder floor settings to default values
+     */
+    protected static function resetFolderFloorSettings(): void
+    {
+        try {
+            $client = new ModelArmorClient();
+            $floorSettingsName = sprintf('folders/%s/locations/global/floorSetting', self::$folderId);
+            
+            // Create an empty filter config
+            $filterConfig = new FilterConfig();
+            
+            // Create floor setting with enforcement disabled
+            $floorSetting = (new FloorSetting())
+                ->setName($floorSettingsName)
+                ->setFilterConfig($filterConfig)
+                ->setEnableFloorSettingEnforcement(false);
+            
+            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
+            $response = $client->updateFloorSetting($updateRequest);
+            
+            echo "Floor settings reset for folder " . self::$folderId . "\n";
+        } catch (\Exception $e) {
+            // Log but don't fail teardown if reset fails
+            echo "Warning: Failed to reset folder floor settings: " . $e->getMessage() . "\n";
+        }
+    }
+
+    /**
+     * Reset organization floor settings to default values
+     */
+    protected static function resetOrganizationFloorSettings(): void
+    {
+        try {
+            $client = new ModelArmorClient();
+            $floorSettingsName = sprintf('organizations/%s/locations/global/floorSetting', self::$organizationId);
+            
+            // Create an empty filter config
+            $filterConfig = new FilterConfig();
+            
+            // Create floor setting with enforcement disabled
+            $floorSetting = (new FloorSetting())
+                ->setName($floorSettingsName)
+                ->setFilterConfig($filterConfig)
+                ->setEnableFloorSettingEnforcement(false);
+            
+            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
+            $response = $client->updateFloorSetting($updateRequest);
+            
+            echo "Floor settings reset for organization " . self::$organizationId . "\n";
+        } catch (\Exception $e) {
+            // Log but don't fail teardown if reset fails
+            echo "Warning: Failed to reset organization floor settings: " . $e->getMessage() . "\n";
+        }
     }
 
     public function testCreateTemplate()
@@ -696,5 +798,63 @@ class modelarmorTest extends TestCase
         }
     }
 
-    # TODO: Add tests for floor settings once API issues are resolved.
+    public function testGetFolderFloorSettings()
+    {
+        $output = $this->runSnippet('get_folder_floor_settings', [
+            self::$folderId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testGetProjectFloorSettings()
+    {
+        $output = $this->runSnippet('get_project_floor_settings', [
+            self::$projectId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testGetOrganizationFloorSettings()
+    {
+        $output = $this->runSnippet('get_organization_floor_settings', [
+            self::$organizationId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateFolderFloorSettings()
+    {
+        $output = $this->runSnippet('update_folder_floor_settings', [
+            self::$folderId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateProjectFloorSettings()
+    {
+        $output = $this->runSnippet('update_project_floor_settings', [
+            self::$projectId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateOrganizationFloorSettings()
+    {
+        $output = $this->runSnippet('update_organization_floor_settings', [
+            self::$organizationId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
 }
