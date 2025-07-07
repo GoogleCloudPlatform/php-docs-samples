@@ -834,7 +834,7 @@ class modelarmorTest extends TestCase
             self::$folderId,
         ]);
 
-        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $expectedResponseString = 'Floor setting updated';
         $this->assertStringContainsString($expectedResponseString, $output);
     }
 
@@ -844,7 +844,7 @@ class modelarmorTest extends TestCase
             self::$projectId,
         ]);
 
-        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $expectedResponseString = 'Floor setting updated';
         $this->assertStringContainsString($expectedResponseString, $output);
     }
 
@@ -854,7 +854,7 @@ class modelarmorTest extends TestCase
             self::$organizationId,
         ]);
 
-        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $expectedResponseString = 'Floor setting updated';
         $this->assertStringContainsString($expectedResponseString, $output);
     }
 }
