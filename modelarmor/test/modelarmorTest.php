@@ -131,13 +131,13 @@ class modelarmorTest extends TestCase
 
         // Reset floor settings after tests
         if (self::$projectId) {
-            self::resetProjectFloorSettings();
+            self::resetFloorSettings('project', self::$projectId);
         }
         if (self::$folderId) {
-            self::resetFolderFloorSettings();
+            self::resetFloorSettings('folder', self::$folderId);
         }
         if (self::$organizationId) {
-            self::resetOrganizationFloorSettings();
+            self::resetFloorSettings('organization', self::$organizationId);
         }
 
         self::$client->close();
@@ -162,13 +162,25 @@ class modelarmorTest extends TestCase
     }
 
     /**
-     * Reset project floor settings to default values
+     * Resets floor settings to default values for various resource types
+     *
+     * @param string $resourceType The type of resource (project, folder, organization)
+     * @param string $resourceId The ID of the resource
      */
-    protected static function resetProjectFloorSettings(): void
+    protected static function resetFloorSettings(string $resourceType, string $resourceId): void
     {
         try {
             $client = new ModelArmorClient();
-            $floorSettingsName = sprintf('projects/%s/locations/global/floorSetting', self::$projectId);
+
+            // Format resource path based on resource type
+            $resourcePathFormat = match($resourceType) {
+                'project' => 'projects/%s/locations/global/floorSetting',
+                'folder' => 'folders/%s/locations/global/floorSetting',
+                'organization' => 'organizations/%s/locations/global/floorSetting',
+                default => throw new \InvalidArgumentException("Invalid resource type: {$resourceType}"),
+            };
+
+            $floorSettingsName = sprintf($resourcePathFormat, $resourceId);
 
             // Create an empty filter config
             $filterConfig = new FilterConfig();
@@ -182,68 +194,14 @@ class modelarmorTest extends TestCase
             $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
             $response = $client->updateFloorSetting($updateRequest);
 
-            echo 'Floor settings reset for project ' . self::$projectId . "\n";
+            echo "Floor settings reset for {$resourceType} {$resourceId}\n";
         } catch (\Exception $e) {
             // Log but don't fail teardown if reset fails
-            echo 'Warning: Failed to reset project floor settings: ' . $e->getMessage() . "\n";
+            echo "Warning: Failed to reset {$resourceType} floor settings: " . $e->getMessage() . "\n";
         }
     }
 
-    /**
-     * Reset folder floor settings to default values
-     */
-    protected static function resetFolderFloorSettings(): void
-    {
-        try {
-            $client = new ModelArmorClient();
-            $floorSettingsName = sprintf('folders/%s/locations/global/floorSetting', self::$folderId);
-
-            // Create an empty filter config
-            $filterConfig = new FilterConfig();
-
-            // Create floor setting with enforcement disabled
-            $floorSetting = (new FloorSetting())
-                ->setName($floorSettingsName)
-                ->setFilterConfig($filterConfig)
-                ->setEnableFloorSettingEnforcement(false);
-
-            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
-            $response = $client->updateFloorSetting($updateRequest);
-
-            echo 'Floor settings reset for folder ' . self::$folderId . "\n";
-        } catch (\Exception $e) {
-            // Log but don't fail teardown if reset fails
-            echo 'Warning: Failed to reset folder floor settings: ' . $e->getMessage() . "\n";
-        }
-    }
-
-    /**
-     * Reset organization floor settings to default values
-     */
-    protected static function resetOrganizationFloorSettings(): void
-    {
-        try {
-            $client = new ModelArmorClient();
-            $floorSettingsName = sprintf('organizations/%s/locations/global/floorSetting', self::$organizationId);
-
-            // Create an empty filter config
-            $filterConfig = new FilterConfig();
-
-            // Create floor setting with enforcement disabled
-            $floorSetting = (new FloorSetting())
-                ->setName($floorSettingsName)
-                ->setFilterConfig($filterConfig)
-                ->setEnableFloorSettingEnforcement(false);
-
-            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
-            $response = $client->updateFloorSetting($updateRequest);
-
-            echo 'Floor settings reset for organization ' . self::$organizationId . "\n";
-        } catch (\Exception $e) {
-            // Log but don't fail teardown if reset fails
-            echo 'Warning: Failed to reset organization floor settings: ' . $e->getMessage() . "\n";
-        }
-    }
+    // Wrapper methods removed in favor of directly calling resetFloorSettings
 
     public function testCreateTemplate()
     {
