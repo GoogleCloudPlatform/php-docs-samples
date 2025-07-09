@@ -101,8 +101,8 @@ class modelarmorTest extends TestCase
         self::$testRaiTemplateId = self::getTemplateId('php-rai-template-');
         self::$testMaliciousTemplateId = self::getTemplateId('php-malicious-template-');
         self::$testPIandJailbreakTemplateId = self::getTemplateId('php-template-with-pijailbreak-');
-        self::$organizationId = getenv('MA_ORG_ID');
-        self::$folderId = getenv('MA_FOLDER_ID');
+        self::$organizationId = self::requireEnv('MA_ORG_ID');
+        self::$folderId = self::requireEnv('MA_FOLDER_ID');
         self::createTemplateWithMaliciousURI();
         self::createTemplateWithPIJailbreakFilter();
         self::createTemplateWithRAI();
