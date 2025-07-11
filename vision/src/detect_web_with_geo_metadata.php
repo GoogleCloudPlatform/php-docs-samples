@@ -18,7 +18,7 @@
 // [START vision_web_detection_include_geo]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
