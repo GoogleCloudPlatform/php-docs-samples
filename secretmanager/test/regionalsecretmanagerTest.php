@@ -57,9 +57,15 @@ class regionalsecretmanagerTest extends TestCase
     private static $testSecretVersionToEnable;
     private static $testSecretWithTagToCreateName;
     private static $testSecretBindTagToCreateName;
+    private static $testSecretWithLabelsToCreateName;
+    private static $testSecretWithAnnotationsToCreateName;
 
     private static $iamUser = 'user:kapishsingh@google.com';
     private static $locationId = 'us-central1';
+    private static $testLabelKey = 'test-label-key';
+    private static $testLabelValue = 'test-label-value';
+    private static $testAnnotationKey = 'test-annotation-key';
+    private static $testAnnotationValue = 'test-annotation-value';
 
     private static $testTagKey;
     private static $testTagValue;
@@ -81,6 +87,8 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecretVersionToEnable = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretWithTagToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretBindTagToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretWithLabelsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretWithAnnotationsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::disableSecretVersion(self::$testSecretVersionToEnable);
 
         self::$testTagKey = self::createTagKey(self::randomSecretId());
@@ -98,6 +106,8 @@ class regionalsecretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretToCreateName);
         self::deleteSecret(self::$testSecretWithTagToCreateName);
         self::deleteSecret(self::$testSecretBindTagToCreateName);
+        self::deleteSecret(self::$testSecretWithLabelsToCreateName);
+        self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -461,5 +471,35 @@ class regionalsecretmanagerTest extends TestCase
 
         $this->assertStringContainsString('Created secret', $output);
         $this->assertStringContainsString('Tag binding created for secret', $output);
+    }
+
+    public function testCreateSecretWithLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testLabelValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
     }
 }
