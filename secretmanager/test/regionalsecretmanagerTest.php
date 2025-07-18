@@ -64,8 +64,10 @@ class regionalsecretmanagerTest extends TestCase
     private static $locationId = 'us-central1';
     private static $testLabelKey = 'test-label-key';
     private static $testLabelValue = 'test-label-value';
+    private static $testUpdatedLabelValue = 'test-label-new-value';
     private static $testAnnotationKey = 'test-annotation-key';
     private static $testAnnotationValue = 'test-annotation-value';
+    private static $testUpdatedAnnotationValue = 'test-annotation-new-value';
 
     private static $testTagKey;
     private static $testTagValue;
@@ -501,5 +503,89 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testViewSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_regional_secret_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testViewSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_regional_secret_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testEditSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_regional_secret_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testUpdatedLabelValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testEditSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_regional_secret_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testUpdatedAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretLabel()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_regional_secret_label', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretAnnotation()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_regional_secret_annotation', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
     }
 }
