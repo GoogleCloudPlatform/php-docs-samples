@@ -59,8 +59,13 @@ function edit_regional_secret_annotations(string $projectId, string $locationId,
     // get the annotations
     $annotations = $getSecret->getAnnotations();
 
-    // update the annotation
-    $annotations->offsetSet($annotationKey, $annotationValue);
+    // update the annotation - need to create a new annotations map with the updated values
+    $newAnnotations = [];
+    foreach ($annotations as $key => $value) {
+        $newAnnotations[$key] = $value;
+    }
+    $newAnnotations[$annotationKey] = $annotationValue;
+    $getSecret->setAnnotations($newAnnotations);
 
     // set the field mask
     $fieldMask = new FieldMask();
