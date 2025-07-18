@@ -56,7 +56,7 @@ function edit_secret_annotations(string $projectId, string $secretId, string $an
     $annotations = $getSecret->getAnnotations();
 
     // update the annotation
-    $annotations[$annotationKey] = $annotationValue;
+    $annotations->offsetSet($annotationKey, $annotationValue);
 
     // set the field mask
     $fieldMask = new FieldMask();

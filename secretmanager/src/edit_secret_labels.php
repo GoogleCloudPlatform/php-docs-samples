@@ -56,7 +56,7 @@ function edit_secret_labels(string $projectId, string $secretId, string $labelKe
     $labels = $getSecret->getLabels();
 
     // update the label
-    $labels[$labelKey] = $labelValue;
+    $labels->offsetSet($labelKey, $labelValue);
 
     // set the field mask
     $fieldMask = new FieldMask();

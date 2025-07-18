@@ -60,7 +60,7 @@ function edit_regional_secret_labels(string $projectId, string $locationId, stri
     $labels = $getSecret->getLabels();
 
     // update the label
-    $labels[$labelKey] = $labelValue;
+    $labels->offsetSet($labelKey, $labelValue);
 
     // set the field mask
     $fieldMask = new FieldMask();
