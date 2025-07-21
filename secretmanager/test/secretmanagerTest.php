@@ -62,6 +62,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretBindTagToCreateName;
     private static $testSecretWithLabelsToCreateName;
     private static $testSecretWithAnnotationsToCreateName;
+    private static $testSecretWithDelayedDestroyToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
     private static $testLabelKey = 'test-label-key';
@@ -70,6 +71,7 @@ class secretmanagerTest extends TestCase
     private static $testAnnotationKey = 'test-annotation-key';
     private static $testAnnotationValue = 'test-annotation-value';
     private static $testUpdatedAnnotationValue = 'test-annotation-new-value';
+    private static $testDelayedDestroyTime = 86400;
 
     private static $testTagKey;
     private static $testTagValue;
@@ -89,6 +91,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretBindTagToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithLabelsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithAnnotationsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithDelayedDestroyToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -111,6 +114,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretBindTagToCreateName);
         self::deleteSecret(self::$testSecretWithLabelsToCreateName);
         self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
+        self::deleteSecret(self::$testSecretWithDelayedDestroyToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -578,6 +582,44 @@ class secretmanagerTest extends TestCase
             $name['project'],
             $name['secret'],
             self::$testAnnotationKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testCreateSecretWithDelayedDestroyed()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_delayed_destroy', [
+            $name['project'],
+            $name['secret'],
+            self::$testDelayedDestroyTime
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testDisableSecretDelayedDestroy()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('disable_secret_delayed_destroy', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testUpdateSecretWithDelayedDestroyed()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('update_secret_with_delayed_destroy', [
+            $name['project'],
+            $name['secret'],
+            self::$testDelayedDestroyTime
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
