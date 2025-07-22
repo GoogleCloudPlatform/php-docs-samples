@@ -39,7 +39,7 @@ use Google\Protobuf\FieldMask;
  * @param string $secretId       Your secret ID (e.g. 'my-secret')
  * @param int $versionDestroyTtl Your Version Destroy Ttl (e.g. 86400)
  */
-function update_regional_secret_with_delayed_destroy(string $projectId, string $locationId, string $secretId, string $versionDestroyTtl): void
+function update_regional_secret_with_delayed_destroy(string $projectId, string $locationId, string $secretId, int $versionDestroyTtl): void
 {
     // Specify regional endpoint.
     $options = ['apiEndpoint' => "secretmanager.$locationId.rep.googleapis.com"];

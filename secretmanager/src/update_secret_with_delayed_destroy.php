@@ -38,7 +38,7 @@ use Google\Protobuf\FieldMask;
  * @param string $secretId       Your secret ID (e.g. 'my-secret')
  * @param int $versionDestroyTtl Your Version Destroy Ttl (e.g. 86400)
  */
-function update_secret_with_delayed_destroy(string $projectId, string $secretId, string $versionDestroyTtl): void
+function update_secret_with_delayed_destroy(string $projectId, string $secretId, int $versionDestroyTtl): void
 {
     // Create the Secret Manager client.
     $client = new SecretManagerServiceClient();
