@@ -33,6 +33,7 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\GetSecretRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
@@ -169,6 +170,14 @@ class secretmanagerTest extends TestCase
                 throw $e;
             }
         }
+    }
+
+    private static function getSecret(string $projectId, string $secretId): Secret
+    {
+        $name = self::$client->secretName($projectId, $secretId);
+        $getSecretRequest = (new GetSecretRequest())
+            ->setName($name);
+        return self::$client->getSecret($getSecretRequest);
     }
 
     private static function createTagKey(string $short_name): string
@@ -598,6 +607,9 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
     }
 
     public function testDisableSecretDelayedDestroy()
@@ -610,6 +622,9 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['secret']);
+        $this->assertNull($secret->getVersionDestroyTtl());
     }
 
     public function testUpdateSecretWithDelayedDestroyed()
@@ -623,5 +638,8 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
     }
 }

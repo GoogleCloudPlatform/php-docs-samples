@@ -33,6 +33,7 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\GetSecretRequest;
 use Google\Cloud\SecretManager\V1\Secret;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
@@ -164,6 +165,13 @@ class regionalsecretmanagerTest extends TestCase
                 throw $e;
             }
         }
+    }
+
+    private static function getSecret(string $projectId, string $locationId, string $secretId): Secret
+    {
+        $name = self::$client->projectLocationSecretName($projectId, $locationId, $secretId);
+        $getSecretRequest = (new GetSecretRequest())->setName($name);
+        return self::$client->getSecret($getSecretRequest);
     }
 
     private static function createTagKey(string $short_name): string
@@ -605,6 +613,9 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
     }
 
     public function testDisableSecretDelayedDestroy()
@@ -618,6 +629,9 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertNull($secret->getVersionDestroyTtl());
     }
 
     public function testUpdateSecretWithDelayedDestroyed()
@@ -632,5 +646,7 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
     }
 }
