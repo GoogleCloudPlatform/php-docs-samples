@@ -18,7 +18,7 @@
 // [START vision_fulltext_detection]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 
 /**
  * @param string $path Path to the image, e.g. "path/to/your/image.jpg"
