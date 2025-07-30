@@ -60,8 +60,16 @@ class secretmanagerTest extends TestCase
     private static $testSecretVersionToEnable;
     private static $testSecretWithTagToCreateName;
     private static $testSecretBindTagToCreateName;
+    private static $testSecretWithLabelsToCreateName;
+    private static $testSecretWithAnnotationsToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
+    private static $testLabelKey = 'test-label-key';
+    private static $testLabelValue = 'test-label-value';
+    private static $testUpdatedLabelValue = 'test-label-new-value';
+    private static $testAnnotationKey = 'test-annotation-key';
+    private static $testAnnotationValue = 'test-annotation-value';
+    private static $testUpdatedAnnotationValue = 'test-annotation-new-value';
 
     private static $testTagKey;
     private static $testTagValue;
@@ -79,6 +87,8 @@ class secretmanagerTest extends TestCase
         self::$testUmmrSecretToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithTagToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretBindTagToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithLabelsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithAnnotationsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -99,6 +109,8 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testUmmrSecretToCreateName);
         self::deleteSecret(self::$testSecretWithTagToCreateName);
         self::deleteSecret(self::$testSecretBindTagToCreateName);
+        self::deleteSecret(self::$testSecretWithLabelsToCreateName);
+        self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -463,5 +475,111 @@ class secretmanagerTest extends TestCase
 
         $this->assertStringContainsString('Created secret', $output);
         $this->assertStringContainsString('Tag binding created for secret', $output);
+    }
+
+    public function testCreateSecretWithLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_labels', [
+            $name['project'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testLabelValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_annotations', [
+            $name['project'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testViewSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_secret_annotations', [
+            $name['project'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testViewSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_secret_labels', [
+            $name['project'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testEditSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_secret_labels', [
+            $name['project'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testUpdatedLabelValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testEditSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_secret_annotations', [
+            $name['project'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testUpdatedAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretLabel()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_secret_label', [
+            $name['project'],
+            $name['secret'],
+            self::$testLabelKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretAnnotation()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_secret_annotation', [
+            $name['project'],
+            $name['secret'],
+            self::$testAnnotationKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
     }
 }
