@@ -58,3 +58,7 @@ to [browse the source][google-cloud-php-source] and  [report issues][google-clou
 ## Licensing
 
 * See [LICENSE](../../LICENSE)
+
+## Note
+
+Tests for Anywhere cache Sample are not included due to the long operation times typical for cache operations.
