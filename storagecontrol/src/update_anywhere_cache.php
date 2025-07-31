@@ -26,6 +26,7 @@ namespace Google\Cloud\Samples\StorageControl;
 # [START storage_control_update_anywhere_cache]
 use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
+use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheMetadata;
 use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheRequest;
 use Google\Protobuf\FieldMask;
 
@@ -63,9 +64,15 @@ function update_anywhere_cache(string $bucketName, string $anywhereCacheId, stri
         'update_mask' => $updateMask,
     ]);
 
-    $response = $storageControlClient->updateAnywhereCache($request);
+    $operation = $storageControlClient->updateAnywhereCache($request);
 
-    printf('Updated anywhere cache: %s', $response->getName());
+    printf('Waiting for operation %s to complete...' . PHP_EOL, $operation->getName());
+    $operation->pollUntilComplete();
+
+    // var_dump($operation);exit;
+    /** @var UpdateAnywhereCacheMetadata */
+    $metadata = $operation->getMetadata();
+    printf('Updated anywhere cache: %s', $metadata->getAnywhereCacheId());
 }
 # [END storage_control_update_anywhere_cache]
 
