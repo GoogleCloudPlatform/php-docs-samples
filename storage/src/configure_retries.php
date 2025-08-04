@@ -24,7 +24,7 @@
 
 namespace Google\Cloud\Samples\Storage;
 
-# [START configure_retries]
+# [START storage_configure_retries]
 use Google\Cloud\Storage\StorageClient;
 
 /**
@@ -50,6 +50,8 @@ function configure_retries(string $bucketName): void
         // Executes a delay
         // Defaults to utilizing `usleep`.
         // Function signature should match: `function (int $delay) : void`.
+        // This function is mostly used internally, so the tests don't wait 
+        // the time of the delay to run.
         'restDelayFunction' => function ($delay) {
             usleep($delay);
         },
@@ -89,6 +91,8 @@ function configure_retries(string $bucketName): void
         // Executes a delay
         // Defaults to utilizing `usleep`.
         // Function signature should match: `function (int $delay) : void`.
+        // This function is mostly used internally, so the tests don't wait 
+        // the time of the delay to run.
         'restDelayFunction' => function ($delay) {
             usleep($delay);
         },
@@ -116,7 +120,7 @@ function configure_retries(string $bucketName): void
         printf('Object: %s' . PHP_EOL, $object->name());
     }
 }
-# [END configure_retries]
+# [END storage_configure_retries]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
