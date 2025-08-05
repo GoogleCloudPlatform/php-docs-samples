@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Google LLC
  *
@@ -26,7 +27,6 @@ namespace Google\Cloud\Samples\StorageControl;
 # [START storage_control_update_anywhere_cache]
 use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
-use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheMetadata;
 use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheRequest;
 use Google\Protobuf\FieldMask;
 
@@ -56,23 +56,25 @@ function update_anywhere_cache(string $bucketName, string $anywhereCacheId, stri
         'paths' => ['admission_policy'],
     ]);
 
-    // Start an update operation and block until it completes. Real applications
-    // may want to setup a callback, wait on a coroutine, or poll until it
-    // completes.
     $request = new UpdateAnywhereCacheRequest([
         'anywhere_cache' => $anywhereCache,
         'update_mask' => $updateMask,
     ]);
 
+    // Start an update operation. This returns an Operation object which can be polled.
+    /** @var Operation $operation */
     $operation = $storageControlClient->updateAnywhereCache($request);
 
     printf('Waiting for operation %s to complete...' . PHP_EOL, $operation->getName());
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete([
+        'totalPollTimeoutMillis' => 5400000,
+        'initialPollDelayMillis' => 1000, // Start with 1 second delay
+        'pollDelayMultiplier' => 2,      // Double delay each time
+        'maxPollDelayMillis' => 60000,   // Max 60 seconds delay between polls
+    ]);
 
-    // var_dump($operation);exit;
-    /** @var UpdateAnywhereCacheMetadata */
-    $metadata = $operation->getMetadata();
-    printf('Updated anywhere cache: %s', $metadata->getAnywhereCacheId());
+    $anywhereCacheResult = $operation->getResult();
+    printf('Updated anywhere cache: %s', $anywhereCacheResult->getName());
 }
 # [END storage_control_update_anywhere_cache]
 

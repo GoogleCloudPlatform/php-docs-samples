@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2025 Google Inc.
  *
@@ -45,7 +46,7 @@ class anywhereCacheTest extends TestCase
         self::$location = 'us-west1';
         self::$zone = 'us-west1-b';
         $uniqueBucketId = time() . rand();
-        self::$cacheId = sprintf('php-anywhere-cache-%s', time() . rand());
+        self::$cacheId = self::$zone;
         self::$sourceBucket = self::$storage->createBucket(
             sprintf('php-gcscontrol-sample-%s', $uniqueBucketId),
             [
@@ -56,7 +57,7 @@ class anywhereCacheTest extends TestCase
         );
         self::$anywhereCacheName = self::$storageControlClient->anywhereCacheName(
             '_', // Set project to "_" to signify global bucket
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId
         );
     }
@@ -77,7 +78,7 @@ class anywhereCacheTest extends TestCase
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Created Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Created anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -88,12 +89,12 @@ class anywhereCacheTest extends TestCase
     public function testGetAnywhereCache()
     {
         $output = $this->runFunctionSnippet('get_anywhere_cache', [
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId,
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Got Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Got anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -104,11 +105,11 @@ class anywhereCacheTest extends TestCase
     public function testListAnywhereCaches()
     {
         $output = $this->runFunctionSnippet('list_anywhere_caches', [
-            self::$location,
+            self::$sourceBucket->name(),
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Listed Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Anywhere cache name: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -119,12 +120,12 @@ class anywhereCacheTest extends TestCase
     public function testPauseAnywhereCache()
     {
         $output = $this->runFunctionSnippet('pause_anywhere_cache', [
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId,
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Paused Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Paused anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -135,12 +136,12 @@ class anywhereCacheTest extends TestCase
     public function testResumeAnywhereCache()
     {
         $output = $this->runFunctionSnippet('resume_anywhere_cache', [
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId,
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Resumed Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Resumed anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -150,14 +151,15 @@ class anywhereCacheTest extends TestCase
      */
     public function testUpdateAnywhereCache()
     {
+        $admission_policy = 'admit-on-second-miss';
         $output = $this->runFunctionSnippet('update_anywhere_cache', [
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId,
-            '7200s'
+            $admission_policy
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Updated Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Updated anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
@@ -168,12 +170,12 @@ class anywhereCacheTest extends TestCase
     public function testDisableAnywhereCache()
     {
         $output = $this->runFunctionSnippet('disable_anywhere_cache', [
-            self::$location,
+            self::$sourceBucket->name(),
             self::$cacheId,
         ]);
 
         $this->assertStringContainsString(
-            sprintf('Disabled Anywhere Cache: %s', self::$anywhereCacheName),
+            sprintf('Disabled anywhere cache: %s', self::$anywhereCacheName),
             $output
         );
     }
