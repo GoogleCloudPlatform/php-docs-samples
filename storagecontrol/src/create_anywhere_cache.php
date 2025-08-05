@@ -28,6 +28,7 @@ namespace Google\Cloud\Samples\StorageControl;
 use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\CreateAnywhereCacheRequest;
+use Google\ApiCore\Operation;
 
 /**
  * Creates an Anywhere Cache instance.

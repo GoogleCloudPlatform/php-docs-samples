@@ -29,6 +29,7 @@ use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheRequest;
 use Google\Protobuf\FieldMask;
+use Google\ApiCore\Operation;
 
 /**
  * Updates an Anywhere Cache instance.
