@@ -29,7 +29,6 @@ use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\UpdateAnywhereCacheRequest;
 use Google\Protobuf\FieldMask;
-use Google\ApiCore\Operation;
 
 /**
  * Updates an Anywhere Cache instance.
@@ -63,7 +62,6 @@ function update_anywhere_cache(string $bucketName, string $anywhereCacheId, stri
     ]);
 
     // Start an update operation. This returns an Operation object which can be polled.
-    /** @var Operation $operation */
     $operation = $storageControlClient->updateAnywhereCache($request);
 
     printf('Waiting for operation %s to complete...' . PHP_EOL, $operation->getName());

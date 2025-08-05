@@ -28,7 +28,6 @@ namespace Google\Cloud\Samples\StorageControl;
 use Google\Cloud\Storage\Control\V2\AnywhereCache;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\CreateAnywhereCacheRequest;
-use Google\ApiCore\Operation;
 
 /**
  * Creates an Anywhere Cache instance.
@@ -57,7 +56,6 @@ function create_anywhere_cache(string $bucketName, string $zone): void
     // Start a create operation and block until it completes. Real applications
     // may want to setup a callback, wait on a coroutine, or poll until it
     // completes.
-    /** @var Operation $operation */
     $operation = $storageControlClient->createAnywhereCache($request);
 
     printf('Waiting for operation %s to complete...' . PHP_EOL, $operation->getName());
