@@ -1,7 +1,7 @@
 {
   "require": {
     "google/cloud-kms": "^2.3",
-    "google/cloud-secret-manager": "^1.15.2",
+    "google/cloud-secret-manager": "^2.0.0",
     "google/cloud-parametermanager": "^0.2.0"
   }
 }
