@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-storage": "^1.28.0",
+        "google/cloud-storage": "^1.48.0",
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
