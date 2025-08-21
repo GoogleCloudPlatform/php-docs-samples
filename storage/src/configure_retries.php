@@ -112,7 +112,7 @@ function configure_retries(string $bucketName): void
         // Runs after the restRetryFunction. This might be used to simply consume the 
         // exception and $arguments b/w retries. This returns the new $arguments thus allowing 
         // modification on demand for $arguments. For ex: changing the headers in b/w retries.
-        'restRetryListener' => function (\Exception $e, $retryAttempt, &$arguments) use (&$listenerInvocations6b) {
+        'restRetryListener' => function (\Exception $e, $retryAttempt, &$arguments) {
             // logic
         },
     ];
