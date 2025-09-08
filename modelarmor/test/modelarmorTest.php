@@ -106,6 +106,17 @@ class modelarmorTest extends TestCase
         self::createTemplateWithMaliciousURI();
         self::createTemplateWithPIJailbreakFilter();
         self::createTemplateWithRAI();
+
+        // Reset floor settings before tests
+        if (self::$projectId) {
+            self::resetFloorSettings('project', self::$projectId);
+        }
+        if (self::$folderId) {
+            self::resetFloorSettings('folder', self::$folderId);
+        }
+        if (self::$organizationId) {
+            self::resetFloorSettings('organization', self::$organizationId);
+        }
     }
 
     public static function tearDownAfterClass(): void
