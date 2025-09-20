@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-speech": "^1.0.0",
+        "google/cloud-speech": "^2.0.0",
         "google/cloud-storage": "^1.20.1"
     }
 }
