@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-storagebatchoperations": "0.1.1"
+        "google/cloud-storagebatchoperations": "0.2.1"
     },
     "require-dev": {
         "google/cloud-storage": "^1.48.1"
