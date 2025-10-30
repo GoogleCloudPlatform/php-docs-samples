@@ -153,11 +153,9 @@ EOF;
 
     public function testMoveObjectAtomic()
     {
-        $bucketName = self::$bucketName . '-hns';
         $objectName = 'test-object-' . time();
         $newObjectName = $objectName . '-moved';
-        $bucket = self::$storage->createBucket($bucketName, [
-            'hierarchicalNamespace' => ['enabled' => true],
+        $bucket = self::$storage->createBucket(self::$bucketName, [
             'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
         ]);
 
@@ -165,7 +163,7 @@ EOF;
         $this->assertTrue($object->exists());
 
         $output = self::runFunctionSnippet('move_object_atomic', [
-            $bucketName,
+            self::$bucketName,
             $objectName,
             $newObjectName
         ]);
@@ -173,9 +171,9 @@ EOF;
         $this->assertEquals(
             sprintf(
                 'Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
-                $bucketName,
+                self::$bucketName,
                 $objectName,
-                $bucketName,
+                self::$bucketName,
                 $newObjectName
             ),
             $output
