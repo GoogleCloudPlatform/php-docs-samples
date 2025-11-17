@@ -151,11 +151,16 @@ EOF;
         $this->assertEquals($output, $outputString);
     }
 
-    public function testMoveObjectAtomic()
+    /**
+      * @dataProvider provideMoveObject
+      */
+    public function testMoveObjectAtomic(bool $hnEnabled)
     {
+        $bucketName = "move-object-bucket-" . uniqid();
         $objectName = 'test-object-' . time();
         $newObjectName = $objectName . '-moved';
-        $bucket = self::$storage->createBucket(self::$bucketName, [
+        $bucket = self::$storage->createBucket($bucketName, [
+            'hierarchicalNamespace' => ['enabled' => $hnEnabled],
             'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
         ]);
 
@@ -163,7 +168,7 @@ EOF;
         $this->assertTrue($object->exists());
 
         $output = self::runFunctionSnippet('move_object_atomic', [
-            self::$bucketName,
+            $bucketName,
             $objectName,
             $newObjectName
         ]);
@@ -171,9 +176,9 @@ EOF;
         $this->assertEquals(
             sprintf(
                 'Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
-                self::$bucketName,
+                $bucketName,
                 $objectName,
-                self::$bucketName,
+                $bucketName,
                 $newObjectName
             ),
             $output
@@ -185,6 +190,11 @@ EOF;
 
         $bucket->object($newObjectName)->delete();
         $bucket->delete();
+    }
+
+    public function provideMoveObject()
+    {
+        return [[true], [false]];
     }
 
     public function testCompose()
