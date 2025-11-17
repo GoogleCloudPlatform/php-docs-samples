@@ -156,7 +156,7 @@ EOF;
       */
     public function testMoveObjectAtomic(bool $hnEnabled)
     {
-        $bucketName = "move-object-bucket-" . uniqid();
+        $bucketName = 'move-object-bucket-' . uniqid();
         $objectName = 'test-object-' . time();
         $newObjectName = $objectName . '-moved';
         $bucket = self::$storage->createBucket($bucketName, [
