@@ -18,7 +18,8 @@
 namespace Google\Cloud\Samples\SecurityCenter;
 
 // [START securitycenter_list_notification_configs]
-use Google\Cloud\SecurityCenter\V1\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\Client\SecurityCenterClient;
+use Google\Cloud\SecurityCenter\V1\ListNotificationConfigsRequest;
 
 /**
  * @param string $organizationId        Your org ID
@@ -31,8 +32,10 @@ function list_notification(string $organizationId): void
     //		"projects/{projectId}"
     //		"folders/{folderId}"
     $parent = $securityCenterClient::organizationName($organizationId);
+    $listNotificationConfigsRequest = (new ListNotificationConfigsRequest())
+        ->setParent($parent);
 
-    foreach ($securityCenterClient->listNotificationConfigs($parent) as $element) {
+    foreach ($securityCenterClient->listNotificationConfigs($listNotificationConfigsRequest) as $element) {
         printf('Found notification config %s' . PHP_EOL, $element->getName());
     }
 

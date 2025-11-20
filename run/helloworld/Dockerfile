@@ -17,7 +17,7 @@
 
 # Use the official PHP image.
 # https://hub.docker.com/_/php
-FROM php:8.0-apache
+FROM php:8.4-apache
 
 # Configure PHP for Cloud Run.
 # Precompile PHP code with opcache.
@@ -40,6 +40,9 @@ RUN set -ex; \
 # Copy in custom code from the host machine.
 WORKDIR /var/www/html
 COPY . ./
+
+# Ensure the webserver has permissions to execute index.php
+RUN chown -R www-data:www-data /var/www/html
 
 # Use the PORT environment variable in Apache configuration files.
 # https://cloud.google.com/run/docs/reference/container-contract#port

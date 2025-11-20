@@ -21,7 +21,16 @@ namespace Google\Cloud\Samples\Media\Stitcher;
 
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\Video\Stitcher\V1\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\Client\VideoStitcherServiceClient;
+use Google\Cloud\Video\Stitcher\V1\DeleteCdnKeyRequest;
+use Google\Cloud\Video\Stitcher\V1\DeleteLiveConfigRequest;
+use Google\Cloud\Video\Stitcher\V1\DeleteVodConfigRequest;
+use Google\Cloud\Video\Stitcher\V1\DeleteSlateRequest;
+use Google\Cloud\Video\Stitcher\V1\GetLiveSessionRequest;
+use Google\Cloud\Video\Stitcher\V1\ListCdnKeysRequest;
+use Google\Cloud\Video\Stitcher\V1\ListLiveConfigsRequest;
+use Google\Cloud\Video\Stitcher\V1\ListVodConfigsRequest;
+use Google\Cloud\Video\Stitcher\V1\ListSlatesRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -72,8 +81,15 @@ class videoStitcherTest extends TestCase
 
     private static $inputBucketName = 'cloud-samples-data';
     private static $inputVodFileName = '/media/hls-vod/manifest.m3u8';
+    private static $updatedInputVodFileName = '/media/hls-vod/manifest.mpd';
+
     private static $vodUri;
+    private static $updatedVodUri;
+
     private static $vodAgTagUri = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250%2C728x90&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&correlator=';
+
+    private static $vodConfigId;
+    private static $vodConfigName;
 
     private static $vodSessionId;
     private static $vodSessionName;
@@ -98,11 +114,13 @@ class videoStitcherTest extends TestCase
         self::deleteOldSlates();
         self::deleteOldCdnKeys();
         self::deleteOldLiveConfigs();
+        self::deleteOldVodConfigs();
 
         self::$slateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$slateFileName);
         self::$updatedSlateUri = sprintf('https://storage.googleapis.com/%s%s', self::$bucket, self::$updatedSlateFileName);
 
         self::$vodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputVodFileName);
+        self::$updatedVodUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$updatedInputVodFileName);
 
         self::$liveUri = sprintf('https://storage.googleapis.com/%s%s', self::$inputBucketName, self::$inputLiveFileName);
     }
@@ -420,8 +438,79 @@ class videoStitcherTest extends TestCase
         $this->assertStringContainsString('Deleted live config', $output);
     }
 
+    public function testCreateVodConfig()
+    {
+        self::$vodConfigId = sprintf('php-test-vod-config-%s-%s', uniqid(), time());
+        # API returns project number rather than project ID so
+        # don't include that in $vodConfigName since we don't have it
+        self::$vodConfigName = sprintf('/locations/%s/vodConfigs/%s', self::$location, self::$vodConfigId);
+
+        $output = $this->runFunctionSnippet('create_vod_config', [
+            self::$projectId,
+            self::$location,
+            self::$vodConfigId,
+            self::$vodUri,
+            self::$vodAgTagUri
+        ]);
+        $this->assertStringContainsString(self::$vodConfigName, $output);
+    }
+
+    /** @depends testCreateVodConfig */
+    public function testListVodConfigs()
+    {
+        $output = $this->runFunctionSnippet('list_vod_configs', [
+            self::$projectId,
+            self::$location
+        ]);
+        $this->assertStringContainsString(self::$vodConfigName, $output);
+    }
+
+    /** @depends testListVodConfigs */
+    public function testUpdateVodConfig()
+    {
+        $output = $this->runFunctionSnippet('update_vod_config', [
+            self::$projectId,
+            self::$location,
+            self::$vodConfigId,
+            self::$updatedVodUri
+        ]);
+        $this->assertStringContainsString(self::$vodConfigName, $output);
+    }
+
+    /** @depends testUpdateVodConfig */
+    public function testGetVodConfig()
+    {
+        $output = $this->runFunctionSnippet('get_vod_config', [
+            self::$projectId,
+            self::$location,
+            self::$vodConfigId
+        ]);
+        $this->assertStringContainsString(self::$vodConfigName, $output);
+    }
+
+    /** @depends testGetVodConfig */
+    public function testDeleteVodConfig()
+    {
+        $output = $this->runFunctionSnippet('delete_vod_config', [
+            self::$projectId,
+            self::$location,
+            self::$vodConfigId
+        ]);
+        $this->assertStringContainsString('Deleted VOD config', $output);
+    }
+
     public function testCreateVodSession()
     {
+        # Create a temporary VOD config for the VOD session (required)
+        $tempVodConfigId = sprintf('php-test-vod-config-%s-%s', uniqid(), time());
+        $this->runFunctionSnippet('create_vod_config', [
+            self::$projectId,
+            self::$location,
+            $tempVodConfigId,
+            self::$vodUri,
+            self::$vodAgTagUri
+        ]);
+
         # API returns project number rather than project ID so
         # don't include that in $vodSessionName since we don't have it
         self::$vodSessionName = sprintf('/locations/%s/vodSessions/', self::$location);
@@ -429,13 +518,19 @@ class videoStitcherTest extends TestCase
         $output = $this->runFunctionSnippet('create_vod_session', [
             self::$projectId,
             self::$location,
-            self::$vodUri,
-            self::$vodAgTagUri
+            $tempVodConfigId
         ]);
         $this->assertStringContainsString(self::$vodSessionName, $output);
         self::$vodSessionId = explode('/', $output);
         self::$vodSessionId = trim(self::$vodSessionId[(count(self::$vodSessionId) - 1)]);
         self::$vodSessionName = sprintf('/locations/%s/vodSessions/%s', self::$location, self::$vodSessionId);
+
+        # Delete the temporary VOD config
+        $this->runFunctionSnippet('delete_vod_config', [
+            self::$projectId,
+            self::$location,
+            $tempVodConfigId
+        ]);
     }
 
     /** @depends testCreateVodSession */
@@ -577,7 +672,9 @@ class videoStitcherTest extends TestCase
 
         $stitcherClient = new VideoStitcherServiceClient();
         $formattedName = $stitcherClient->liveSessionName(self::$projectId, self::$location, self::$liveSessionId);
-        $session = $stitcherClient->getLiveSession($formattedName);
+        $getLiveSessionRequest = (new GetLiveSessionRequest())
+            ->setName($formattedName);
+        $session = $stitcherClient->getLiveSession($getLiveSessionRequest);
         $playUri = $session->getPlayUri();
 
         $manifest = file_get_contents($playUri);
@@ -621,20 +718,26 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listSlates($parent);
+        $listSlatesRequest = (new ListSlatesRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listSlates($listSlatesRequest);
         $slates = $response->iterateAllElements();
 
         $currentTime = time();
         $oneHourInSecs = 60 * 60 * 1;
 
         foreach ($slates as $slate) {
-            $tmp = explode('/', $slate->getName());
-            $id = end($tmp);
-            $tmp = explode('-', $id);
-            $timestamp = intval(end($tmp));
+            if (str_contains($slate->getName(), 'php-test-')) {
+                $tmp = explode('/', $slate->getName());
+                $id = end($tmp);
+                $tmp = explode('-', $id);
+                $timestamp = intval(end($tmp));
 
-            if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteSlate($slate->getName());
+                if ($currentTime - $timestamp >= $oneHourInSecs) {
+                    $deleteSlateRequest = (new DeleteSlateRequest())
+                        ->setName($slate->getName());
+                    $stitcherClient->deleteSlate($deleteSlateRequest);
+                }
             }
         }
     }
@@ -643,20 +746,26 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listCdnKeys($parent);
+        $listCdnKeysRequest = (new ListCdnKeysRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listCdnKeys($listCdnKeysRequest);
         $keys = $response->iterateAllElements();
 
         $currentTime = time();
         $oneHourInSecs = 60 * 60 * 1;
 
         foreach ($keys as $key) {
-            $tmp = explode('/', $key->getName());
-            $id = end($tmp);
-            $tmp = explode('-', $id);
-            $timestamp = intval(end($tmp));
+            if (str_contains($key->getName(), 'php-test-')) {
+                $tmp = explode('/', $key->getName());
+                $id = end($tmp);
+                $tmp = explode('-', $id);
+                $timestamp = intval(end($tmp));
 
-            if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteCdnKey($key->getName());
+                if ($currentTime - $timestamp >= $oneHourInSecs) {
+                    $deleteCdnKeyRequest = (new DeleteCdnKeyRequest())
+                        ->setName($key->getName());
+                    $stitcherClient->deleteCdnKey($deleteCdnKeyRequest);
+                }
             }
         }
     }
@@ -665,20 +774,54 @@ class videoStitcherTest extends TestCase
     {
         $stitcherClient = new VideoStitcherServiceClient();
         $parent = $stitcherClient->locationName(self::$projectId, self::$location);
-        $response = $stitcherClient->listLiveConfigs($parent);
+        $listLiveConfigsRequest = (new ListLiveConfigsRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listLiveConfigs($listLiveConfigsRequest);
         $liveConfigs = $response->iterateAllElements();
 
         $currentTime = time();
         $oneHourInSecs = 60 * 60 * 1;
 
         foreach ($liveConfigs as $liveConfig) {
-            $tmp = explode('/', $liveConfig->getName());
-            $id = end($tmp);
-            $tmp = explode('-', $id);
-            $timestamp = intval(end($tmp));
+            if (str_contains($liveConfig->getName(), 'php-test-')) {
+                $tmp = explode('/', $liveConfig->getName());
+                $id = end($tmp);
+                $tmp = explode('-', $id);
+                $timestamp = intval(end($tmp));
 
-            if ($currentTime - $timestamp >= $oneHourInSecs) {
-                $stitcherClient->deleteLiveConfig($liveConfig->getName());
+                if ($currentTime - $timestamp >= $oneHourInSecs) {
+                    $deleteLiveConfigRequest = (new DeleteLiveConfigRequest())
+                        ->setName($liveConfig->getName());
+                    $stitcherClient->deleteLiveConfig($deleteLiveConfigRequest);
+                }
+            }
+        }
+    }
+
+    private static function deleteOldVodConfigs(): void
+    {
+        $stitcherClient = new VideoStitcherServiceClient();
+        $parent = $stitcherClient->locationName(self::$projectId, self::$location);
+        $listVodConfigsRequest = (new ListVodConfigsRequest())
+            ->setParent($parent);
+        $response = $stitcherClient->listVodConfigs($listVodConfigsRequest);
+        $vodConfigs = $response->iterateAllElements();
+
+        $currentTime = time();
+        $oneHourInSecs = 60 * 60 * 1;
+
+        foreach ($vodConfigs as $vodConfig) {
+            if (str_contains($vodConfig->getName(), 'php-test-')) {
+                $tmp = explode('/', $vodConfig->getName());
+                $id = end($tmp);
+                $tmp = explode('-', $id);
+                $timestamp = intval(end($tmp));
+
+                if ($currentTime - $timestamp >= $oneHourInSecs) {
+                    $deleteVodConfigRequest = (new DeleteVodConfigRequest())
+                        ->setName($vodConfig->getName());
+                    $stitcherClient->deleteVodConfig($deleteVodConfigRequest);
+                }
             }
         }
     }

@@ -20,7 +20,8 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\Kms;
 
 // [START kms_quickstart]
-use Google\Cloud\Kms\V1\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\Client\KeyManagementServiceClient;
+use Google\Cloud\Kms\V1\ListKeyRingsRequest;
 
 function quickstart(
     string $projectId = 'my-project',
@@ -33,7 +34,9 @@ function quickstart(
     $locationName = $client->locationName($projectId, $locationId);
 
     // Call the API.
-    $keyRings = $client->listKeyRings($locationName);
+    $listKeyRingsRequest = (new ListKeyRingsRequest())
+        ->setParent($locationName);
+    $keyRings = $client->listKeyRings($listKeyRingsRequest);
 
     // Example of iterating over key rings.
     printf('Key rings in %s:' . PHP_EOL, $locationName);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2023 Google LLC.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,36 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_drop_foreign_key_constraint_delete_cascade]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Alter table to drop foreign key delete cascade action.
  * Example:
  * ```
- * drop_foreign_key_constraint_delete_cascade($instanceId, $databaseId);
+ * drop_foreign_key_constraint_delete_cascade($projectId, $instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
 function drop_foreign_key_constraint_delete_cascade(
+    string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
+): void {
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
-    $operation = $database->updateDdl(
-        'ALTER TABLE ShoppingCarts
-        DROP CONSTRAINT FKShoppingCartsCustomerName'
-    );
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => [
+            'ALTER TABLE ShoppingCarts DROP CONSTRAINT FKShoppingCartsCustomerName'
+        ]
+    ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

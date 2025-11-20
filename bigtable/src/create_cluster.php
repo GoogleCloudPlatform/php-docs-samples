@@ -24,10 +24,14 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_create_cluster]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Cluster;
-use Google\Cloud\Bigtable\Admin\V2\StorageType;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster;
+use Google\Cloud\Bigtable\Admin\V2\CreateClusterRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetClusterRequest;
+use Google\Cloud\Bigtable\Admin\V2\GetInstanceRequest;
+use Google\Cloud\Bigtable\Admin\V2\ListClustersRequest;
+use Google\Cloud\Bigtable\Admin\V2\StorageType;
 
 /**
  * Create a cluster in an existing Bigtable instance
@@ -50,7 +54,9 @@ function create_cluster(
 
     printf('Adding Cluster to Instance %s' . PHP_EOL, $instanceId);
     try {
-        $instanceAdminClient->getInstance($instanceName);
+        $getInstanceRequest = (new GetInstanceRequest())
+            ->setName($instanceName);
+        $instanceAdminClient->getInstance($getInstanceRequest);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('Instance %s does not exists.' . PHP_EOL, $instanceId);
@@ -63,8 +69,10 @@ function create_cluster(
 
     $storage_type = StorageType::SSD;
     $serve_nodes = 3;
+    $listClustersRequest = (new ListClustersRequest())
+        ->setParent($instanceName);
 
-    $clustersBefore = $instanceAdminClient->listClusters($instanceName)->getClusters();
+    $clustersBefore = $instanceAdminClient->listClusters($listClustersRequest)->getClusters();
     $clusters = $clustersBefore->getIterator();
     foreach ($clusters as $cluster) {
         print($cluster->getName() . PHP_EOL);
@@ -80,11 +88,17 @@ function create_cluster(
         )
     );
     try {
-        $instanceAdminClient->getCluster($clusterName);
+        $getClusterRequest = (new GetClusterRequest())
+            ->setName($clusterName);
+        $instanceAdminClient->getCluster($getClusterRequest);
         printf('Cluster %s already exists, aborting...', $clusterId);
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
-            $operationResponse = $instanceAdminClient->createCluster($instanceName, $clusterId, $cluster);
+            $createClusterRequest = (new CreateClusterRequest())
+                ->setParent($instanceName)
+                ->setClusterId($clusterId)
+                ->setCluster($cluster);
+            $operationResponse = $instanceAdminClient->createCluster($createClusterRequest);
 
             $operationResponse->pollUntilComplete();
             if ($operationResponse->operationSucceeded()) {

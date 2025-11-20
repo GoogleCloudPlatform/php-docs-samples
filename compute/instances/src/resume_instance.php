@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Compute;
 
 # [START compute_resume_instance]
-use Google\Cloud\Compute\V1\InstancesClient;
+use Google\Cloud\Compute\V1\Client\InstancesClient;
+use Google\Cloud\Compute\V1\ResumeInstanceRequest;
 
 /**
  * Resume a suspended Google Compute Engine instance (with unencrypted disks).
@@ -43,7 +44,11 @@ function resume_instance(
 ) {
     // Resume the suspended Compute Engine instance using InstancesClient.
     $instancesClient = new InstancesClient();
-    $operation = $instancesClient->resume($instanceName, $projectId, $zone);
+    $request = (new ResumeInstanceRequest())
+        ->setInstance($instanceName)
+        ->setProject($projectId)
+        ->setZone($zone);
+    $operation = $instancesClient->resume($request);
 
     // Wait for the operation to complete.
     $operation->pollUntilComplete();

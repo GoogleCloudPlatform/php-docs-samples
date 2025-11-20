@@ -24,8 +24,9 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_cluster]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Cluster;
 
 /**
  * Update a cluster in a Bigtable instance
@@ -45,13 +46,16 @@ function update_cluster(
     $clusterName = $instanceAdminClient->clusterName($projectId, $instanceId, $clusterId);
 
     try {
-        $operationResponse = $instanceAdminClient->updateCluster($clusterName, $newNumNodes);
+        $cluster = (new Cluster())
+            ->setName($clusterName)
+            ->setServeNodes($newNumNodes);
+        $operationResponse = $instanceAdminClient->updateCluster($cluster);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedCluster = $operationResponse->getResult();
             printf('Cluster updated with the new num of nodes: %s.' . PHP_EOL, $updatedCluster->getServeNodes());
-        // doSomethingWith($updatedCluster)
+            // doSomethingWith($updatedCluster)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)

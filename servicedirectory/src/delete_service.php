@@ -19,7 +19,8 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_delete_service]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\DeleteServiceRequest;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -38,7 +39,9 @@ function delete_service(
 
     // Run request.
     $serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-    $client->deleteService($serviceName);
+    $deleteServiceRequest = (new DeleteServiceRequest())
+        ->setName($serviceName);
+    $client->deleteService($deleteServiceRequest);
 
     // Print results.
     printf('Deleted Service: %s' . PHP_EOL, $serviceName);

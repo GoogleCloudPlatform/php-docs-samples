@@ -41,17 +41,29 @@ class spannerTest extends TestCase
 
     use RetryTrait, EventuallyConsistentTestTrait;
 
+    /** @var string autoscalingInstanceId */
+    protected static $autoscalingInstanceId;
+
     /** @var string instanceId */
     protected static $instanceId;
 
     /** @var string lowCostInstanceId */
     protected static $lowCostInstanceId;
 
+    /** @var string instancePartitionInstanceId */
+    protected static $instancePartitionInstanceId;
+
+    /** @var Instance instancePartitionInstance */
+    protected static $instancePartitionInstance;
+
     /** @var string databaseId */
     protected static $databaseId;
 
     /** @var string encryptedDatabaseId */
     protected static $encryptedDatabaseId;
+
+    /** @var string $encryptedMrCmekDatabaseId */
+    protected static $encryptedMrCmekDatabaseId;
 
     /** @var string backupId */
     protected static $backupId;
@@ -79,6 +91,12 @@ class spannerTest extends TestCase
 
     /** @var string kmsKeyName */
     protected static $kmsKeyName;
+
+    /** @var string kmsKeyName2 */
+    protected static $kmsKeyName2;
+
+    /** @var string kmsKeyName3 */
+    protected static $kmsKeyName3;
 
     /**
      * Low cost instance with less than 1000 processing units.
@@ -117,20 +135,28 @@ class spannerTest extends TestCase
             'projectId' => self::$projectId,
         ]);
 
+        self::$autoscalingInstanceId = 'test-' . time() . rand();
         self::$instanceId = 'test-' . time() . rand();
         self::$lowCostInstanceId = 'test-' . time() . rand();
+        self::$instancePartitionInstanceId = 'test-' . time() . rand();
+        self::$instancePartitionInstance = $spanner->instance(self::$instancePartitionInstanceId);
         self::$databaseId = 'test-' . time() . rand();
         self::$encryptedDatabaseId = 'en-test-' . time() . rand();
+        self::$encryptedMrCmekDatabaseId = 'mr-test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$instance = $spanner->instance(self::$instanceId);
         self::$kmsKeyName =
             'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        self::$kmsKeyName2 =
+            'projects/' . self::$projectId . '/locations/us-east1/keyRings/spanner-test-keyring2/cryptoKeys/spanner-test-cmek2';
+        self::$kmsKeyName3 =
+            'projects/' . self::$projectId . '/locations/us-east4/keyRings/spanner-test-keyring3/cryptoKeys/spanner-test-cmek3';
         self::$lowCostInstance = $spanner->instance(self::$lowCostInstanceId);
 
         self::$multiInstanceId = 'kokoro-multi-instance';
         self::$multiDatabaseId = 'test-' . time() . rand() . 'm';
         self::$instanceConfig = 'nam3';
-        self::$defaultLeader = 'us-central1';
+        self::$defaultLeader = 'us-east1';
         self::$updatedDefaultLeader = 'us-east4';
         self::$multiInstance = $spanner->instance(self::$multiInstanceId);
         self::$baseConfigId = 'nam7';
@@ -141,7 +167,8 @@ class spannerTest extends TestCase
 
     public function testCreateInstance()
     {
-        $output = $this->runFunctionSnippet('create_instance', [
+        $output = $this->runAdminFunctionSnippet('create_instance', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$instanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
@@ -150,7 +177,8 @@ class spannerTest extends TestCase
 
     public function testCreateInstanceWithProcessingUnits()
     {
-        $output = $this->runFunctionSnippet('create_instance_with_processing_units', [
+        $output = $this->runAdminFunctionSnippet('create_instance_with_processing_units', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$lowCostInstanceId
         ]);
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
@@ -159,11 +187,22 @@ class spannerTest extends TestCase
 
     public function testCreateInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('create_instance_config', [
-            self::$customInstanceConfigId, self::$baseConfigId
+        $output = $this->runAdminFunctionSnippet('create_instance_config', [
+            self::$projectId, self::$customInstanceConfigId, self::$baseConfigId
         ]);
 
         $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
+    }
+
+    public function testCreateInstanceWithAutoscalingConfig()
+    {
+        $output = $this->runAdminFunctionSnippet('create_instance_with_autoscaling_config', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$autoscalingInstanceId
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance test-', $output);
+        $this->assertStringContainsString('minNodes set to 1', $output);
     }
 
     /**
@@ -171,7 +210,8 @@ class spannerTest extends TestCase
      */
     public function testUpdateInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('update_instance_config', [
+        $output = $this->runAdminFunctionSnippet('update_instance_config', [
+            self::$projectId,
             self::$customInstanceConfigId
         ]);
 
@@ -179,11 +219,12 @@ class spannerTest extends TestCase
     }
 
     /**
-     * @depends testUpdateInstanceConfig
+     * @depends testListInstanceConfigOperations
      */
     public function testDeleteInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('delete_instance_config', [
+        $output = $this->runAdminFunctionSnippet('delete_instance_config', [
+            self::$projectId,
             self::$customInstanceConfigId
         ]);
         $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
@@ -194,13 +235,14 @@ class spannerTest extends TestCase
      */
     public function testListInstanceConfigOperations()
     {
-        $output = $this->runFunctionSnippet('list_instance_config_operations', [
-            self::$customInstanceConfigId
+        $output = $this->runAdminFunctionSnippet('list_instance_config_operations', [
+            self::$projectId
         ]);
 
         $this->assertStringContainsString(
             sprintf(
-                'Instance config operation for %s of type %s has status done.',
+                'Instance config operation for projects/%s/instanceConfigs/%s of type %s has status done.',
+                self::$projectId,
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
             ),
@@ -208,11 +250,39 @@ class spannerTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Instance config operation for %s of type %s has status done.',
+                'Instance config operation for projects/%s/instanceConfigs/%s of type %s has status done.',
+                self::$projectId,
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
             ),
             $output);
+    }
+
+    public function testCreateInstancePartition()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $instanceConfig = $spanner->instanceConfiguration('regional-us-central1');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            self::$instancePartitionInstanceId,
+            [
+                'displayName' => 'Instance partitions test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+        $output = $this->runAdminFunctionSnippet('create_instance_partition', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$instancePartitionInstanceId,
+            'instance_partition_id' => 'my-instance-partition'
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created instance partition my-instance-partition', $output);
     }
 
     /**
@@ -220,7 +290,7 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabase()
     {
-        $output = $this->runFunctionSnippet('create_database');
+        $output = $this->runAdminFunctionSnippet('create_database');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created database test-', $output);
     }
@@ -230,7 +300,8 @@ class spannerTest extends TestCase
      */
     public function testCreateDatabaseWithEncryptionKey()
     {
-        $output = $this->runFunctionSnippet('create_database_with_encryption_key', [
+        $output = $this->runAdminFunctionSnippet('create_database_with_encryption_key', [
+            self::$projectId,
             self::$instanceId,
             self::$encryptedDatabaseId,
             self::$kmsKeyName,
@@ -239,12 +310,43 @@ class spannerTest extends TestCase
         $this->assertStringContainsString('Created database en-test-', $output);
     }
 
+    public function testCreateDatabaseWithMrCmek()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
+        $output = $this->runAdminFunctionSnippet('create_database_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
+            self::$encryptedMrCmekDatabaseId,
+            $kmsKeyNames,
+        ]);
+        $this->assertStringContainsString('Waiting for operation to complete...', $output);
+        $this->assertStringContainsString('Created database mr-test-', $output);
+    }
+
     /**
      * @depends testCreateDatabase
      */
     public function testUpdateDatabase()
     {
-        $output = $this->runFunctionSnippet('update_database', [
+        $output = $this->runAdminFunctionSnippet('update_database', [
+            'project_id' => self::$projectId,
             'instanceId' => self::$instanceId,
             'databaseId' => self::$databaseId
         ]);
@@ -341,7 +443,7 @@ class spannerTest extends TestCase
      */
     public function testAddColumn()
     {
-        $output = $this->runFunctionSnippet('add_column');
+        $output = $this->runAdminFunctionSnippet('add_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added the MarketingBudget column.', $output);
     }
@@ -385,7 +487,7 @@ class spannerTest extends TestCase
      */
     public function testCreateIndex()
     {
-        $output = $this->runFunctionSnippet('create_index');
+        $output = $this->runAdminFunctionSnippet('create_index');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle index.', $output);
     }
@@ -419,7 +521,7 @@ class spannerTest extends TestCase
      */
     public function testCreateStoringIndex()
     {
-        $output = $this->runFunctionSnippet('create_storing_index');
+        $output = $this->runAdminFunctionSnippet('create_storing_index');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added the AlbumsByAlbumTitle2 index.', $output);
     }
@@ -474,7 +576,7 @@ class spannerTest extends TestCase
      */
     public function testCreateTableTimestamp()
     {
-        $output = $this->runFunctionSnippet('create_table_with_timestamp_column');
+        $output = $this->runAdminFunctionSnippet('create_table_with_timestamp_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created Performances table in database test-', $output);
     }
@@ -493,7 +595,7 @@ class spannerTest extends TestCase
      */
     public function testAddTimestampColumn()
     {
-        $output = $this->runFunctionSnippet('add_timestamp_column');
+        $output = $this->runAdminFunctionSnippet('add_timestamp_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added LastUpdateTime as a commit timestamp column in Albums table', $output);
     }
@@ -701,7 +803,7 @@ class spannerTest extends TestCase
      */
     public function testCreateTableDatatypes()
     {
-        $output = $this->runFunctionSnippet('create_table_with_datatypes');
+        $output = $this->runAdminFunctionSnippet('create_table_with_datatypes');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Created Venues table in database test-', $output);
     }
@@ -822,7 +924,7 @@ class spannerTest extends TestCase
      */
     public function testAddNumericColumn()
     {
-        $output = $this->runFunctionSnippet('add_numeric_column');
+        $output = $this->runAdminFunctionSnippet('add_numeric_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added Revenue as a NUMERIC column in Venues table', $output);
     }
@@ -850,7 +952,7 @@ class spannerTest extends TestCase
      */
     public function testAddJsonColumn()
     {
-        $output = $this->runFunctionSnippet('add_json_column');
+        $output = $this->runAdminFunctionSnippet('add_json_column');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString('Added VenueDetails as a JSON column in Venues table', $output);
     }
@@ -991,7 +1093,7 @@ class spannerTest extends TestCase
      */
     public function testAddDropDatabaseRole()
     {
-        $output = $this->runFunctionSnippet('add_drop_database_role');
+        $output = $this->runAdminFunctionSnippet('add_drop_database_role');
         $this->assertStringContainsString('Waiting for create role and grant operation to complete...' . PHP_EOL, $output);
         $this->assertStringContainsString('Created roles new_parent and new_child and granted privileges' . PHP_EOL, $output);
         $this->assertStringContainsString('Waiting for revoke role and drop role operation to complete...' . PHP_EOL, $output);
@@ -1053,7 +1155,7 @@ class spannerTest extends TestCase
      */
     public function testCreateSequence()
     {
-        $output = $this->runFunctionSnippet('create_sequence');
+        $output = $this->runAdminFunctionSnippet('create_sequence');
         $this->assertStringContainsString(
             'Created Seq sequence and Customers table, where ' .
             'the key column CustomerId uses the sequence as a default value',
@@ -1067,7 +1169,7 @@ class spannerTest extends TestCase
      */
     public function testAlterSequence()
     {
-        $output = $this->runFunctionSnippet('alter_sequence');
+        $output = $this->runAdminFunctionSnippet('alter_sequence');
         $this->assertStringContainsString(
             'Altered Seq sequence to skip an inclusive range between 1000 and 5000000',
             $output
@@ -1080,7 +1182,7 @@ class spannerTest extends TestCase
      */
     public function testDropSequence()
     {
-        $output = $this->runFunctionSnippet('drop_sequence');
+        $output = $this->runAdminFunctionSnippet('drop_sequence');
         $this->assertStringContainsString(
             'Altered Customers table to drop DEFAULT from CustomerId ' .
             'column and dropped the Seq sequence',
@@ -1088,23 +1190,30 @@ class spannerTest extends TestCase
         );
     }
 
-    private function testGetInstanceConfig()
+    public function testGetInstanceConfig()
     {
-        $output = $this->runFunctionSnippet('get_instance_config', [
+        $output = $this->runAdminFunctionSnippet('get_instance_config', [
+            'project_id' => self::$projectId,
             'instance_config' => self::$instanceConfig
         ]);
         $this->assertStringContainsString(self::$instanceConfig, $output);
     }
 
-    private function testListInstanceConfigs()
+    public function testListInstanceConfigs()
     {
-        $output = $this->runFunctionSnippet('list_instance_configs');
-        $this->assertStringContainsString(self::$instanceConfig, $output);
+        $output = $this->runAdminFunctionSnippet('list_instance_configs', [
+            'project_id' => self::$projectId
+        ]);
+        $this->assertStringContainsString(
+            'Available leader options for instance config',
+            $output
+        );
     }
 
-    private function testCreateDatabaseWithDefaultLeader()
+    public function testCreateDatabaseWithDefaultLeader()
     {
-        $output = $this->runFunctionSnippet('create_database_with_default_leader', [
+        $output = $this->runAdminFunctionSnippet('create_database_with_default_leader', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
             'defaultLeader' => self::$defaultLeader
@@ -1127,9 +1236,10 @@ class spannerTest extends TestCase
     /**
      * @depends testCreateDatabaseWithDefaultLeader
      */
-    private function testUpdateDatabaseWithDefaultLeader()
+    public function testUpdateDatabaseWithDefaultLeader()
     {
-        $output = $this->runFunctionSnippet('update_database_with_default_leader', [
+        $output = $this->runAdminFunctionSnippet('update_database_with_default_leader', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
             'defaultLeader' => self::$updatedDefaultLeader
@@ -1140,9 +1250,10 @@ class spannerTest extends TestCase
     /**
      * @depends testUpdateDatabaseWithDefaultLeader
      */
-    private function testGetDatabaseDdl()
+    public function testGetDatabaseDdl()
     {
-        $output = $this->runFunctionSnippet('get_database_ddl', [
+        $output = $this->runAdminFunctionSnippet('get_database_ddl', [
+            'project_id' => self::$projectId,
             'instance_id' => self::$multiInstanceId,
             'database_id' => self::$multiDatabaseId,
         ]);
@@ -1153,10 +1264,12 @@ class spannerTest extends TestCase
     /**
      * @depends testUpdateDatabaseWithDefaultLeader
      */
-    private function testListDatabases()
+    public function testListDatabases()
     {
-        $output = $this->runFunctionSnippet('list_databases');
-        $this->assertStringContainsString(self::$databaseId, $output);
+        $output = $this->runAdminFunctionSnippet('list_databases', [
+            'project_id' => self::$projectId,
+            'instance_id' => self::$multiInstanceId,
+        ]);
         $this->assertStringContainsString(self::$multiDatabaseId, $output);
         $this->assertStringContainsString(self::$updatedDefaultLeader, $output);
     }
@@ -1166,6 +1279,14 @@ class spannerTest extends TestCase
         return $this->traitRunFunctionSnippet(
             $sampleName,
             array_values($params) ?: [self::$instanceId, self::$databaseId]
+        );
+    }
+
+    private function runAdminFunctionSnippet($sampleName, $params = [])
+    {
+        return $this->traitRunFunctionSnippet(
+            $sampleName,
+            array_values($params) ?: [self::$projectId, self::$instanceId, self::$databaseId]
         );
     }
 
@@ -1218,10 +1339,13 @@ class spannerTest extends TestCase
             $database = self::$instance->database(self::$databaseId);
             $database->drop();
         }
-        $database = self::$multiInstance->database(self::$databaseId);
-        $database->drop();
+        if (self::$multiInstance->exists()) {//Clean up database
+            $database = self::$multiInstance->database(self::$databaseId);
+            $database->drop();
+        }
         self::$instance->delete();
         self::$lowCostInstance->delete();
+        self::$instancePartitionInstance->delete();
         if (self::$customInstanceConfig->exists()) {
             self::$customInstanceConfig->delete();
         }
@@ -1232,7 +1356,7 @@ class spannerTest extends TestCase
 
     public function testCreateTableForeignKeyDeleteCascade()
     {
-        $output = $this->runFunctionSnippet('create_table_with_foreign_key_delete_cascade');
+        $output = $this->runAdminFunctionSnippet('create_table_with_foreign_key_delete_cascade');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString(
             'Created Customers and ShoppingCarts table with FKShoppingCartsCustomerId ' .
@@ -1246,7 +1370,7 @@ class spannerTest extends TestCase
      */
     public function testAlterTableDropForeignKeyDeleteCascade()
     {
-        $output = $this->runFunctionSnippet('drop_foreign_key_constraint_delete_cascade');
+        $output = $this->runAdminFunctionSnippet('drop_foreign_key_constraint_delete_cascade');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString(
             'Altered ShoppingCarts table to drop FKShoppingCartsCustomerName ' .
@@ -1260,12 +1384,25 @@ class spannerTest extends TestCase
      */
     public function testAlterTableAddForeignKeyDeleteCascade()
     {
-        $output = $this->runFunctionSnippet('alter_table_with_foreign_key_delete_cascade');
+        $output = $this->runAdminFunctionSnippet('alter_table_with_foreign_key_delete_cascade');
         $this->assertStringContainsString('Waiting for operation to complete...', $output);
         $this->assertStringContainsString(
             'Altered ShoppingCarts table with FKShoppingCartsCustomerName ' .
             'foreign key constraint on database',
             $output
         );
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testDirectedRead()
+    {
+        $output = $this->runFunctionSnippet('directed_read');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk', $output);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, AlbumTitle: Go, Go, Go', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, AlbumTitle: Green', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, AlbumTitle: Forever Hold Your Peace', $output);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, AlbumTitle: Terrified', $output);
     }
 }

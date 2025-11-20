@@ -27,7 +27,7 @@ function streamBigQuery(ServerRequestInterface $request)
     $bigQuery = new BigQueryClient(['projectId' => $projectId]);
     $queryJobConfig = $bigQuery->query(
         'SELECT abstract FROM `bigquery-public-data.breathe.bioasq` LIMIT 1000'
-        );
+    );
     $queryResults = $bigQuery->runQuery($queryJobConfig);
 
     // Stream out large payload by iterating rows and flushing output.

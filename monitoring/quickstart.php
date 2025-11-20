@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 Google Inc. All Rights Reserved.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 # Imports the Google Cloud client library
 use Google\Api\Metric;
 use Google\Api\MonitoredResource;
-use Google\Cloud\Monitoring\V3\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\Client\MetricServiceClient;
+use Google\Cloud\Monitoring\V3\CreateTimeSeriesRequest;
 use Google\Cloud\Monitoring\V3\Point;
 use Google\Cloud\Monitoring\V3\TimeInterval;
 use Google\Cloud\Monitoring\V3\TimeSeries;
@@ -37,7 +38,7 @@ $zone = 'us-central1-f';
 
 try {
     $client = new MetricServiceClient();
-    $formattedProjectName = $client->projectName($projectId);
+    $formattedProjectName = 'projects/' . $projectId;
     $labels = [
         'instance_id' => $instanceId,
         'zone' => $zone,
@@ -69,8 +70,11 @@ try {
     $timeSeries->setMetric($m);
     $timeSeries->setResource($r);
     $timeSeries->setPoints($points);
+    $createTimeSeriesRequest = (new CreateTimeSeriesRequest())
+        ->setName($formattedProjectName)
+        ->setTimeSeries([$timeSeries]);
 
-    $client->createTimeSeries($formattedProjectName, [$timeSeries]);
+    $client->createTimeSeries($createTimeSeriesRequest);
     print('Successfully submitted a time series' . PHP_EOL);
 } finally {
     $client->close();

@@ -18,8 +18,8 @@
 namespace Google\Cloud\Samples\PubSub;
 
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\V1\PublisherClient;
-use Google\Cloud\PubSub\V1\SchemaServiceClient;
+use Google\Cloud\PubSub\V1\Client\PublisherClient;
+use Google\Cloud\PubSub\V1\Client\SchemaServiceClient;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\TestTrait;
@@ -95,6 +95,9 @@ class SchemaTest extends TestCase
     {
         $schemaId = uniqid('samples-test-' . $type . '-');
         $schemaName = SchemaServiceClient::schemaName(self::$projectId, $schemaId);
+        $expectedMessage = $type === 'avro'
+            ? 'Committed a schema using an Avro schema'
+            : 'Committed a schema using a Protocol Buffer schema';
 
         $this->runFunctionSnippet(sprintf('create_%s_schema', $type), [
             self::$projectId,
@@ -110,7 +113,7 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Committed a schema using an %s schema: %s@', ucfirst($type), $schemaName
+                '%s: %s@', $expectedMessage, $schemaName
             ),
             $listOutput
         );
@@ -125,7 +128,7 @@ class SchemaTest extends TestCase
 
         $this->assertStringContainsString(
             sprintf(
-                'Got a schema revision: %s@%s',
+                'Got the schema revision: %s@%s',
                 $schemaName,
                 $schemaRevisionId
             ),
@@ -143,6 +146,49 @@ class SchemaTest extends TestCase
             self::$projectId,
             $schemaId,
         ]);
+    }
+
+    public function testCreateUpdateTopicWithSchemaRevisions()
+    {
+        $schemaId = uniqid('samples-test-');
+        $pubsub = new PubSubClient([
+            'projectId' => self::$projectId,
+        ]);
+        $definition = (string) file_get_contents(self::PROTOBUF_DEFINITION);
+        $schema = $pubsub->createSchema($schemaId, 'PROTOCOL_BUFFER', $definition);
+        $schema->commit($definition, 'PROTOCOL_BUFFER');
+        $schemas = ($schema->listRevisions())['schemas'];
+        $revisions = array_map(fn ($x) => $x['revisionId'], $schemas);
+
+        $topicId = uniqid('samples-test-topic-');
+        $output = $this->runFunctionSnippet('create_topic_with_schema_revisions', [
+            self::$projectId,
+            $topicId,
+            $schemaId,
+            $revisions[1],
+            $revisions[0],
+            'BINARY'
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Topic %s created', PublisherClient::topicName(self::$projectId, $topicId)),
+            $output
+        );
+
+        $output = $this->runFunctionSnippet('update_topic_schema', [
+            self::$projectId,
+            $topicId,
+            $revisions[1],
+            $revisions[0],
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Updated topic with schema: %s', PublisherClient::topicName(self::$projectId, $topicId)),
+            $output
+        );
+
+        $schema->delete();
+        $pubsub->topic($topicId)->delete();
     }
 
     /**

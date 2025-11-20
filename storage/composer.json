@@ -1,10 +1,10 @@
 {
     "require": {
-        "google/cloud-storage": "^1.28.0",
+        "google/cloud-storage": "^1.48.7",
         "paragonie/random_compat": "^9.0.0"
     },
     "require-dev": {
-        "google/cloud-pubsub": "^1.31",
+        "google/cloud-pubsub": "^2.0",
         "guzzlehttp/guzzle": "^7.0"
     }
 }

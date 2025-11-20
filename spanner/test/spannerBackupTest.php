@@ -47,6 +47,9 @@ class spannerBackupTest extends TestCase
     /** @var string encryptedBackupId */
     protected static $encryptedBackupId;
 
+    /** @var string encryptedMrCmekBackupId */
+    protected static $encryptedMrCmekBackupId;
+
     /** @var string databaseId */
     protected static $databaseId;
 
@@ -59,11 +62,20 @@ class spannerBackupTest extends TestCase
     /** @var string encryptedRestoredDatabaseId */
     protected static $encryptedRestoredDatabaseId;
 
+    /** @var string encryptedMrCmekRestoredDatabaseId */
+    protected static $encryptedMrCmekRestoredDatabaseId;
+
     /** @var $instance Instance */
     protected static $instance;
 
     /** @var string kmsKeyName */
     protected static $kmsKeyName;
+
+    /** @var string kmsKeyName2 */
+    protected static $kmsKeyName2;
+
+    /** @var string kmsKeyName3 */
+    protected static $kmsKeyName3;
 
     public static function setUpBeforeClass(): void
     {
@@ -85,12 +97,18 @@ class spannerBackupTest extends TestCase
         self::$databaseId = 'test-' . time() . rand();
         self::$backupId = 'backup-' . self::$databaseId;
         self::$encryptedBackupId = 'en-backup-' . self::$databaseId;
+        self::$encryptedMrCmekBackupId = 'mr-backup-' . self::$databaseId;
         self::$restoredDatabaseId = self::$databaseId . '-r';
         self::$encryptedRestoredDatabaseId = self::$databaseId . '-en-r';
+        self::$encryptedMrCmekRestoredDatabaseId = self::$databaseId . '-mr-r';
         self::$instance = $spanner->instance(self::$instanceId);
 
         self::$kmsKeyName =
-            'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        'projects/' . self::$projectId . '/locations/us-central1/keyRings/spanner-test-keyring/cryptoKeys/spanner-test-cmek';
+        self::$kmsKeyName2 =
+        'projects/' . self::$projectId . '/locations/us-east1/keyRings/spanner-test-keyring2/cryptoKeys/spanner-test-cmek2';
+        self::$kmsKeyName3 =
+        'projects/' . self::$projectId . '/locations/us-east4/keyRings/spanner-test-keyring3/cryptoKeys/spanner-test-cmek3';
     }
 
     public function testCreateDatabaseWithVersionRetentionPeriod()
@@ -105,14 +123,43 @@ class spannerBackupTest extends TestCase
 
     public function testCreateBackupWithEncryptionKey()
     {
-        $database = self::$instance->database(self::$databaseId);
-
         $output = $this->runFunctionSnippet('create_backup_with_encryption_key', [
             self::$databaseId,
             self::$encryptedBackupId,
             self::$kmsKeyName,
         ]);
         $this->assertStringContainsString(self::$backupId, $output);
+    }
+
+    public function testCreateBackupWithMrCmek()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
+        $output = $this->runFunctionSnippet('create_backup_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
+            self::$databaseId,
+            self::$encryptedMrCmekBackupId,
+            $kmsKeyNames,
+        ]);
+        $this->assertStringContainsString(self::$encryptedMrCmekBackupId, $output);
     }
 
     /**
@@ -149,21 +196,13 @@ class spannerBackupTest extends TestCase
      */
     public function testListBackupOperations()
     {
-        $databaseId2 = self::$databaseId . '-2';
-        $database2 = self::$instance->database($databaseId2);
-        // DB may already exist if the test timed out and retried
-        if (!$database2->exists()) {
-            $database2->create();
-        }
-        $backup = self::$instance->backup(self::$backupId . '-pro');
-        $lro = $backup->create($databaseId2, new \DateTime('+7 hours'));
         $output = $this->runFunctionSnippet('list_backup_operations', [
-            'database_id' => self::$databaseId,
+            self::$databaseId,
+            self::$backupId
         ]);
-        $lro->pollUntilComplete();
 
-        $this->assertStringContainsString(basename($backup->name()), $output);
-        $this->assertStringContainsString($databaseId2, $output);
+        $this->assertStringContainsString(basename(self::$backupId), $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
     /**
@@ -177,6 +216,44 @@ class spannerBackupTest extends TestCase
             $newBackupId,
             self::$instanceId,
             self::$backupId
+        ]);
+
+        $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
+        $this->assertMatchesRegularExpression(sprintf($regex, $newBackupId, self::$backupId), $output);
+    }
+
+    /**
+     * @depends testCreateBackup
+     */
+    public function testCopyBackupWithMrCmek()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
+        $newBackupId = 'copy-' . self::$backupId . '-' . time();
+
+        $output = $this->runFunctionSnippet('copy_backup_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
+            $newBackupId,
+            $mrCmekInstanceId,
+            self::$backupId,
+            $kmsKeyNames
         ]);
 
         $regex = '/Backup %s of size \d+ bytes was copied at (.+) from the source backup %s/';
@@ -229,12 +306,47 @@ class spannerBackupTest extends TestCase
     }
 
     /**
+     * @depends testCreateBackupWithMrCmek
+     */
+    public function testRestoreBackupWithMrCmek()
+    {
+        $spanner = new SpannerClient([
+            'projectId' => self::$projectId,
+        ]);
+        $mrCmekInstanceId = 'test-mr-' . time() . rand();
+        $instanceConfig = $spanner->instanceConfiguration('nam3');
+        $operation = $spanner->createInstance(
+            $instanceConfig,
+            $mrCmekInstanceId,
+            [
+                'displayName' => 'Mr Cmek test.',
+                'nodeCount' => 1,
+                'labels' => [
+                    'cloud_spanner_samples' => true,
+                ]
+            ]
+        );
+        $operation->pollUntilComplete();
+
+        $kmsKeyNames = array(self::$kmsKeyName, self::$kmsKeyName2, self::$kmsKeyName3);
+        $output = $this->runFunctionSnippet('restore_backup_with_mr_cmek', [
+            self::$projectId,
+            $mrCmekInstanceId,
+            self::$encryptedMrCmekRestoredDatabaseId,
+            self::$encryptedMrCmekBackupId,
+            $kmsKeyNames,
+        ]);
+        $this->assertStringContainsString(self::$encryptedMrCmekBackupId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
+    }
+
+    /**
      * @depends testRestoreBackupWithEncryptionKey
      */
     public function testListDatabaseOperations()
     {
         $output = $this->runFunctionSnippet('list_database_operations');
-        $this->assertStringContainsString(self::$encryptedRestoredDatabaseId, $output);
+        $this->assertStringContainsString(self::$databaseId, $output);
     }
 
     /**
@@ -279,7 +391,7 @@ class spannerBackupTest extends TestCase
     {
         return $this->traitRunFunctionSnippet(
             $sampleName,
-            array_merge([self::$instanceId], array_values($params))
+            array_merge([self::$projectId, self::$instanceId], array_values($params))
         );
     }
 

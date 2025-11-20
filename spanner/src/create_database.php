@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_create_database]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\CreateDatabaseRequest;
 
 /**
  * Creates a database and tables for sample data.
@@ -33,34 +34,37 @@ use Google\Cloud\Spanner\SpannerClient;
  * create_database($instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId The Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
-function create_database(string $instanceId, string $databaseId): void
+function create_database(string $projectId, string $instanceId, string $databaseId): void
 {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
+    $databaseAdminClient = new DatabaseAdminClient();
+    $instance = $databaseAdminClient->instanceName($projectId, $instanceId);
 
-    if (!$instance->exists()) {
-        throw new \LogicException("Instance $instanceId does not exist");
-    }
-
-    $operation = $instance->createDatabase($databaseId, ['statements' => [
-        'CREATE TABLE Singers (
-            SingerId     INT64 NOT NULL,
-            FirstName    STRING(1024),
-            LastName     STRING(1024),
-            SingerInfo   BYTES(MAX),
-            FullName     STRING(2048) AS
-            (ARRAY_TO_STRING([FirstName, LastName], " ")) STORED
-        ) PRIMARY KEY (SingerId)',
-        'CREATE TABLE Albums (
-            SingerId     INT64 NOT NULL,
-            AlbumId      INT64 NOT NULL,
-            AlbumTitle   STRING(MAX)
-        ) PRIMARY KEY (SingerId, AlbumId),
-        INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
-    ]]);
+    $operation = $databaseAdminClient->createDatabase(
+        new CreateDatabaseRequest([
+            'parent' => $instance,
+            'create_statement' => sprintf('CREATE DATABASE `%s`', $databaseId),
+            'extra_statements' => [
+                'CREATE TABLE Singers (' .
+                'SingerId     INT64 NOT NULL,' .
+                'FirstName    STRING(1024),' .
+                'LastName     STRING(1024),' .
+                'SingerInfo   BYTES(MAX),' .
+                'FullName     STRING(2048) AS' .
+                '(ARRAY_TO_STRING([FirstName, LastName], " ")) STORED' .
+                ') PRIMARY KEY (SingerId)',
+                'CREATE TABLE Albums (' .
+                    'SingerId     INT64 NOT NULL,' .
+                    'AlbumId      INT64 NOT NULL,' .
+                    'AlbumTitle   STRING(MAX)' .
+                ') PRIMARY KEY (SingerId, AlbumId),' .
+                'INTERLEAVE IN PARENT Singers ON DELETE CASCADE'
+            ]
+        ])
+    );
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

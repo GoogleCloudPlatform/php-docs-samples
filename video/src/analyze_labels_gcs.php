@@ -19,7 +19,8 @@
 namespace Google\Cloud\Samples\VideoIntelligence;
 
 // [START video_analyze_labels_gcs]
-use Google\Cloud\VideoIntelligence\V1\VideoIntelligenceServiceClient;
+use Google\Cloud\VideoIntelligence\V1\AnnotateVideoRequest;
+use Google\Cloud\VideoIntelligence\V1\Client\VideoIntelligenceServiceClient;
 use Google\Cloud\VideoIntelligence\V1\Feature;
 
 /**
@@ -33,10 +34,10 @@ function analyze_labels_gcs(string $uri, int $pollingIntervalSeconds = 0)
 
     # Execute a request.
     $features = [Feature::LABEL_DETECTION];
-    $operation = $video->annotateVideo([
-        'inputUri' => $uri,
-        'features' => $features,
-    ]);
+    $request = (new AnnotateVideoRequest())
+        ->setInputUri($uri)
+        ->setFeatures($features);
+    $operation = $video->annotateVideo($request);
 
     # Wait for the request to complete.
     $operation->pollUntilComplete([

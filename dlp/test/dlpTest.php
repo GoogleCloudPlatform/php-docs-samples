@@ -18,32 +18,23 @@
 
 namespace Google\Cloud\Samples\Dlp;
 
-use Google\Cloud\Dlp\V2\DlpJob;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
-use Google\Cloud\TestUtils\TestTrait;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use PHPUnitRetry\RetryTrait;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\Finding;
-use Google\Cloud\Dlp\V2\InfoType;
-use Google\Cloud\Dlp\V2\InfoTypeStats;
-use Google\Cloud\Dlp\V2\InspectContentResponse;
-use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
-use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
-use Google\Cloud\PubSub\Message;
-use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\PubSub\Subscription;
-use Google\Cloud\PubSub\Topic;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityEquivalenceClass;
 use Google\Cloud\Dlp\V2\AnalyzeDataSourceRiskDetails\KAnonymityResult\KAnonymityHistogramBucket;
-use Google\Cloud\Dlp\V2\Value;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateJobTriggerRequest;
+use Google\Cloud\Dlp\V2\DlpJob;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
+use Google\Cloud\Dlp\V2\Finding;
 use Google\Cloud\Dlp\V2\HybridInspectResponse;
 use Google\Cloud\Dlp\V2\HybridOptions;
+use Google\Cloud\Dlp\V2\InfoType;
+use Google\Cloud\Dlp\V2\InfoTypeStats;
 use Google\Cloud\Dlp\V2\InspectConfig;
+use Google\Cloud\Dlp\V2\InspectContentResponse;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails;
+use Google\Cloud\Dlp\V2\InspectDataSourceDetails\Result;
 use Google\Cloud\Dlp\V2\InspectJobConfig;
 use Google\Cloud\Dlp\V2\InspectResult;
 use Google\Cloud\Dlp\V2\JobTrigger;
@@ -55,6 +46,16 @@ use Google\Cloud\Dlp\V2\StorageConfig;
 use Google\Cloud\Dlp\V2\StoredInfoType;
 use Google\Cloud\Dlp\V2\StoredInfoTypeState;
 use Google\Cloud\Dlp\V2\StoredInfoTypeVersion;
+use Google\Cloud\Dlp\V2\Value;
+use Google\Cloud\PubSub\Message;
+use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\PubSub\Subscription;
+use Google\Cloud\PubSub\Topic;
+use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
+use PHPUnitRetry\RetryTrait;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Unit Tests for dlp commands.
@@ -887,6 +888,47 @@ class dlpTest extends TestCase
         $this->assertEquals($string, $reidOutput);
     }
 
+    public function testGetJob()
+    {
+
+        // Set filter to only go back a day, so that we do not pull every job.
+        $filter = sprintf(
+            'state=DONE AND end_time>"%sT00:00:00+00:00"',
+            date('Y-m-d', strtotime('-1 day'))
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $getJobName = $this->runFunctionSnippet('list_jobs', [
+            self::$projectId,
+            $filter,
+        ]);
+        preg_match($jobIdRegex, $getJobName, $jobIds);
+        $jobName = $jobIds[0];
+
+        $output = $this->runFunctionSnippet('get_job', [
+            $jobName
+        ]);
+        $this->assertStringContainsString('Job ' . $jobName . ' status:', $output);
+    }
+
+    public function testCreateJob()
+    {
+        $gcsPath = sprintf(
+            'gs://%s/dlp/harmful.csv',
+            $this->requireEnv('GOOGLE_STORAGE_BUCKET')
+        );
+        $jobIdRegex = "~projects/.*/dlpJobs/i-\d+~";
+        $jobName = $this->runFunctionSnippet('create_job', [
+            self::$projectId,
+            $gcsPath
+        ]);
+        $this->assertMatchesRegularExpression($jobIdRegex, $jobName);
+        $output = $this->runFunctionSnippet(
+            'delete_job',
+            [$jobName]
+        );
+        $this->assertStringContainsString('Successfully deleted job ' . $jobName, $output);
+    }
+
     public function testRedactImageListedInfotypes()
     {
         $imagePath = __DIR__ . '/data/test.png';
@@ -1252,9 +1294,11 @@ class dlpTest extends TestCase
 
         // Run trigger creation request
         $parent = 'projects/' . self::$projectId . '/locations/global';
-        $trigger = $dlp->createJobTrigger($parent, $jobTriggerObject, [
-            'triggerId' => $triggerId
-        ]);
+        $createJobTriggerRequest = (new CreateJobTriggerRequest())
+            ->setParent($parent)
+            ->setJobTrigger($jobTriggerObject)
+            ->setTriggerId($triggerId);
+        $trigger = $dlp->createJobTrigger($createJobTriggerRequest);
 
         return $trigger->getName();
     }

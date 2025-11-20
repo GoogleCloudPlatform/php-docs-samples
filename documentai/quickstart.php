@@ -16,43 +16,51 @@
  */
 
 # [START documentai_quickstart]
-# Includes the autoloader for libraries installed with composer
+# Include the autoloader for libraries installed with Composer.
 require __DIR__ . '/vendor/autoload.php';
 
-# Imports the Google Cloud client library
-use Google\Cloud\DocumentAI\V1\DocumentProcessorServiceClient;
+# Import the Google Cloud client library.
+use Google\Cloud\DocumentAI\V1\Client\DocumentProcessorServiceClient;
 use Google\Cloud\DocumentAI\V1\RawDocument;
+use Google\Cloud\DocumentAI\V1\ProcessRequest;
 
-$projectId = 'YOUR_PROJECT_ID'; # Your Google Cloud Platform project ID
-$location = 'us'; # Your Processor Location
-$processor = 'YOUR_PROCESSOR_ID'; # Your Processor ID
+# TODO(developer): Update the following lines before running the sample.
+# Your Google Cloud Platform project ID.
+$projectId = 'YOUR_PROJECT_ID';
 
-# Create Client
-$client = new DocumentProcessorServiceClient();
+# Your Processor Location.
+$location = 'us';
 
-# Local File Path
+# Your Processor ID as hexadecimal characters.
+# Not to be confused with the Processor Display Name.
+$processorId = 'YOUR_PROCESSOR_ID';
+
+# Path for the file to read.
 $documentPath = 'resources/invoice.pdf';
 
-# Read in File Contents
+# Create Client.
+$client = new DocumentProcessorServiceClient();
+
+# Read in file.
 $handle = fopen($documentPath, 'rb');
 $contents = fread($handle, filesize($documentPath));
 fclose($handle);
 
-# Load File Contents into RawDocument
-$rawDocument = new RawDocument([
-    'content' => $contents,
-    'mime_type' => 'application/pdf'
-]);
+# Load file contents into a RawDocument.
+$rawDocument = (new RawDocument())
+    ->setContent($contents)
+    ->SetMimeType('application/pdf');
 
-# Fully-qualified Processor Name
-$name = $client->processorName($projectId, $location, $processor);
+# Get the Fully-qualified Processor Name.
+$fullProcessorName = $client->processorName($projectId, $location, $processorId);
 
-# Make Processing Request
-$response = $client->processDocument($name, [
-    'rawDocument' => $rawDocument
-]);
+# Send a ProcessRequest and get a ProcessResponse.
+$request = (new ProcessRequest())
+    ->setName($fullProcessorName)
+    ->setRawDocument($rawDocument);
 
-# Print Document Text
+$response = $client->processDocument($request);
+
+# Show the text found in the document.
 printf('Document Text: %s', $response->getDocument()->getText());
-
 # [END documentai_quickstart]

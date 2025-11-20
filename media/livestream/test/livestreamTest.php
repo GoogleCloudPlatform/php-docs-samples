@@ -22,7 +22,19 @@ namespace Google\Cloud\Samples\Media\LiveStream;
 use Google\ApiCore\ApiException;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\Video\LiveStream\V1\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\Client\LivestreamServiceClient;
+use Google\Cloud\Video\LiveStream\V1\DeleteAssetRequest;
+use Google\Cloud\Video\LiveStream\V1\DeleteChannelRequest;
+use Google\Cloud\Video\LiveStream\V1\DeleteEventRequest;
+use Google\Cloud\Video\LiveStream\V1\DeleteInputRequest;
+use Google\Cloud\Video\LiveStream\V1\GetChannelRequest;
+use Google\Cloud\Video\LiveStream\V1\GetInputRequest;
+use Google\Cloud\Video\LiveStream\V1\GetPoolRequest;
+use Google\Cloud\Video\LiveStream\V1\ListAssetsRequest;
+use Google\Cloud\Video\LiveStream\V1\ListChannelsRequest;
+use Google\Cloud\Video\LiveStream\V1\ListEventsRequest;
+use Google\Cloud\Video\LiveStream\V1\ListInputsRequest;
+use Google\Cloud\Video\LiveStream\V1\StopChannelRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -107,7 +119,9 @@ class livestreamTest extends TestCase
             self::$location,
             self::$inputId
         );
-        $input = $livestreamClient->getInput($formattedName);
+        $getInputRequest = (new GetInputRequest())
+            ->setName($formattedName);
+        $input = $livestreamClient->getInput($getInputRequest);
         $this->assertTrue($input->getPreprocessingConfig()->hasCrop());
     }
 
@@ -198,7 +212,9 @@ class livestreamTest extends TestCase
             self::$location,
             self::$channelId
         );
-        $channel = $livestreamClient->getChannel($formattedName);
+        $getChannelRequest = (new GetChannelRequest())
+            ->setName($formattedName);
+        $channel = $livestreamClient->getChannel($getChannelRequest);
         $inputAttachments = $channel->getInputAttachments();
         foreach ($inputAttachments as $inputAttachment) {
             $this->assertStringContainsString('updated-input', $inputAttachment->getKey());
@@ -476,7 +492,9 @@ class livestreamTest extends TestCase
             self::$location,
             self::$poolId
         );
-        $pool = $livestreamClient->getPool($formattedName);
+        $getPoolRequest = (new GetPoolRequest())
+            ->setName($formattedName);
+        $pool = $livestreamClient->getPool($getPoolRequest);
         $this->assertEquals($pool->getNetworkConfig()->getPeeredNetwork(), '');
     }
 
@@ -484,7 +502,9 @@ class livestreamTest extends TestCase
     {
         $livestreamClient = new LivestreamServiceClient();
         $parent = $livestreamClient->locationName(self::$projectId, self::$location);
-        $response = $livestreamClient->listInputs($parent);
+        $listInputsRequest = (new ListInputsRequest())
+            ->setParent($parent);
+        $response = $livestreamClient->listInputs($listInputsRequest);
         $inputs = $response->iterateAllElements();
 
         $currentTime = time();
@@ -498,7 +518,9 @@ class livestreamTest extends TestCase
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
                 try {
-                    $livestreamClient->deleteInput($input->getName());
+                    $deleteInputRequest = (new DeleteInputRequest())
+                        ->setName($input->getName());
+                    $livestreamClient->deleteInput($deleteInputRequest);
                 } catch (ApiException $e) {
                     // Cannot delete inputs that are added to channels
                     if ($e->getStatus() === 'FAILED_PRECONDITION') {
@@ -515,7 +537,9 @@ class livestreamTest extends TestCase
     {
         $livestreamClient = new LivestreamServiceClient();
         $parent = $livestreamClient->locationName(self::$projectId, self::$location);
-        $response = $livestreamClient->listChannels($parent);
+        $listChannelsRequest = (new ListChannelsRequest())
+            ->setParent($parent);
+        $response = $livestreamClient->listChannels($listChannelsRequest);
         $channels = $response->iterateAllElements();
 
         $currentTime = time();
@@ -529,18 +553,24 @@ class livestreamTest extends TestCase
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
                 // Must delete channel events before deleting the channel
-                $response = $livestreamClient->listEvents($channel->getName());
+                $listEventsRequest = (new ListEventsRequest())
+                    ->setParent($channel->getName());
+                $response = $livestreamClient->listEvents($listEventsRequest);
                 $events = $response->iterateAllElements();
                 foreach ($events as $event) {
                     try {
-                        $livestreamClient->deleteEvent($event->getName());
+                        $deleteEventRequest = (new DeleteEventRequest())
+                            ->setName($event->getName());
+                        $livestreamClient->deleteEvent($deleteEventRequest);
                     } catch (ApiException $e) {
                         printf('Channel event delete failed: %s.' . PHP_EOL, $e->getMessage());
                     }
                 }
 
                 try {
-                    $livestreamClient->stopChannel($channel->getName());
+                    $stopChannelRequest = (new StopChannelRequest())
+                        ->setName($channel->getName());
+                    $livestreamClient->stopChannel($stopChannelRequest);
                 } catch (ApiException $e) {
                     // Cannot delete channels that are running, but
                     // channel may already be stopped
@@ -552,7 +582,9 @@ class livestreamTest extends TestCase
                 }
 
                 try {
-                    $livestreamClient->deleteChannel($channel->getName());
+                    $deleteChannelRequest = (new DeleteChannelRequest())
+                        ->setName($channel->getName());
+                    $livestreamClient->deleteChannel($deleteChannelRequest);
                 } catch (ApiException $e) {
                     // Cannot delete inputs that are added to channels
                     if ($e->getStatus() === 'FAILED_PRECONDITION') {
@@ -569,7 +601,9 @@ class livestreamTest extends TestCase
     {
         $livestreamClient = new LivestreamServiceClient();
         $parent = $livestreamClient->locationName(self::$projectId, self::$location);
-        $response = $livestreamClient->listAssets($parent);
+        $listAssetsRequest = (new ListAssetsRequest())
+            ->setParent($parent);
+        $response = $livestreamClient->listAssets($listAssetsRequest);
         $assets = $response->iterateAllElements();
 
         $currentTime = time();
@@ -583,7 +617,9 @@ class livestreamTest extends TestCase
 
             if ($currentTime - $timestamp >= $oneHourInSecs) {
                 try {
-                    $livestreamClient->deleteAsset($asset->getName());
+                    $deleteAssetRequest = (new DeleteAssetRequest())
+                        ->setName($asset->getName());
+                    $livestreamClient->deleteAsset($deleteAssetRequest);
                 } catch (ApiException $e) {
                     printf('Asset delete failed: %s.' . PHP_EOL, $e->getMessage());
                 }

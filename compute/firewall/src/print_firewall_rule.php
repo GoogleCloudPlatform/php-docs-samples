@@ -23,7 +23,8 @@
 
 namespace Google\Cloud\Samples\Compute;
 
-use Google\Cloud\Compute\V1\FirewallsClient;
+use Google\Cloud\Compute\V1\Client\FirewallsClient;
+use Google\Cloud\Compute\V1\GetFirewallRequest;
 
 /**
  * Prints details about a particular firewall rule in the specified project.
@@ -37,7 +38,10 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
 {
     // Get details of a firewall rule defined for the project using Firewalls Client.
     $firewallClient = new FirewallsClient();
-    $response = $firewallClient->get($firewallRuleName, $projectId);
+    $request = (new GetFirewallRequest())
+        ->setFirewall($firewallRuleName)
+        ->setProject($projectId);
+    $response = $firewallClient->get($request);
     $direction = $response->getDirection();
     printf('ID: %s' . PHP_EOL, $response->getID());
     printf('Kind: %s' . PHP_EOL, $response->getKind());
@@ -52,12 +56,12 @@ function print_firewall_rule(string $projectId, string $firewallRuleName)
     print('--Allowed--' . PHP_EOL);
     foreach ($response->getAllowed() as $item) {
         printf('Protocol: %s' . PHP_EOL, $item->getIPProtocol());
-        foreach ($item->getPorts()as $ports) {
+        foreach ($item->getPorts() as $ports) {
             printf(' - Ports: %s' . PHP_EOL, $ports);
         }
     }
     print('--Source Ranges--' . PHP_EOL);
-    foreach ($response->getSourceRanges()as $ranges) {
+    foreach ($response->getSourceRanges() as $ranges) {
         printf(' - Range: %s' . PHP_EOL, $ranges);
     }
 }

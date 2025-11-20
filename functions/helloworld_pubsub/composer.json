@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">= 7.4",
+        "php": ">= 8.1",
         "cloudevents/sdk-php": "^1.0",
         "google/cloud-functions-framework": "^1.1"
     },
@@ -11,7 +11,7 @@
         ]
     },
     "require-dev": {
-        "google/cloud-pubsub": "^1.29",
+        "google/cloud-pubsub": "^2.0",
         "google/cloud-logging": "^1.21"
     }
 }

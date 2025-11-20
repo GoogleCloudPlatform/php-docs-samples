@@ -18,11 +18,13 @@
 namespace Google\Cloud\Samples\StorageTransfer;
 
 # [START storagetransfer_quickstart]
-use Google\Cloud\StorageTransfer\V1\StorageTransferServiceClient;
+use Google\Cloud\StorageTransfer\V1\Client\StorageTransferServiceClient;
+use Google\Cloud\StorageTransfer\V1\CreateTransferJobRequest;
+use Google\Cloud\StorageTransfer\V1\GcsData;
+use Google\Cloud\StorageTransfer\V1\RunTransferJobRequest;
 use Google\Cloud\StorageTransfer\V1\TransferJob;
 use Google\Cloud\StorageTransfer\V1\TransferJob\Status;
 use Google\Cloud\StorageTransfer\V1\TransferSpec;
-use Google\Cloud\StorageTransfer\V1\GcsData;
 
 /**
  * Creates and runs a transfer job between two GCS buckets
@@ -31,23 +33,31 @@ use Google\Cloud\StorageTransfer\V1\GcsData;
  * @param string $sourceGcsBucketName The name of the GCS bucket to transfer objects from.
  * @param string $sinkGcsBucketName The name of the GCS bucket to transfer objects to.
  */
-function quickstart($projectId, $sourceGcsBucketName, $sinkGcsBucketName)
-{
+function quickstart(
+    string $projectId,
+    string $sourceGcsBucketName,
+    string $sinkGcsBucketName
+): void {
     // $project = 'my-project-id';
     // $sourceGcsBucketName = 'my-source-bucket';
     // $sinkGcsBucketName = 'my-sink-bucket';
     $transferJob = new TransferJob([
         'project_id' => $projectId,
         'transfer_spec' => new TransferSpec([
-            'gcs_data_sink' => new GcsData(['bucket_name' => $sourceGcsBucketName]),
+            'gcs_data_sink' => new GcsData(['bucket_name' => $sinkGcsBucketName]),
             'gcs_data_source' => new GcsData(['bucket_name' => $sourceGcsBucketName])
         ]),
         'status' => Status::ENABLED
     ]);
 
     $client = new StorageTransferServiceClient();
-    $response = $client->createTransferJob($transferJob);
-    $client->runTransferJob($response->getName(), $projectId);
+    $createRequest = (new CreateTransferJobRequest())
+        ->setTransferJob($transferJob);
+    $response = $client->createTransferJob($createRequest);
+    $runRequest = (new RunTransferJobRequest())
+        ->setJobName($response->getName())
+        ->setProjectId($projectId);
+    $client->runTransferJob($runRequest);
 
     printf('Created and ran transfer job from %s to %s with name %s ' . PHP_EOL, $sourceGcsBucketName, $sinkGcsBucketName, $response->getName());
 }

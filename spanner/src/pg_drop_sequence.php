@@ -24,7 +24,8 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_postgresql_drop_sequence]
-use Google\Cloud\Spanner\SpannerClient;
+use Google\Cloud\Spanner\Admin\Database\V1\Client\DatabaseAdminClient;
+use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
 
 /**
  * Drops a sequence.
@@ -33,21 +34,28 @@ use Google\Cloud\Spanner\SpannerClient;
  * pg_drop_sequence($instanceId, $databaseId);
  * ```
  *
+ * @param string $projectId Your Google Cloud project ID.
  * @param string $instanceId The Spanner instance ID.
  * @param string $databaseId The Spanner database ID.
  */
 function pg_drop_sequence(
+    string $projectId,
     string $instanceId,
     string $databaseId
-    ): void {
-    $spanner = new SpannerClient();
-    $instance = $spanner->instance($instanceId);
-    $database = $instance->database($databaseId);
-
-    $operation = $database->updateDdlBatch([
+): void {
+    $databaseAdminClient = new DatabaseAdminClient();
+    $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
+    $statements = [
         'ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT',
         'DROP SEQUENCE Seq'
+    ];
+
+    $request = new UpdateDatabaseDdlRequest([
+        'database' => $databaseName,
+        'statements' => $statements
     ]);
+
+    $operation = $databaseAdminClient->updateDatabaseDdl($request);
 
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();

@@ -24,11 +24,12 @@
 namespace Google\Cloud\Samples\Bigtable;
 
 // [START bigtable_update_instance]
-use Google\Cloud\Bigtable\Admin\V2\BigtableInstanceAdminClient;
-use Google\Cloud\Bigtable\Admin\V2\Instance;
-use Google\Protobuf\FieldMask;
-use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
 use Google\ApiCore\ApiException;
+use Google\Cloud\Bigtable\Admin\V2\Client\BigtableInstanceAdminClient;
+use Google\Cloud\Bigtable\Admin\V2\Instance;
+use Google\Cloud\Bigtable\Admin\V2\Instance\Type as InstanceType;
+use Google\Cloud\Bigtable\Admin\V2\PartialUpdateInstanceRequest;
+use Google\Protobuf\FieldMask;
 
 /**
  * Update a Bigtable instance
@@ -63,13 +64,16 @@ function update_instance(
     ]);
 
     try {
-        $operationResponse = $instanceAdminClient->partialUpdateInstance($instance, $updateMask);
+        $partialUpdateInstanceRequest = (new PartialUpdateInstanceRequest())
+            ->setInstance($instance)
+            ->setUpdateMask($updateMask);
+        $operationResponse = $instanceAdminClient->partialUpdateInstance($partialUpdateInstanceRequest);
 
         $operationResponse->pollUntilComplete();
         if ($operationResponse->operationSucceeded()) {
             $updatedInstance = $operationResponse->getResult();
             printf('Instance updated with the new display name: %s.' . PHP_EOL, $updatedInstance->getDisplayName());
-        // doSomethingWith($updatedInstance)
+            // doSomethingWith($updatedInstance)
         } else {
             $error = $operationResponse->getError();
             // handleError($error)
