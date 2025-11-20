@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,10 @@ class quickstartTest extends TestCase
     use TestTrait;
     public function testQuickstart()
     {
+        $this->expectOutputRegex('/Created Recognizer: projects\/.+\/locations\/global\/recognizers\/quickstart-recognizer-.+/');
+        $this->expectOutputRegex('/Transcript: how old is the Brooklyn Bridge/');
+        $this->expectOutputRegex('/Deleted Recognizer: projects\/.+\/locations\/global\/recognizers\/quickstart-recognizer-.+/');
         // Invoke quickstart.php
         include __DIR__ . '/../quickstart.php';
-        $this->expectOutputRegex('/Bridge/');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-# Copyright 2020 Google LLC
+# Copyright 2023 Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -15,41 +15,50 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_profanity_filter]
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\RecognizeRequest;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognitionFeatures;
+use Google\Cloud\Speech\V2\AutoDetectDecodingConfig;
 
 /**
- * @param string $audioFile path to an audio file
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $location The location of the recognizer.
+ * @param string $recognizerId The ID of the recognizer to use.
+ * @param string $audioFile path to an audio file.
+ *               ex "test/data/audio32KHz.flac"
  */
-function profanity_filter(string $audioFile)
+function profanity_filter(string $projectId, string $location, string $recognizerId, string $audioFile)
 {
-    // change these variables if necessary
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
-    $profanityFilter = true;
+    // create the speech client
+    $apiEndpoint = $location === 'global' ? null : sprintf('%s-speech.googleapis.com', $location);
+    $speech = new SpeechClient(['apiEndpoint' => $apiEndpoint]);
 
     // get contents of a file into a string
     $content = file_get_contents($audioFile);
 
-    // set string as audio content
-    $audio = (new RecognitionAudio())
+    $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
+
+    // When true, the profanity filter will be enabled.
+    $features = new RecognitionFeatures([
+        'profanity_filter' => true
+    ]);
+
+    $config = (new RecognitionConfig())
+        ->setFeatures($features)
+
+        // Can also use {@see Google\Cloud\Speech\V2\ExplicitDecodingConfig}
+        // ->setExplicitDecodingConfig(new ExplicitDecodingConfig([...]);
+
+        ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
+    $request = (new RecognizeRequest())
+        ->setRecognizer($recognizerName)
+        ->setConfig($config)
         ->setContent($content);
 
-    // set config
-    $config = (new RecognitionConfig())
-        ->setEncoding($encoding)
-        ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode)
-        ->setProfanityFilter($profanityFilter);
-
-    // create the speech client
-    $client = new SpeechClient();
-
     # Detects speech in the audio file
-    $response = $client->recognize($config, $audio);
+    $response = $speech->recognize($request);
 
     # Print most likely transcription
     foreach ($response->getResults() as $result) {
@@ -57,7 +66,7 @@ function profanity_filter(string $audioFile)
         printf('Transcript: %s' . PHP_EOL, $transcript);
     }
 
-    $client->close();
+    $speech->close();
 }
 # [END speech_profanity_filter]
 

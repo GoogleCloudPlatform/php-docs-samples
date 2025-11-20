@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,27 @@ namespace Google\Cloud\Samples\Speech\Tests;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../src/create_recognizer.php';
+require_once __DIR__ . '/../src/delete_recognizer.php';
+
 class speechTest extends TestCase
 {
     use TestTrait;
 
-    protected static $bucketName;
+    private $recognizerId;
+    private $projectId;
+
+    protected function setUp(): void
+    {
+        $this->projectId = $this->requireEnv('GOOGLE_CLOUD_PROJECT');
+        $this->recognizerId = 'test-recognizer-' . uniqid();
+        create_recognizer($this->projectId, 'global', $this->recognizerId);
+    }
+
+    protected function tearDown(): void
+    {
+        delete_recognizer($this->projectId, 'global', $this->recognizerId);
+    }
 
     public function testBase64Audio()
     {
@@ -42,7 +58,7 @@ class speechTest extends TestCase
     public function testTranscribeEnhanced()
     {
         $path = __DIR__ . '/data/commercial_mono.wav';
-        $output = $this->runFunctionSnippet('transcribe_enhanced_model', [$path]);
+        $output = $this->runFunctionSnippet('transcribe_enhanced_model', [$this->projectId, 'global', $this->recognizerId, $path]);
         $this->assertStringContainsString('Chrome', $output);
     }
 
@@ -51,9 +67,8 @@ class speechTest extends TestCase
         $path = __DIR__ . '/data/audio32KHz.raw';
         $output = $this->runFunctionSnippet(
             'transcribe_model_selection',
-            [$path, 'video']
+            [$this->projectId, 'global', $this->recognizerId, $path, 'video']
         );
-        // $this->assertStringContainsString('the weather outside is sunny',$output);
         $this->assertStringContainsStringIgnoringCase(
             'how old is the Brooklyn Bridge',
             $output
@@ -63,7 +78,7 @@ class speechTest extends TestCase
     public function testTranscribePunctuation()
     {
         $path = __DIR__ . '/data/audio32KHz.raw';
-        $output = $this->runFunctionSnippet('transcribe_auto_punctuation', [$path]);
+        $output = $this->runFunctionSnippet('transcribe_auto_punctuation', [$this->projectId, 'global', $this->recognizerId, $path]);
         $this->assertStringContainsStringIgnoringCase(
             'How old is the Brooklyn Bridge',
             $output
@@ -76,31 +91,29 @@ class speechTest extends TestCase
         if ($requireGrpc && !extension_loaded('grpc')) {
             self::markTestSkipped('Must enable grpc extension.');
         }
-        if (!self::$bucketName && '_gcs' == substr($command, -4)) {
-            $this->requireEnv('GOOGLE_STORAGE_BUCKET');
-        }
-        $output = $this->runFunctionSnippet($command, [$audioFile]);
+
+        $output = $this->runFunctionSnippet($command, [$this->projectId, 'global', $this->recognizerId, $audioFile]);
 
         $this->assertStringContainsString('how old is the Brooklyn Bridge', $output);
 
         // Check for the word time offsets
         if (in_array($command, ['transcribe_async_words'])) {
-            $this->assertMatchesRegularExpression('/start: "*.*s", end: "*.*s/', $output);
+            $this->assertMatchesRegularExpression('/start_offset {\\s*seconds: \\d+\\s*}/', $output);
+            $this->assertMatchesRegularExpression('/end_offset {\\s*seconds: \\d+\\s*}/', $output);
         }
     }
 
     public function provideTranscribe()
     {
-        self::$bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         return [
             ['transcribe_sync', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe_sync_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe_sync_gcs', 'gs://cloud-samples-data/speech/audio.raw'],
             ['transcribe_async', __DIR__ . '/data/audio32KHz.raw'],
-            ['transcribe_async_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['transcribe_async_gcs', 'gs://cloud-samples-data/speech/audio.raw'],
             ['transcribe_async_words', __DIR__ . '/data/audio32KHz.raw'],
-            ['profanity_filter_gcs', 'gs://' . self::$bucketName . '/speech/audio32KHz.raw'],
+            ['profanity_filter_gcs', 'gs://cloud-samples-data/speech/profanity.raw'],
             ['multi_region_gcs', 'gs://cloud-samples-data/speech/brooklyn_bridge.raw' ],
-            ['profanity_filter', __DIR__ . '/data/audio32KHz.raw'],
+            ['profanity_filter', __DIR__ . '/data/profanity.raw'],
             ['streaming_recognize', __DIR__ . '/data/audio32KHz.raw', true],
         ];
     }

@@ -60,7 +60,8 @@ if ($operation->operationSucceeded()) {
     print_r($operation->getError());
 }
 
-$recognitionConfig = (new RecognitionConfig())
+// Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+$config = (new RecognitionConfig())
     ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
         'encoding' => AudioEncoding::LINEAR16,
         'sample_rate_hertz' => 16000,
@@ -70,7 +71,7 @@ $recognitionConfig = (new RecognitionConfig())
 $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
 $request = (new RecognizeRequest())
     ->setRecognizer($recognizerName)
-    ->setConfig($recognitionConfig)
+    ->setConfig($config)
     ->setUri($gcsURI);
 
 # Detects speech in the audio file

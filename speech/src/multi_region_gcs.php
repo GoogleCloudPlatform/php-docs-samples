@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2021 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,37 +18,43 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_with_multi_region_gcs]
-# Imports the Google Cloud client library
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $location The location of the recognizer.
+ * @param string $recognizerId The ID of the recognizer to use (other than global).
  * @param string $uri The Cloud Storage object to transcribe
  *                    e.x. gs://cloud-samples-data/speech/brooklyn_bridge.raw
  */
-function multi_region_gcs(string $uri)
+function multi_region_gcs(string $projectId, string $location, string $recognizerId, string $uri)
 {
-    # set string as audio content
-    $audio = (new RecognitionAudio())
+    $options = ['apiEndpoint' => sprintf('%s-speech.googleapis.com', $location)];
+    $speech = new SpeechClient($options);
+
+    $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
+
+    $config = (new RecognitionConfig())
+        // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+        // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
+        ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
+            'encoding' => AudioEncoding::LINEAR16,
+            'sample_rate_hertz' => 16000,
+            'audio_channel_count' => 1,
+        ]));
+
+    $request = (new RecognizeRequest())
+        ->setRecognizer($recognizerName)
+        ->setConfig($config)
         ->setUri($uri);
 
-    # The audio file's encoding, sample rate and language
-    $config = new RecognitionConfig([
-        'encoding' => AudioEncoding::LINEAR16,
-        'sample_rate_hertz' => 16000,
-        'language_code' => 'en-US'
-    ]);
-
-    # Specify a new endpoint.
-    $options = ['apiEndpoint' => 'eu-speech.googleapis.com'];
-
-    # Instantiates a client
-    $client = new SpeechClient($options);
-
     # Detects speech in the audio file
-    $response = $client->recognize($config, $audio);
+    $response = $speech->recognize($request);
 
     # Print most likely transcription
     foreach ($response->getResults() as $result) {
@@ -57,8 +63,6 @@ function multi_region_gcs(string $uri)
         $transcript = $mostLikely->getTranscript();
         printf('Transcript: %s' . PHP_EOL, $transcript);
     }
-
-    $client->close();
 }
 # [END speech_transcribe_with_multi_region_gcs]
 
