@@ -45,7 +45,6 @@ function transcribe_sync_gcs(string $projectId, string $location, string $recogn
     $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
 
     $config = (new RecognitionConfig())
-
         // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
         // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
 

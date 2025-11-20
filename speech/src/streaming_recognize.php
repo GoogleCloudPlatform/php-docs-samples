@@ -83,7 +83,7 @@ function streaming_recognize(string $projectId, string $location, string $recogn
         // process the results
         foreach ($response->getResults() as $result) {
             printf(
-                'Transcription: "%s"' . PHP_EOL,
+                'Transcript: "%s"' . PHP_EOL,
                 $result->getAlternatives()[0]->getTranscript()
             );
         }

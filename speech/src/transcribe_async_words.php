@@ -55,15 +55,14 @@ function transcribe_async_words(string $projectId, string $location, string $rec
         'diarization_config' => new SpeakerDiarizationConfig(),
     ]);
 
-    // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
     $config = (new RecognitionConfig())
         ->setFeatures($features)
         // When running outside the "global" location, you can set the model to "chirp_3" in
         // RecognitionConfig instead of on the recognizer.
         // ->setModel('chirp_3')
 
-        // Can also use {@see Google\Cloud\Speech\V2\ExplicitDecodingConfig}
-        // ->setExplicitDecodingConfig(new ExplicitDecodingConfig([...]);
+        // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+        // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
 
         ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
             // change these variables if necessary
@@ -99,14 +98,14 @@ function transcribe_async_words(string $projectId, string $location, string $rec
                 foreach ($transcript->getResults() as $transacriptResult) {
                     $alternatives = $transacriptResult->getAlternatives();
                     $mostLikely = $alternatives[0];
-                    var_dump($alternatives, $mostLikely);exit;
                     foreach ($mostLikely->getWords() as $wordInfo) {
                         $startTime = $wordInfo->getStartOffset();
                         $endTime = $wordInfo->getEndOffset();
                         printf('  Word: %s (start: %s, end: %s)' . PHP_EOL,
-                        $wordInfo->getWord(),
-                        $startTime->serializeToJsonString(),
-                        $endTime->serializeToJsonString());
+                            $wordInfo->getWord(),
+                            $startTime?->serializeToJsonString(),
+                            $endTime?->serializeToJsonString()
+                        );
                     }
                 }
             }

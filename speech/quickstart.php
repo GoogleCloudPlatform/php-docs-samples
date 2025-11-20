@@ -60,8 +60,10 @@ if ($operation->operationSucceeded()) {
     print_r($operation->getError());
 }
 
-// Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
 $config = (new RecognitionConfig())
+    // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+    // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
     ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
         'encoding' => AudioEncoding::LINEAR16,
         'sample_rate_hertz' => 16000,

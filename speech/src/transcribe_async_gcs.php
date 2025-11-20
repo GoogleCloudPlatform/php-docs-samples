@@ -70,7 +70,7 @@ function transcribe_async_gcs(string $projectId, string $location, string $recog
         ->setRecognitionOutputConfig($outputConfig);
 
     try {
-        $operation = $client->batchRecognize($request);
+        $operation = $speech->batchRecognize($request);
         $operation->pollUntilComplete();
 
         if ($operation->operationSucceeded()) {
@@ -94,7 +94,7 @@ function transcribe_async_gcs(string $projectId, string $location, string $recog
             print_r($operation->getError());
         }
     } finally {
-        $client->close();
+        $speech->close();
     }
 }
 # [END speech_transcribe_async_gcs]

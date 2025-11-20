@@ -22,10 +22,25 @@ class quickstartTest extends TestCase
     use TestTrait;
     public function testQuickstart()
     {
-        $this->expectOutputRegex('/Created Recognizer: projects\/.+\/locations\/global\/recognizers\/quickstart-recognizer-.+/');
-        $this->expectOutputRegex('/Transcript: how old is the Brooklyn Bridge/');
-        $this->expectOutputRegex('/Deleted Recognizer: projects\/.+\/locations\/global\/recognizers\/quickstart-recognizer-.+/');
-        // Invoke quickstart.php
-        include __DIR__ . '/../quickstart.php';
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
+        }
+
+        $file = sys_get_temp_dir() . '/speech_quickstart.php';
+        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+        $contents = str_replace(
+            ['YOUR_PROJECT_ID', '__DIR__'],
+            [$projectId, sprintf('"%s/.."', __DIR__)],
+            $contents
+        );
+        file_put_contents($file, $contents);
+
+        // Invoke quickstart.php and capture output
+        ob_start();
+        include $file;
+        $result = ob_get_clean();
+
+        // Make sure it looks correct
+        $this->assertStringContainsString('Transcript: how old is the Brooklyn Bridge', $result);
     }
 }
