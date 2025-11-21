@@ -28,7 +28,7 @@ namespace Google\Cloud\Samples\PubSub;
 use Google\Cloud\PubSub\PubSubClient;
 
 /**
- * Create unwrappped push subscription.
+ * Create unwrapped push subscription.
  *
  * @param string $projectId  The Google project ID.
  * @param string $topicName  The Pub/Sub topic name.
