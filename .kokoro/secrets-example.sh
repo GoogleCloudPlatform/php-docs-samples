@@ -100,6 +100,10 @@ export GOOGLE_KMS_SERVICEACCOUNTEMAIL=
 export REDIS_HOST=
 export REDIS_PORT=
 
+# Model Armor
+export MA_FOLDER_ID=
+export MA_ORG_ID=
+
 # PubSub
 export GOOGLE_PUBSUB_SUBSCRIPTION=php-example-subscription
 export GOOGLE_PUBSUB_TOPIC=php-example-topic

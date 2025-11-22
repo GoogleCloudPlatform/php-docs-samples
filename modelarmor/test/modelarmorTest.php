@@ -50,6 +50,8 @@ use Google\Cloud\ModelArmor\V1\CreateTemplateRequest;
 use Google\Cloud\ModelArmor\V1\RaiFilterType;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings;
 use Google\Cloud\ModelArmor\V1\RaiFilterSettings\RaiFilter;
+use Google\Cloud\ModelArmor\V1\FloorSetting;
+use Google\Cloud\ModelArmor\V1\UpdateFloorSettingRequest;
 
 class modelarmorTest extends TestCase
 {
@@ -76,6 +78,8 @@ class modelarmorTest extends TestCase
     protected static $testRaiTemplateId;
     protected static $testMaliciousTemplateId;
     protected static $testPIandJailbreakTemplateId;
+    protected static $organizationId;
+    protected static $folderId;
 
     public static function setUpBeforeClass(): void
     {
@@ -96,10 +100,23 @@ class modelarmorTest extends TestCase
         self::$testSanitizeModelResponseUserPromptId = self::getTemplateId('php-sanitize-model-response-user-prompt-');
         self::$testRaiTemplateId = self::getTemplateId('php-rai-template-');
         self::$testMaliciousTemplateId = self::getTemplateId('php-malicious-template-');
-        self::$testPIandJailbreakTemplateId = self::getTemplateId('php-pi-and-jailbreak-template-');
+        self::$testPIandJailbreakTemplateId = self::getTemplateId('php-template-with-pijailbreak-');
+        self::$organizationId = self::requireEnv('MA_ORG_ID');
+        self::$folderId = self::requireEnv('MA_FOLDER_ID');
         self::createTemplateWithMaliciousURI();
         self::createTemplateWithPIJailbreakFilter();
         self::createTemplateWithRAI();
+
+        // Reset floor settings before tests
+        if (self::$projectId) {
+            self::resetFloorSettings('project', self::$projectId);
+        }
+        if (self::$folderId) {
+            self::resetFloorSettings('folder', self::$folderId);
+        }
+        if (self::$organizationId) {
+            self::resetFloorSettings('organization', self::$organizationId);
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -122,6 +139,18 @@ class modelarmorTest extends TestCase
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testMaliciousTemplateId);
         self::deleteTemplate(self::$projectId, self::$locationId, self::$testPIandJailbreakTemplateId);
         self::deleteDlpTemplates(self::$inspectTemplateName, self::$deidentifyTemplateName, self::$locationId);
+
+        // Reset floor settings after tests
+        if (self::$projectId) {
+            self::resetFloorSettings('project', self::$projectId);
+        }
+        if (self::$folderId) {
+            self::resetFloorSettings('folder', self::$folderId);
+        }
+        if (self::$organizationId) {
+            self::resetFloorSettings('organization', self::$organizationId);
+        }
+
         self::$client->close();
     }
 
@@ -142,6 +171,48 @@ class modelarmorTest extends TestCase
     {
         return uniqid($testId);
     }
+
+    /**
+     * Resets floor settings to default values for various resource types
+     *
+     * @param string $resourceType The type of resource (project, folder, organization)
+     * @param string $resourceId The ID of the resource
+     */
+    protected static function resetFloorSettings(string $resourceType, string $resourceId): void
+    {
+        try {
+            $client = new ModelArmorClient();
+
+            // Format resource path based on resource type
+            $resourcePathFormat = match($resourceType) {
+                'project' => 'projects/%s/locations/global/floorSetting',
+                'folder' => 'folders/%s/locations/global/floorSetting',
+                'organization' => 'organizations/%s/locations/global/floorSetting',
+                default => throw new \InvalidArgumentException("Invalid resource type: {$resourceType}"),
+            };
+
+            $floorSettingsName = sprintf($resourcePathFormat, $resourceId);
+
+            // Create an empty filter config
+            $filterConfig = new FilterConfig();
+
+            // Create floor setting with enforcement disabled
+            $floorSetting = (new FloorSetting())
+                ->setName($floorSettingsName)
+                ->setFilterConfig($filterConfig)
+                ->setEnableFloorSettingEnforcement(false);
+
+            $updateRequest = (new UpdateFloorSettingRequest())->setFloorSetting($floorSetting);
+            $response = $client->updateFloorSetting($updateRequest);
+
+            echo "Floor settings reset for {$resourceType} {$resourceId}\n";
+        } catch (\Exception $e) {
+            // Log but don't fail teardown if reset fails
+            echo "Warning: Failed to reset {$resourceType} floor settings: " . $e->getMessage() . "\n";
+        }
+    }
+
+    // Wrapper methods removed in favor of directly calling resetFloorSettings
 
     public function testCreateTemplate()
     {
@@ -696,5 +767,63 @@ class modelarmorTest extends TestCase
         }
     }
 
-    # TODO: Add tests for floor settings once API issues are resolved.
+    public function testGetFolderFloorSettings()
+    {
+        $output = $this->runSnippet('get_folder_floor_settings', [
+            self::$folderId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testGetProjectFloorSettings()
+    {
+        $output = $this->runSnippet('get_project_floor_settings', [
+            self::$projectId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testGetOrganizationFloorSettings()
+    {
+        $output = $this->runSnippet('get_organization_floor_settings', [
+            self::$organizationId,
+        ]);
+
+        $expectedResponseString = 'Floor settings retrieved successfully:';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateFolderFloorSettings()
+    {
+        $output = $this->runSnippet('update_folder_floor_settings', [
+            self::$folderId,
+        ]);
+
+        $expectedResponseString = 'Floor setting updated';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateProjectFloorSettings()
+    {
+        $output = $this->runSnippet('update_project_floor_settings', [
+            self::$projectId,
+        ]);
+
+        $expectedResponseString = 'Floor setting updated';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
+
+    public function testUpdateOrganizationFloorSettings()
+    {
+        $output = $this->runSnippet('update_organization_floor_settings', [
+            self::$organizationId,
+        ]);
+
+        $expectedResponseString = 'Floor setting updated';
+        $this->assertStringContainsString($expectedResponseString, $output);
+    }
 }

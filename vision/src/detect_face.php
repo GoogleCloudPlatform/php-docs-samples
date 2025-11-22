@@ -18,7 +18,7 @@
 namespace Google\Cloud\Samples\Vision;
 
 // [START vision_face_detection_tutorial_imports]
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 
 // [END vision_face_detection_tutorial_imports]
 /**

@@ -151,13 +151,16 @@ EOF;
         $this->assertEquals($output, $outputString);
     }
 
-    public function testMoveObjectAtomic()
+    /**
+      * @dataProvider provideMoveObject
+      */
+    public function testMoveObjectAtomic(bool $hnEnabled)
     {
-        $bucketName = self::$bucketName . '-hns';
+        $bucketName = 'move-object-bucket-' . uniqid();
         $objectName = 'test-object-' . time();
         $newObjectName = $objectName . '-moved';
         $bucket = self::$storage->createBucket($bucketName, [
-            'hierarchicalNamespace' => ['enabled' => true],
+            'hierarchicalNamespace' => ['enabled' => $hnEnabled],
             'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
         ]);
 
@@ -187,6 +190,11 @@ EOF;
 
         $bucket->object($newObjectName)->delete();
         $bucket->delete();
+    }
+
+    public function provideMoveObject()
+    {
+        return [[true], [false]];
     }
 
     public function testCompose()
