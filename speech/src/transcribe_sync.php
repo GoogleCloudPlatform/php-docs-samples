@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,39 +24,42 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_sync]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+
+use Google\Cloud\Speech\V2\AutoDetectDecodingConfig;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
- * @param string $audioFile path to an audio file
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $recognizerId The ID of the recognizer to use.
+ * @param string $audioFile path to an audio file (e.x. "test/data/audio32KHz.flac")
  */
-function transcribe_sync(string $audioFile)
+function transcribe_sync(string $projectId, string $location, string $recognizerId, string $audioFile)
 {
-    // change these variables if necessary
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
+    // create the speech client
+    $apiEndpoint = $location === 'global' ? null : sprintf('%s-speech.googleapis.com', $location);
+    $speech = new SpeechClient(['apiEndpoint' => $apiEndpoint]);
 
     // get contents of a file into a string
     $content = file_get_contents($audioFile);
 
-    // set string as audio content
-    $audio = (new RecognitionAudio())
-        ->setContent($content);
+    $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
 
-    // set config
     $config = (new RecognitionConfig())
-        ->setEncoding($encoding)
-        ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode);
 
-    // create the speech client
-    $client = new SpeechClient();
+        // Can also use {@see Google\Cloud\Speech\V2\ExplicitDecodingConfig}
+        // ->setExplicitDecodingConfig(new ExplicitDecodingConfig([...]);
+
+        ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
+    $request = (new RecognizeRequest())
+        ->setRecognizer($recognizerName)
+        ->setContent($content)
+        ->setConfig($config);
 
     try {
-        $response = $client->recognize($config, $audio);
+        $response = $speech->recognize($request);
         foreach ($response->getResults() as $result) {
             $alternatives = $result->getAlternatives();
             $mostLikely = $alternatives[0];
@@ -66,7 +69,7 @@ function transcribe_sync(string $audioFile)
             printf('Confidence: %s' . PHP_EOL, $confidence);
         }
     } finally {
-        $client->close();
+        $speech->close();
     }
 }
 # [END speech_transcribe_sync]

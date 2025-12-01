@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,30 +20,64 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\CreateRecognizerRequest;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\Recognizer;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 # The name of the audio file to transcribe
 $gcsURI = 'gs://cloud-samples-data/speech/brooklyn_bridge.raw';
 
-# set string as audio content
-$audio = (new RecognitionAudio())
-    ->setUri($gcsURI);
-
-# The audio file's encoding, sample rate and language
-$config = new RecognitionConfig([
-    'encoding' => AudioEncoding::LINEAR16,
-    'sample_rate_hertz' => 16000,
-    'language_code' => 'en-US'
-]);
+# Your Google Cloud Project ID and location
+$projectId = 'YOUR_PROJECT_ID';
+$location = 'global';
 
 # Instantiates a client
-$client = new SpeechClient();
+$speech = new SpeechClient();
+
+// Create a Recognizer
+$createRecognizerRequest = new CreateRecognizerRequest([
+    'parent' => SpeechClient::locationName($projectId, $location),
+    'recognizer_id' => $recognizerId = 'quickstart-recognizer-' . uniqid(),
+    'recognizer' => new Recognizer([
+        'language_codes' => ['en-US'],
+        'model' => 'latest_short'
+    ])
+]);
+
+$operation = $speech->createRecognizer($createRecognizerRequest);
+
+// Wait for the operation to complete
+$operation->pollUntilComplete();
+if ($operation->operationSucceeded()) {
+    $result = $operation->getResult();
+    printf('Created Recognizer: %s' . PHP_EOL, $result->getName());
+} else {
+    print_r($operation->getError());
+}
+
+$config = (new RecognitionConfig())
+    // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+    // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
+    ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
+        'encoding' => AudioEncoding::LINEAR16,
+        'sample_rate_hertz' => 16000,
+        'audio_channel_count' => 1,
+    ]));
+
+$recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
+$request = (new RecognizeRequest())
+    ->setRecognizer($recognizerName)
+    ->setConfig($config)
+    ->setUri($gcsURI);
 
 # Detects speech in the audio file
-$response = $client->recognize($config, $audio);
+$response = $speech->recognize($request);
 
 # Print most likely transcription
 foreach ($response->getResults() as $result) {
@@ -53,6 +87,4 @@ foreach ($response->getResults() as $result) {
     printf('Transcript: %s' . PHP_EOL, $transcript);
 }
 
-$client->close();
-
-# [END speech_quickstart]
+$speech->close();
