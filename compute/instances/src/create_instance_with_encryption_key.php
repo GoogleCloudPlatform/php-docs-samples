@@ -28,7 +28,6 @@ use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Client\InstancesClient;
 use Google\Cloud\Compute\V1\CustomerEncryptionKey;
-use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 use Google\Cloud\Compute\V1\InsertInstanceRequest;
 
 /**
@@ -78,7 +77,7 @@ function create_instance_with_encryption_key(
     $disk = (new AttachedDisk())
         ->setBoot(true)
         ->setAutoDelete(true)
-        ->setType(Type::PERSISTENT)
+        ->setType(AttachedDisk\Type::PERSISTENT)
         ->setInitializeParams($diskInitializeParams)
         ->setDiskEncryptionKey($customerEncryptionKey);
 

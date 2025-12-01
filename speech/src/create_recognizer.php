@@ -33,7 +33,7 @@ function create_recognizer(
     string $projectId,
     string $location,
     string $recognizerId,
-    string $model = "latest_short"
+    string $model = 'latest_short'
 ): void {
     $apiEndpoint = $location === 'global' ? null : sprintf('%s-speech.googleapis.com', $location);
     $speech = new SpeechClient(['apiEndpoint' => $apiEndpoint]);

@@ -91,7 +91,7 @@ function transcribe_async_words(string $projectId, string $location, string $rec
             $response = $operation->getResult();
             foreach ($response->getResults() as $result) {
                 if ($result->getError()) {
-                    print('Error: '. $result->getError()->getMessage());
+                    print('Error: ' . $result->getError()->getMessage());
                 }
                 // get the most likely transcription
                 $transcript = $result->getInlineResult()->getTranscript();

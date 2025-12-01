@@ -27,7 +27,6 @@ namespace Google\Cloud\Samples\Compute;
 use Google\Cloud\Compute\V1\AttachedDisk;
 use Google\Cloud\Compute\V1\AttachedDiskInitializeParams;
 use Google\Cloud\Compute\V1\Client\InstancesClient;
-use Google\Cloud\Compute\V1\Enums\AttachedDisk\Type;
 use Google\Cloud\Compute\V1\InsertInstanceRequest;
 
 /**
@@ -67,7 +66,7 @@ function create_instance(
     $disk = (new AttachedDisk())
         ->setBoot(true)
         ->setAutoDelete(true)
-        ->setType(Type::PERSISTENT)
+        ->setType(AttachedDisk\Type::PERSISTENT)
         ->setInitializeParams($diskInitializeParams);
 
     // Use the network interface provided in the $networkName argument.
