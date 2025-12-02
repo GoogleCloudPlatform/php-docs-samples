@@ -44,7 +44,6 @@ API using the transcribe command:
 
 ```sh
 php src/transcribe_sync.php test/data/audio32KHz.raw
-php src/transcribe_async.php test/data/audio32KHz.raw
 php src/transcribe_async_words.php test/data/audio32KHz.raw
 ```
 ## Troubleshooting
