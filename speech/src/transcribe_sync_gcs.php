@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,36 +24,44 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_sync_gcs]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognizeRequest;
 
 /**
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $location The location of the recognizer.
+ * @param string $recognizerId The ID of the recognizer to use.
  * @param string $uri The Cloud Storage object to transcribe (gs://your-bucket-name/your-object-name)
  */
-function transcribe_sync_gcs(string $uri)
+function transcribe_sync_gcs(string $projectId, string $location, string $recognizerId, string $uri)
 {
-    // change these variables if necessary
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
+    // create the speech client
+    $apiEndpoint = $location === 'global' ? null : sprintf('%s-speech.googleapis.com', $location);
+    $speech = new SpeechClient(['apiEndpoint' => $apiEndpoint]);
 
-    // set string as audio content
-    $audio = (new RecognitionAudio())
+    $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
+
+    $config = (new RecognitionConfig())
+        // Can also use {@see Google\Cloud\Speech\V2\AutoDetectDecodingConfig}
+        // ->setAutoDecodingConfig(new AutoDetectDecodingConfig());
+
+        ->setExplicitDecodingConfig(new ExplicitDecodingConfig([
+            // change these variables if necessary
+            'encoding' => AudioEncoding::LINEAR16,
+            'sample_rate_hertz' => 16000,
+            'audio_channel_count' => 1,
+        ]));
+
+    $request = (new RecognizeRequest())
+        ->setRecognizer($recognizerName)
+        ->setConfig($config)
         ->setUri($uri);
 
-    // set config
-    $config = (new RecognitionConfig())
-        ->setEncoding($encoding)
-        ->setSampleRateHertz($sampleRateHertz)
-        ->setLanguageCode($languageCode);
-
-    // create the speech client
-    $client = new SpeechClient();
-
     try {
-        $response = $client->recognize($config, $audio);
+        $response = $speech->recognize($request);
         foreach ($response->getResults() as $result) {
             $alternatives = $result->getAlternatives();
             $mostLikely = $alternatives[0];
@@ -63,7 +71,7 @@ function transcribe_sync_gcs(string $uri)
             printf('Confidence: %s' . PHP_EOL, $confidence);
         }
     } finally {
-        $client->close();
+        $speech->close();
     }
 }
 # [END speech_transcribe_sync_gcs]

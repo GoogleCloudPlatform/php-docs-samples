@@ -2,7 +2,7 @@
     "require": {
         "google/cloud-functions-framework": "^1.0",
         "google/cloud-storage": "^1.23",
-        "google/cloud-vision": "^1.2",
+        "google/cloud-vision": "^2.0",
         "ext-imagick": "*"
     },
     "scripts": {

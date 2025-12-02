@@ -48,7 +48,7 @@ function pg_update_dml_returning(string $instanceId, string $databaseId): void
     $result = $transaction->execute(
         'UPDATE Albums '
         . 'SET MarketingBudget = MarketingBudget * 2 '
-        . 'WHERE SingerId = 1 and AlbumId = 1'
+        . 'WHERE SingerId = 1 and AlbumId = 1 '
         . 'RETURNING MarketingBudget'
     );
     foreach ($result->rows() as $row) {

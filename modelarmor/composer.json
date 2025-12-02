@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-dlp": "^2.4",
-        "google/cloud-modelarmor": "^0.1.0"
+        "google/cloud-dlp": "^2.6",
+        "google/cloud-modelarmor": "^0.5.0"
     }
 }
