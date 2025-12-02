@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\AnalyticsData\Test;
+
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 

@@ -39,16 +39,24 @@ use Google\Cloud\Storage\StorageClient;
  *        (e.g. 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=')
  *     be the same key originally used to encrypt the object.
  */
-function download_encrypted_object(string $bucketName, string $objectName, string $destination, string $base64EncryptionKey): void
-{
+function download_encrypted_object(
+    string $bucketName,
+    string $objectName,
+    string $destination,
+    string $base64EncryptionKey
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
     $object = $bucket->object($objectName);
     $object->downloadToFile($destination, [
         'encryptionKey' => $base64EncryptionKey,
     ]);
-    printf('Encrypted object gs://%s/%s downloaded to %s' . PHP_EOL,
-        $bucketName, $objectName, basename($destination));
+    printf(
+        'Encrypted object gs://%s/%s downloaded to %s' . PHP_EOL,
+        $bucketName,
+        $objectName,
+        basename($destination)
+    );
 }
 # [END storage_download_encrypted_file]
 

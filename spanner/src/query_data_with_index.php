@@ -68,8 +68,12 @@ function query_data_with_index(
     );
 
     foreach ($results as $row) {
-        printf('AlbumId: %s, AlbumTitle: %s, MarketingBudget: %d' . PHP_EOL,
-            $row['AlbumId'], $row['AlbumTitle'], $row['MarketingBudget']);
+        printf(
+            'AlbumId: %s, AlbumTitle: %s, MarketingBudget: %d' . PHP_EOL,
+            $row['AlbumId'],
+            $row['AlbumTitle'],
+            $row['MarketingBudget']
+        );
     }
 }
 // [END spanner_query_data_with_index]

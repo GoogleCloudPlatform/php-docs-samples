@@ -56,8 +56,12 @@ function query_data_with_float_parameter(string $instanceId, string $databaseId)
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, PopularityScore: %f' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['PopularityScore']);
+        printf(
+            'VenueId: %s, VenueName: %s, PopularityScore: %f' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['PopularityScore']
+        );
     }
 }
 // [END spanner_query_with_float_parameter]

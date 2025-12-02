@@ -44,9 +44,11 @@ function enable_default_kms_key(string $bucketName, string $kmsKeyName): void
             'defaultKmsKeyName' => $kmsKeyName
         ]
     ]);
-    printf('Default KMS key for %s was set to %s' . PHP_EOL,
+    printf(
+        'Default KMS key for %s was set to %s' . PHP_EOL,
         $bucketName,
-        $bucket->info()['encryption']['defaultKmsKeyName']);
+        $bucket->info()['encryption']['defaultKmsKeyName']
+    );
 }
 # [END storage_set_bucket_default_kms_key]
 

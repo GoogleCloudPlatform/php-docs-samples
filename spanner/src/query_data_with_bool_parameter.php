@@ -56,9 +56,12 @@ function query_data_with_bool_parameter(string $instanceId, string $databaseId):
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, OutdoorVenue: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'],
-            $row['OutdoorVenue'] ? 'True' : 'False');
+        printf(
+            'VenueId: %s, VenueName: %s, OutdoorVenue: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['OutdoorVenue'] ? 'True' : 'False'
+        );
     }
 }
 // [END spanner_query_with_bool_parameter]

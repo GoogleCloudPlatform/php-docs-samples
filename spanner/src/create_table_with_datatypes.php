@@ -63,8 +63,11 @@ function create_table_with_datatypes(string $projectId, string $instanceId, stri
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created Venues table in database %s on instance %s' . PHP_EOL,
-        $databaseId, $instanceId);
+    printf(
+        'Created Venues table in database %s on instance %s' . PHP_EOL,
+        $databaseId,
+        $instanceId
+    );
 }
 // [END spanner_create_table_with_datatypes]
 

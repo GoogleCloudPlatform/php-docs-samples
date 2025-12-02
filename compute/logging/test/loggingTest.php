@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Compute\Logging\Test;
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/mocks/FluentLogger.php';

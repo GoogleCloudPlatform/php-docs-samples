@@ -40,9 +40,16 @@ function delete_endpoint(
     $client = new RegistrationServiceClient();
 
     // Run request.
-    $endpointName = RegistrationServiceClient::endpointName($projectId, $locationId, $namespaceId, $serviceId, $endpointId);
+    $endpointName = RegistrationServiceClient::endpointName(
+        $projectId,
+        $locationId,
+        $namespaceId,
+        $serviceId,
+        $endpointId
+    );
     $deleteEndpointRequest = (new DeleteEndpointRequest())
         ->setName($endpointName);
+  
     $client->deleteEndpoint($deleteEndpointRequest);
 
     // Print results.

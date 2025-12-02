@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Video\Test;
+
 use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
 

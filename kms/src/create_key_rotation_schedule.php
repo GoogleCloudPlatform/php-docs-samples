@@ -49,13 +49,11 @@ function create_key_rotation_schedule(
 
         // Rotate the key every 30 days.
         ->setRotationPeriod((new Duration())
-            ->setSeconds(60 * 60 * 24 * 30)
-        )
+            ->setSeconds(60 * 60 * 24 * 30))
 
         // Start the first rotation in 24 hours.
         ->setNextRotationTime((new Timestamp())
-            ->setSeconds(time() + 60 * 60 * 24)
-        );
+            ->setSeconds(time() + 60 * 60 * 24));
 
     // Call the API.
     $createCryptoKeyRequest = (new CreateCryptoKeyRequest())

@@ -46,7 +46,9 @@ function import_from_storage_json_truncate(
 
     // create the import job
     $gcsUri = 'gs://cloud-samples-data/bigquery/us-states/us-states.json';
-    $loadConfig = $table->loadFromStorage($gcsUri)->sourceFormat('NEWLINE_DELIMITED_JSON')->writeDisposition('WRITE_TRUNCATE');
+    $loadConfig = $table->loadFromStorage($gcsUri)
+        ->sourceFormat('NEWLINE_DELIMITED_JSON')
+        ->writeDisposition('WRITE_TRUNCATE');
     $job = $table->runJob($loadConfig);
 
     // check if the job is complete

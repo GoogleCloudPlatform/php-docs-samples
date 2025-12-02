@@ -38,8 +38,12 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $base64EncryptionKey The base64 encoded encryption key.
  *        (e.g. 'TIbv/fjexq+VmtXzAlc63J4z5kFmWJ6NdAPQulQBT7g=')
  */
-function upload_encrypted_object(string $bucketName, string $objectName, string $source, string $base64EncryptionKey): void
-{
+function upload_encrypted_object(
+    string $bucketName,
+    string $objectName,
+    string $source,
+    string $base64EncryptionKey
+): void {
     $storage = new StorageClient();
     $file = fopen($source, 'r');
     $bucket = $storage->bucket($bucketName);
@@ -47,8 +51,12 @@ function upload_encrypted_object(string $bucketName, string $objectName, string 
         'name' => $objectName,
         'encryptionKey' => $base64EncryptionKey,
     ]);
-    printf('Uploaded encrypted %s to gs://%s/%s' . PHP_EOL,
-        basename($source), $bucketName, $objectName);
+    printf(
+        'Uploaded encrypted %s to gs://%s/%s' . PHP_EOL,
+        basename($source),
+        $bucketName,
+        $objectName
+    );
 }
 # [END storage_upload_encrypted_file]
 

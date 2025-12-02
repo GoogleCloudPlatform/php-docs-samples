@@ -36,8 +36,12 @@ use Google\Cloud\Spanner\Admin\Database\V1\UpdateDatabaseDdlRequest;
  * @param string $parentTable The parent table to create. Defaults to 'Singers'
  * @param string $childTable The child table to create. Defaults to 'Albums'
  */
-function pg_interleaved_table(string $projectId, string $instanceId, string $databaseId, string $parentTable = 'Singers', string $childTable = 'Albums'): void
-{
+function pg_interleaved_table(
+    string $instanceId,
+    string $databaseId,
+    string $parentTable = 'Singers',
+    string $childTable = 'Albums'
+): void {
     $databaseAdminClient = new DatabaseAdminClient();
     $databaseName = DatabaseAdminClient::databaseName($projectId, $instanceId, $databaseId);
 
