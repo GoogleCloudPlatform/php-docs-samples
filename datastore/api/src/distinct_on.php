@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with distinctOn.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function distinct_on(DatastoreClient $datastore)
+function distinct_on(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_distinct_on_query]
     $query = $datastore->query()
         ->kind('Task')

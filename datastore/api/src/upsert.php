@@ -22,10 +22,11 @@ use Google\Cloud\Datastore\DatastoreClient;
 /**
  * Create a Datastore entity and upsert it.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function upsert(DatastoreClient $datastore)
+function upsert(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_upsert]
     $key = $datastore->key('Task', 'sampleTask');
     $task = $datastore->entity($key, [

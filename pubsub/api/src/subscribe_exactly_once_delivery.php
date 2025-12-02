@@ -38,6 +38,8 @@ function subscribe_exactly_once_delivery(
 ): void {
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
+        // use the apiEndpoint option to set a regional endpoint
+        'apiEndpoint' => 'us-west1-pubsub.googleapis.com:443'
     ]);
 
     $subscription = $pubsub->subscription($subscriptionId);

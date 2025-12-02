@@ -44,6 +44,7 @@ function query_filter_dataset(string $projectId): void
         'country' => 'USA',
         'capital' => false,
         'population' => 860000,
+        'density' => 18000,
         'regions' => ['west_coast', 'norcal']
     ]);
     $citiesRef->document('LA')->set([
@@ -52,6 +53,7 @@ function query_filter_dataset(string $projectId): void
         'country' => 'USA',
         'capital' => false,
         'population' => 3900000,
+        'density' => 8000,
         'regions' => ['west_coast', 'socal']
     ]);
     $citiesRef->document('DC')->set([
@@ -60,6 +62,7 @@ function query_filter_dataset(string $projectId): void
         'country' => 'USA',
         'capital' => true,
         'population' => 680000,
+        'density' => 11000,
         'regions' => ['east_coast']
     ]);
     $citiesRef->document('TOK')->set([
@@ -68,6 +71,7 @@ function query_filter_dataset(string $projectId): void
         'country' => 'Japan',
         'capital' => true,
         'population' => 9000000,
+        'density' => 16000,
         'regions' => ['kanto', 'honshu']
     ]);
     $citiesRef->document('BJ')->set([
@@ -76,6 +80,7 @@ function query_filter_dataset(string $projectId): void
         'country' => 'China',
         'capital' => true,
         'population' => 21500000,
+        'density' => 3500,
         'regions' => ['jingjinji', 'hebei']
     ]);
     printf('Added example cities data to the cities collection.' . PHP_EOL);

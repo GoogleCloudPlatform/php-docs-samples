@@ -25,10 +25,11 @@ use Google\Cloud\Datastore\Key;
  * Create a Datastore entity and insert it. It will fail if there is already
  * an entity with the same key.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function insert(DatastoreClient $datastore)
+function insert(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_insert]
     $task = $datastore->entity('Task', [
         'category' => 'Personal',

@@ -1,5 +1,11 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.74"
+        "google/cloud-spanner": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GPBMetadata\\": "generated/GPBMetadata",
+            "Testing\\": "generated/Testing"
+        }
     }
 }

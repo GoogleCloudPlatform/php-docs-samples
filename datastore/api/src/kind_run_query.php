@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create and run a query to list all kinds in Datastore.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function kind_run_query(DatastoreClient $datastore)
+function kind_run_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_kind_run_query]
     $query = $datastore->query()
         ->kind('__kind__')

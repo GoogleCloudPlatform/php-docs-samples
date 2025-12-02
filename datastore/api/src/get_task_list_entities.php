@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Run a query with an ancestor inside a transaction.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function get_task_list_entities(DatastoreClient $datastore)
+function get_task_list_entities(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_transactional_single_entity_group_read_only]
     $transaction = $datastore->readOnlyTransaction();
     $taskListKey = $datastore->key('TaskList', 'default');

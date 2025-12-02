@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Key;
 /**
  * Create an entity with a parent key.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function entity_with_parent(DatastoreClient $datastore)
+function entity_with_parent(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_entity_with_parent]
     $parentKey = $datastore->key('TaskList', 'default');
     $key = $datastore->key('Task')->ancestorKey($parentKey);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,25 +26,31 @@ namespace Google\Cloud\Samples\Firestore;
 use Google\Cloud\Firestore\FirestoreClient;
 
 /**
- * An example of an invalid range query. @see https://cloud.google.com/firestore/docs/query-data/queries#compound_queries
+ * Example of a query with range and inequality filters on multiple fields.
+ * @see https://cloud.google.com/firestore/docs/query-data/multiple-range-fields
  *
  * @param string $projectId The Google Cloud Project ID
  */
-function query_filter_range_invalid(string $projectId): void
+function query_filter_compound_multi_ineq(string $projectId): void
 {
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
         'projectId' => $projectId,
     ]);
-    $citiesRef = $db->collection('samples/php/cities');
-    # [START firestore_query_filter_range_invalid]
-    $invalidRangeQuery = $citiesRef
-        ->where('state', '>=', 'CA')
-        ->where('population', '>', 1000000);
-    # [END firestore_query_filter_range_invalid]
 
-    // This will throw an exception
-    $invalidRangeQuery->documents();
+    # [START firestore_query_filter_compound_multi_ineq]
+    $collection = $db->collection('samples/php/cities');
+    $chainedQuery = $collection
+        ->where('population', '>', 1000000)
+        ->where('density', '<', 10000);
+
+    # [END firestore_query_filter_compound_multi_ineq]
+    foreach ($chainedQuery->documents() as $document) {
+        printf(
+            'Document %s returned by population > 1000000 and density < 10000' . PHP_EOL,
+            $document->id()
+        );
+    }
 }
 
 // The following 2 lines are only needed to run the samples

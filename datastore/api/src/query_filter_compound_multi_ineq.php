@@ -15,31 +15,40 @@
  * limitations under the License.
  */
 
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/datastore/api/README.md
+ */
+
 namespace Google\Cloud\Samples\Datastore;
 
-use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Query\Query;
+use DateTime;
 
 /**
- * Create an invalid query with inequality filters on multiple properties.
+ * Example of a query with range and inequality filters on multiple fields.
+ * @see https://cloud.google.com/datastore/docs/multiple-range-fields
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function inequality_invalid(DatastoreClient $datastore)
+function query_filter_compound_multi_ineq(string $namespaceId = null): void
 {
-    // [START datastore_inequality_invalid]
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    // [START datastore_query_filter_compound_multi_ineq]
     $query = $datastore->query()
         ->kind('Task')
         ->filter('priority', '>', 3)
         ->filter('created', '>', new DateTime('1990-01-01T00:00:00z'));
-    // [END datastore_inequality_invalid]
-    print_r($query);
-
+    // [END datastore_query_filter_compound_multi_ineq]
     $result = $datastore->runQuery($query);
     $found = false;
-    foreach ($result as $e) {
+    foreach ($result as $entity) {
         $found = true;
+        printf(
+            'Document %s returned by priority > 3 and created > 1990' . PHP_EOL,
+            $entity->key()
+        );
     }
 
     if (!$found) {

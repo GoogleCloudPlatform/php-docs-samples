@@ -38,8 +38,11 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
  * @param array  $locations Replication locations (e.g. array('us-east1', 'us-east4'))
  */
-function create_secret_with_user_managed_replication(string $projectId, string $secretId, array $locations): void
-{
+function create_secret_with_user_managed_replication(
+    string $projectId,
+    string $secretId,
+    array $locations
+): void {
     // Create the Secret Manager client.
     $client = new SecretManagerServiceClient();
 

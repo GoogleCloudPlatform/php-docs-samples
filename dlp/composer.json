@@ -2,7 +2,7 @@
     "name": "google/dlp-sample",
     "type": "project",
     "require": {
-        "google/cloud-dlp": "^1.12",
-        "google/cloud-pubsub": "^1.49"
+        "google/cloud-dlp": "^2.0",
+        "google/cloud-pubsub": "^2.0"
     }
 }

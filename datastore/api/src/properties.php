@@ -19,16 +19,17 @@ namespace Google\Cloud\Samples\Datastore;
 
 use DateTime;
 use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\Key;
 
 /**
  * Create a Datastore entity, giving the excludeFromIndexes option.
  *
- * @param DatastoreClient $datastore
- * @param Key $key
+ * @param string $keyId
+ * @param string $namespaceId
  */
-function properties(DatastoreClient $datastore, Key $key)
+function properties(string $keyId, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $key = $datastore->key('Task', $keyId);
     // [START datastore_properties]
     $task = $datastore->entity(
         $key,

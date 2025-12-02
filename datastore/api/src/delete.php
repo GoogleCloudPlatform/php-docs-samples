@@ -23,11 +23,13 @@ use Google\Cloud\Datastore\Key;
 /**
  * Delete a Datastore entity with the given key.
  *
- * @param DatastoreClient $datastore
- * @param Key $taskKey
+ * @param string $namespaceId
+ * @param string $keyId
  */
-function delete(DatastoreClient $datastore, Key $taskKey)
+function delete(string $keyId, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
+    $taskKey = $datastore->key('Task', $keyId);
     // [START datastore_delete]
     $datastore->delete($taskKey);
     // [END datastore_delete]

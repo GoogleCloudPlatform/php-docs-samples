@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Key;
 /**
  * Create a Datastore key with a parent with one level.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function key_with_parent(DatastoreClient $datastore)
+function key_with_parent(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_key_with_parent]
     $taskKey = $datastore->key('TaskList', 'default')
         ->pathElement('Task', 'sampleTask');

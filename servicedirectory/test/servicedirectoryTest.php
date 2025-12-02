@@ -17,9 +17,11 @@
  */
 namespace Google\Cloud\Samples\ServiceDirectory;
 
-use Google\Cloud\ServiceDirectory\V1beta1\Endpoint;
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
-use Google\Cloud\ServiceDirectory\V1beta1\Service;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\DeleteNamespaceRequest;
+use Google\Cloud\ServiceDirectory\V1\Endpoint;
+use Google\Cloud\ServiceDirectory\V1\ListNamespacesRequest;
+use Google\Cloud\ServiceDirectory\V1\Service;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -36,9 +38,13 @@ class servicedirectoryTest extends TestCase
     {
         // Delete any namespaces created during the tests.
         $client = new RegistrationServiceClient();
-        $pagedResponse = $client->listNamespaces(RegistrationServiceClient::locationName(self::$projectId, self::$locationId));
+        $listNamespacesRequest = (new ListNamespacesRequest())
+            ->setParent(RegistrationServiceClient::locationName(self::$projectId, self::$locationId));
+        $pagedResponse = $client->listNamespaces($listNamespacesRequest);
         foreach ($pagedResponse->iterateAllElements() as $namespace_pb) {
-            $client->deleteNamespace($namespace_pb->getName());
+            $deleteNamespaceRequest = (new DeleteNamespaceRequest())
+                ->setName($namespace_pb->getName());
+            $client->deleteNamespace($deleteNamespaceRequest);
         }
     }
 

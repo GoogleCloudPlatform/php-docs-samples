@@ -23,15 +23,16 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Run the given projection query and collect the projected properties.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  * @param Query $query
  */
-function run_projection_query(DatastoreClient $datastore, Query $query = null)
+function run_projection_query(Query $query = null, string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     if (!isset($query)) {
         $query = $datastore->query()
-      ->kind('Task')
-      ->projection(['priority', 'percent_complete']);
+            ->kind('Task')
+            ->projection(['priority', 'percent_complete']);
     }
 
     // [START datastore_run_query_projection]

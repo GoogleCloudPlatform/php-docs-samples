@@ -147,6 +147,12 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Bucket:', $output);
     }
 
+    public function testListSoftDeletedBuckets()
+    {
+        $output = $this->runFunctionSnippet('list_soft_deleted_buckets');
+        $this->assertStringContainsString('Bucket:', $output);
+    }
+
     public function testCreateGetDeleteBuckets()
     {
         $bucketName = sprintf('test-bucket-%s-%s', time(), rand());
@@ -559,6 +565,7 @@ class storageTest extends TestCase
             $output,
         );
     }
+
     public function testBucketVersioning()
     {
         $output = self::runFunctionSnippet('enable_versioning', [
@@ -860,6 +867,7 @@ class storageTest extends TestCase
             $output
         );
         $this->assertTrue($info['hierarchicalNamespace']['enabled']);
+        $this->runFunctionSnippet('delete_bucket', [$bucketName]);
     }
 
     public function testObjectCsekToCmek()
@@ -938,6 +946,50 @@ class storageTest extends TestCase
         );
     }
 
+    public function testGetRestoreSoftDeletedBucket()
+    {
+        $bucketName = sprintf('test-soft-deleted-bucket-%s-%s', time(), rand());
+        $bucket = self::$storage->createBucket($bucketName);
+
+        $this->assertTrue($bucket->exists());
+        $generation = $bucket->info()['generation'];
+        $bucket->delete();
+
+        $this->assertFalse($bucket->exists());
+
+        $options = ['generation' => $generation, 'softDeleted' => true];
+        $softDeletedBucket = self::$storage->bucket($bucketName);
+        $info = $softDeletedBucket->info($options);
+
+        $output = self::runFunctionSnippet('get_soft_deleted_bucket', [
+            $bucketName,
+            $generation
+        ]);
+        $outputString = <<<EOF
+        Bucket: {$bucketName}
+        Generation: {$info['generation']}
+        SoftDeleteTime: {$info['softDeleteTime']}
+        HardDeleteTime: {$info['hardDeleteTime']}
+
+        EOF;
+        $this->assertEquals($outputString, $output);
+
+        $output = self::runFunctionSnippet('restore_soft_deleted_bucket', [
+            $bucketName,
+            $generation
+        ]);
+
+        $this->assertTrue($bucket->exists());
+        $this->assertEquals(
+            sprintf(
+                'Soft deleted bucket %s was restored.' . PHP_EOL,
+                $bucketName
+            ),
+            $output
+        );
+        $this->runFunctionSnippet('delete_bucket', [$bucketName]);
+    }
+
     public function testSetBucketWithAutoclass()
     {
         $bucket = self::$storage->createBucket(uniqid('samples-set-autoclass-'), [
@@ -964,6 +1016,90 @@ class storageTest extends TestCase
             sprintf(
                 'Autoclass terminal storage class is %s.' . PHP_EOL,
                 $terminalStorageClass
+            ),
+            $output
+        );
+    }
+
+    public function testGetSoftDeletePolicy()
+    {
+        $bucketName = uniqid('samples-get-soft-delete-policy-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'softDeletePolicy' => [
+                'retentionDurationSeconds' => 604800,
+            ],
+        ]);
+
+        $output = self::runFunctionSnippet('get_soft_delete_policy', [
+            $bucketName,
+        ]);
+        $info = $bucket->info();
+        $bucket->delete();
+
+        if ($info['softDeletePolicy']['retentionDurationSeconds'] === '0') {
+            $this->assertStringContainsString(
+                sprintf('Bucket %s soft delete policy was disabled', $bucketName),
+                $output
+            );
+        } else {
+            $duration = $info['softDeletePolicy']['retentionDurationSeconds'];
+            $effectiveTime = $info['softDeletePolicy']['effectiveTime'];
+            $outputString = <<<EOF
+                Soft delete Policy for $bucketName
+                Soft delete Period: $duration seconds
+                Effective Time: $effectiveTime
+
+                EOF;
+            $this->assertEquals($output, $outputString);
+        }
+    }
+
+    public function testSetSoftDeletePolicy()
+    {
+        $bucketName = uniqid('samples-set-soft-delete-policy-');
+        $bucket = self::$storage->createBucket($bucketName);
+        $info = $bucket->reload();
+
+        $this->assertNotEquals('864000', $info['softDeletePolicy']['retentionDurationSeconds']);
+        $output = self::runFunctionSnippet('set_soft_delete_policy', [
+            $bucketName
+        ]);
+        $info = $bucket->reload();
+        $this->assertEquals('864000', $info['softDeletePolicy']['retentionDurationSeconds']);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Bucket %s soft delete policy set to 10 days',
+                $bucketName
+            ),
+            $output
+        );
+    }
+
+    public function testDisableSoftDelete()
+    {
+        $bucketName = uniqid('samples-disable-soft-delete-');
+        $bucket = self::$storage->createBucket($bucketName, [
+            'softDeletePolicy' => [
+                'retentionDurationSeconds' => 604800,
+            ],
+        ]);
+        $info = $bucket->reload();
+
+        $this->assertEquals('604800', $info['softDeletePolicy']['retentionDurationSeconds']);
+
+        $output = self::runFunctionSnippet('disable_soft_delete', [
+            $bucketName
+        ]);
+        $info = $bucket->reload();
+        $this->assertEquals('0', $info['softDeletePolicy']['retentionDurationSeconds']);
+        $bucket->delete();
+
+        $this->assertStringContainsString(
+            sprintf(
+                'Bucket %s soft delete policy was disabled',
+                $bucketName
             ),
             $output
         );

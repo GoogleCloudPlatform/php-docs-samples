@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Key;
 /**
  * Create a complete Datastore key.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function named_key(DatastoreClient $datastore)
+function named_key(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_named_key]
     $taskKey = $datastore->key('Task', 'sampleTask');
     // [END datastore_named_key]

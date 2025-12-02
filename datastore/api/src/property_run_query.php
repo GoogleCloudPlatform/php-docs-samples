@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create and run a property query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function property_run_query(DatastoreClient $datastore)
+function property_run_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_property_run_query]
     $query = $datastore->query()
         ->kind('__property__')

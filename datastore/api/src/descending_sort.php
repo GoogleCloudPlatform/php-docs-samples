@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a query with descending sort.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function descending_sort(DatastoreClient $datastore)
+function descending_sort(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_descending_sort]
     $query = $datastore->query()
         ->kind('Task')

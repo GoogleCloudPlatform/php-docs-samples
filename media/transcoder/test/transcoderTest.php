@@ -63,7 +63,7 @@ class transcoderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::checkProjectEnvVars();
-        self::$projectNumber = self::requireEnv('GOOGLE_PROJECT_NUMBER');
+        self::$projectNumber = self::getProjectNumber(self::$projectId);
         $bucketName = self::requireEnv('GOOGLE_STORAGE_BUCKET');
 
         self::$storage = new StorageClient();

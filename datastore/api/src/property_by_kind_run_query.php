@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create and run a property query with a kind.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function property_by_kind_run_query(DatastoreClient $datastore)
+function property_by_kind_run_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_property_by_kind_run_query]
     $ancestorKey = $datastore->key('__kind__', 'Task');
     $query = $datastore->query()

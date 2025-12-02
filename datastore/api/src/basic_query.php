@@ -23,10 +23,11 @@ use Google\Cloud\Datastore\Query\Query;
 /**
  * Create a basic Datastore query.
  *
- * @param DatastoreClient $datastore
+ * @param string $namespaceId
  */
-function basic_query(DatastoreClient $datastore)
+function basic_query(string $namespaceId = null)
 {
+    $datastore = new DatastoreClient(['namespaceId' => $namespaceId]);
     // [START datastore_basic_query]
     $query = $datastore->query()
         ->kind('Task')

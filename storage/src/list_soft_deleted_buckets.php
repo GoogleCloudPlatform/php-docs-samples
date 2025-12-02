@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 Google Inc.
+ * Copyright 2025 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,26 @@
 /**
  * For instructions on how to run the full sample:
  *
- * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/firestore/README.md
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storage/README.md
  */
 
-namespace Google\Cloud\Samples\Firestore;
+namespace Google\Cloud\Samples\Storage;
 
-use Google\Cloud\Firestore\FirestoreClient;
+# [START storage_list_soft_deleted_buckets]
+use Google\Cloud\Storage\StorageClient;
 
 /**
- * Create a range with order by query.
- *
- * @param string $projectId The Google Cloud Project ID
+ * List all the soft deleted Cloud Storage buckets for the current project.
  */
-function query_order_field_invalid(string $projectId): void
+function list_soft_deleted_buckets(): void
 {
-    // Create the Cloud Firestore client
-    $db = new FirestoreClient([
-        'projectId' => $projectId,
-    ]);
-    $citiesRef = $db->collection('samples/php/cities');
-    # [START firestore_query_order_field_invalid]
-    $invalidRangeQuery = $citiesRef
-        ->where('population', '>', 2500000)
-        ->orderBy('country');
-    # [END firestore_query_order_field_invalid]
-
-    // This will throw an exception
-    $invalidRangeQuery->documents();
+    $storage = new StorageClient();
+    $options = [ 'softDeleted' => true ];
+    foreach ($storage->buckets($options) as $bucket) {
+        printf('Bucket: %s' . PHP_EOL, $bucket->name());
+    }
 }
+# [END storage_list_soft_deleted_buckets]
 
 // The following 2 lines are only needed to run the samples
 require_once __DIR__ . '/../../testing/sample_helpers.php';
