@@ -24,7 +24,7 @@
 namespace Google\Cloud\Samples\Spanner;
 
 // [START spanner_read_stale_data]
-use Google\Cloud\Spanner\Duration;
+use Google\Protobuf\Duration;
 use Google\Cloud\Spanner\SpannerClient;
 
 /**
@@ -49,7 +49,7 @@ function read_stale_data(string $instanceId, string $databaseId): void
         'Albums',
         $keySet,
         ['SingerId', 'AlbumId', 'AlbumTitle'],
-        ['exactStaleness' => new Duration(15)]
+        ['exactStaleness' => new Duration(['seconds' => 15])]
     );
 
     foreach ($results->rows() as $row) {
