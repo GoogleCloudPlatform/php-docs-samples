@@ -151,6 +151,52 @@ EOF;
         $this->assertEquals($output, $outputString);
     }
 
+    /**
+      * @dataProvider provideMoveObject
+      */
+    public function testMoveObjectAtomic(bool $hnEnabled)
+    {
+        $bucketName = 'move-object-bucket-' . uniqid();
+        $objectName = 'test-object-' . time();
+        $newObjectName = $objectName . '-moved';
+        $bucket = self::$storage->createBucket($bucketName, [
+            'hierarchicalNamespace' => ['enabled' => $hnEnabled],
+            'iamConfiguration' => ['uniformBucketLevelAccess' => ['enabled' => true]]
+        ]);
+
+        $object = $bucket->upload('test', ['name' => $objectName]);
+        $this->assertTrue($object->exists());
+
+        $output = self::runFunctionSnippet('move_object_atomic', [
+            $bucketName,
+            $objectName,
+            $newObjectName
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
+                $bucketName,
+                $objectName,
+                $bucketName,
+                $newObjectName
+            ),
+            $output
+        );
+
+        $this->assertFalse($object->exists());
+        $movedObject = $bucket->object($newObjectName);
+        $this->assertTrue($movedObject->exists());
+
+        $bucket->object($newObjectName)->delete();
+        $bucket->delete();
+    }
+
+    public function provideMoveObject()
+    {
+        return [[true], [false]];
+    }
+
     public function testCompose()
     {
         $bucket = self::$storage->bucket(self::$bucketName);
@@ -371,5 +417,84 @@ EOF;
         $this->assertStringNotContainsString('Event-based hold', $output);
         $this->assertStringNotContainsString('Custom Time', $output);
         $this->assertStringNotContainsString('Retention Expiration Time', $output);
+    }
+
+    public function testListSoftDeletedObjects()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDuration' => 604800,
+            ],
+        ]);
+
+        $objectName = uniqid('soft-deleted-object-');
+        $object = $bucket->upload('content', ['name' => $objectName]);
+        $object->delete();
+
+        $output = self::runFunctionSnippet('list_soft_deleted_objects', [
+            self::$bucketName,
+        ]);
+
+        $this->assertStringContainsString('Object:', $output);
+    }
+
+    public function testListSoftDeletedObjectVersions()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDuration' => 604800,
+            ],
+        ]);
+
+        $objectName1 = 'soft-deleted-object-1';
+        $object1 = $bucket->upload('content', ['name' => $objectName1]);
+        $object1->delete();
+
+        $objectName2 = 'soft-deleted-object-2';
+        $object2 = $bucket->upload('content', ['name' => $objectName2]);
+        $object2->delete();
+
+        $output = self::runFunctionSnippet('list_soft_deleted_object_versions', [
+            self::$bucketName,
+            $objectName1
+        ]);
+
+        $this->assertStringContainsString($objectName1, $output);
+        $this->assertStringNotContainsString($objectName2, $output);
+    }
+
+    public function testRestoreSoftDeletedObject()
+    {
+        $bucket = self::$storage->bucket(self::$bucketName);
+        $bucket->update([
+            'softDeletePolicy' => [
+                'retentionDuration' => 60,
+            ],
+        ]);
+
+        $objectName = uniqid('soft-deleted-object-');
+        $object = $bucket->upload('content', ['name' => $objectName]);
+        $info = $object->reload();
+        $object->delete();
+
+        $this->assertFalse($object->exists());
+
+        $output = self::runFunctionSnippet('restore_soft_deleted_object', [
+            self::$bucketName,
+            $objectName,
+            $info['generation']
+        ]);
+
+        $object = $bucket->object($objectName);
+        $this->assertTrue($object->exists());
+        $this->assertEquals(
+            sprintf(
+                'Soft deleted object %s was restored.' . PHP_EOL,
+                $objectName
+            ),
+            $output
+        );
     }
 }

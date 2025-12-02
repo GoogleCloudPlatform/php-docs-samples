@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-namespace Google\Cloud\Samples\Speech\Test;
-
-use PHPUnit\Framework\TestCase;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
 {
     use TestTrait;
     public function testQuickstart()
     {
-        // Invoke quickstart.php
-        include __DIR__ . '/../quickstart.php';
-        $this->expectOutputRegex('/Bridge/');
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('GOOGLE_PROJECT_ID must be set.');
+        }
+
+        $file = sys_get_temp_dir() . '/speech_quickstart.php';
+        $contents = file_get_contents(__DIR__ . '/../quickstart.php');
+        $contents = str_replace(
+            ['YOUR_PROJECT_ID', '__DIR__'],
+            [$projectId, sprintf('"%s/.."', __DIR__)],
+            $contents
+        );
+        file_put_contents($file, $contents);
+
+        // Invoke quickstart.php and capture output
+        ob_start();
+        include $file;
+        $result = ob_get_clean();
+
+        // Make sure it looks correct
+        $this->assertStringContainsString('Transcript: how old is the Brooklyn Bridge', $result);
     }
 }

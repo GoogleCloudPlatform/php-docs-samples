@@ -27,8 +27,9 @@ namespace Google\Cloud\Samples\Dlp;
 
 use Google\Cloud\Dlp\V2\BigQueryField;
 use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpServiceClient;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
 use Google\Cloud\Dlp\V2\CloudStoragePath;
+use Google\Cloud\Dlp\V2\CreateStoredInfoTypeRequest;
 use Google\Cloud\Dlp\V2\FieldId;
 use Google\Cloud\Dlp\V2\LargeCustomDictionaryConfig;
 use Google\Cloud\Dlp\V2\StoredInfoTypeConfig;
@@ -77,9 +78,11 @@ function create_stored_infotype(
 
     // Send the stored infoType creation request and process the response.
     $parent = "projects/$callingProjectId/locations/global";
-    $response = $dlp->createStoredInfoType($parent, $storedInfoTypeConfig, [
-        'storedInfoTypeId' => $storedInfoTypeId
-    ]);
+    $createStoredInfoTypeRequest = (new CreateStoredInfoTypeRequest())
+        ->setParent($parent)
+        ->setConfig($storedInfoTypeConfig)
+        ->setStoredInfoTypeId($storedInfoTypeId);
+    $response = $dlp->createStoredInfoType($createStoredInfoTypeRequest);
 
     // Print results.
     printf('Successfully created Stored InfoType : %s', $response->getName());

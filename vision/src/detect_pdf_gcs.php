@@ -21,11 +21,12 @@ namespace Google\Cloud\Samples\Vision;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Vision\V1\AnnotateFileResponse;
 use Google\Cloud\Vision\V1\AsyncAnnotateFileRequest;
+use Google\Cloud\Vision\V1\AsyncBatchAnnotateFilesRequest;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\Feature;
 use Google\Cloud\Vision\V1\Feature\Type;
 use Google\Cloud\Vision\V1\GcsDestination;
 use Google\Cloud\Vision\V1\GcsSource;
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\InputConfig;
 use Google\Cloud\Vision\V1\OutputConfig;
 
@@ -66,7 +67,9 @@ function detect_pdf_gcs(string $path, string $output)
 
     # make request
     $imageAnnotator = new ImageAnnotatorClient();
-    $operation = $imageAnnotator->asyncBatchAnnotateFiles($requests);
+    $request = (new AsyncBatchAnnotateFilesRequest())
+        ->setRequests($requests);
+    $operation = $imageAnnotator->asyncBatchAnnotateFiles($request);
     print('Waiting for operation to finish.' . PHP_EOL);
     $operation->pollUntilComplete();
 

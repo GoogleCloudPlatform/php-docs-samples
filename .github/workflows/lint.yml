@@ -10,7 +10,7 @@ jobs:
     name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -41,18 +41,14 @@ jobs:
     name: PHPStan Static Analysis
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
     - name: Get changed files
       id: changedFiles
-      uses: tj-actions/changed-files@v44
-    - uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-      with:
-        state: open
+      uses: tj-actions/changed-files@v47
     - name: Run Script
       run: |
         composer install -d testing/
@@ -60,4 +56,4 @@ jobs:
         bash testing/run_staticanalysis_check.sh
       env:
         FILES_CHANGED: ${{ steps.changedFiles.outputs.all_changed_files }}
-        PULL_REQUEST_NUMBER: ${{ steps.findPr.outputs.pr }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}

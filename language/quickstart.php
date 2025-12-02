@@ -20,24 +20,33 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Language\LanguageClient;
+use Google\Cloud\Language\V2\AnalyzeSentimentRequest;
+use Google\Cloud\Language\V2\Client\LanguageServiceClient;
+use Google\Cloud\Language\V2\Document;
 
 # Your Google Cloud Platform project ID
 $projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
-$language = new LanguageClient([
+$language = new LanguageServiceClient([
     'projectId' => $projectId
 ]);
 
 # The text to analyze
 $text = 'Hello, world!';
+$document = (new Document())
+    ->setContent($text)
+    ->setType(Document\Type::PLAIN_TEXT);
+$analyzeSentimentRequest = (new AnalyzeSentimentRequest())
+    ->setDocument($document);
 
 # Detects the sentiment of the text
-$annotation = $language->analyzeSentiment($text);
-$sentiment = $annotation->sentiment();
+$response = $language->analyzeSentiment($analyzeSentimentRequest);
+foreach ($response->getSentences() as $sentence) {
+    $sentiment = $sentence->getSentiment();
+    echo 'Text: ' . $sentence->getText()->getContent() . PHP_EOL;
+    printf('Sentiment: %s, %s' . PHP_EOL, $sentiment->getScore(), $sentiment->getMagnitude());
+}
 
-echo 'Text: ' . $text . '
-Sentiment: ' . $sentiment['score'] . ', ' . $sentiment['magnitude'];
 # [END language_quickstart]
-return $sentiment;
+return $sentiment ?? null;

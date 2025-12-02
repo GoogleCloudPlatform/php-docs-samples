@@ -1,8 +1,8 @@
 {
     "require": {
-        "google/cloud-storage-control": "1.0.0"
+        "google/cloud-storage-control": "1.6.1"
     },
     "require-dev": {
-        "google/cloud-storage": "^1.41.3"
+        "google/cloud-storage": "^1.48.1"
     }
 }

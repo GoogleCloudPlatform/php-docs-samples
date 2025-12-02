@@ -36,25 +36,20 @@ use Google\Cloud\Video\Stitcher\V1\VodSession;
  *
  * @param string $callingProjectId     The project ID to run the API call under
  * @param string $location             The location of the session
- * @param string $sourceUri            Uri of the media to stitch; this URI must
- *                                     reference either an MPEG-DASH manifest
- *                                     (.mpd) file or an M3U playlist manifest
- *                                     (.m3u8) file.
- * @param string $adTagUri             The Uri of the ad tag
+ * @param string $vodConfigId          The name of the VOD config to use for the session
  */
 function create_vod_session(
     string $callingProjectId,
     string $location,
-    string $sourceUri,
-    string $adTagUri
+    string $vodConfigId
 ): void {
     // Instantiate a client.
     $stitcherClient = new VideoStitcherServiceClient();
 
     $parent = $stitcherClient->locationName($callingProjectId, $location);
+    $vodConfig = $stitcherClient->vodConfigName($callingProjectId, $location, $vodConfigId);
     $vodSession = new VodSession();
-    $vodSession->setSourceUri($sourceUri);
-    $vodSession->setAdTagUri($adTagUri);
+    $vodSession->setVodConfig($vodConfig);
     $vodSession->setAdTracking(AdTracking::SERVER);
 
     // Run VOD session creation request

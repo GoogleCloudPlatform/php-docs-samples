@@ -277,7 +277,8 @@ class firestoreTest extends TestCase
     public function testChainedInequalityQuery()
     {
         $output = $this->runFirestoreSnippet('query_filter_compound_multi_ineq');
-        $this->assertStringContainsString('Document person4 returned by age > 35 and height between 60 and 70', $output);
+        $this->assertStringContainsString('Document LA returned by population > 1000000 and density < 10000', $output);
+        $this->assertStringContainsString('Document BJ returned by population > 1000000 and density < 10000', $output);
     }
 
     /**

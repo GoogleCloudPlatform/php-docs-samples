@@ -19,7 +19,8 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_delete_endpoint]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\DeleteEndpointRequest;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -46,7 +47,10 @@ function delete_endpoint(
         $serviceId,
         $endpointId
     );
-    $endpoint = $client->deleteEndpoint($endpointName);
+    $deleteEndpointRequest = (new DeleteEndpointRequest())
+        ->setName($endpointName);
+  
+    $client->deleteEndpoint($deleteEndpointRequest);
 
     // Print results.
     printf('Deleted Endpoint: %s' . PHP_EOL, $endpointName);
