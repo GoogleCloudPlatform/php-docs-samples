@@ -1,7 +1,7 @@
 {
   "require": {
     "google/cloud-pubsub": "^2.0",
-    "google/cloud-datastore": "^1.11.2",
+    "google/cloud-datastore": "^2.0.0",
     "slim/slim": "^4.7",
     "slim/psr7": "^1.3",
     "slim/twig-view": "^3.0",
