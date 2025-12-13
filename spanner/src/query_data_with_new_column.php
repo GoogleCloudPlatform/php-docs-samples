@@ -53,8 +53,12 @@ function query_data_with_new_column(string $instanceId, string $databaseId): voi
     );
 
     foreach ($results as $row) {
-        printf('SingerId: %s, AlbumId: %s, MarketingBudget: %d' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['MarketingBudget']);
+        printf(
+            'SingerId: %s, AlbumId: %s, MarketingBudget: %d' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['MarketingBudget']
+        );
     }
 }
 // [END spanner_query_data_with_new_column]

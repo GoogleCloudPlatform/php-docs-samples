@@ -17,6 +17,8 @@
 
 declare(strict_types=1);
 
+namespace Google\Cloud\Samples\SecretManager\Test;
+
 use Google\ApiCore\ApiException as GaxApiException;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\DeleteSecretRequest;

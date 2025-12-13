@@ -42,8 +42,13 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $expression Te condition specified in CEL expression language.
  *        (e.g. 'resource.name.startsWith("projects/_/buckets/bucket-name/objects/prefix-a-")')
  */
-function remove_bucket_conditional_iam_binding(string $bucketName, string $role, string $title, string $description, string $expression): void
-{
+function remove_bucket_conditional_iam_binding(
+    string $bucketName,
+    string $role,
+    string $title,
+    string $description,
+    string $expression
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

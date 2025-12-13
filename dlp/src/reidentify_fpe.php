@@ -66,7 +66,8 @@ function reidentify_fpe(
     $infoTypes = [$ssnInfoType];
 
     // The set of characters to replace sensitive ones with
-    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+    // For more information, see
+    // https://cloud.google.com/dlp/docs/reference/rest/v2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the wrapped crypto key configuration object

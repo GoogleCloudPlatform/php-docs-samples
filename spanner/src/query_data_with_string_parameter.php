@@ -56,8 +56,11 @@ function query_data_with_string_parameter(string $instanceId, string $databaseId
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName']);
+        printf(
+            'VenueId: %s, VenueName: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName']
+        );
     }
 }
 // [END spanner_query_with_string_parameter]

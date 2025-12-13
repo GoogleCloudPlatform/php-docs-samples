@@ -32,52 +32,66 @@ function detect_web_gcs(string $path)
     $web = $response->getWebDetection();
 
     if ($web) {
-        printf('%d best guess labels found' . PHP_EOL,
-            count($web->getPagesWithMatchingImages()));
+        printf(
+            '%d best guess labels found' . PHP_EOL,
+            count($web->getPagesWithMatchingImages())
+        );
         foreach ($web->getBestGuessLabels() as $label) {
             printf('Best guess label: %s' . PHP_EOL, $label->getLabel());
         }
         print(PHP_EOL);
 
         // Print pages with matching images
-        printf('%d pages with matching images found' . PHP_EOL,
-            count($web->getPagesWithMatchingImages()));
+        printf(
+            '%d pages with matching images found' . PHP_EOL,
+            count($web->getPagesWithMatchingImages())
+        );
         foreach ($web->getPagesWithMatchingImages() as $page) {
             printf('URL: %s' . PHP_EOL, $page->getUrl());
         }
         print(PHP_EOL);
 
         // Print full matching images
-        printf('%d full matching images found' . PHP_EOL,
-            count($web->getFullMatchingImages()));
+        printf(
+            '%d full matching images found' . PHP_EOL,
+            count($web->getFullMatchingImages())
+        );
         foreach ($web->getFullMatchingImages() as $fullMatchingImage) {
             printf('URL: %s' . PHP_EOL, $fullMatchingImage->getUrl());
         }
         print(PHP_EOL);
 
         // Print partial matching images
-        printf('%d partial matching images found' . PHP_EOL,
-            count($web->getPartialMatchingImages()));
+        printf(
+            '%d partial matching images found' . PHP_EOL,
+            count($web->getPartialMatchingImages())
+        );
         foreach ($web->getPartialMatchingImages() as $partialMatchingImage) {
             printf('URL: %s' . PHP_EOL, $partialMatchingImage->getUrl());
         }
         print(PHP_EOL);
 
         // Print visually similar images
-        printf('%d visually similar images found' . PHP_EOL,
-            count($web->getVisuallySimilarImages()));
+        printf(
+            '%d visually similar images found' . PHP_EOL,
+            count($web->getVisuallySimilarImages())
+        );
         foreach ($web->getVisuallySimilarImages() as $visuallySimilarImage) {
             printf('URL: %s' . PHP_EOL, $visuallySimilarImage->getUrl());
         }
         print(PHP_EOL);
 
         // Print web entities
-        printf('%d web entities found' . PHP_EOL,
-            count($web->getWebEntities()));
+        printf(
+            '%d web entities found' . PHP_EOL,
+            count($web->getWebEntities())
+        );
         foreach ($web->getWebEntities() as $entity) {
-            printf('Description: %s, Score: %f' . PHP_EOL,
+            printf(
+                'Description: %s, Score: %f' . PHP_EOL,
                 $entity->getDescription(),
-                $entity->getScore());
+                $entity->getScore()
+            );
         }
     } else {
         print('No Results.' . PHP_EOL);

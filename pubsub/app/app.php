@@ -82,8 +82,7 @@ $app->get('/fetch_messages', function (Request $request, Response $response, $ar
 $app->post('/receive_message', function (Request $request, Response $response, $args) use ($container) {
     // pull the message from the post body
     $json = json_decode($request->getContent(), true);
-    if (
-        !isset($json['message']['data'])
+    if (!isset($json['message']['data'])
         || !$message = base64_decode($json['message']['data'])
     ) {
         return new Response('', 400);

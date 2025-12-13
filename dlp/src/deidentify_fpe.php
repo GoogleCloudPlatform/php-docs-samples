@@ -68,7 +68,8 @@ function deidentify_fpe(
         ->setCryptoKeyName($keyName);
 
     // The set of characters to replace sensitive ones with
-    // For more information, see https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+    // For more information, see
+    // https://cloud.google.com/dlp/docs/reference/rest/V2/organizations.deidentifyTemplates#ffxcommonnativealphabet
     $commonAlphabet = FfxCommonNativeAlphabet::NUMERIC;
 
     // Create the crypto key configuration object

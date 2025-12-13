@@ -52,8 +52,14 @@ function get_key(string $projectId, string $keyId): void
         // $key->getCreateTime() returns a Google\Protobuf\Timestamp object
         printf('Create time: %d' . PHP_EOL, $key->getCreateTime()->getSeconds());
         printf('Web platform settings: %s' . PHP_EOL, $key->hasWebSettings() ? 'Yes' : 'No');
-        printf('Allowed all domains: %s' . PHP_EOL, $key->hasWebSettings() && $webSettings->getAllowAllDomains() ? 'Yes' : 'No');
-        printf('Integration Type: %s' . PHP_EOL, $key->hasWebSettings() ? IntegrationType::name($webSettings->getIntegrationType()) : 'N/A');
+        printf(
+            'Allowed all domains: %s' . PHP_EOL,
+            $key->hasWebSettings() && $webSettings->getAllowAllDomains() ? 'Yes' : 'No'
+        );
+        printf(
+            'Integration Type: %s' . PHP_EOL,
+            $key->hasWebSettings() ? IntegrationType::name($webSettings->getIntegrationType()) : 'N/A'
+        );
     } catch (ApiException $e) {
         if ($e->getStatus() === 'NOT_FOUND') {
             printf('The key with Key ID: %s doesn\'t exist.' . PHP_EOL, $keyId);
