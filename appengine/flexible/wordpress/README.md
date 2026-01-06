@@ -35,7 +35,7 @@ Engine bucket is named YOUR_PROJECT_ID.appspot.com. Change the default Access
 Control List (ACL) of that bucket as follows:
 
 ```
-$ gsutil defacl ch -u AllUsers:R gs://YOUR_PROJECT_ID.appspot.com
+$ gcloud storage buckets update --add-default-object-acl-grant=allUsers:R gs://YOUR_PROJECT_ID.appspot.com
 ```
 
 ### Create and configure a Cloud SQL for MySQL 2nd generation instance

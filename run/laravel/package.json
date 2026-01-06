@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "update-static": "vite build && gsutil -m cp -r public/* gs://${ASSET_BUCKET}"
+        "update-static": "vite build && gcloud storage cp --recursive public/* gs://${ASSET_BUCKET}"
 
     },
     "devDependencies": {
