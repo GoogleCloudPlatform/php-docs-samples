@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.97"
+        "google/cloud-spanner": "^2.0"
     },
     "autoload": {
         "psr-4": {

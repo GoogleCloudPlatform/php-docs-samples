@@ -19,8 +19,9 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_create_endpoint]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
-use Google\Cloud\ServiceDirectory\V1beta1\Endpoint;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\CreateEndpointRequest;
+use Google\Cloud\ServiceDirectory\V1\Endpoint;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -50,7 +51,11 @@ function create_endpoint(
 
     // Run request.
     $serviceName = RegistrationServiceClient::serviceName($projectId, $locationId, $namespaceId, $serviceId);
-    $endpoint = $client->createEndpoint($serviceName, $endpointId, $endpointObject);
+    $createEndpointRequest = (new CreateEndpointRequest())
+        ->setParent($serviceName)
+        ->setEndpointId($endpointId)
+        ->setEndpoint($endpointObject);
+    $endpoint = $client->createEndpoint($createEndpointRequest);
 
     // Print results.
     printf('Created Endpoint: %s' . PHP_EOL, $endpoint->getName());

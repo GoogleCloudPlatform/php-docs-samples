@@ -17,6 +17,14 @@ assign_issues_by:
   - 'api: spanner'
   to:
   - shivgautam
+- labels:
+  - 'api: parametermanager'
+  to:
+  - GoogleCloudPlatform/cloud-parameters-team
+- labels:
+  - "api: modelarmor"
+  to:
+  - GoogleCloudPlatform/cloud-modelarmor-team
 
 assign_prs_by:
 - labels:
@@ -33,3 +41,11 @@ assign_prs_by:
   - 'api: cloudiot'
   to:
   - laszlokorossy
+- labels:
+  - 'api: parametermanager'
+  to:
+  - GoogleCloudPlatform/cloud-parameters-team
+- labels:
+  - "api: modelarmor"
+  to:
+  - GoogleCloudPlatform/cloud-modelarmor-team

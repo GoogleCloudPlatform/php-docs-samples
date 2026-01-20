@@ -24,17 +24,19 @@
 namespace Google\Cloud\Samples\Dlp;
 
 # [START dlp_k_anonymity_with_entity_id]
-use Google\Cloud\Dlp\V2\DlpServiceClient;
-use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
-use Google\Cloud\Dlp\V2\BigQueryTable;
-use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\Action;
 use Google\Cloud\Dlp\V2\Action\SaveFindings;
+use Google\Cloud\Dlp\V2\BigQueryTable;
+use Google\Cloud\Dlp\V2\Client\DlpServiceClient;
+use Google\Cloud\Dlp\V2\CreateDlpJobRequest;
+use Google\Cloud\Dlp\V2\DlpJob\JobState;
 use Google\Cloud\Dlp\V2\EntityId;
-use Google\Cloud\Dlp\V2\PrivacyMetric\KAnonymityConfig;
-use Google\Cloud\Dlp\V2\PrivacyMetric;
 use Google\Cloud\Dlp\V2\FieldId;
+use Google\Cloud\Dlp\V2\GetDlpJobRequest;
 use Google\Cloud\Dlp\V2\OutputStorageConfig;
+use Google\Cloud\Dlp\V2\PrivacyMetric;
+use Google\Cloud\Dlp\V2\PrivacyMetric\KAnonymityConfig;
+use Google\Cloud\Dlp\V2\RiskAnalysisJobConfig;
 
 /**
  * Computes the k-anonymity of a column set in a Google BigQuery table with entity id.
@@ -106,15 +108,18 @@ function k_anonymity_with_entity_id(
 
     // Submit request.
     $parent = "projects/$callingProjectId/locations/global";
-    $job = $dlp->createDlpJob($parent, [
-        'riskJob' => $riskJob
-    ]);
+    $createDlpJobRequest = (new CreateDlpJobRequest())
+        ->setParent($parent)
+        ->setRiskJob($riskJob);
+    $job = $dlp->createDlpJob($createDlpJobRequest);
 
     $numOfAttempts = 10;
     do {
         printf('Waiting for job to complete' . PHP_EOL);
         sleep(10);
-        $job = $dlp->getDlpJob($job->getName());
+        $getDlpJobRequest = (new GetDlpJobRequest())
+            ->setName($job->getName());
+        $job = $dlp->getDlpJob($getDlpJobRequest);
         if ($job->getState() == JobState::DONE) {
             break;
         }

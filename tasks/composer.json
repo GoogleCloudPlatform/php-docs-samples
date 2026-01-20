@@ -1,5 +1,5 @@
 {
     "require": {
-        "google/cloud-tasks": "^1.14"
+        "google/cloud-tasks": "^2.0"
     }
 }

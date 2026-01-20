@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,52 +24,69 @@
 namespace Google\Cloud\Samples\Speech;
 
 # [START speech_transcribe_streaming]
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
-use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\StreamingRecognizeRequest;
+use Google\Cloud\Speech\V2\RecognitionFeatures;
+use Google\Cloud\Speech\V2\AutoDetectDecodingConfig;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\StreamingRecognitionConfig;
 
 /**
- * @param string $audioFile path to an audio file
+ * @param string $projectId The Google Cloud project ID.
+ * @param string $location The location of the recognizer.
+ * @param string $recognizerId The ID of the recognizer to use.
+ * @param string $audioFile path to an audio file.
  */
-function streaming_recognize(string $audioFile)
+function streaming_recognize(string $projectId, string $location, string $recognizerId, string $audioFile)
 {
-    // change these variables if necessary
-    $encoding = AudioEncoding::LINEAR16;
-    $sampleRateHertz = 32000;
-    $languageCode = 'en-US';
+    // create the speech client
+    $apiEndpoint = $location === 'global' ? null : sprintf('%s-speech.googleapis.com', $location);
+    $speech = new SpeechClient(['apiEndpoint' => $apiEndpoint]);
 
-    $speechClient = new SpeechClient();
-    try {
-        $config = (new RecognitionConfig())
-            ->setEncoding($encoding)
-            ->setSampleRateHertz($sampleRateHertz)
-            ->setLanguageCode($languageCode);
+    $recognizerName = SpeechClient::recognizerName($projectId, $location, $recognizerId);
 
-        $strmConfig = new StreamingRecognitionConfig();
-        $strmConfig->setConfig($config);
+    // set streaming config
+    $features = new RecognitionFeatures([
+        'enable_automatic_punctuation' => true
+    ]);
+    $streamingConfig = (new StreamingRecognitionConfig())
+        ->setConfig(new RecognitionConfig([
+            // Can also use {@see Google\Cloud\Speech\V2\ExplicitDecodingConfig}
+            'auto_decoding_config' => new AutoDetectDecodingConfig(),
+            'features' => $features
+        ]));
+    $streamingRequest = (new StreamingRecognizeRequest())
+        ->setRecognizer($recognizerName)
+        ->setStreamingConfig($streamingConfig);
 
-        $strmReq = new StreamingRecognizeRequest();
-        $strmReq->setStreamingConfig($strmConfig);
+    // set the streaming request
+    $stream = $speech->streamingRecognize();
+    $stream->write($streamingRequest);
 
-        $strm = $speechClient->streamingRecognize();
-        $strm->write($strmReq);
+    // stream the audio file
+    $handle = fopen($audioFile, 'r');
+    while (!feof($handle)) {
+        $chunk = fread($handle, 4096);
+        $streamingRequest = (new StreamingRecognizeRequest())
+            ->setAudio($chunk);
+        $stream->write($streamingRequest);
+    }
+    fclose($handle);
 
-        $strmReq = new StreamingRecognizeRequest();
-        $content = file_get_contents($audioFile);
-        $strmReq->setAudioContent($content);
-        $strm->write($strmReq);
-
-        foreach ($strm->closeWriteAndReadAll() as $response) {
-            foreach ($response->getResults() as $result) {
-                foreach ($result->getAlternatives() as $alt) {
-                    printf("Transcription: %s\n", $alt->getTranscript());
-                }
-            }
+    // read the responses
+    foreach ($stream->closeWriteAndReadAll() as $response) {
+        // an empty response indicates the end of the stream
+        if (!$response->getResults()) {
+            continue;
         }
-    } finally {
-        $speechClient->close();
+
+        // process the results
+        foreach ($response->getResults() as $result) {
+            printf(
+                'Transcript: "%s"' . PHP_EOL,
+                $result->getAlternatives()[0]->getTranscript()
+            );
+        }
     }
 }
 # [END speech_transcribe_streaming]

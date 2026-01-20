@@ -20,11 +20,20 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\ResourceManager\V3\DeleteTagKeyRequest;
+use Google\Cloud\ResourceManager\V3\DeleteTagValueRequest;
+use Google\Cloud\ResourceManager\V3\Client\TagKeysClient;
+use Google\Cloud\ResourceManager\V3\CreateTagKeyRequest;
+use Google\Cloud\ResourceManager\V3\TagKey;
+use Google\Cloud\ResourceManager\V3\Client\TagValuesClient;
+use Google\Cloud\ResourceManager\V3\CreateTagValueRequest;
+use Google\Cloud\ResourceManager\V3\TagValue;
 use Google\Cloud\SecretManager\V1\AddSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
+use Google\Cloud\SecretManager\V1\GetSecretRequest;
 use Google\Cloud\SecretManager\V1\Secret;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
@@ -36,6 +45,9 @@ class regionalsecretmanagerTest extends TestCase
     use TestTrait;
 
     private static $client;
+    private static $tagKeyClient;
+    private static $tagValuesClient;
+
     private static $testSecret;
     private static $testSecretToDelete;
     private static $testSecretWithVersions;
@@ -44,14 +56,31 @@ class regionalsecretmanagerTest extends TestCase
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;
     private static $testSecretVersionToEnable;
+    private static $testSecretWithTagToCreateName;
+    private static $testSecretBindTagToCreateName;
+    private static $testSecretWithLabelsToCreateName;
+    private static $testSecretWithAnnotationsToCreateName;
+    private static $testSecretWithDelayedDestroyToCreateName;
 
     private static $iamUser = 'user:kapishsingh@google.com';
     private static $locationId = 'us-central1';
+    private static $testLabelKey = 'test-label-key';
+    private static $testLabelValue = 'test-label-value';
+    private static $testUpdatedLabelValue = 'test-label-new-value';
+    private static $testAnnotationKey = 'test-annotation-key';
+    private static $testAnnotationValue = 'test-annotation-value';
+    private static $testUpdatedAnnotationValue = 'test-annotation-new-value';
+    private static $testDelayedDestroyTime = 86400;
+
+    private static $testTagKey;
+    private static $testTagValue;
 
     public static function setUpBeforeClass(): void
     {
         $options = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com' ];
         self::$client = new SecretManagerServiceClient($options);
+        self::$tagKeyClient = new TagKeysClient();
+        self::$tagValuesClient = new TagValuesClient();
 
         self::$testSecret = self::createSecret();
         self::$testSecretToDelete = self::createSecret();
@@ -61,7 +90,15 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDisable = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToEnable = self::addSecretVersion(self::$testSecretWithVersions);
+        self::$testSecretWithTagToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretBindTagToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretWithLabelsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretWithAnnotationsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretWithDelayedDestroyToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::disableSecretVersion(self::$testSecretVersionToEnable);
+
+        self::$testTagKey = self::createTagKey(self::randomSecretId());
+        self::$testTagValue = self::createTagValue(self::randomSecretId());
     }
 
     public static function tearDownAfterClass(): void
@@ -73,6 +110,14 @@ class regionalsecretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretToDelete->getName());
         self::deleteSecret(self::$testSecretWithVersions->getName());
         self::deleteSecret(self::$testSecretToCreateName);
+        self::deleteSecret(self::$testSecretWithTagToCreateName);
+        self::deleteSecret(self::$testSecretBindTagToCreateName);
+        self::deleteSecret(self::$testSecretWithLabelsToCreateName);
+        self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
+        self::deleteSecret(self::$testSecretWithDelayedDestroyToCreateName);
+        sleep(15); // Added a sleep to wait for the tag unbinding
+        self::deleteTagValue();
+        self::deleteTagKey();
     }
 
     private static function randomSecretId(): string
@@ -119,6 +164,93 @@ class regionalsecretmanagerTest extends TestCase
             if ($e->getStatus() != 'NOT_FOUND') {
                 throw $e;
             }
+        }
+    }
+
+    private static function getSecret(string $projectId, string $locationId, string $secretId): Secret
+    {
+        $name = self::$client->projectLocationSecretName($projectId, $locationId, $secretId);
+        $getSecretRequest = (new GetSecretRequest())->setName($name);
+        return self::$client->getSecret($getSecretRequest);
+    }
+
+    private static function createTagKey(string $short_name): string
+    {
+        $parent = self::$client->projectName(self::$projectId);
+        $tagKey = (new TagKey())
+            ->setParent($parent)
+            ->setShortName($short_name);
+
+        $request = (new CreateTagKeyRequest())
+            ->setTagKey($tagKey);
+
+        $operation = self::$tagKeyClient->createTagKey($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            $createdTagKey = $operation->getResult();
+            printf("Tag key created: %s\n", $createdTagKey->getName());
+            return $createdTagKey->getName();
+        } else {
+            $error = $operation->getError();
+            printf("Error creating tag key: %s\n", $error->getMessage());
+            return '';
+        }
+    }
+
+    private static function createTagValue(string $short_name): string
+    {
+        $tagValuesClient = new TagValuesClient();
+        $tagValue = (new TagValue())
+            ->setParent(self::$testTagKey)
+            ->setShortName($short_name);
+
+        $request = (new CreateTagValueRequest())
+            ->setTagValue($tagValue);
+
+        $operation = self::$tagValuesClient->createTagValue($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            $createdTagValue = $operation->getResult();
+            printf("Tag value created: %s\n", $createdTagValue->getName());
+            return $createdTagValue->getName();
+        } else {
+            $error = $operation->getError();
+            printf("Error creating tag value: %s\n", $error->getMessage());
+            return '';
+        }
+    }
+
+    private static function deleteTagKey()
+    {
+        $request = (new DeleteTagKeyRequest())
+            ->setName(self::$testTagKey);
+
+        $operation = self::$tagKeyClient->deleteTagKey($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            printf("Tag key deleted: %s\n", self::$testTagValue);
+        } else {
+            $error = $operation->getError();
+            printf("Error deleting tag key: %s\n", $error->getMessage());
+        }
+    }
+
+    private static function deleteTagValue()
+    {
+        $request = (new DeleteTagValueRequest())
+            ->setName(self::$testTagValue);
+
+        $operation = self::$tagValuesClient->deleteTagValue($request);
+        $operation->pollUntilComplete();
+
+        if ($operation->operationSucceeded()) {
+            printf("Tag value deleted: %s\n", self::$testTagValue);
+        } else {
+            $error = $operation->getError();
+            printf("Error deleting tag value: %s\n", $error->getMessage());
         }
     }
 
@@ -323,5 +455,198 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testCreateSecretWithTags()
+    {
+        $name = self::$client->parseName(self::$testSecretWithTagToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_tags', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testTagKey,
+            self::$testTagValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testBindTagsToSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('bind_tags_to_regional_secret', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testTagValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+        $this->assertStringContainsString('Tag binding created for secret', $output);
+    }
+
+    public function testCreateSecretWithLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testLabelValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testViewSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_regional_secret_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testViewSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('view_regional_secret_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Get secret', $output);
+    }
+
+    public function testEditSecretLabels()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_regional_secret_labels', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey,
+            self::$testUpdatedLabelValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testEditSecretAnnotations()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('edit_regional_secret_annotations', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey,
+            self::$testUpdatedAnnotationValue
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretLabel()
+    {
+        $name = self::$client->parseName(self::$testSecretWithLabelsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_regional_secret_label', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testLabelKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretAnnotation()
+    {
+        $name = self::$client->parseName(self::$testSecretWithAnnotationsToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_regional_secret_annotation', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testAnnotationKey
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testCreateSecretWithDelayedDestroyed()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_delayed_destroy', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testDelayedDestroyTime
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
+    }
+
+    public function testDisableSecretDelayedDestroy()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('disable_regional_secret_delayed_destroy', [
+            $name['project'],
+            $name['location'],
+            $name['secret']
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertNull($secret->getVersionDestroyTtl());
+    }
+
+    public function testUpdateSecretWithDelayedDestroyed()
+    {
+        $name = self::$client->parseName(self::$testSecretWithDelayedDestroyToCreateName);
+
+        $output = $this->runFunctionSnippet('update_regional_secret_with_delayed_destroy', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testDelayedDestroyTime
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
     }
 }

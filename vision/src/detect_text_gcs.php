@@ -18,7 +18,7 @@
 // [START vision_text_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
 
 /**
  * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"

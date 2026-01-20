@@ -19,8 +19,9 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_create_service]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
-use Google\Cloud\ServiceDirectory\V1beta1\Service;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\CreateServiceRequest;
+use Google\Cloud\ServiceDirectory\V1\Service;
 
 /**
  * @param string $projectId Your Cloud project ID
@@ -39,7 +40,11 @@ function create_service(
 
     // Run request.
     $namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
-    $service = $client->createService($namespaceName, $serviceId, new Service());
+    $createServiceRequest = (new CreateServiceRequest())
+        ->setParent($namespaceName)
+        ->setServiceId($serviceId)
+        ->setService(new Service());
+    $service = $client->createService($createServiceRequest);
 
     // Print results.
     printf('Created Service: %s' . PHP_EOL, $service->getName());
