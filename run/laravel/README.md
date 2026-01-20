@@ -150,7 +150,7 @@ export ASSET_BUCKET=${PROJECT_ID}-static
 * Create a Cloud Storage bucket:
 
     ```bash
-    gsutil mb gs://${ASSET_BUCKET}
+    gcloud storage buckets create gs://${ASSET_BUCKET}
     ```
 
 ### Setup Artifact Registry
@@ -257,7 +257,7 @@ The configuration is similar to the deployment to Cloud Run, requiring the datab
 
 ### Upload static assets
 
-Using the custom `npm` command, you can use `vite` to compile and `gsutil` to copy the assets from your application to Cloud Storage.
+Using the custom `npm` command, you can use `vite` to compile and `gcloud storage` to copy the assets from your application to Cloud Storage.
 
 * Upload static assets:
 
@@ -269,7 +269,7 @@ Using the custom `npm` command, you can use `vite` to compile and `gsutil` to co
 
 * Confirm the output of this operation
 
-   * You should see vite returning "N modules transformed", and gsutil returning "Operation completed over N objects"
+   * You should see vite returning "N modules transformed", and gcloud storage returning "Operation completed over N objects"
 
 ### Deploy the service to Cloud Run
 

@@ -19,8 +19,9 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_create_namespace]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
-use Google\Cloud\ServiceDirectory\V1beta1\PBNamespace;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\CreateNamespaceRequest;
+use Google\Cloud\ServiceDirectory\V1\PBNamespace;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -37,7 +38,11 @@ function create_namespace(
 
     // Run request.
     $locationName = RegistrationServiceClient::locationName($projectId, $locationId);
-    $namespace = $client->createNamespace($locationName, $namespaceId, new PBNamespace());
+    $createNamespaceRequest = (new CreateNamespaceRequest())
+        ->setParent($locationName)
+        ->setNamespaceId($namespaceId)
+        ->setNamespace(new PBNamespace());
+    $namespace = $client->createNamespace($createNamespaceRequest);
 
     // Print results.
     printf('Created Namespace: %s' . PHP_EOL, $namespace->getName());

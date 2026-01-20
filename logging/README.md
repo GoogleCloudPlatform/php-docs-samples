@@ -21,7 +21,7 @@ $ php src/list_entries.php your-project-id 'your-logger-name'
 
 To use logging sinks, you will also need a Google Cloud Storage Bucket.
 
-    gsutil mb gs://[YOUR_PROJECT_ID]
+    gcloud storage buckets create gs://[YOUR_PROJECT_ID]
 
 You must add Cloud Logging as an owner to the bucket. To do so, add
 `cloud-logs@google.com` as an owner to the bucket. See the

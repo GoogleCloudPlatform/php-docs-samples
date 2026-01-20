@@ -1,20 +1,30 @@
 {
   "extends": [
-    "config:base",
+    "config:recommended",
     ":preserveSemverRanges"
   ],
-  "packageRules": [{
-      "paths": ["testing/composer.json"],
-      "excludePackageNames": ["phpunit/phpunit"]
-    }, {
-      "matchPaths": ["functions/**"],
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "testing/composer.json"
+      ],
+      "matchPackageNames": [
+        "!phpunit/phpunit"
+      ]
+    },
+    {
+      "matchFileNames": [
+        "functions/**"
+      ],
       "branchPrefix": "renovate/functions-"
-    }],
-  "ignorePaths": [
-      "appengine/flexible/",
-      "run/laravel/"
+    }
   ],
-  "branchPrefix": "renovate/{{parentDir}}-",
-  "prConcurrentLimit": 10,
+  "ignorePaths": [
+    "appengine/flexible/",
+    "run/laravel/"
+  ],
+  "branchPrefix": "renovate/",
+  "additionalBranchPrefix": "{{parentDir}}-",
+  "prConcurrentLimit": 20,
   "dependencyDashboard": true
 }

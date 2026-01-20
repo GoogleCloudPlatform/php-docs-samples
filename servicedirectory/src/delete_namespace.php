@@ -19,7 +19,8 @@
 namespace Google\Cloud\Samples\ServiceDirectory;
 
 // [START servicedirectory_delete_namespace]
-use Google\Cloud\ServiceDirectory\V1beta1\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\Client\RegistrationServiceClient;
+use Google\Cloud\ServiceDirectory\V1\DeleteNamespaceRequest;
 
 /**
  * @param string $projectId     Your Cloud project ID
@@ -36,7 +37,9 @@ function delete_namespace(
 
     // Run request.
     $namespaceName = RegistrationServiceClient::namespaceName($projectId, $locationId, $namespaceId);
-    $client->deleteNamespace($namespaceName);
+    $deleteNamespaceRequest = (new DeleteNamespaceRequest())
+        ->setName($namespaceName);
+    $client->deleteNamespace($deleteNamespaceRequest);
 
     // Print results.
     printf('Deleted Namespace: %s' . PHP_EOL, $namespaceName);
