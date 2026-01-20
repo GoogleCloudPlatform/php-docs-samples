@@ -37,7 +37,7 @@ function data_batch_writes(string $projectId): void
         'projectId' => $projectId,
     ]);
     # [START firestore_data_batch_writes]
-    $batch = $db->batch();
+    $batch = $db->bulkWriter();
 
     # Set the data for NYC
     $nycRef = $db->collection('samples/php/cities')->document('NYC');

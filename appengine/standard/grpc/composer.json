@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-spanner": "^1.15.0",
+        "google/cloud-spanner": "^2.0.0",
         "google/cloud-monitoring": "^2.0.0",
         "google/cloud-speech": "^2.0.0"
     },
