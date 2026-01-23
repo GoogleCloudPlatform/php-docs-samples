@@ -31,23 +31,25 @@ use Google\Cloud\PubSub\Topic;
  *
  * @param string $projectId
  * @param string $topicId
- * @param string $functionName
- * @param string $functionCode
  */
 function create_topic_with_smt(
     string $projectId,
-    string $topicId,
-    string $functionName,
-    string $functionCode
+    string $topicId
 ) {
     $pubsub = new PubSubClient([
         'projectId' => $projectId
     ]);
 
+    $functionName = 'toUpper';
+    $code = 'function toUpper(message, metadata){
+        message.data = message.data.toUpperCase();
+        return message;
+    }';
+
     $smtConfig = [
         'javascriptUdf' => [
             'functionName' => $functionName,
-            'code' => $functionCode
+            'code' => $code
         ]
     ];
 

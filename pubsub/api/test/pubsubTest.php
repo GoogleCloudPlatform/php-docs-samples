@@ -162,12 +162,9 @@ class PubSubTest extends TestCase
     public function testCreateAndDeleteTopicWithSMT()
     {
         $topic = 'test-topic-smt-' . rand();
-        [$functionName, $functionCode] = $this->getSmtFunction();
         $output = $this->runFunctionSnippet('create_topic_with_smt', [
             self::$projectId,
             $topic,
-            $functionName,
-            $functionCode
         ]);
 
         $this->assertMatchesRegularExpression('/Topic with SMT/', $output);
@@ -261,13 +258,10 @@ class PubSubTest extends TestCase
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
         $subscription = 'test-subscription-' . rand();
-        [$functionName, $functionCode] = $this->getSmtFunction();
         $output = $this->runFunctionSnippet('create_subscription_with_SMT', [
             self::$projectId,
             $topic,
-            $subscription,
-            $functionName,
-            $functionCode
+            $subscription
         ]);
 
         $this->assertMatchesRegularExpression('/Subscription with SMT/', $output);
@@ -796,16 +790,5 @@ class PubSubTest extends TestCase
         ]);
         $this->assertMatchesRegularExpression('/Topic deleted:/', $output);
         $this->assertMatchesRegularExpression(sprintf('/%s/', $topic), $output);
-    }
-
-    private function getSmtFunction(): array
-    {
-        $functionName = 'toUpper';
-        $code = 'function toUpper(message, metadata){
-            message.data = message.data.toUpperCase();
-            return message;
-        }';
-
-        return [$functionName, $code];
     }
 }
