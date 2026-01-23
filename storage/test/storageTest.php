@@ -147,6 +147,13 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Bucket:', $output);
     }
 
+    public function testListBucketsPartialSuccess()
+    {
+        $output = $this->runFunctionSnippet('list_buckets_partial_success');
+        $this->assertStringContainsString('Bucket:', $output);
+        $this->assertTrue(true);
+    }
+
     public function testListSoftDeletedBuckets()
     {
         $output = $this->runFunctionSnippet('list_soft_deleted_buckets');
