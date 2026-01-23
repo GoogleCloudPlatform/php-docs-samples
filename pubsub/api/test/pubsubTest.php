@@ -282,7 +282,6 @@ class PubSubTest extends TestCase
         $this->assertMatchesRegularExpression(sprintf('/%s/', $subscription), $output);
     }
 
-
     public function testCreateAndDeleteSubscriptionWithFilter()
     {
         $topic = $this->requireEnv('GOOGLE_PUBSUB_TOPIC');
