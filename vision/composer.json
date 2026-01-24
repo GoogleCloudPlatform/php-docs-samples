@@ -2,7 +2,7 @@
     "name": "google/vision",
     "type": "project",
     "require": {
-        "google/cloud-vision": "^1.7",
+        "google/cloud-vision": "^2.0",
         "google/cloud-storage": "^1.20.1"
     }
 }
