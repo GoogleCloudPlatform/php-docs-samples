@@ -71,8 +71,10 @@ function dml_batch_update_request_priority(string $instanceId, string $databaseI
         ], array('priority' => $priority));
         $t->commit();
         $rowCounts = count($result->rowCounts());
-        printf('Executed %s SQL statements using Batch DML with PRIORITY_LOW.' . PHP_EOL,
-            $rowCounts);
+        printf(
+            'Executed %s SQL statements using Batch DML with PRIORITY_LOW.' . PHP_EOL,
+            $rowCounts
+        );
     });
 }
 // [END spanner_dml_batch_update_request_priority]

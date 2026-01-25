@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Endpoints;
+namespace Google\Cloud\Samples\Endpoints\Test;
 
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;

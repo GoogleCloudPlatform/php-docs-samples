@@ -45,7 +45,12 @@ function read_data_with_database_role(string $instanceId, string $databaseId): v
     $results = $database->execute('SELECT * FROM Singers');
 
     foreach ($results as $row) {
-        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['SingerId'], $row['FirstName'], $row['LastName']);
+        printf(
+            'SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['FirstName'],
+            $row['LastName']
+        );
     }
 }
 // [END spanner_read_data_with_database_role]

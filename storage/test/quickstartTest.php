@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Storage\Test;
+
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;

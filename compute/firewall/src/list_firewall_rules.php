@@ -45,7 +45,12 @@ function list_firewall_rules(string $projectId)
 
     print('--- Firewall Rules ---' . PHP_EOL);
     foreach ($firewallList->iterateAllElements() as $firewall) {
-        printf(' -  %s : %s : %s' . PHP_EOL, $firewall->getName(), $firewall->getDescription(), $firewall->getNetwork());
+        printf(
+            ' -  %s : %s : %s' . PHP_EOL,
+            $firewall->getName(),
+            $firewall->getDescription(),
+            $firewall->getNetwork()
+        );
     }
 }
 # [END compute_firewall_list]

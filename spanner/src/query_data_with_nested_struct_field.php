@@ -77,8 +77,11 @@ function query_data_with_nested_struct_field(string $instanceId, string $databas
         ]
     );
     foreach ($results as $row) {
-        printf('SingerId: %s SongName: %s' . PHP_EOL,
-            $row['SingerId'], $row['SongName']);
+        printf(
+            'SingerId: %s SongName: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['SongName']
+        );
     }
 }
 // [END spanner_field_access_on_nested_struct_parameters]

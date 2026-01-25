@@ -47,7 +47,8 @@ function transaction_document_update(string $projectId): void
         ]);
     });
     # [END firestore_transaction_document_update]
-    printf('Ran a simple transaction to update the population field in the SF document in the cities collection.' . PHP_EOL);
+    print('Ran a simple transaction to update the population field in the SF document in the cities collection.');
+    print(PHP_EOF);
 }
 
 // The following 2 lines are only needed to run the samples

@@ -50,8 +50,12 @@ function read_data(string $instanceId, string $databaseId): void
     );
 
     foreach ($results->rows() as $row) {
-        printf('SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
+        printf(
+            'SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['AlbumTitle']
+        );
     }
 }
 // [END spanner_read_data]

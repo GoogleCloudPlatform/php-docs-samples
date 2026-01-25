@@ -51,8 +51,12 @@ function read_only_transaction(string $instanceId, string $databaseId): void
     );
     print('Results from the first read:' . PHP_EOL);
     foreach ($results as $row) {
-        printf('SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
+        printf(
+            'SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['AlbumTitle']
+        );
     }
 
     // Perform another read using the `read` method. Even if the data
@@ -67,8 +71,12 @@ function read_only_transaction(string $instanceId, string $databaseId): void
 
     print('Results from the second read:' . PHP_EOL);
     foreach ($results->rows() as $row) {
-        printf('SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
+        printf(
+            'SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['AlbumTitle']
+        );
     }
 }
 // [END spanner_read_only_transaction]

@@ -38,7 +38,8 @@ function auth_http_implicit($projectId)
     # Get the credentials and project ID from the environment using Google Auth
     # library's ApplicationDefaultCredentials class.
     $middleware = ApplicationDefaultCredentials::getMiddleware(
-        'https://www.googleapis.com/auth/cloud-platform');
+        'https://www.googleapis.com/auth/cloud-platform'
+    );
     $stack = HandlerStack::create();
     $stack->push($middleware);
 

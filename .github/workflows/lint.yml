@@ -6,7 +6,8 @@ on:
   pull_request:
 
 jobs:
-  styles:
+  php_cs_fixer:
+    name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -18,7 +19,26 @@ jobs:
     - name: Run Script
       run: testing/run_cs_check.sh
 
-  staticanalysis:
+  php_code_sniffer:
+    name: PHP Code Sniffer
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+    - name: Install Dependencies
+      uses: nick-invision/retry@v2
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: composer global require squizlabs/php_codesniffer
+    - name: Run PHPCS Code Style Checker
+      run: ~/.composer/vendor/bin/phpcs --standard=phpcs-ruleset.xml -p -s
+
+  phpstan_static_analysis:
+    name: PHPStan Static Analysis
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6

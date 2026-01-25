@@ -54,7 +54,8 @@ function filter_composing_chain(
     ]);
 
     foreach ($rows as $key => $row) {
-        // The "print_row" helper function is defined in https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
+        // The "print_row" helper function is defined in
+        // https://cloud.google.com/bigtable/docs/samples/bigtable-reads-print
         print_row($key, $row);
     }
 }

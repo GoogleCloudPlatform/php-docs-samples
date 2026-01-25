@@ -49,7 +49,8 @@ function write_read_with_dml(string $instanceId, string $databaseId): void
     $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
             'INSERT Singers (SingerId, FirstName, LastName) '
-            . " VALUES (11, 'Timothy', 'Campbell')");
+            . " VALUES (11, 'Timothy', 'Campbell')"
+        );
 
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
 

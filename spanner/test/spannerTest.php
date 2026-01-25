@@ -191,7 +191,10 @@ class spannerTest extends TestCase
             self::$projectId, self::$customInstanceConfigId, self::$baseConfigId
         ]);
 
-        $this->assertStringContainsString(sprintf('Created instance configuration %s', self::$customInstanceConfigId), $output);
+        $this->assertStringContainsString(
+            sprintf('Created instance configuration %s', self::$customInstanceConfigId),
+            $output
+        );
     }
 
     public function testCreateInstanceWithAutoscalingConfig()
@@ -215,7 +218,10 @@ class spannerTest extends TestCase
             self::$customInstanceConfigId
         ]);
 
-        $this->assertStringContainsString(sprintf('Updated instance configuration %s', self::$customInstanceConfigId), $output);
+        $this->assertStringContainsString(
+            sprintf('Updated instance configuration %s', self::$customInstanceConfigId),
+            $output
+        );
     }
 
     /**
@@ -227,7 +233,10 @@ class spannerTest extends TestCase
             self::$projectId,
             self::$customInstanceConfigId
         ]);
-        $this->assertStringContainsString(sprintf('Deleted instance configuration %s', self::$customInstanceConfigId), $output);
+        $this->assertStringContainsString(
+            sprintf('Deleted instance configuration %s', self::$customInstanceConfigId),
+            $output
+        );
     }
 
     /**
@@ -246,7 +255,8 @@ class spannerTest extends TestCase
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata'
             ),
-            $output);
+            $output
+        );
 
         $this->assertStringContainsString(
             sprintf(
@@ -255,7 +265,8 @@ class spannerTest extends TestCase
                 self::$customInstanceConfigId,
                 'type.googleapis.com/google.spanner.admin.instance.v1.UpdateInstanceConfigMetadata'
             ),
-            $output);
+            $output
+        );
     }
 
     public function testCreateInstancePartition()
@@ -478,7 +489,10 @@ class spannerTest extends TestCase
     {
         $this->runFunctionSnippet('update_data');
         $output = $this->runFunctionSnippet('read_write_transaction');
-        $this->assertStringContainsString('Setting first album\'s budget to 300000 and the second album\'s budget to 300000', $output);
+        $this->assertStringContainsString(
+            'Setting first album\'s budget to 300000 and the second album\'s budget to 300000',
+            $output
+        );
         $this->assertStringContainsString('Transaction complete.', $output);
     }
 
@@ -614,12 +628,12 @@ class spannerTest extends TestCase
      */
     public function testQueryDataTimestamp()
     {
-        $output = $this->runFunctionSnippet('query_data_with_timestamp_column');
-        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, MarketingBudget: 1000000, LastUpdateTime: 20', $output);
-        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, MarketingBudget: 750000, LastUpdateTime: 20', $output);
-        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
-        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
-        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $output);
+        $o = $this->runFunctionSnippet('query_data_with_timestamp_column');
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 1, MarketingBudget: 1000000, LastUpdateTime: 20', $o);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 2, MarketingBudget: 750000, LastUpdateTime: 20', $o);
+        $this->assertStringContainsString('SingerId: 1, AlbumId: 2, MarketingBudget: NULL, LastUpdateTime: NULL', $o);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 1, MarketingBudget: NULL, LastUpdateTime: NULL', $o);
+        $this->assertStringContainsString('SingerId: 2, AlbumId: 3, MarketingBudget: NULL, LastUpdateTime: NULL', $o);
     }
 
     /**

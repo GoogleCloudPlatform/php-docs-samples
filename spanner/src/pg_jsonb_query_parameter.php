@@ -54,7 +54,8 @@ function pg_jsonb_query_parameter(
         'types' => [
             'p1' => Database::TYPE_INT64
         ]
-    ]);
+        ]
+    );
 
     foreach ($results as $row) {
         printf('VenueId: %s, VenueDetails: %s' . PHP_EOL, $row['venueid'], $row['venuedetails']);

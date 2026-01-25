@@ -112,7 +112,8 @@ class translateTest extends TestCase
         $option2 = 'Pozdrav svijetu';
         $option3 = 'Zdravo svijete';
         $option4 = 'Здраво Свете';
-        $this->assertThat($output,
+        $this->assertThat(
+            $output,
             $this->logicalOr(
                 $this->stringContains($option1),
                 $this->stringContains($option2),
@@ -179,7 +180,8 @@ class translateTest extends TestCase
         );
         $option1 = 'アカウント';
         $option2 = '口座';
-        $this->assertThat($output,
+        $this->assertThat(
+            $output,
             $this->logicalOr(
                 $this->stringContains($option1),
                 $this->stringContains($option2)

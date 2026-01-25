@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\PubSub\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase

@@ -39,11 +39,13 @@ function get_bucket_autoclass(string $bucketName): void
     $info = $bucket->info();
 
     if (isset($info['autoclass'])) {
-        printf('Bucket %s has autoclass enabled: %s' . PHP_EOL,
+        printf(
+            'Bucket %s has autoclass enabled: %s' . PHP_EOL,
             $bucketName,
             $info['autoclass']['enabled']
         );
-        printf('Bucket %s has autoclass toggle time: %s' . PHP_EOL,
+        printf(
+            'Bucket %s has autoclass toggle time: %s' . PHP_EOL,
             $bucketName,
             $info['autoclass']['toggleTime']
         );

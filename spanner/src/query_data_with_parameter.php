@@ -49,8 +49,12 @@ function query_data_with_parameter(string $instanceId, string $databaseId): void
     );
 
     foreach ($results as $row) {
-        printf('SingerId: %s, FirstName: %s, LastName: %s' . PHP_EOL,
-            $row['SingerId'], $row['FirstName'], $row['LastName']);
+        printf(
+            'SingerId: %s, FirstName: %s, LastName: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['FirstName'],
+            $row['LastName']
+        );
     }
 }
 // [END spanner_query_with_parameter]

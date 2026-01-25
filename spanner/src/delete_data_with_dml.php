@@ -41,7 +41,8 @@ function delete_data_with_dml(string $instanceId, string $databaseId): void
 
     $database->runTransaction(function (Transaction $t) {
         $rowCount = $t->executeUpdate(
-            "DELETE FROM Singers WHERE FirstName = 'Alice'");
+            "DELETE FROM Singers WHERE FirstName = 'Alice'"
+        );
         $t->commit();
         printf('Deleted %d row(s).' . PHP_EOL, $rowCount);
     });

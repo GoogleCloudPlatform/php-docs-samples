@@ -54,7 +54,8 @@ function update_data_with_dml(string $instanceId, string $databaseId): void
         $rowCount = $t->executeUpdate(
             'UPDATE Albums '
             . 'SET MarketingBudget = MarketingBudget * 2 '
-            . 'WHERE SingerId = 1 and AlbumId = 1');
+            . 'WHERE SingerId = 1 and AlbumId = 1'
+        );
         $t->commit();
         printf('Updated %d row(s).' . PHP_EOL, $rowCount);
     });

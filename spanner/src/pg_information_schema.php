@@ -74,7 +74,8 @@ function pg_information_schema(string $projectId, string $instanceId, string $da
             user_defined_type_name
         FROM INFORMATION_SCHEMA.tables
         WHERE table_schema=\'public\'
-        ');
+        '
+    );
 
     printf('Details fetched.' . PHP_EOL);
     foreach ($results as $row) {

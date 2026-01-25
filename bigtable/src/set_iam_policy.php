@@ -36,7 +36,8 @@ use Google\Cloud\Iam\V1\SetIamPolicyRequest;
  * @param string $projectId The Google Cloud project ID
  * @param string $instanceId The ID of the Bigtable instance
  * @param string $email The email of the member to be assigned the role(Format: 'user:EMAIL_ID')
- * @param string $role The role to be assigned. For a list of roles check out https://cloud.google.com/bigtable/docs/access-control
+ * @param string $role The role to be assigned. For a list of roles check out
+ *                     https://cloud.google.com/bigtable/docs/access-control
  */
 function set_iam_policy(
     string $projectId,

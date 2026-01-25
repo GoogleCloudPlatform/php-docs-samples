@@ -81,7 +81,8 @@ function create_backup(
         basename($info->getName()),
         $info->getSizeBytes(),
         $info->getCreateTime()->getSeconds(),
-        $info->getVersionTime()->getSeconds());
+        $info->getVersionTime()->getSeconds()
+    );
 }
 // [END spanner_create_backup]
 

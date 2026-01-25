@@ -57,9 +57,11 @@ function analyze_text_detection_file(string $path, int $pollingIntervalSeconds =
             foreach ($text->getSegments() as $segment) {
                 $start = $segment->getSegment()->getStartTimeOffset();
                 $end = $segment->getSegment()->getEndTimeOffset();
-                printf('  Segment: %ss to %ss' . PHP_EOL,
+                printf(
+                    '  Segment: %ss to %ss' . PHP_EOL,
                     $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                    $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                    $end->getSeconds() + $end->getNanos() / 1000000000.0
+                );
                 printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
             }
         }
