@@ -59,6 +59,9 @@ class secretmanagerTest extends TestCase
     private static $testSecretVersionToDestroy;
     private static $testSecretVersionToDisable;
     private static $testSecretVersionToEnable;
+    private static $testSecretVersionToDestroyWithETag;
+    private static $testSecretVersionToDisableWithETag;
+    private static $testSecretVersionToEnableWithETag;
     private static $testSecretWithTagToCreateName;
     private static $testSecretBindTagToCreateName;
     private static $testSecretWithLabelsToCreateName;
@@ -99,6 +102,11 @@ class secretmanagerTest extends TestCase
         self::$testSecretVersionToDisable = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToEnable = self::addSecretVersion(self::$testSecretWithVersions);
         self::disableSecretVersion(self::$testSecretVersionToEnable);
+
+        self::$testSecretVersionToDestroyWithETag = self::addSecretVersion(self::$testSecretWithVersions);
+        self::$testSecretVersionToDisableWithETag = self::addSecretVersion(self::$testSecretWithVersions);
+        self::$testSecretVersionToEnableWithETag = self::addSecretVersion(self::$testSecretWithVersions);
+        self::disableSecretVersion(self::$testSecretVersionToEnableWithETag);
 
         self::$testTagKey = self::createTagKey(self::randomSecretId());
         self::$testTagValue = self::createTagValue(self::randomSecretId());
@@ -310,6 +318,20 @@ class secretmanagerTest extends TestCase
         $this->assertStringContainsString('Created secret', $output);
     }
 
+    public function testDeleteSecretUsingEtag()
+    {
+        // Create a fresh secret to delete with etag.
+        $secret = self::createSecret();
+        $name = self::$client->parseName($secret->getName());
+
+        $output = $this->runFunctionSnippet('delete_secret_using_etag', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Deleted secret', $output);
+    }
+
     public function testDeleteSecret()
     {
         $name = self::$client->parseName(self::$testSecretToDelete->getName());
@@ -320,6 +342,19 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Deleted secret', $output);
+    }
+
+    public function testDestroySecretVersionUsingEtag()
+    {
+        $name = self::$client->parseName(self::$testSecretVersionToDestroyWithETag->getName());
+
+        $output = $this->runFunctionSnippet('destroy_secret_version_using_etag', [
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
+        ]);
+
+        $this->assertStringContainsString('Destroyed secret version', $output);
     }
 
     public function testDestroySecretVersion()
@@ -335,6 +370,19 @@ class secretmanagerTest extends TestCase
         $this->assertStringContainsString('Destroyed secret version', $output);
     }
 
+    public function testDisableSecretVersionUsingEtag()
+    {
+        $name = self::$client->parseName(self::$testSecretVersionToDisableWithETag->getName());
+
+        $output = $this->runFunctionSnippet('disable_secret_version_using_etag', [
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
+        ]);
+
+        $this->assertStringContainsString('Disabled secret version', $output);
+    }
+
     public function testDisableSecretVersion()
     {
         $name = self::$client->parseName(self::$testSecretVersionToDisable->getName());
@@ -346,6 +394,19 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Disabled secret version', $output);
+    }
+
+    public function testEnableSecretVersionUsingEtag()
+    {
+        $name = self::$client->parseName(self::$testSecretVersionToEnableWithETag->getName());
+
+        $output = $this->runFunctionSnippet('enable_secret_version_using_etag', [
+            $name['project'],
+            $name['secret'],
+            $name['secret_version'],
+        ]);
+
+        $this->assertStringContainsString('Enabled secret version', $output);
     }
 
     public function testEnableSecretVersion()
@@ -466,6 +527,20 @@ class secretmanagerTest extends TestCase
 
         $this->assertStringContainsString('secret', $output);
         $this->assertStringContainsString($name['secret'], $output);
+    }
+
+    public function testUpdateSecretUsingEtag()
+    {
+        $name = self::$client->parseName(self::$testSecret->getName());
+
+        $output = $this->runFunctionSnippet('update_secret_using_etag', [
+            $name['project'],
+            $name['secret'],
+            'etaglabel',
+            'etagvalue',
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
     }
 
     public function testUpdateSecret()
