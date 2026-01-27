@@ -405,6 +405,23 @@ class regionalsecretmanagerTest extends TestCase
         $this->assertStringContainsString('Updated IAM policy', $output);
     }
 
+    public function testListSecretVersionsWithFilter()
+    {
+        $name = self::$client->parseName(self::$testSecretWithVersions->getName());
+
+        // Filter for enabled versions.
+        $filter = 'state = ENABLED';
+
+        $output = $this->runFunctionSnippet('list_regional_secret_versions_with_filter', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            $filter,
+        ]);
+
+        $this->assertStringContainsString('Found secret version', $output);
+    }
+
     public function testListSecretVersions()
     {
         $name = self::$client->parseName(self::$testSecretWithVersions->getName());
@@ -416,6 +433,21 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('secret version', $output);
+    }
+
+    public function testListSecretsWithFilter()
+    {
+        $name = self::$client->parseName(self::$testSecret->getName());
+
+        $filter = 'name:' . $name['secret'];
+
+        $output = $this->runFunctionSnippet('list_regional_secrets_with_filter', [
+            $name['project'],
+            $name['location'],
+            $filter,
+        ]);
+
+        $this->assertStringContainsString('Found secret', $output);
     }
 
     public function testListSecrets()
