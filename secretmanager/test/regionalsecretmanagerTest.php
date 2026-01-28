@@ -64,6 +64,7 @@ class regionalsecretmanagerTest extends TestCase
     private static $testSecretWithLabelsToCreateName;
     private static $testSecretWithAnnotationsToCreateName;
     private static $testSecretWithDelayedDestroyToCreateName;
+    private static $testSecretWithExpirationToCreateName;
 
     private static $iamUser = 'user:kapishsingh@google.com';
     private static $locationId = 'us-central1';
@@ -94,7 +95,8 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecretWithLabelsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretWithAnnotationsToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretWithDelayedDestroyToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
-        
+        self::$testSecretWithExpirationToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDisable = self::addSecretVersion(self::$testSecretWithVersions);
@@ -123,6 +125,7 @@ class regionalsecretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithLabelsToCreateName);
         self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
         self::deleteSecret(self::$testSecretWithDelayedDestroyToCreateName);
+        self::deleteSecret(self::$testSecretWithExpirationToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -759,5 +762,44 @@ class regionalsecretmanagerTest extends TestCase
         $this->assertStringContainsString('Updated secret', $output);
         $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
         $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
+    }
+
+    public function testCreateSecretWithExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_expiration', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testUpdateSecretWithExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('update_regional_secret_with_expiration', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_regional_secret_expiration', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
     }
 }
