@@ -37,7 +37,7 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
  * @param string $projectId Google Cloud project id (e.g. 'my-project-id')
  * @param string $locationId Secret location (e.g. 'us-central1')
  * @param string $secretId Id for the new secret (e.g. 'my-secret-id')
- * @param string $kmsKeyName Full KMS key resource name (e.g. 'projects/my-project/locations/global/keyRings/my-kr/cryptoKeys/my-key')
+ * @param string $kmsKeyName Full KMS key resource name (e.g. 'projects/my-project/locations/us-central1/keyRings/my-kr/cryptoKeys/my-key')
  */
 function create_regional_secret_with_cmek(string $projectId, string $locationId, string $secretId, string $kmsKeyName): void
 {

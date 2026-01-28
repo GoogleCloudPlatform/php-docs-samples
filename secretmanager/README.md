@@ -19,8 +19,8 @@ This simple command-line application demonstrates how to invoke
     Set the following environment variables:
 
     - GOOGLE_CLOUD_PUBSUB_TOPIC - Full name of topic (projects/{project}/topics/{topic}).
-    -  GOOGLE_CLOUD_KMS_KEY - Full name of global KMS key (projects/{project}/locations/global/keyRings/{keyring}/cryptoKeys/{key}).
-    -  GOOGLE_CLOUD_REGIONAL_KMS_KEY - Full name of regional KMS key (projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}).
+    - GOOGLE_CLOUD_KMS_KEY - Full name of global KMS key (projects/{project}/locations/global/keyRings/{keyring}/cryptoKeys/{key}).
+    - GOOGLE_CLOUD_REGIONAL_KMS_KEY - Full name of regional KMS key (projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}).
 
 1.  **Download The Credentials** - Click "Go to credentials" after enabling the
     APIs. Click "New Credentials" and select "Service Account Key". Create a new

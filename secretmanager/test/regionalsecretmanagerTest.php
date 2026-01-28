@@ -825,8 +825,8 @@ class regionalsecretmanagerTest extends TestCase
     {
         $kmsKey = getenv('GOOGLE_CLOUD_REGIONAL_KMS_KEY');
         if ($kmsKey === false || $kmsKey === '') {
-            $this->markTestSkipped('GOOGLE_CLOUD_KMS_KEY not set');
-            printf('Skipping testCreateSecretWithTopic dependent on GOOGLE_CLOUD_KMS_KEY%s', PHP_EOL);
+            $this->markTestSkipped('GOOGLE_CLOUD_REGIONAL_KMS_KEY not set');
+            printf('Skipping testCreateSecretWithTopic dependent on GOOGLE_CLOUD_REGIONAL_KMS_KEY%s', PHP_EOL);
         }
 
         $name = self::$client->parseName(self::$testSecretWithCMEKToCreateName);
