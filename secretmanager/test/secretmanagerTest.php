@@ -67,6 +67,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretWithLabelsToCreateName;
     private static $testSecretWithAnnotationsToCreateName;
     private static $testSecretWithDelayedDestroyToCreateName;
+    private static $testSecretWithExpirationToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
     private static $testLabelKey = 'test-label-key';
@@ -96,6 +97,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretWithLabelsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithAnnotationsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithDelayedDestroyToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithExpirationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -124,6 +126,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithLabelsToCreateName);
         self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
         self::deleteSecret(self::$testSecretWithDelayedDestroyToCreateName);
+        self::deleteSecret(self::$testSecretWithExpirationToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -746,5 +749,41 @@ class secretmanagerTest extends TestCase
 
         $secret = self::getSecret($name['project'], $name['secret']);
         $this->assertEquals(self::$testDelayedDestroyTime, $secret->getVersionDestroyTtl()->getSeconds());
+    }
+
+    public function testCreateSecretWithExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_expiration', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testUpdateSecretWithExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('update_secret_with_expiration', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretExpiration()
+    {
+        $name = self::$client->parseName(self::$testSecretWithExpirationToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_secret_expiration', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
     }
 }
