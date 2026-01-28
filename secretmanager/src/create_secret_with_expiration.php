@@ -65,7 +65,7 @@ function create_secret_with_expiration(string $projectId, string $secretId): voi
     $newSecret = $client->createSecret($request);
 
     // Print the new secret name.
-    printf('Created secret %s with expiration', $newSecret->getName());
+    printf('Created secret: %s%s', $newSecret->getName(), PHP_EOL);
 }
 // [END secretmanager_create_secret_with_expiration]
 

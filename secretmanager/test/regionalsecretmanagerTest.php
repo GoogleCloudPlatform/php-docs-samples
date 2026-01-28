@@ -106,7 +106,7 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecretVersionToDisableWithETag = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToEnableWithETag = self::addSecretVersion(self::$testSecretWithVersions);
         self::disableSecretVersion(self::$testSecretVersionToEnableWithETag);
-        
+
         self::$testTagKey = self::createTagKey(self::randomSecretId());
         self::$testTagValue = self::createTagValue(self::randomSecretId());
     }
