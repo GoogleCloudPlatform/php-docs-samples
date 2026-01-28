@@ -14,7 +14,13 @@ This simple command-line application demonstrates how to invoke
 
 1.  **Enable APIs** - [Enable the Secret Manager
     API](https://console.cloud.google.com/flows/enableapi?apiid=secretmanager.googleapis.com)
-    and create a new project or select an existing project.
+    and create a new project or select an existing project. To run the rotation tests, you will need to [Create a Pub/Sub topic](https://cloud.google.com/pubsub/docs/create-topic). CMEK related test cases need separate [KMS key](https://cloud.google.com/kms/docs/create-key) for global and regional tests.
+    
+    Set the following environment variables:
+
+    - GOOGLE_CLOUD_PUBSUB_TOPIC - Full name of topic (projects/{project}/topics/{topic}).
+    - GOOGLE_CLOUD_KMS_KEY - Full name of global KMS key (projects/{project}/locations/global/keyRings/{keyring}/cryptoKeys/{key}).
+    - GOOGLE_CLOUD_REGIONAL_KMS_KEY - Full name of regional KMS key (projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}).
 
 1.  **Download The Credentials** - Click "Go to credentials" after enabling the
     APIs. Click "New Credentials" and select "Service Account Key". Create a new
