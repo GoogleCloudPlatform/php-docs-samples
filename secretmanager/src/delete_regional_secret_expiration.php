@@ -65,7 +65,7 @@ function delete_regional_secret_expiration(string $projectId, string $locationId
     $newSecret = $client->updateSecret($request);
 
     // Print the new secret name.
-    printf('Updated secret: %s', $newSecret->getName());
+    printf('Updated secret: %s%s', $newSecret->getName(), PHP_EOL);
 }
 // [END secretmanager_delete_regional_secret_expiration]
 

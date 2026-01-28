@@ -60,7 +60,7 @@ function create_regional_secret_with_expiration(string $projectId, string $locat
     $newSecret = $client->createSecret($request);
 
     // Print the new secret name.
-    printf('Created secret %s with expiration' . PHP_EOL, $newSecret->getName());
+    printf('Created secret: %s%s', $newSecret->getName(), PHP_EOL);
 }
 // [END secretmanager_create_regional_secret_with_expiration]
 

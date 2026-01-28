@@ -69,7 +69,7 @@ function update_regional_secret_with_expiration(string $projectId, string $locat
     $newSecret = $client->updateSecret($request);
 
     // Print the new secret name.
-    printf('Updated secret: %s', $newSecret->getName());
+    printf('Updated secret: %s%s', $newSecret->getName(), PHP_EOL);
 }
 // [END secretmanager_update_regional_secret_with_expiration]
 

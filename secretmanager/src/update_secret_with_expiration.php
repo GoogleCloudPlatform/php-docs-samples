@@ -68,7 +68,7 @@ function update_secret_with_expiration(string $projectId, string $secretId): voi
     $newSecret = $client->updateSecret($request);
 
     // Print the new secret name.
-    printf('Updated secret: %s', $newSecret->getName());
+    printf('Updated secret: %s%s', $newSecret->getName(), PHP_EOL);
 }
 // [END secretmanager_update_secret_with_expiration]
 
