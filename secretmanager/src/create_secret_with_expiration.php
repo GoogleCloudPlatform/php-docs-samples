@@ -34,10 +34,10 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Protobuf\Duration;
 
 /**
- * Create a secret with expiration TTL (as a Timestamp expiration).
+ * Create a secret with expiration TTL.
  * 
- * @param string $projectId  Your Google Cloud Project ID (e.g. 'my-project')
- * @param string $secretId   Your secret ID (e.g. 'my-secret')
+ * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
+ * @param string $secretId  Your secret ID (e.g. 'my-secret')
  */
 function create_secret_with_expiration(string $projectId, string $secretId): void
 {

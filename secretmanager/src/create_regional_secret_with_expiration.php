@@ -32,7 +32,7 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 use Google\Protobuf\Duration;
 
 /**
- * Create a regional secret with expiration TTL (as a Timestamp expiration).
+ * Create a regional secret with expiration TTL.
  *
  * @param string $projectId Google Cloud project id (e.g. 'my-project')
  * @param string $locationId Secret location (e.g. 'us-central1')
