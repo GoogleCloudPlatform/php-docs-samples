@@ -915,4 +915,31 @@ class regionalsecretmanagerTest extends TestCase
 
         $this->assertStringContainsString('Updated secret', $output);
     }
+
+    public function testListTagsOnSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('list_tags_on_regional_secret', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Tag binding', $output);
+    }
+
+    public function testDeleteTagFromSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_tag_from_regional_secret', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+            self::$testTagValue,
+        ]);
+
+        $this->assertStringContainsString('Deleted tag binding', $output);
+    }
 }
