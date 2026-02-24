@@ -27,7 +27,7 @@ function get_retired_resource(
     string $projectId = 'my-project',
     string $locationId = 'us-east1',
     string $retiredResourceId = 'my-retired-resource'
-): void {
+): mixed {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -41,6 +41,8 @@ function get_retired_resource(
 
     printf('Retired Resource Name: %s' . PHP_EOL, $response->getName());
     printf('Original Resource: %s' . PHP_EOL, $response->getOriginalResource());
+
+    return $response;
 }
 // [END kms_get_retired_resource]
 

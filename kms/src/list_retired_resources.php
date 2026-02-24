@@ -26,7 +26,7 @@ use Google\Cloud\Kms\V1\ListRetiredResourcesRequest;
 function list_retired_resources(
     string $projectId = 'my-project',
     string $locationId = 'us-east1'
-): void {
+): mixed {
     // Create the Cloud KMS client.
     $client = new KeyManagementServiceClient();
 
@@ -43,6 +43,8 @@ function list_retired_resources(
         printf('Original Resource: %s' . PHP_EOL, $retiredResource->getOriginalResource());
         printf('Delete Time: %s' . PHP_EOL, $retiredResource->getDeleteTime()->getSeconds());
     }
+
+    return $response;
 }
 // [END kms_list_retired_resources]
 

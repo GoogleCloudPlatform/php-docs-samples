@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\Kms;
 
+use Google\ApiCore\ApiException;
+use Google\Rpc\Code;
 use Google\Cloud\Iam\V1\Binding;
 use Google\Cloud\Iam\V1\GetIamPolicyRequest;
 use Google\Cloud\Iam\V1\SetIamPolicyRequest;
@@ -45,6 +47,9 @@ use Google\Cloud\Kms\V1\MacSignRequest;
 use Google\Cloud\Kms\V1\MacVerifyRequest;
 use Google\Cloud\Kms\V1\ProtectionLevel;
 use Google\Cloud\Kms\V1\UpdateCryptoKeyRequest;
+use Google\Cloud\Kms\V1\DeleteCryptoKeyRequest;
+use Google\Cloud\Kms\V1\ListRetiredResourcesRequest;
+use Google\Cloud\Kms\V1\GetCryptoKeyRequest;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Protobuf\FieldMask;
 use PHPUnit\Framework\TestCase;
@@ -820,19 +825,19 @@ class kmsTest extends TestCase
         $client = new KeyManagementServiceClient();
         $keyRingName = $client->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
         $keyId = self::randomId();
-        
+
         // Create an ASYMMETRIC_SIGN key (no initial version created by default for this purpose).
         $key = (new CryptoKey())
             ->setPurpose(CryptoKeyPurpose::ASYMMETRIC_SIGN)
             ->setVersionTemplate((new CryptoKeyVersionTemplate)
                 ->setAlgorithm(CryptoKeyVersionAlgorithm::EC_SIGN_P256_SHA256));
-                
+
         $request = (new CreateCryptoKeyRequest())
             ->setParent($keyRingName)
             ->setCryptoKeyId($keyId)
             ->setCryptoKey($key)
             ->setSkipInitialVersionCreation(true);
-        
+
         $client->createCryptoKey($request);
 
         // Delete it.
@@ -844,72 +849,70 @@ class kmsTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Deleted crypto key', $output);
-        
+
         $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, $keyId);
         try {
-            $getKeyRequest = (new \Google\Cloud\Kms\V1\GetCryptoKeyRequest())->setName($keyName);
-            $deletedKey = $client->getCryptoKey($getKeyRequest);
-            $this->assertEquals(CryptoKey\State::DELETED, $deletedKey->getState());
-        } catch (\Google\ApiCore\ApiException $e) {
-            // If the key is not found, it might be due to eventual consistency or it's effectively deleted.
-            // However, typically it SHOULD exist in DELETED state.
-            // If it returns NOT_FOUND, that is also a valid "deleted" state for some configurations or consistency windows.
-            // Let's accept NOT_FOUND as valid for this test.
-            $this->assertEquals(\Google\Rpc\Code::NOT_FOUND, $e->getCode());
+            $getKeyRequest = (new GetCryptoKeyRequest())->setName($keyName);
+            $client->getCryptoKey($getKeyRequest);
+            $this->fail('Key should be deleted');
+        } catch (ApiException $e) {
+            $this->assertEquals(Code::NOT_FOUND, $e->getCode());
         }
 
         return $keyId;
     }
 
-    /**
-     * @depends testDeleteCryptoKey
-     */
-    public function testListRetiredResources($deletedKeyId)
+    public function testListAndGetRetiredResource()
     {
-        list(, $output) = $this->runFunctionSnippet('list_retired_resources', [
-            self::$projectId,
-            self::$locationId
-        ]);
-        
-        $this->assertStringContainsString('Retired Resource Name', $output);
-        $this->assertStringContainsString($deletedKeyId, $output);
-    }
-
-    /**
-     * @depends testDeleteCryptoKey
-     */
-    public function testGetRetiredResource($deletedKeyId)
-    {
+        // Create a key to delete
         $client = new KeyManagementServiceClient();
+        $keyRingName = $client->keyRingName(self::$projectId, self::$locationId, self::$keyRingId);
+        $keyId = self::randomId();
+        $key = (new CryptoKey())
+            ->setPurpose(CryptoKeyPurpose::ASYMMETRIC_SIGN)
+            ->setVersionTemplate((new CryptoKeyVersionTemplate)
+                ->setAlgorithm(CryptoKeyVersionAlgorithm::EC_SIGN_P256_SHA256));
+
+        // Create key (with no initial version)
+        $request = (new CreateCryptoKeyRequest())
+            ->setParent($keyRingName)
+            ->setCryptoKeyId($keyId)
+            ->setCryptoKey($key)
+            ->setSkipInitialVersionCreation(true);
+        $client->createCryptoKey($request);
+
+        // Delete it
+        $keyName = $client->cryptoKeyName(self::$projectId, self::$locationId, self::$keyRingId, $keyId);
+        $deleteRequest = (new DeleteCryptoKeyRequest())->setName($keyName);
+        $client->deleteCryptoKey($deleteRequest);
+
+        // Find the retired resource ID first (needed for the snippet)
         $parent = $client->locationName(self::$projectId, self::$locationId);
-        $listRequest = (new \Google\Cloud\Kms\V1\ListRetiredResourcesRequest())->setParent($parent);
-        
+        $listRequest = (new ListRetiredResourcesRequest())->setParent($parent);
+
         $retiredResource = null;
         foreach ($client->listRetiredResources($listRequest) as $res) {
-            if (strpos($res->getOriginalResource(), $deletedKeyId) !== false) {
+            if (strpos($res->getOriginalResource(), $keyId) !== false) {
                 $retiredResource = $res;
                 break;
             }
         }
-        
-        if (!$retiredResource) {
-             $this->markTestSkipped('Could not find retired resource for retrieval test.');
-             return;
-        }
+
+        $this->assertNotNull($retiredResource, 'Could not find retired resource for retrieval test.');
 
         $parts = explode('/', $retiredResource->getName());
         $retiredResourceId = end($parts);
-        
-        list(, $output) = $this->runFunctionSnippet('get_retired_resource', [
+
+        list($response, $output) = $this->runFunctionSnippet('get_retired_resource', [
             self::$projectId,
             self::$locationId,
             $retiredResourceId
         ]);
 
+        $this->assertStringContainsString($keyId, $response->getOriginalResource());
         $this->assertStringContainsString('Retired Resource Name', $output);
-        $this->assertStringContainsString($deletedKeyId, $output);
     }
-    
+
     public function testDeleteCryptoKeyVersion()
     {
         $this->markTestSkipped('Skipping deleteCryptoKeyVersion test due to complexity of destroying a key version.');
