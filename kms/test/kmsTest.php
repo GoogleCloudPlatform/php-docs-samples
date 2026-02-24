@@ -866,29 +866,13 @@ class kmsTest extends TestCase
      */
     public function testListRetiredResources($deletedKeyId)
     {
-        // Add retry logic for eventual consistency
-        $attempts = 0;
-        $found = false;
+        list(, $output) = $this->runFunctionSnippet('list_retired_resources', [
+            self::$projectId,
+            self::$locationId
+        ]);
         
-        while ($attempts < 10 && !$found) {
-            // runFunctionSnippet captures output already.
-            list(, $output) = $this->runFunctionSnippet('list_retired_resources', [
-                self::$projectId,
-                self::$locationId
-            ]);
-            
-            if (strpos($output, $deletedKeyId) !== false) {
-                $found = true;
-                $this->assertStringContainsString('Retired Resource Name', $output);
-            } else {
-                sleep(1);
-                $attempts++;
-            }
-        }
-        
-        if (!$found) {
-            $this->fail("Did not find deleted key $deletedKeyId in retired resources list.");
-        }
+        $this->assertStringContainsString('Retired Resource Name', $output);
+        $this->assertStringContainsString($deletedKeyId, $output);
     }
 
     /**
