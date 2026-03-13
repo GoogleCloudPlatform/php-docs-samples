@@ -375,6 +375,16 @@ class spannerTest extends TestCase
     /**
      * @depends testInsertData
      */
+    public function testBatchWrite()
+    {
+        $output = $this->runFunctionSnippet('batch_write');
+        $this->assertStringContainsString('Mutation group indexes', $output);
+        $this->assertStringContainsString('have been applied', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
     public function testQueryData()
     {
         $output = $this->runFunctionSnippet('query_data');
