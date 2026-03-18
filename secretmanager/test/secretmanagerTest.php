@@ -70,6 +70,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretWithExpirationToCreateName;
     private static $testSecretWithCMEKToCreateName;
     private static $testSecretWithTopicToCreateName;
+    private static $testSecretWithRotationToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
     private static $testLabelKey = 'test-label-key';
@@ -105,6 +106,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretWithExpirationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithCMEKToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithTopicToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithRotationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -145,6 +147,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithExpirationToCreateName);
         self::deleteSecret(self::$testSecretWithCMEKToCreateName);
         self::deleteSecret(self::$testSecretWithTopicToCreateName);
+        self::deleteSecret(self::$testSecretWithRotationToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -840,5 +843,80 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testCreateSecretWithRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_rotation', [
+            $name['project'],
+            $name['secret'],
+            self::$testRotationTopic,
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testUpdateSecretRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testUpdateSecretRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('update_secret_rotation', [
+            $name['project'],
+            $name['secret'],
+            self::$testRotationTopic,
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testDeleteSecretRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_secret_rotation', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testListTagsOnSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('list_tags_on_secret', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Tag binding', $output);
+    }
+
+    public function testDeleteTagFromSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_tag_from_secret', [
+            $name['project'],
+            $name['secret'],
+            self::$testTagValue,
+        ]);
+
+        $this->assertStringContainsString('Deleted tag binding', $output);
     }
 }
