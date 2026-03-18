@@ -68,6 +68,9 @@ class secretmanagerTest extends TestCase
     private static $testSecretWithAnnotationsToCreateName;
     private static $testSecretWithDelayedDestroyToCreateName;
     private static $testSecretWithExpirationToCreateName;
+    private static $testSecretWithCMEKToCreateName;
+    private static $testSecretWithTopicToCreateName;
+    private static $testSecretWithRotationToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
     private static $testLabelKey = 'test-label-key';
@@ -80,6 +83,9 @@ class secretmanagerTest extends TestCase
 
     private static $testTagKey;
     private static $testTagValue;
+
+    private static $skipRotationTests = false;
+    private static $testRotationTopic;
 
     public static function setUpBeforeClass(): void
     {
@@ -98,6 +104,9 @@ class secretmanagerTest extends TestCase
         self::$testSecretWithAnnotationsToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithDelayedDestroyToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithExpirationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithCMEKToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithTopicToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithRotationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -112,6 +121,15 @@ class secretmanagerTest extends TestCase
 
         self::$testTagKey = self::createTagKey(self::randomSecretId());
         self::$testTagValue = self::createTagValue(self::randomSecretId());
+
+        // GOOGLE_CLOUD_PUBSUB_TOPIC (projects/{project}/topics/{topic}).
+        $envTopic = getenv('GOOGLE_CLOUD_PUBSUB_TOPIC');
+        if ($envTopic === false || $envTopic === '') {
+            self::$skipRotationTests = true;
+            printf('Skipping tests dependent on GOOGLE_CLOUD_PUBSUB_TOPIC as it is not set.%s', PHP_EOL);
+        } else {
+            self::$testRotationTopic = $envTopic;
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -127,6 +145,9 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithAnnotationsToCreateName);
         self::deleteSecret(self::$testSecretWithDelayedDestroyToCreateName);
         self::deleteSecret(self::$testSecretWithExpirationToCreateName);
+        self::deleteSecret(self::$testSecretWithCMEKToCreateName);
+        self::deleteSecret(self::$testSecretWithTopicToCreateName);
+        self::deleteSecret(self::$testSecretWithRotationToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -785,5 +806,117 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testCreateSecretWithCmek()
+    {
+        $kmsKey = getenv('GOOGLE_CLOUD_KMS_KEY');
+        if ($kmsKey === false || $kmsKey === '') {
+            $this->markTestSkipped('GOOGLE_CLOUD_KMS_KEY not set');
+            printf('Skipping testCreateSecretWithCmek dependent on GOOGLE_CLOUD_KMS_KEY%s', PHP_EOL);
+        }
+
+        $name = self::$client->parseName(self::$testSecretWithCMEKToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_cmek', [
+            $name['project'],
+            $name['secret'],
+            $kmsKey,
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithTopic()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testCreateSecretWithTopic dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+
+        $name = self::$client->parseName(self::$testSecretWithTopicToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_topic', [
+            $name['project'],
+            $name['secret'],
+            self::$testRotationTopic,
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testCreateSecretWithRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testCreateSecretWithRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_rotation', [
+            $name['project'],
+            $name['secret'],
+            self::$testRotationTopic,
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+    }
+
+    public function testUpdateSecretRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testUpdateSecretRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('update_secret_rotation', [
+            $name['project'],
+            $name['secret'],
+            self::$testRotationTopic,
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testDeleteSecretRotation()
+    {
+        if (self::$skipRotationTests) {
+            $this->markTestSkipped('GOOGLE_CLOUD_PUBSUB_TOPIC not set');
+            printf('Skipping testDeleteSecretRotation dependent on GOOGLE_CLOUD_PUBSUB_TOPIC%s', PHP_EOL);
+        }
+        $name = self::$client->parseName(self::$testSecretWithRotationToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_secret_rotation', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Updated secret', $output);
+    }
+
+    public function testListTagsOnSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('list_tags_on_secret', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Tag binding', $output);
+    }
+
+    public function testDeleteTagFromSecret()
+    {
+        $name = self::$client->parseName(self::$testSecretBindTagToCreateName);
+
+        $output = $this->runFunctionSnippet('delete_tag_from_secret', [
+            $name['project'],
+            $name['secret'],
+            self::$testTagValue,
+        ]);
+
+        $this->assertStringContainsString('Deleted tag binding', $output);
     }
 }
