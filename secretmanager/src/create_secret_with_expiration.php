@@ -35,7 +35,7 @@ use Google\Protobuf\Duration;
 
 /**
  * Create a secret with expiration TTL.
- * 
+ *
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
  */
