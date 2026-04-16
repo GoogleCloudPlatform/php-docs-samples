@@ -53,7 +53,7 @@ function create_secret_with_topic(string $projectId, string $secretId, string $t
         'topics' => [new Topic(['name' => $topicName])],
     ]);
 
-     // Build the request.
+    // Build the request.
     $request = CreateSecretRequest::build($parent, $secretId, $secret);
 
     // Create the secret.

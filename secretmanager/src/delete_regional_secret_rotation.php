@@ -44,7 +44,7 @@ function delete_regional_secret_rotation(string $projectId, string $locationId, 
     ]);
 
     $fieldMask = new FieldMask();
-    $fieldMask->setPaths(['rotation','topics']);
+    $fieldMask->setPaths(['rotation', 'topics']);
 
     $request = new UpdateSecretRequest();
     $request->setSecret($secret);

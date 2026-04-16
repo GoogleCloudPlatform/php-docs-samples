@@ -42,7 +42,7 @@ function delete_secret_rotation(string $projectId, string $secretId): void
     ]);
 
     $fieldMask = new FieldMask();
-    $fieldMask->setPaths(['rotation','topics']);
+    $fieldMask->setPaths(['rotation', 'topics']);
 
     $request = new UpdateSecretRequest();
     $request->setSecret($secret);

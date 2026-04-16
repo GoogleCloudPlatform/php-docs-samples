@@ -57,7 +57,7 @@ function update_secret_rotation(string $projectId, string $secretId, string $top
     ]);
 
     $fieldMask = new FieldMask();
-    $fieldMask->setPaths(['rotation','topics']);
+    $fieldMask->setPaths(['rotation', 'topics']);
 
     $request = new UpdateSecretRequest();
     $request->setSecret($secret);

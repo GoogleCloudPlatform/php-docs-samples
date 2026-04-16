@@ -50,7 +50,7 @@ function create_regional_secret_with_topic(string $projectId, string $locationId
         'topics' => [new Topic(['name' => $topicName])],
     ]);
 
-     // Build the request.
+    // Build the request.
     $request = CreateSecretRequest::build($parent, $secretId, $secret);
 
     // Create the secret.
