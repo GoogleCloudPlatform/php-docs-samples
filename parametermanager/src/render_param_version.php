@@ -35,7 +35,7 @@ use Google\Cloud\ParameterManager\V1\RenderParameterVersionRequest;
  *
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $parameterId The Parameter ID (e.g. 'my-param')
- * @param string $versionId The Version ID (e.g. 'my-param-version')
+ * @param string $versionId The Version ID (e.g. 'my-param-version') or alias (e.g. "latest")
  */
 function render_param_version(string $projectId, string $parameterId, string $versionId): void
 {
