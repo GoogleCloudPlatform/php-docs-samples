@@ -46,15 +46,20 @@ function detect_document_text_gcs(string $path)
                     $block_text .= "\n";
                 }
                 printf('Block content: %s', $block_text);
-                printf('Block confidence: %f' . PHP_EOL,
-                    $block->getConfidence());
+                printf(
+                    'Block confidence: %f' . PHP_EOL,
+                    $block->getConfidence()
+                );
 
                 # get bounds
                 $vertices = $block->getBoundingBox()->getVertices();
                 $bounds = [];
                 foreach ($vertices as $vertex) {
-                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(),
-                        $vertex->getY());
+                    $bounds[] = sprintf(
+                        '(%d,%d)',
+                        $vertex->getX(),
+                        $vertex->getY()
+                    );
                 }
                 print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
 

@@ -56,7 +56,8 @@ class ConceptsTest extends TestCase
             getenv('DATASTORE_EMULATOR_HOST') === false) {
             $this->markTestSkipped(
                 'No application credentials were found, also not using the '
-                . 'datastore emulator');
+                . 'datastore emulator'
+            );
         }
         self::$datastore = new DatastoreClient([
             'namespaceId' => self::$namespaceId = $this->generateRandomString()

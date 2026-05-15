@@ -56,8 +56,12 @@ function query_data_with_date_parameter(string $instanceId, string $databaseId):
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, LastContactDate: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['LastContactDate']);
+        printf(
+            'VenueId: %s, VenueName: %s, LastContactDate: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['LastContactDate']
+        );
     }
 }
 // [END spanner_query_with_date_parameter]

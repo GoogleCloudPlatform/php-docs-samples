@@ -64,8 +64,12 @@ function read_data_with_storing_index(string $instanceId, string $databaseId): v
     );
 
     foreach ($results->rows() as $row) {
-        printf('AlbumId: %s, AlbumTitle: %s, MarketingBudget: %d' . PHP_EOL,
-            $row['AlbumId'], $row['AlbumTitle'], $row['MarketingBudget']);
+        printf(
+            'AlbumId: %s, AlbumTitle: %s, MarketingBudget: %d' . PHP_EOL,
+            $row['AlbumId'],
+            $row['AlbumTitle'],
+            $row['MarketingBudget']
+        );
     }
 }
 // [END spanner_read_data_with_storing_index]

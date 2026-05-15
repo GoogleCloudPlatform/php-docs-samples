@@ -60,9 +60,11 @@ function analyze_labels_file(string $path, int $pollingIntervalSeconds = 0)
             foreach ($label->getSegments() as $segment) {
                 $start = $segment->getSegment()->getStartTimeOffset();
                 $end = $segment->getSegment()->getEndTimeOffset();
-                printf('  Segment: %ss to %ss' . PHP_EOL,
+                printf(
+                    '  Segment: %ss to %ss' . PHP_EOL,
                     $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                    $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                    $end->getSeconds() + $end->getNanos() / 1000000000.0
+                );
                 printf('  Confidence: %f' . PHP_EOL, $segment->getConfidence());
             }
         }
@@ -77,9 +79,11 @@ function analyze_labels_file(string $path, int $pollingIntervalSeconds = 0)
             foreach ($label->getSegments() as $shot) {
                 $start = $shot->getSegment()->getStartTimeOffset();
                 $end = $shot->getSegment()->getEndTimeOffset();
-                printf('  Shot: %ss to %ss' . PHP_EOL,
+                printf(
+                    '  Shot: %ss to %ss' . PHP_EOL,
                     $start->getSeconds() + $start->getNanos() / 1000000000.0,
-                    $end->getSeconds() + $end->getNanos() / 1000000000.0);
+                    $end->getSeconds() + $end->getNanos() / 1000000000.0
+                );
                 printf('  Confidence: %f' . PHP_EOL, $shot->getConfidence());
             }
         }

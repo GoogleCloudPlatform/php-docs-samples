@@ -82,8 +82,10 @@ function query_data_with_array_of_struct(string $instanceId, string $databaseId)
         ]
     );
     foreach ($results as $row) {
-        printf('SingerId: %s' . PHP_EOL,
-            $row['SingerId']);
+        printf(
+            'SingerId: %s' . PHP_EOL,
+            $row['SingerId']
+        );
     }
     // [END spanner_query_data_with_array_of_struct]
 }

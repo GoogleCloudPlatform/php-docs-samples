@@ -41,7 +41,7 @@ function base64url_decode($input)
 function base64url_encode($input, $padding = true)
 {
     $output = strtr(base64_encode($input), '+/', '-_');
-    return ($padding) ? $output : str_replace('=', '',  $output);
+    return ($padding) ? $output : str_replace('=', '', $output);
 }
 
 /**

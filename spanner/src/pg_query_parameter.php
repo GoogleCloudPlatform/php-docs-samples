@@ -50,11 +50,16 @@ function pg_query_parameter(string $instanceId, string $databaseId): void
         'parameters' => [
             'p1' => 'A%'
         ]
-    ]
+        ]
     );
 
     foreach ($results as $row) {
-        printf('SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL, $row['singerid'], $row['firstname'], $row['lastname']);
+        printf(
+            'SingerId: %s, Firstname: %s, LastName: %s' . PHP_EOL,
+            $row['singerid'],
+            $row['firstname'],
+            $row['lastname']
+        );
     }
 }
 // [END spanner_postgresql_query_parameter]

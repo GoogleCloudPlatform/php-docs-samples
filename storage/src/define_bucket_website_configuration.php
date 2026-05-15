@@ -38,8 +38,11 @@ use Google\Cloud\Storage\StorageClient;
  *        (e.g. '404.html')
  *     as the 404 Not Found page.
  */
-function define_bucket_website_configuration(string $bucketName, string $indexPageObject, string $notFoundPageObject): void
-{
+function define_bucket_website_configuration(
+    string $bucketName,
+    string $indexPageObject,
+    string $notFoundPageObject
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

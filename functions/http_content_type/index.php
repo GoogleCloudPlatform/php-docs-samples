@@ -37,15 +37,15 @@ function helloContent(ServerRequestInterface $request): string
                 $name = $json['name'] ?? $name;
             }
             break;
-            // 'John', stored in a stream
+        // 'John', stored in a stream
         case 'application/octet-stream':
             $name = $body;
             break;
-            // 'John'
+        // 'John'
         case 'text/plain':
             $name = $body;
             break;
-            // 'name=John' in the body of a POST request (not the URL)
+        // 'name=John' in the body of a POST request (not the URL)
         case 'application/x-www-form-urlencoded':
             parse_str($body, $data);
             $name = $data['name'] ?? $name;

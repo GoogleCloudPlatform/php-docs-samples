@@ -47,8 +47,12 @@ function query_data(string $instanceId, string $databaseId): void
     );
 
     foreach ($results as $row) {
-        printf('SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['AlbumTitle']);
+        printf(
+            'SingerId: %s, AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['AlbumTitle']
+        );
     }
 }
 // [END spanner_query_data]

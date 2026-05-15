@@ -58,8 +58,11 @@ function read_data_with_index(string $instanceId, string $databaseId): void
     );
 
     foreach ($results->rows() as $row) {
-        printf('AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
-            $row['AlbumId'], $row['AlbumTitle']);
+        printf(
+            'AlbumId: %s, AlbumTitle: %s' . PHP_EOL,
+            $row['AlbumId'],
+            $row['AlbumTitle']
+        );
     }
 }
 // [END spanner_read_data_with_index]

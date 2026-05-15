@@ -40,8 +40,13 @@ use Google\Cloud\Storage\StorageClient;
  *        (e.g. 3600)
  *     requests before it must repeat preflighted requests.
  */
-function cors_configuration(string $bucketName, string $method, string $origin, string $responseHeader, int $maxAgeSeconds): void
-{
+function cors_configuration(
+    string $bucketName,
+    string $method,
+    string $origin,
+    string $responseHeader,
+    int $maxAgeSeconds
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 

@@ -30,7 +30,8 @@ use Google\Cloud\BigQuery\BigQueryClient;
  * Dry runs the given query
  *
  * @param string $projectId The project Id of your Google Cloud Project.
- * @param string $query The query to be run. For eg: $query = 'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`'
+ * @param string $query The query to be run. For eg:
+ *                      'SELECT id, view_count FROM `bigquery-public-data.stackoverflow.posts_questions`'
  */
 function dry_run_query(string $projectId, string $query): void
 {

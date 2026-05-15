@@ -41,7 +41,10 @@ function query_filter_array_contains_any(string $projectId): void
     $containsQuery = $citiesRef->where('regions', 'array-contains-any', ['west_coast', 'east_coast']);
     # [END firestore_query_filter_array_contains_any]
     foreach ($containsQuery->documents() as $document) {
-        printf('Document %s returned by query regions array-contains-any [west_coast, east_coast]' . PHP_EOL, $document->id());
+        printf(
+            'Document %s returned by query regions array-contains-any [west_coast, east_coast]' . PHP_EOL,
+            $document->id()
+        );
     }
 }
 

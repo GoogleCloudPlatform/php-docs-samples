@@ -45,11 +45,13 @@ function move_object(string $bucketName, string $objectName, string $newBucketNa
     $object = $bucket->object($objectName);
     $object->copy($newBucketName, ['name' => $newObjectName]);
     $object->delete();
-    printf('Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
+    printf(
+        'Moved gs://%s/%s to gs://%s/%s' . PHP_EOL,
         $bucketName,
         $objectName,
         $newBucketName,
-        $newObjectName);
+        $newObjectName
+    );
 }
 # [END storage_move_file]
 

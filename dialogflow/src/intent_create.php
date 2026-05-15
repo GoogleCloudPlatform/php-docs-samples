@@ -29,9 +29,12 @@ use Google\Cloud\Dialogflow\V2\Intent\TrainingPhrase\Part;
 /**
 * Create an intent of the given intent type.
 */
-function intent_create($projectId, $displayName, $trainingPhraseParts = [],
-    $messageTexts = [])
-{
+function intent_create(
+    $projectId,
+    $displayName,
+    $trainingPhraseParts = [],
+    $messageTexts = []
+) {
     $intentsClient = new IntentsClient();
 
     // prepare parent

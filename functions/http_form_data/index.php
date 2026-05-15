@@ -29,7 +29,10 @@ function uploadFile(ServerRequestInterface $request): ResponseInterface
 
     $contentType = $request->getHeader('Content-Type')[0];
     if (strpos($contentType, 'multipart/form-data') !== 0) {
-        return new Response(400, [], 'Bad Request: content of type "multipart/form-data" not provided, found ' . $contentType);
+        return new Response(400, [], sprintf(
+            'Bad Request: content of type "multipart/form-data" not provided, found %s',
+            $contentType
+        ));
     }
 
     $fileList = [];

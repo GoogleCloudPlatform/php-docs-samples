@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\TextToSpeech\Tests;
+
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -26,8 +28,11 @@ class quickstartTest extends TestCase
     {
         $file = sys_get_temp_dir() . '/tts_quickstart.php';
         $contents = file_get_contents(__DIR__ . '/../quickstart.php');
-        $contents = str_replace('__DIR__', sprintf('"%s/.."', __DIR__),
-            $contents);
+        $contents = str_replace(
+            '__DIR__',
+            sprintf('"%s/.."', __DIR__),
+            $contents
+        );
         file_put_contents($file, $contents);
         // invoke quickstart.php
         $audioContent = include $file;

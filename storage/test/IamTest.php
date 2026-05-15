@@ -58,8 +58,7 @@ class IamTest extends TestCase
         $policy = $iam->policy(['requestedPolicyVersion' => 3]);
 
         foreach ($policy['bindings'] as $i => $binding) {
-            if (
-                $binding['role'] == self::$role &&
+            if ($binding['role'] == self::$role &&
                 in_array(self::$user, $binding['members'])
             ) {
                 unset($policy['bindings'][$i]);
@@ -120,7 +119,14 @@ with condition:
     Title: %s
     Description: %s
     Expression: %s
-', self::$role, self::$bucket, self::$user, $title, $description, $expression);
+',
+            self::$role,
+            self::$bucket,
+            self::$user,
+            $title,
+            $description,
+            $expression
+        );
 
         $this->assertEquals($outputString, $output);
 
@@ -175,7 +181,9 @@ Members:
     Title: always true
     Description: this condition is always true
     Expression: 1 < 2
-', self::$user);
+',
+            self::$user
+        );
         $this->assertStringContainsString($bindingWithCondition, $output);
     }
 
@@ -206,8 +214,7 @@ Members:
             'requestedPolicyVersion' => 3
         ]);
         foreach ($policy['bindings'] as $binding) {
-            if (
-                $binding['role'] == self::$role
+            if ($binding['role'] == self::$role
                 && empty($binding['condition'])
             ) {
                 $foundRoleMember = in_array(self::$user, $binding['members']);
@@ -245,8 +252,7 @@ Members:
             'requestedPolicyVersion' => 3
         ]);
         foreach ($policy['bindings'] as $binding) {
-            if (
-                $binding['role'] == self::$role
+            if ($binding['role'] == self::$role
                 && isset($binding['condition'])
             ) {
                 $condition = $binding['condition'];

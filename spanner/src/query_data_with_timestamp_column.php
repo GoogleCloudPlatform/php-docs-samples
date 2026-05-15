@@ -39,7 +39,7 @@ use Google\Cloud\Spanner\SpannerClient;
  * add the column by running the `add_timestamp_column` sample or by running
  * this DDL statement against your database:
  *
- * 		ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)
+ *      ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP OPTIONS (allow_commit_timestamp=true)
  *
  * Example:
  * ```
@@ -67,8 +67,13 @@ function query_data_with_timestamp_column(string $instanceId, string $databaseId
         if ($row['LastUpdateTime'] == null) {
             $row['LastUpdateTime'] = 'NULL';
         }
-        printf('SingerId: %s, AlbumId: %s, MarketingBudget: %s, LastUpdateTime: %s' . PHP_EOL,
-            $row['SingerId'], $row['AlbumId'], $row['MarketingBudget'], $row['LastUpdateTime']);
+        printf(
+            'SingerId: %s, AlbumId: %s, MarketingBudget: %s, LastUpdateTime: %s' . PHP_EOL,
+            $row['SingerId'],
+            $row['AlbumId'],
+            $row['MarketingBudget'],
+            $row['LastUpdateTime']
+        );
     }
 }
 // [END spanner_query_data_with_timestamp_column]

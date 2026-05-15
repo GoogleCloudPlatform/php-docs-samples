@@ -36,8 +36,11 @@ class DeployAppEngineFlexTest extends TestCase
     {
         // Access the modules app top page.
         $resp = $this->client->get('/');
-        $this->assertEquals('200', $resp->getStatusCode(),
-            'top page status code');
+        $this->assertEquals(
+            '200',
+            $resp->getStatusCode(),
+            'top page status code'
+        );
     }
 
     public function testSendMessage()
@@ -48,17 +51,22 @@ class DeployAppEngineFlexTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('204', $resp->getStatusCode(),
-            '/send_message status code');
+        $this->assertEquals(
+            '204',
+            $resp->getStatusCode(),
+            '/send_message status code'
+        );
     }
 
     public function testReceiveMessage()
     {
         $resp = $this->client->request('POST', '/receive_message', [
                 'body' => json_encode(['message' => ['data' => 'Bye.']]),
-            ]
+            ]);
+        $this->assertEquals(
+            '200',
+            $resp->getStatusCode(),
+            '/receive_message status code'
         );
-        $this->assertEquals('200', $resp->getStatusCode(),
-            '/receive_message status code');
     }
 }

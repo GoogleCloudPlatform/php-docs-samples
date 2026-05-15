@@ -44,13 +44,11 @@ function create_key_asymmetric_sign(
     $key = (new CryptoKey())
         ->setPurpose(CryptoKeyPurpose::ASYMMETRIC_SIGN)
         ->setVersionTemplate((new CryptoKeyVersionTemplate())
-            ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_SIGN_PKCS1_2048_SHA256)
-        )
+            ->setAlgorithm(CryptoKeyVersionAlgorithm::RSA_SIGN_PKCS1_2048_SHA256))
 
         // Optional: customize how long key versions should be kept before destroying.
         ->setDestroyScheduledDuration((new Duration())
-            ->setSeconds(24 * 60 * 60)
-        );
+            ->setSeconds(24 * 60 * 60));
 
     // Call the API.
     $createCryptoKeyRequest = (new CreateCryptoKeyRequest())

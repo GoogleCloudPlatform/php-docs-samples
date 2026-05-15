@@ -52,7 +52,8 @@ function write_data_with_dml(string $instanceId, string $databaseId): void
             . "(12, 'Melissa', 'Garcia'), "
             . "(13, 'Russell', 'Morales'), "
             . "(14, 'Jacqueline', 'Long'), "
-            . "(15, 'Dylan', 'Shaw')");
+            . "(15, 'Dylan', 'Shaw')"
+        );
         $t->commit();
         printf('Inserted %d row(s).' . PHP_EOL, $rowCount);
     });

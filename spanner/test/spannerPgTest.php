@@ -101,7 +101,10 @@ class spannerPgTest extends TestCase
         $output = $this->runFunctionSnippet('pg_functions');
         self::$lastUpdateDataTimestamp = time();
 
-        $this->assertStringContainsString('1284352323 seconds after epoch is 2010-09-13T04:32:03.000000Z', $output);
+        $this->assertStringContainsString(
+            '1284352323 seconds after epoch is 2010-09-13T04:32:03.000000Z',
+            $output
+        );
     }
 
     /*
@@ -189,8 +192,7 @@ class spannerPgTest extends TestCase
 
         $db->runTransaction(function (Transaction $t) {
             $t->executeUpdate(
-                'INSERT INTO users (id, name, active)'
-                    . ' VALUES ($1, $2, $3), ($4, $5, $6)',
+                'INSERT INTO users (id, name, active) VALUES ($1, $2, $3), ($4, $5, $6)',
                 [
                     'parameters' => [
                         'p1' => 1,
@@ -275,7 +277,10 @@ class spannerPgTest extends TestCase
         ]);
         self::$lastUpdateDataTimestamp = time();
 
-        $this->assertStringContainsString(sprintf('Added column VenueDetails on table %s.', self::$jsonbTable), $output);
+        $this->assertStringContainsString(
+            sprintf('Added column VenueDetails on table %s.', self::$jsonbTable),
+            $output
+        );
     }
 
     /**

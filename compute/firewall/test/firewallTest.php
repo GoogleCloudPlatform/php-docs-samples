@@ -129,7 +129,7 @@ class firewallTest extends TestCase
                 'projectId' => self::$projectId,
                 'firewallRuleName' => self::$firewallRuleName
             ]);
-            $this->assertStringContainsString('Rule ' . self::$firewallRuleName . ' deleted',  $output);
+            $this->assertStringContainsString('Rule ' . self::$firewallRuleName . ' deleted', $output);
         } catch (ApiException $e) {
             if ($e->getCode() != 404) {
                 throw new ApiException($e->getMessage(), $e->getCode(), $e->getStatus());

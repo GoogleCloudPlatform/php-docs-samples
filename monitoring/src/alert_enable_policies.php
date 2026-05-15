@@ -51,7 +51,8 @@ function alert_enable_policies($projectId, $enable = true, $filter = null)
     foreach ($policies->iterateAllElements() as $policy) {
         $isEnabled = $policy->getEnabled()->getValue();
         if ($enable == $isEnabled) {
-            printf('Policy %s is already %s' . PHP_EOL,
+            printf(
+                'Policy %s is already %s' . PHP_EOL,
                 $policy->getName(),
                 $isEnabled ? 'enabled' : 'disabled'
             );

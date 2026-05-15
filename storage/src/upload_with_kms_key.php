@@ -50,11 +50,13 @@ function upload_with_kms_key(string $bucketName, string $objectName, string $sou
         'name' => $objectName,
         'destinationKmsKeyName' => $kmsKeyName,
     ]);
-    printf('Uploaded %s to gs://%s/%s using encryption key %s' . PHP_EOL,
+    printf(
+        'Uploaded %s to gs://%s/%s using encryption key %s' . PHP_EOL,
         basename($source),
         $bucketName,
         $objectName,
-        $kmsKeyName);
+        $kmsKeyName
+    );
 }
 # [END storage_upload_with_kms_key]
 

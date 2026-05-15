@@ -62,8 +62,12 @@ function pg_case_sensitivity(string $projectId, string $instanceId, string $data
     print('Waiting for operation to complete...' . PHP_EOL);
     $operation->pollUntilComplete();
 
-    printf('Created %s table in database %s on instance %s' . PHP_EOL,
-        $table, $databaseId, $instanceId);
+    printf(
+        'Created %s table in database %s on instance %s' . PHP_EOL,
+        $tableName,
+        $databaseId,
+        $instanceId
+    );
 }
 // [END spanner_postgresql_case_sensitivity]
 

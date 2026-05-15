@@ -74,8 +74,13 @@ class IntegrationTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testLimitInfiniteRetries(array $cloudevent, array $data, string $statusCode, string $expected, string $label): void
-    {
+    public function testLimitInfiniteRetries(
+        array $cloudevent,
+        array $data,
+        string $statusCode,
+        string $expected,
+        string $label
+    ): void {
         // Prepare the HTTP headers for a CloudEvent.
         $cloudEventHeaders = [];
         foreach ($cloudevent as $key => $value) {

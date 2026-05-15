@@ -56,8 +56,12 @@ function query_data_with_timestamp_parameter(string $instanceId, string $databas
     );
 
     foreach ($results as $row) {
-        printf('VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
-            $row['VenueId'], $row['VenueName'], $row['LastUpdateTime']);
+        printf(
+            'VenueId: %s, VenueName: %s, LastUpdateTime: %s' . PHP_EOL,
+            $row['VenueId'],
+            $row['VenueName'],
+            $row['LastUpdateTime']
+        );
     }
 }
 // [END spanner_query_with_timestamp_parameter]

@@ -55,8 +55,11 @@ function rotate_encryption_key(
         'destinationEncryptionKey' => $newBase64EncryptionKey,
     ]);
 
-    printf('Rotated encryption key for object gs://%s/%s' . PHP_EOL,
-        $bucketName, $objectName);
+    printf(
+        'Rotated encryption key for object gs://%s/%s' . PHP_EOL,
+        $bucketName,
+        $objectName
+    );
 }
 # [END storage_rotate_encryption_key]
 

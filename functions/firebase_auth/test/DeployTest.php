@@ -121,7 +121,9 @@ class DeployTest extends TestCase
     private function createAuthUser(string $email): void
     {
         if (empty(self::$apiHttpClient)) {
-            $credentials = ApplicationDefaultCredentials::getCredentials('https://www.googleapis.com/auth/cloud-platform');
+            $credentials = ApplicationDefaultCredentials::getCredentials(
+                'https://www.googleapis.com/auth/cloud-platform'
+            );
             self::$apiHttpClient = CredentialsLoader::makeHttpClient($credentials, [
                 'base_uri' => 'https://identitytoolkit.googleapis.com/'
             ]);

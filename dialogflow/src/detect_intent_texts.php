@@ -61,8 +61,11 @@ function detect_intent_texts($projectId, $texts, $sessionId, $languageCode = 'en
         // output relevant info
         print(str_repeat('=', 20) . PHP_EOL);
         printf('Query text: %s' . PHP_EOL, $queryText);
-        printf('Detected intent: %s (confidence: %f)' . PHP_EOL, $displayName,
-            $confidence);
+        printf(
+            'Detected intent: %s (confidence: %f)' . PHP_EOL,
+            $displayName,
+            $confidence
+        );
         print(PHP_EOL);
         printf('Fulfilment text: %s' . PHP_EOL, $fulfilmentText);
     }
