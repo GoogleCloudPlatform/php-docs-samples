@@ -206,4 +206,22 @@ class StorageControlTest extends TestCase
             $output
         );
     }
+
+    public function testDeleteFolderRecursive()
+    {
+        $recursiveFolderId = time() . rand();
+        
+        $this->runFunctionSnippet('create_folder', [
+            self::$sourceBucket->name(), $recursiveFolderId
+        ]);
+
+        $output = $this->runFunctionSnippet('delete_folder_recursive', [
+            self::$sourceBucket->name(), $recursiveFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Deleted folder: %s', $recursiveFolderId),
+            $output
+        );
+    }
 }
