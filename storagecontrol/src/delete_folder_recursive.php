@@ -53,7 +53,8 @@ function delete_folder_recursive(string $bucketName, string $folderName): void
     if ($operation->operationSucceeded()) {
         printf('Deleted folder: %s', $folderName);
     } else {
-        printf('Failed to delete folder: %s', $operation->getError()->getMessage());
+        $error = $operation->getError();
+        printf('Failed to delete folder: %s', $error ? $error->getMessage() : 'Unknown error');
     }
 }
 # [END storage_control_delete_folder_recursive]
