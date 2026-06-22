@@ -39,7 +39,7 @@ function list_buckets_ip_filtering(string $projectId): void
     ]);
 
     printf('Buckets:' . PHP_EOL);
-    foreach ($storage->buckets() as $bucket) {
+    foreach ($storage->buckets(['projection' => 'full']) as $bucket) {
         $info = $bucket->info();
         $mode = $info['ipFilter']['mode'] ?? 'Not Configured';
 

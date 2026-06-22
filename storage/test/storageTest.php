@@ -1283,7 +1283,8 @@ class storageTest extends TestCase
         // test enable
         $output = self::runFunctionSnippet('enable_ip_filtering', [
             $projectId,
-            $bucketName
+            $bucketName,
+            'Disabled'
         ]);
 
         $this->assertStringContainsString(
@@ -1325,11 +1326,7 @@ class storageTest extends TestCase
             ]);
 
             $this->assertStringContainsString(
-                sprintf('Bucket Name: %s', $bucketName),
-                $output
-            );
-            $this->assertStringContainsString(
-                'IP Filtering Mode: Disabled',
+                sprintf('Bucket Name: %s, IP Filtering Mode: Disabled', $bucketName),
                 $output
             );
 
@@ -1345,7 +1342,7 @@ class storageTest extends TestCase
 
             $bucket->reload();
             $info = $bucket->info();
-            $this->assertArrayNotHasKey('allowedIpCidrRanges', $info['ipFilter']['publicNetworkSource'] ?? []);
+            $this->assertEmpty($info['ipFilter']['publicNetworkSource']['allowedIpCidrRanges'] ?? []);
         } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
             // If the runner gets locked out by the 'Enabled' mode, we gracefully catch the 403
             // so we can still clean up the bucket.

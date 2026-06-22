@@ -33,16 +33,16 @@ use Google\Cloud\Storage\StorageClient;
  *        (e.g. 'my-project-id')
  * @param string $bucketName The name of your Cloud Storage bucket.
  *        (e.g. 'my-bucket')
+ * @param string $mode The mode to set IP filtering to.
+ *        (e.g. 'Enabled')
  */
-function enable_ip_filtering(string $projectId, string $bucketName): void
+function enable_ip_filtering(string $projectId, string $bucketName, string $mode = 'Enabled'): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
     $ipFilter = [
-        // Set to 'Enabled' to enforce the IP filters.
-        // We use 'Disabled' here to prevent locking out the test runner.
-        'mode' => 'Disabled',
+        'mode' => $mode,
         'allowAllServiceAgentAccess' => true,
         'publicNetworkSource' => [
             'allowedIpCidrRanges' => ['1.2.3.0/24']
