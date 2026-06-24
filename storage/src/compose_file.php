@@ -37,8 +37,10 @@ use Google\Cloud\Storage\StorageClient;
  *        (e.g. 'my-object-2')
  * @param string $targetObjectName The name of the object to be created.
  *        (e.g. 'composed-my-object-1-my-object-2')
+ * @param bool $deleteSourceObjects Whether to delete the source objects after composition.
+ *        (e.g. false)
  */
-function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
+function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName, bool $deleteSourceObjects = false): void
 {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
@@ -60,6 +62,14 @@ function compose_file(string $bucketName, string $firstObjectName, string $secon
             $firstObjectName,
             $secondObjectName
         );
+
+        if ($deleteSourceObjects) {
+            foreach ($objectsToCompose as $sourceObject) {
+                $bucket->object($sourceObject)->delete();
+            }
+            printf(' and source objects were deleted');
+        }
+        printf(PHP_EOL);
     }
 }
 # [END storage_compose_file]
