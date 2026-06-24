@@ -272,18 +272,18 @@ EOF;
         $bucket->upload('content', ['name' => $object2Name]);
 
         $targetName = uniqid('compose-object-target-');
-        
+
         $args = [
             self::$bucketName,
             $object1Name,
             $object2Name,
             $targetName,
         ];
-        
+
         if ($deleteSourceObjects) {
             $args[] = true;
         }
-        
+
         $output = self::runFunctionSnippet('compose_file', $args);
 
         $expectedOutput = sprintf(
