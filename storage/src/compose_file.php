@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2021 Google LLC
  *
@@ -38,8 +39,13 @@ use Google\Cloud\Storage\StorageClient;
  * @param string $targetObjectName The name of the object to be created.
  *        (e.g. 'composed-my-object-1-my-object-2')
  */
-function compose_file(string $bucketName, string $firstObjectName, string $secondObjectName, string $targetObjectName): void
-{
+function compose_file(
+    string $bucketName,
+    string $firstObjectName,
+    string $secondObjectName,
+    string $targetObjectName,
+    bool $deleteSourceObjects = false
+): void {
     $storage = new StorageClient();
     $bucket = $storage->bucket($bucketName);
 
@@ -50,16 +56,26 @@ function compose_file(string $bucketName, string $firstObjectName, string $secon
     $targetObject = $bucket->compose($objectsToCompose, $targetObjectName, [
         'destination' => [
             'contentType' => 'application/octet-stream'
-        ]
+        ],
+        'deleteSourceObjects' => $deleteSourceObjects,
     ]);
 
     if ($targetObject->exists()) {
-        printf(
-            'New composite object %s was created by combining %s and %s',
-            $targetObject->name(),
-            $firstObjectName,
-            $secondObjectName
-        );
+        if ($deleteSourceObjects) {
+            printf(
+                'New composite object %s was created by combining %s and %s and the source objects were deleted.',
+                $targetObject->name(),
+                $firstObjectName,
+                $secondObjectName
+            );
+        } else {
+            printf(
+                'New composite object %s was created by combining %s and %s',
+                $targetObject->name(),
+                $firstObjectName,
+                $secondObjectName
+            );
+        }
     }
 }
 # [END storage_compose_file]

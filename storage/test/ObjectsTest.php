@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Google Inc.
  *
@@ -274,6 +275,7 @@ EOF;
             $object1Name,
             $object2Name,
             $targetName,
+            false // deleteSourceObjects
         ]);
 
         $this->assertEquals(
@@ -286,8 +288,41 @@ EOF;
             $output
         );
 
+        $this->assertTrue($bucket->object($object1Name)->exists());
+        $this->assertTrue($bucket->object($object2Name)->exists());
+
         $bucket->object($object1Name)->delete();
         $bucket->object($object2Name)->delete();
+        $bucket->object($targetName)->delete();
+
+        // Test with deleteSourceObjects = true
+        $object1Name = uniqid('compose-object1-');
+        $object2Name = uniqid('compose-object2-');
+        $bucket->upload('content', ['name' => $object1Name]);
+        $bucket->upload('content', ['name' => $object2Name]);
+
+        $targetName = uniqid('compose-object-target-');
+        $output = self::runFunctionSnippet('compose_file', [
+            self::$bucketName,
+            $object1Name,
+            $object2Name,
+            $targetName,
+            true // deleteSourceObjects
+        ]);
+
+        $this->assertEquals(
+            sprintf(
+                'New composite object %s was created by combining %s and %s and the source objects were deleted.',
+                $targetName,
+                $object1Name,
+                $object2Name
+            ),
+            $output
+        );
+
+        $this->assertFalse($bucket->object($object1Name)->exists());
+        $this->assertFalse($bucket->object($object2Name)->exists());
+
         $bucket->object($targetName)->delete();
     }
 
