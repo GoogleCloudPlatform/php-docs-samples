@@ -59,15 +59,17 @@ class storageTest extends TestCase
         self::$tempBucket->delete();
 
         $objectRetentionBucket = self::$storage->bucket(self::$objectRetentionBucketName);
-        foreach ($objectRetentionBucket->objects() as $object) {
-            // Disable object retention before delete
-            $object->update([
-                'retention' => [],
-                'overrideUnlockedRetention' => true
-            ]);
-            $object->delete();
+        if ($objectRetentionBucket->exists()) {
+            foreach ($objectRetentionBucket->objects() as $object) {
+                // Disable object retention before delete
+                $object->update([
+                    'retention' => [],
+                    'overrideUnlockedRetention' => true
+                ]);
+                $object->delete();
+            }
+            $objectRetentionBucket->delete();
         }
-        $objectRetentionBucket->delete();
     }
 
     public function testBucketAcl()
@@ -1271,6 +1273,34 @@ class storageTest extends TestCase
         $this->assertStringContainsString('Storage Client initialized.', $output);
     }
 
+    public function testCreateBucketIpFiltering()
+    {
+        $bucketName = uniqid('php-create-ip-filter-');
+
+        $output = self::runFunctionSnippet('create_bucket_ip_filtering', [
+            $bucketName,
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Bucket %s created with IP filtering rules.', $bucketName),
+            $output
+        );
+
+        $bucket = self::$storage->bucket($bucketName);
+        $bucket->reload(['projection' => 'full']);
+        $info = $bucket->info();
+
+        if (!isset($info['ipFilter'])) {
+            $this->markTestSkipped('IP filtering is not enabled for this project.');
+        }
+
+        $this->assertEquals('Disabled', $info['ipFilter']['mode']);
+        $this->assertEquals(['1.2.3.0/24'], $info['ipFilter']['publicNetworkSource']['allowedIpCidrRanges']);
+        $this->assertTrue($info['ipFilter']['allowAllServiceAgentAccess']);
+
+        $bucket->delete();
+    }
+
     public function testIpFilteringLifecycle()
     {
         $bucket = self::$storage->createBucket(uniqid('php-ip-filter-'));
@@ -1295,6 +1325,11 @@ class storageTest extends TestCase
         try {
             $bucket->reload();
             $info = $bucket->info();
+
+            if (!isset($info['ipFilter'])) {
+                $this->markTestSkipped('IP filtering is not enabled for this project.');
+            }
+
             $this->assertEquals('Disabled', $info['ipFilter']['mode']);
             $this->assertEquals([$ipAddress], $info['ipFilter']['publicNetworkSource']['allowedIpCidrRanges']);
 
@@ -1306,29 +1341,6 @@ class storageTest extends TestCase
             $this->assertStringContainsString('Mode: Disabled', $output);
             $this->assertStringContainsString('- ' . $ipAddress, $output);
             $this->assertStringContainsString('- Network: projects/' . $projectId . '/global/networks/' . $vpcNetwork, $output);
-
-            // test disable
-            $output = self::runFunctionSnippet('disable_ip_filtering', [
-                $bucketName,
-            ]);
-
-            $this->assertStringContainsString(
-                sprintf('Disabled IP filtering Rules for bucket %s', $bucketName),
-                $output
-            );
-
-            $bucket->reload();
-            $this->assertEquals('Disabled', $bucket->info()['ipFilter']['mode']);
-
-            // test list_buckets_ip_filtering
-            $output = self::runFunctionSnippet('list_buckets_ip_filtering', [
-                $projectId
-            ]);
-
-            $this->assertStringContainsString(
-                sprintf('Bucket Name: %s, IP Filtering Mode: Disabled', $bucketName),
-                $output
-            );
 
             // test delete
             $output = self::runFunctionSnippet('delete_ip_filtering_rules', [
@@ -1343,6 +1355,31 @@ class storageTest extends TestCase
             $bucket->reload();
             $info = $bucket->info();
             $this->assertEmpty($info['ipFilter']['publicNetworkSource']['allowedIpCidrRanges'] ?? []);
+
+            // test disable
+            $output = self::runFunctionSnippet('disable_ip_filtering', [
+                $bucketName,
+            ]);
+
+            $this->assertStringContainsString(
+                sprintf('Disabled IP filtering Rules for bucket %s', $bucketName),
+                $output
+            );
+
+            $bucket->reload();
+            $this->assertEquals('Disabled', $bucket->info()['ipFilter']['mode']);
+            $this->assertEmpty($bucket->info()['ipFilter']['publicNetworkSource'] ?? []);
+            $this->assertEmpty($bucket->info()['ipFilter']['vpcNetworkSources'] ?? []);
+
+            // test list_buckets_ip_filtering
+            $output = self::runFunctionSnippet('list_buckets_ip_filtering', [
+                $projectId
+            ]);
+
+            $this->assertStringContainsString(
+                sprintf('Bucket Name: %s, IP Filtering Mode: Disabled', $bucketName),
+                $output
+            );
         } catch (\Google\Cloud\Core\Exception\ServiceException $e) {
             // If the runner gets locked out by the 'Enabled' mode, we gracefully catch the 403
             // so we can still clean up the bucket.
