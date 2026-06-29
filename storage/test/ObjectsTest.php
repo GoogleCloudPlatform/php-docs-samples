@@ -300,8 +300,13 @@ EOF;
 
         $this->assertEquals($expectedOutput, $output);
 
-        $this->assertEquals(!$deleteSourceObjects, $bucket->object($object1Name)->exists());
-        $this->assertEquals(!$deleteSourceObjects, $bucket->object($object2Name)->exists());
+        if ($deleteSourceObjects) {
+            $this->assertFalse($bucket->object($object1Name)->exists());
+            $this->assertFalse($bucket->object($object2Name)->exists());
+        } else {
+            $this->assertTrue($bucket->object($object1Name)->exists());
+            $this->assertTrue($bucket->object($object2Name)->exists());
+        }
 
         if (!$deleteSourceObjects) {
             $bucket->object($object1Name)->delete();
