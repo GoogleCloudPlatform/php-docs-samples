@@ -206,4 +206,53 @@ class StorageControlTest extends TestCase
             $output
         );
     }
+
+    /**
+     * @depends testDeleteFolder
+     */
+    public function testDeleteFolderRecursive()
+    {
+        $parentFolderId = 'test-parent-' . time() . rand();
+        $childFolderId = $parentFolderId . '/test-child-' . time() . rand();
+
+        $bucketName = self::$sourceBucket->name();
+        $bucketResourceName = self::$storageControlClient->bucketName('_', $bucketName);
+
+        // Create parent folder
+        $createParentRequest = new \Google\Cloud\Storage\Control\V2\CreateFolderRequest([
+            'parent' => $bucketResourceName,
+            'folder_id' => $parentFolderId,
+        ]);
+        self::$storageControlClient->createFolder($createParentRequest);
+
+        // Create child folder
+        $createChildRequest = new \Google\Cloud\Storage\Control\V2\CreateFolderRequest([
+            'parent' => $bucketResourceName,
+            'folder_id' => $childFolderId,
+        ]);
+        self::$storageControlClient->createFolder($createChildRequest);
+
+        // Call the delete folder recursive snippet
+        $output = $this->runFunctionSnippet('delete_folder_recursive', [
+            $bucketName, $parentFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Deleted folder recursively: %s', $parentFolderId),
+            $output
+        );
+
+        // Verify folder is gone by trying to get the parent folder
+        $formattedParentName = self::$storageControlClient->folderName('_', $bucketName, $parentFolderId);
+        $getRequest = new \Google\Cloud\Storage\Control\V2\GetFolderRequest([
+            'name' => $formattedParentName,
+        ]);
+
+        try {
+            self::$storageControlClient->getFolder($getRequest);
+            $this->fail('Expected getFolder to throw ApiException for deleted folder');
+        } catch (\Google\ApiCore\ApiException $e) {
+            $this->assertEquals(404, $e->getCode());
+        }
+    }
 }
