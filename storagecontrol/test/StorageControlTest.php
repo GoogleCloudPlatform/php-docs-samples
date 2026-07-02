@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\StorageControl;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 class StorageControlTest extends TestCase
 {
     use TestTrait;
+    use EventuallyConsistentTestTrait;
 
     private static $sourceBucket;
     private static $folderId;
@@ -248,11 +250,13 @@ class StorageControlTest extends TestCase
             'name' => $formattedParentName,
         ]);
 
-        try {
-            self::$storageControlClient->getFolder($getRequest);
-            $this->fail('Expected getFolder to throw ApiException for deleted folder');
-        } catch (\Google\ApiCore\ApiException $e) {
-            $this->assertEquals(404, $e->getCode());
-        }
+        $this->runEventuallyConsistentTest(function () use ($getRequest) {
+            try {
+                self::$storageControlClient->getFolder($getRequest);
+                $this->fail('Expected getFolder to throw ApiException for deleted folder');
+            } catch (\Google\ApiCore\ApiException $e) {
+                $this->assertEquals(404, $e->getCode());
+            }
+        });
     }
 }

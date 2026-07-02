@@ -42,6 +42,13 @@ function delete_folder_recursive(string $bucketName, string $folderName): void
 
     $operation = $storageControlClient->deleteFolderRecursive($request);
     $operation->pollUntilComplete();
+    if (!$operation->operationSucceeded()) {
+        $error = $operation->getError();
+        throw new \Exception(sprintf(
+            'DeleteFolderRecursive operation failed: %s',
+            $error ? $error->getMessage() : 'Unknown error'
+        ));
+    }
 
     printf('Deleted folder recursively: %s', $folderName);
 }
