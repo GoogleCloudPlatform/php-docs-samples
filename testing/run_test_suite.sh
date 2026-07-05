@@ -62,6 +62,7 @@ ALT_PROJECT_TESTS=(
     pubsub/api
     pubsub/quickstart
     storage
+    storagecontrol
     spanner
     video
     vision
