@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Google\Cloud\Samples\SecretManager;
 
-// [START secretmanager_regional_create_secret_with_tags]
+// [START secretmanager_create_regional_secret_with_tags]
 // Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\Secret;
@@ -64,7 +64,7 @@ function create_regional_secret_with_tags(string $projectId, string $locationId,
     // Print the new secret name.
     printf('Created secret %s with tag', $newSecret->getName());
 }
-// [END secretmanager_regional_create_secret_with_tags]
+// [END secretmanager_create_regional_secret_with_tags]
 
 // The following 2 lines are only needed to execute the samples on the CLI
 require_once __DIR__ . '/../../testing/sample_helpers.php';
