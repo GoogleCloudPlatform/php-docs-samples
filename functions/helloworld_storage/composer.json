@@ -11,6 +11,6 @@
     },
     "require-dev": {
         "google/cloud-storage": "^1.23",
-        "google/cloud-logging": "^1.21"
+        "google/cloud-logging": "^2.0"
     }
 }
