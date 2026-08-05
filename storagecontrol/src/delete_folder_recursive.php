@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\StorageControl
+namespace Google\Cloud\Samples\StorageControl;
 
 # [START storage_control_delete_folder_recursive]
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
