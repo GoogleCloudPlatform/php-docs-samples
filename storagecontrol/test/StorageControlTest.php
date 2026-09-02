@@ -17,7 +17,10 @@
 
 namespace Google\Cloud\Samples\StorageControl;
 
+use Google\ApiCore\ApiException;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
+use Google\Cloud\Storage\Control\V2\CreateFolderRequest;
+use Google\Cloud\Storage\Control\V2\GetFolderRequest;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
@@ -221,14 +224,14 @@ class StorageControlTest extends TestCase
         $bucketResourceName = self::$storageControlClient->bucketName('_', $bucketName);
 
         // Create parent folder
-        $createParentRequest = new \Google\Cloud\Storage\Control\V2\CreateFolderRequest([
+        $createParentRequest = new CreateFolderRequest([
             'parent' => $bucketResourceName,
             'folder_id' => $parentFolderId,
         ]);
         self::$storageControlClient->createFolder($createParentRequest);
 
         // Create child folder
-        $createChildRequest = new \Google\Cloud\Storage\Control\V2\CreateFolderRequest([
+        $createChildRequest = new CreateFolderRequest([
             'parent' => $bucketResourceName,
             'folder_id' => $childFolderId,
         ]);
@@ -244,17 +247,29 @@ class StorageControlTest extends TestCase
             $output
         );
 
-        // Verify folder is gone by trying to get the parent folder
+        // Verify folder and child folder are gone by trying to get them
         $formattedParentName = self::$storageControlClient->folderName('_', $bucketName, $parentFolderId);
-        $getRequest = new \Google\Cloud\Storage\Control\V2\GetFolderRequest([
+        $getParentRequest = new GetFolderRequest([
             'name' => $formattedParentName,
         ]);
 
-        $this->runEventuallyConsistentTest(function () use ($getRequest) {
+        $formattedChildName = self::$storageControlClient->folderName('_', $bucketName, $childFolderId);
+        $getChildRequest = new GetFolderRequest([
+            'name' => $formattedChildName,
+        ]);
+
+        $this->runEventuallyConsistentTest(function () use ($getParentRequest, $getChildRequest) {
             try {
-                self::$storageControlClient->getFolder($getRequest);
+                self::$storageControlClient->getFolder($getParentRequest);
                 $this->fail('Expected getFolder to throw ApiException for deleted folder');
-            } catch (\Google\ApiCore\ApiException $e) {
+            } catch (ApiException $e) {
+                $this->assertEquals(404, $e->getCode());
+            }
+
+            try {
+                self::$storageControlClient->getFolder($getChildRequest);
+                $this->fail('Expected getFolder to throw ApiException for deleted child folder');
+            } catch (ApiException $e) {
                 $this->assertEquals(404, $e->getCode());
             }
         });

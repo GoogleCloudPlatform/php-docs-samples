@@ -15,6 +15,12 @@
  * limitations under the License.
  */
 
+/**
+ * For instructions on how to run the full sample:
+ *
+ * @see https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/storagecontrol/README.md
+ */
+
 namespace Google\Cloud\Samples\StorageControl;
 
 # [START storage_control_delete_folder_recursive]

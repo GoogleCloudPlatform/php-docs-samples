@@ -32,12 +32,15 @@ export PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 # export the secrets
 if [ -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]; then
-    PROJECT_ID=$(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
+    PROJECT_ID=$(jq -r .project_id "${GOOGLE_APPLICATION_CREDENTIALS}")
     if ! gcloud auth activate-service-account \
         --key-file "${GOOGLE_APPLICATION_CREDENTIALS}" \
         --project "${PROJECT_ID}"; then
         echo "Primary service account activation failed. Trying alternate..."
         if [ -f "${GOOGLE_ALT_APPLICATION_CREDENTIALS}" ]; then
+             if [ -z "${GOOGLE_ALT_PROJECT_ID}" ]; then
+                 GOOGLE_ALT_PROJECT_ID=$(jq -r .project_id "${GOOGLE_ALT_APPLICATION_CREDENTIALS}")
+             fi
              gcloud auth activate-service-account \
                 --key-file "${GOOGLE_ALT_APPLICATION_CREDENTIALS}" \
                 --project "${GOOGLE_ALT_PROJECT_ID}"
