@@ -31,20 +31,38 @@ fi
 export PATH="$PATH:/opt/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 # export the secrets
-if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
-    gcloud auth activate-service-account \
+if [ -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]; then
+    PROJECT_ID=$(jq -r .project_id "${GOOGLE_APPLICATION_CREDENTIALS}")
+    if ! gcloud auth activate-service-account \
         --key-file "${GOOGLE_APPLICATION_CREDENTIALS}" \
-        --project $(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
-    gcloud kms decrypt \
-           --location=global \
-           --keyring=ci \
-           --key=ci \
-           --ciphertext-file=.kokoro/secrets.sh.enc \
-           --plaintext-file=.kokoro/secrets.sh
+        --project "${PROJECT_ID}"; then
+        echo "Primary service account activation failed. Trying alternate..."
+        if [ -f "${GOOGLE_ALT_APPLICATION_CREDENTIALS}" ]; then
+             if [ -z "${GOOGLE_ALT_PROJECT_ID}" ]; then
+                 GOOGLE_ALT_PROJECT_ID=$(jq -r .project_id "${GOOGLE_ALT_APPLICATION_CREDENTIALS}")
+             fi
+             gcloud auth activate-service-account \
+                --key-file "${GOOGLE_ALT_APPLICATION_CREDENTIALS}" \
+                --project "${GOOGLE_ALT_PROJECT_ID}"
+        else
+            echo "No alternate service account available."
+            exit 1
+        fi
+    fi
+    if [ -f .kokoro/secrets.sh.enc ]; then
+        gcloud kms decrypt \
+               --location=global \
+               --keyring=ci \
+               --key=ci \
+               --ciphertext-file=.kokoro/secrets.sh.enc \
+               --plaintext-file=.kokoro/secrets.sh
+    fi
 fi
 
 # Unencrypt and extract secrets
-source .kokoro/secrets.sh
+if [ -f .kokoro/secrets.sh ]; then
+    source .kokoro/secrets.sh
+fi
 
 mkdir -p build/logs
 

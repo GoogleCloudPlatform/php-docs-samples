@@ -17,9 +17,13 @@
 
 namespace Google\Cloud\Samples\StorageControl;
 
+use Google\ApiCore\ApiException;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
+use Google\Cloud\Storage\Control\V2\CreateFolderRequest;
+use Google\Cloud\Storage\Control\V2\GetFolderRequest;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 class StorageControlTest extends TestCase
 {
     use TestTrait;
+    use EventuallyConsistentTestTrait;
 
     private static $sourceBucket;
     private static $folderId;
@@ -205,5 +210,68 @@ class StorageControlTest extends TestCase
             sprintf('Deleted folder: %s', self::$folderId),
             $output
         );
+    }
+
+    /**
+     * @depends testDeleteFolder
+     */
+    public function testDeleteFolderRecursive()
+    {
+        $parentFolderId = 'test-parent-' . time() . rand();
+        $childFolderId = $parentFolderId . '/test-child-' . time() . rand();
+
+        $bucketName = self::$sourceBucket->name();
+        $bucketResourceName = self::$storageControlClient->bucketName('_', $bucketName);
+
+        // Create parent folder
+        $createParentRequest = new CreateFolderRequest([
+            'parent' => $bucketResourceName,
+            'folder_id' => $parentFolderId,
+        ]);
+        self::$storageControlClient->createFolder($createParentRequest);
+
+        // Create child folder
+        $createChildRequest = new CreateFolderRequest([
+            'parent' => $bucketResourceName,
+            'folder_id' => $childFolderId,
+        ]);
+        self::$storageControlClient->createFolder($createChildRequest);
+
+        // Call the delete folder recursive snippet
+        $output = $this->runFunctionSnippet('delete_folder_recursive', [
+            $bucketName, $parentFolderId
+        ]);
+
+        $this->assertStringContainsString(
+            sprintf('Deleted folder recursively: %s', $parentFolderId),
+            $output
+        );
+
+        // Verify folder and child folder are gone by trying to get them
+        $formattedParentName = self::$storageControlClient->folderName('_', $bucketName, $parentFolderId);
+        $getParentRequest = new GetFolderRequest([
+            'name' => $formattedParentName,
+        ]);
+
+        $formattedChildName = self::$storageControlClient->folderName('_', $bucketName, $childFolderId);
+        $getChildRequest = new GetFolderRequest([
+            'name' => $formattedChildName,
+        ]);
+
+        $this->runEventuallyConsistentTest(function () use ($getParentRequest, $getChildRequest) {
+            try {
+                self::$storageControlClient->getFolder($getParentRequest);
+                $this->fail('Expected getFolder to throw ApiException for deleted folder');
+            } catch (ApiException $e) {
+                $this->assertEquals(404, $e->getCode());
+            }
+
+            try {
+                self::$storageControlClient->getFolder($getChildRequest);
+                $this->fail('Expected getFolder to throw ApiException for deleted child folder');
+            } catch (ApiException $e) {
+                $this->assertEquals(404, $e->getCode());
+            }
+        });
     }
 }
