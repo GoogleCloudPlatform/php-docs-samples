@@ -10,7 +10,7 @@
         ]
     },
     "require-dev": {
-        "google/cloud-storage": "^1.23",
+        "google/cloud-storage": "^2.0",
         "google/cloud-logging": "^1.21"
     }
 }
