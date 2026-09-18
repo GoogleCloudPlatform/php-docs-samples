@@ -6,7 +6,7 @@
         "bshaffer/phpunit-retry-annotations": "^0.3.0",
         "google/auth": "^1.12",
         "google/cloud-tools": "dev-main",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^8.0",
         "phpunit/phpunit": "^9.0",
         "friendsofphp/php-cs-fixer": "^3.29",
         "composer/semver": "^3.2",
