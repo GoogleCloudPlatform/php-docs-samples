@@ -1,0 +1,19 @@
+{
+    "require": {
+        "google/cloud-functions-framework": "^0.7.2"
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Google\\Cloud\\Samples\\Functions\\TipsPreload\\": ""
+        }
+    },
+    "scripts": {
+        "start": [
+           "Composer\\Config::disableProcessTimeout",
+           "FUNCTION_TARGET=preloadDemo php -d opcache.preload=preload.php -S localhost:${PORT:-8080} vendor/bin/router.php"
+        ]
+    }
+}
