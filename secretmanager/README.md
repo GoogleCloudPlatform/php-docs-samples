@@ -21,6 +21,7 @@ This simple command-line application demonstrates how to invoke
     - GOOGLE_CLOUD_PUBSUB_TOPIC - Full name of topic (projects/{project}/topics/{topic}).
     - GOOGLE_CLOUD_KMS_KEY - Full name of global KMS key (projects/{project}/locations/global/keyRings/{keyring}/cryptoKeys/{key}).
     - GOOGLE_CLOUD_REGIONAL_KMS_KEY - Full name of regional KMS key (projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}).
+    - CLOUD_SQL_INSTANCE / CLOUD_SQL_USER - Bare Cloud SQL instance ID and database username, required by the Cloud SQL managed-rotation tests.
 
 1.  **Download The Credentials** - Click "Go to credentials" after enabling the
     APIs. Click "New Credentials" and select "Service Account Key". Create a new
