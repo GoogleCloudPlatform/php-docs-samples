@@ -42,6 +42,23 @@ use Google\Cloud\Kms\V1\ProtectionLevel;
 use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\CreateParameterRequest;
 use Google\Cloud\ParameterManager\V1\CreateParameterVersionRequest;
+use Google\Cloud\ParameterManager\V1\CreateTemplateRequest;
+use Google\Cloud\ParameterManager\V1\CreateTemplateVersionRequest;
+use Google\Cloud\ParameterManager\V1\DeleteTemplateRequest;
+use Google\Cloud\ParameterManager\V1\DeleteTemplateVersionRequest;
+use Google\Cloud\ParameterManager\V1\GetParameterRequest;
+use Google\Cloud\ParameterManager\V1\GetParameterVersionRequest;
+use Google\Cloud\ParameterManager\V1\ParameterVersion\ChecksumSource;
+use Google\Cloud\ParameterManager\V1\Template;
+use Google\Cloud\ParameterManager\V1\TemplateFormat;
+use Google\Cloud\ParameterManager\V1\TemplateVersion;
+use Google\Cloud\ParameterManager\V1\TemplateVersionPayload;
+use Google\Cloud\ParameterManager\V1\View;
+use Google\Cloud\ResourceManager\V3\Client\TagBindingsClient;
+use Google\Cloud\ResourceManager\V3\CreateTagBindingRequest;
+use Google\Cloud\ResourceManager\V3\DeleteTagBindingRequest;
+use Google\Cloud\ResourceManager\V3\ListTagBindingsRequest;
+use Google\Cloud\ResourceManager\V3\TagBinding;
 use Google\Cloud\ParameterManager\V1\DeleteParameterRequest;
 use Google\Cloud\ParameterManager\V1\DeleteParameterVersionRequest;
 use Google\Cloud\ParameterManager\V1\Parameter;
@@ -64,6 +81,7 @@ class regionalparametermanagerTest extends TestCase
 
     public const PAYLOAD = 'test123';
     public const JSON_PAYLOAD = '{"username": "test-user", "host": "localhost"}';
+    public const TEMPLATE_PAYLOAD = '{"username": "{{.username}}", "host": "{{.host}}"}';
     public const SECRET_ID = 'projects/project-id/locations/us-central1/secrets/secret-id/versions/latest';
 
     private static $secretClient;
@@ -98,6 +116,30 @@ class regionalparametermanagerTest extends TestCase
     private static $cryptoUpdatedKey;
     private static $testParameterNameWithKms;
 
+    private static $tagBindingsClient;
+
+    private static $testTemplateId;
+    private static $testTemplateVersionId;
+    private static $testTemplateForVersion;
+    private static $testTemplateToGet;
+    private static $testTemplateVersionToGet;
+    private static $testTemplateToDelete;
+    private static $testTemplateToDeleteVersion;
+    private static $testTemplateVersionToDelete;
+    private static $testTemplateToRender;
+    private static $testTemplateVersionToRender;
+    private static $testParameterVersionForRender;
+    private static $testParameterForRender;
+
+    private static $testParameterWithTags;
+    private static $testParameterBindTags;
+    private static $testParameterGetTags;
+
+    private static $testParameterForChecksum;
+    private static $testParameterForVerify;
+    private static $testParameterVersionForVerify;
+    private static $testParameterVersionWithChecksum;
+
     public static function setUpBeforeClass(): void
     {
         $optionsForSecretManager = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com'];
@@ -105,6 +147,7 @@ class regionalparametermanagerTest extends TestCase
         $options = ['apiEndpoint' => 'parametermanager.' . self::$locationId . '.rep.googleapis.com'];
         self::$client = new ParameterManagerClient($options);
         self::$kmsClient = new KeyManagementServiceClient();
+        self::$tagBindingsClient = new TagBindingsClient(['apiEndpoint' => self::$locationId . '-cloudresourcemanager.googleapis.com']);
 
         self::$testParameterName = self::$client->parameterName(self::$projectId, self::$locationId, self::randomId());
         self::$testParameterNameWithFormat = self::$client->parameterName(self::$projectId, self::$locationId, self::randomId());
@@ -145,6 +188,28 @@ class regionalparametermanagerTest extends TestCase
 
         $hsmUdpatedKey = self::randomId();
         self::createUpdatedHsmKey($hsmUdpatedKey);
+
+        self::$testTemplateId = self::randomId();
+        self::$testTemplateVersionId = self::randomId();
+        self::$testTemplateForVersion = self::createTemplate(self::randomId());
+        self::$testTemplateToGet = self::createTemplate(self::randomId());
+        self::$testTemplateVersionToGet = self::createTemplateVersion(self::$testTemplateToGet->getName(), self::randomId(), self::TEMPLATE_PAYLOAD);
+        self::$testTemplateToDelete = self::createTemplate(self::randomId());
+        self::$testTemplateToDeleteVersion = self::createTemplate(self::randomId());
+        self::$testTemplateVersionToDelete = self::createTemplateVersion(self::$testTemplateToDeleteVersion->getName(), self::randomId(), self::TEMPLATE_PAYLOAD);
+        self::$testTemplateToRender = self::createTemplate(self::randomId());
+        self::$testTemplateVersionToRender = self::createTemplateVersion(self::$testTemplateToRender->getName(), self::randomId(), self::TEMPLATE_PAYLOAD);
+        self::$testParameterForRender = self::createParameter(self::randomId(), ParameterFormat::JSON);
+        self::$testParameterVersionForRender = self::createParameterVersion(self::idOf(self::$testParameterForRender->getName()), self::randomId(), self::JSON_PAYLOAD);
+
+        self::$testParameterWithTags = self::randomId();
+        self::$testParameterBindTags = self::randomId();
+        self::$testParameterGetTags = self::randomId();
+
+        self::$testParameterForChecksum = self::createParameter(self::randomId(), ParameterFormat::UNFORMATTED);
+        self::$testParameterVersionWithChecksum = self::randomId();
+        self::$testParameterForVerify = self::createParameter(self::randomId(), ParameterFormat::UNFORMATTED);
+        self::$testParameterVersionForVerify = self::createParameterVersionWithChecksum(self::$testParameterForVerify->getName(), self::randomId(), self::PAYLOAD);
     }
 
     public static function tearDownAfterClass(): void
@@ -188,6 +253,30 @@ class regionalparametermanagerTest extends TestCase
         self::deleteParameterVersion(self::$testParameterVersionToDelete->getName());
         self::deleteParameter(self::$testParameterToDeleteVersion->getName());
         self::deleteParameter(self::$testParameterToDelete->getName());
+
+        self::deleteTemplateVersion(self::templateVersionName(self::$testTemplateForVersion->getName(), self::$testTemplateVersionId));
+        self::deleteTemplate(self::$testTemplateForVersion->getName());
+        self::deleteTemplate(self::templateName(self::$testTemplateId));
+        self::deleteTemplateVersion(self::$testTemplateVersionToGet->getName());
+        self::deleteTemplate(self::$testTemplateToGet->getName());
+        self::deleteTemplate(self::$testTemplateToDelete->getName());
+        self::deleteTemplateVersion(self::$testTemplateVersionToDelete->getName());
+        self::deleteTemplate(self::$testTemplateToDeleteVersion->getName());
+        self::deleteTemplateVersion(self::$testTemplateVersionToRender->getName());
+        self::deleteTemplate(self::$testTemplateToRender->getName());
+        self::deleteParameterVersion(self::$testParameterVersionForRender->getName());
+        self::deleteParameter(self::$testParameterForRender->getName());
+
+        foreach ([self::$testParameterWithTags, self::$testParameterBindTags, self::$testParameterGetTags] as $parameterId) {
+            $name = self::$client->parameterName(self::$projectId, self::$locationId, $parameterId);
+            self::deleteTagBindings($name);
+            self::deleteParameter($name);
+        }
+
+        self::deleteParameterVersion(self::$client->parameterVersionName(self::$projectId, self::$locationId, self::idOf(self::$testParameterForChecksum->getName()), self::$testParameterVersionWithChecksum));
+        self::deleteParameter(self::$testParameterForChecksum->getName());
+        self::deleteParameterVersion(self::$testParameterVersionForVerify->getName());
+        self::deleteParameter(self::$testParameterForVerify->getName());
     }
 
     private static function randomId(): string
@@ -251,6 +340,133 @@ class regionalparametermanagerTest extends TestCase
                 throw $e;
             }
         }
+    }
+
+    private static function idOf(string $name): string
+    {
+        return substr($name, strrpos($name, '/') + 1);
+    }
+
+    private static function templateName(string $templateId): string
+    {
+        return self::$client->templateName(self::$projectId, self::$locationId, $templateId);
+    }
+
+    private static function templateVersionName(string $templateName, string $versionId): string
+    {
+        return $templateName . '/versions/' . $versionId;
+    }
+
+    private static function createTemplate(string $templateId): Template
+    {
+        $parent = self::$client->locationName(self::$projectId, self::$locationId);
+        $request = (new CreateTemplateRequest())
+            ->setParent($parent)
+            ->setTemplateId($templateId)
+            ->setTemplate((new Template())->setFormat(TemplateFormat::TEMPLATE_FORMAT_JSON));
+
+        return self::$client->createTemplate($request);
+    }
+
+    private static function createTemplateVersion(string $templateName, string $versionId, string $payload): TemplateVersion
+    {
+        $request = (new CreateTemplateVersionRequest())
+            ->setParent($templateName)
+            ->setTemplateVersionId($versionId)
+            ->setTemplateVersion((new TemplateVersion())
+                ->setPayload((new TemplateVersionPayload())->setData($payload)));
+
+        return self::$client->createTemplateVersion($request);
+    }
+
+    private static function createParameterVersionWithChecksum(string $parameterName, string $versionId, string $payload): ParameterVersion
+    {
+        $request = (new CreateParameterVersionRequest())
+            ->setParent($parameterName)
+            ->setParameterVersionId($versionId)
+            ->setParameterVersion((new ParameterVersion())
+                ->setPayload((new ParameterVersionPayload())
+                    ->setData($payload)
+                    ->setDataCrc32C(hexdec(hash('crc32c', $payload)))));
+
+        return self::$client->createParameterVersion($request);
+    }
+
+    private static function deleteTemplate(string $name)
+    {
+        try {
+            self::$client->deleteTemplate((new DeleteTemplateRequest())->setName($name));
+        } catch (GaxApiException $e) {
+            if ($e->getStatus() != 'NOT_FOUND') {
+                throw $e;
+            }
+        }
+    }
+
+    private static function deleteTemplateVersion(string $name)
+    {
+        try {
+            self::$client->deleteTemplateVersion((new DeleteTemplateVersionRequest())->setName($name));
+        } catch (GaxApiException $e) {
+            if ($e->getStatus() != 'NOT_FOUND') {
+                throw $e;
+            }
+        }
+    }
+
+    private static function tagBindingParent(string $parameterName): string
+    {
+        $parameter = self::$client->getParameter((new GetParameterRequest())->setName($parameterName));
+
+        return '//parametermanager.googleapis.com/' . $parameter->getName();
+    }
+
+    private static function listTagValues(string $parameterName): array
+    {
+        $request = (new ListTagBindingsRequest())
+            ->setParent(self::tagBindingParent($parameterName));
+        $values = [];
+        foreach (self::$tagBindingsClient->listTagBindings($request) as $binding) {
+            $values[] = $binding->getTagValue();
+        }
+
+        return $values;
+    }
+
+    private static function deleteTagBindings(string $parameterName)
+    {
+        try {
+            $request = (new ListTagBindingsRequest())
+                ->setParent(self::tagBindingParent($parameterName));
+            foreach (self::$tagBindingsClient->listTagBindings($request) as $binding) {
+                $operation = self::$tagBindingsClient->deleteTagBinding((new DeleteTagBindingRequest())->setName($binding->getName()));
+                $operation->pollUntilComplete();
+            }
+        } catch (GaxApiException $e) {
+            if ($e->getStatus() != 'NOT_FOUND') {
+                throw $e;
+            }
+        }
+    }
+
+    private static function tagKey(): string
+    {
+        $tagKey = getenv('PARAMETER_MANAGER_TAG_KEY');
+        if (!$tagKey) {
+            self::markTestSkipped('Set PARAMETER_MANAGER_TAG_KEY to an existing tag key (e.g. tagKeys/1234567890).');
+        }
+
+        return $tagKey;
+    }
+
+    private static function tagValue(): string
+    {
+        $tagValue = getenv('PARAMETER_MANAGER_TAG_VALUE');
+        if (!$tagValue) {
+            self::markTestSkipped('Set PARAMETER_MANAGER_TAG_VALUE to an existing tag value (e.g. tagValues/1234567890).');
+        }
+
+        return $tagValue;
     }
 
     private static function createSecret(string $secretId): Secret
@@ -615,5 +831,287 @@ class regionalparametermanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Removed kms key for regional parameter ', $output);
+    }
+
+    public function testCreateRegionalParamTemplate()
+    {
+        $output = $this->runFunctionSnippet('create_regional_param_template', [
+            self::$projectId,
+            self::$locationId,
+            self::$testTemplateId,
+            'JSON',
+        ]);
+
+        $this->assertStringContainsString('Created regional template', $output);
+        $this->assertStringContainsString('TEMPLATE_FORMAT_JSON', $output);
+    }
+
+    public function testCreateRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateForVersion->getName());
+
+        $output = $this->runFunctionSnippet('create_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            self::$testTemplateVersionId,
+        ]);
+
+        $this->assertStringContainsString('Created regional template version', $output);
+    }
+
+    public function testListRegionalParamTemplates()
+    {
+        $output = $this->runFunctionSnippet('list_regional_param_templates', [
+            self::$projectId,
+            self::$locationId,
+        ]);
+
+        $this->assertStringContainsString('Found regional template', $output);
+    }
+
+    public function testGetRegionalParamTemplate()
+    {
+        $name = self::$client->parseName(self::$testTemplateToGet->getName());
+
+        $output = $this->runFunctionSnippet('get_regional_param_template', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+        ]);
+
+        $this->assertStringContainsString('Got regional template ' . self::$testTemplateToGet->getName(), $output);
+    }
+
+    public function testListRegionalParamTemplateVersions()
+    {
+        $name = self::$client->parseName(self::$testTemplateToGet->getName());
+
+        $output = $this->runFunctionSnippet('list_regional_param_template_versions', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+        ]);
+
+        $this->assertStringContainsString('Found regional template version ' . self::$testTemplateVersionToGet->getName(), $output);
+    }
+
+    public function testGetRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateVersionToGet->getName());
+
+        $output = $this->runFunctionSnippet('get_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            $name['template_version'],
+        ]);
+
+        $this->assertStringContainsString('Got regional template version ' . self::$testTemplateVersionToGet->getName(), $output);
+        $this->assertStringContainsString('{{.username}}', $output);
+    }
+
+    public function testUpdateRegionalParamTemplateLabels()
+    {
+        $name = self::$client->parseName(self::$testTemplateToGet->getName());
+
+        $output = $this->runFunctionSnippet('update_regional_param_template_labels', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            'environment',
+            'test',
+        ]);
+
+        $this->assertStringContainsString('Updated regional template ' . self::$testTemplateToGet->getName(), $output);
+        $this->assertStringContainsString('"environment":"test"', $output);
+    }
+
+    public function testDisableRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateVersionToGet->getName());
+
+        $output = $this->runFunctionSnippet('disable_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            $name['template_version'],
+        ]);
+
+        $this->assertStringContainsString('Disabled regional template version', $output);
+    }
+
+    public function testEnableRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateVersionToGet->getName());
+
+        $output = $this->runFunctionSnippet('enable_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            $name['template_version'],
+        ]);
+
+        $this->assertStringContainsString('Enabled regional template version', $output);
+    }
+
+    public function testRenderRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateVersionToRender->getName());
+        $parameterVersion = self::$client->parseName(self::$testParameterVersionForRender->getName());
+
+        $output = $this->runFunctionSnippet('render_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            $name['template_version'],
+            $parameterVersion['parameter'],
+            $parameterVersion['parameter_version'],
+        ]);
+
+        $this->assertStringContainsString('Template payload: ' . self::TEMPLATE_PAYLOAD, $output);
+        $this->assertStringContainsString('Rendered payload: ', $output);
+        $this->assertStringContainsString('test-user', $output);
+        $this->assertStringNotContainsString('{{.username}}', explode('Rendered payload: ', $output)[1]);
+    }
+
+    public function testDeleteRegionalParamTemplateVersion()
+    {
+        $name = self::$client->parseName(self::$testTemplateVersionToDelete->getName());
+
+        $output = $this->runFunctionSnippet('delete_regional_param_template_version', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+            $name['template_version'],
+        ]);
+
+        $this->assertStringContainsString('Deleted regional template version', $output);
+    }
+
+    public function testDeleteRegionalParamTemplate()
+    {
+        $name = self::$client->parseName(self::$testTemplateToDelete->getName());
+
+        $output = $this->runFunctionSnippet('delete_regional_param_template', [
+            self::$projectId,
+            self::$locationId,
+            $name['template'],
+        ]);
+
+        $this->assertStringContainsString('Deleted regional template', $output);
+    }
+
+    public function testCreateRegionalParamWithTags()
+    {
+        $tagKey = self::tagKey();
+        $tagValue = self::tagValue();
+
+        $output = $this->runFunctionSnippet('create_regional_param_with_tags', [
+            self::$projectId,
+            self::$locationId,
+            self::$testParameterWithTags,
+            $tagKey,
+            $tagValue,
+        ]);
+
+        $this->assertStringContainsString('Created regional parameter', $output);
+        $this->assertStringContainsString(sprintf('with tag %s: %s', $tagKey, $tagValue), $output);
+
+        $name = self::$client->parameterName(self::$projectId, self::$locationId, self::$testParameterWithTags);
+        $this->assertContains($tagValue, self::listTagValues($name));
+    }
+
+    public function testBindTagsToRegionalParam()
+    {
+        $tagValue = self::tagValue();
+
+        $output = $this->runFunctionSnippet('bind_tags_to_regional_param', [
+            self::$projectId,
+            self::$locationId,
+            self::$testParameterBindTags,
+            $tagValue,
+        ]);
+
+        $this->assertStringContainsString('Created regional parameter', $output);
+        $this->assertStringContainsString('Created tag binding', $output);
+
+        $name = self::$client->parameterName(self::$projectId, self::$locationId, self::$testParameterBindTags);
+        $this->assertContains($tagValue, self::listTagValues($name));
+    }
+
+    public function testGetRegionalParamTags()
+    {
+        $tagValue = self::tagValue();
+        $parameter = self::createParameter(self::$testParameterGetTags, ParameterFormat::UNFORMATTED);
+        $operation = self::$tagBindingsClient->createTagBinding((new CreateTagBindingRequest())
+            ->setTagBinding((new TagBinding())
+                ->setParent('//parametermanager.googleapis.com/' . $parameter->getName())
+                ->setTagValue($tagValue)));
+        $operation->pollUntilComplete();
+
+        $output = $this->runFunctionSnippet('get_regional_param_tags', [
+            self::$projectId,
+            self::$locationId,
+            self::$testParameterGetTags,
+        ]);
+
+        $this->assertStringContainsString('Found regional parameter tag: ' . $tagValue, $output);
+    }
+
+    public function testCreateRegionalParamVersionWithChecksum()
+    {
+        $name = self::$client->parseName(self::$testParameterForChecksum->getName());
+
+        $output = $this->runFunctionSnippet('create_regional_param_version_with_checksum', [
+            self::$projectId,
+            self::$locationId,
+            $name['parameter'],
+            self::$testParameterVersionWithChecksum,
+        ]);
+
+        $this->assertStringContainsString('Created regional parameter version', $output);
+        $this->assertStringContainsString('Checksum source: USER_SPECIFIED', $output);
+
+        $versionName = self::$client->parameterVersionName(self::$projectId, self::$locationId, $name['parameter'], self::$testParameterVersionWithChecksum);
+        $version = self::$client->getParameterVersion((new GetParameterVersionRequest())
+            ->setName($versionName)
+            ->setView(View::FULL));
+        $this->assertSame(hexdec(hash('crc32c', 'hello world!')), $version->getPayload()->getDataCrc32C());
+        $this->assertSame(ChecksumSource::USER_SPECIFIED, $version->getChecksumSource());
+    }
+
+    public function testCreateRegionalParamVersionWithMismatchedChecksum()
+    {
+        $request = (new CreateParameterVersionRequest())
+            ->setParent(self::$testParameterForChecksum->getName())
+            ->setParameterVersionId(self::randomId())
+            ->setParameterVersion((new ParameterVersion())
+                ->setPayload((new ParameterVersionPayload())
+                    ->setData(self::PAYLOAD)
+                    ->setDataCrc32C(hexdec(hash('crc32c', self::PAYLOAD)) + 1)));
+
+        try {
+            self::$client->createParameterVersion($request);
+            $this->fail('Expected the checksum mismatch to be rejected.');
+        } catch (GaxApiException $e) {
+            $this->assertSame('INVALID_ARGUMENT', $e->getStatus());
+            $this->assertStringContainsString('CHECKSUM_MISMATCH', $e->getMessage());
+        }
+    }
+
+    public function testGetRegionalParamVersionVerifyChecksum()
+    {
+        $name = self::$client->parseName(self::$testParameterVersionForVerify->getName());
+
+        $output = $this->runFunctionSnippet('get_regional_param_version_verify_checksum', [
+            self::$projectId,
+            self::$locationId,
+            $name['parameter'],
+            $name['parameter_version'],
+        ]);
+
+        $this->assertStringContainsString('Verified checksum for regional parameter version', $output);
+        $this->assertStringContainsString('Checksum source: USER_SPECIFIED', $output);
     }
 }
