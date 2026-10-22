@@ -61,7 +61,7 @@ To run on App Engine Flex, create an App Engine project by following the setup f
 
 First, update [app.yaml](app.yaml) with the correct values to pass the environment variables into the runtime.
 
-In order to use the `sqlsrv` extension, you will need to build a [custom runtime](https://cloud.google.com/appengine/docs/flexible/custom-runtimes/quickstart). The `Dockerfile` in this sample contains a simple example of a custom PHP 7.2 runtime based off of the default App Engine Flex image with the `pdo_sqlsrv` extension installed.
+In order to use the `sqlsrv` extension, you will need to build a [custom runtime](https://cloud.google.com/appengine/docs/flexible/custom-runtimes/quickstart). The `Dockerfile` in this sample contains a simple example of a custom PHP 8.3 runtime with the `pdo_sqlsrv` extension installed.
 
 Then, make sure that the App Engine default service account
 `<PROJECT-ID>@appspot.gserviceaccount.com` has
