@@ -60,7 +60,7 @@ function create_instance_with_encryption_key(
     string $instanceName,
     string $key,
     string $machineType = 'n1-standard-1',
-    string $sourceImage = 'projects/debian-cloud/global/images/family/debian-11',
+    string $sourceImage = 'projects/debian-cloud/global/images/family/debian-13',
     string $networkName = 'global/networks/default'
 ) {
     // Set the machine type using the specified zone.
