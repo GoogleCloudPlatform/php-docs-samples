@@ -39,4 +39,6 @@ beta_settings:
 
 runtime_config:
   document_root: .
+  operating_system: ubuntu22
+  runtime_version: 8.3
 
