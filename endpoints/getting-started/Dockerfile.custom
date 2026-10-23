@@ -1,5 +1,12 @@
-# The Google App Engine php runtime is Debian Jessie with PHP installed
-# and various os-level packages to allow installation of popular PHP
-# libraries. The source is on github at:
-#   https://github.com/GoogleCloudPlatform/php-docker
-FROM gcr.io/google_appengine/php
+# Use the official PHP 8.3 Apache image for App Engine Flexible custom runtimes.
+# https://hub.docker.com/_/php
+FROM php:8.3-apache
+
+COPY --from=composer:latest-bin /composer /usr/local/bin/composer
+
+WORKDIR /var/www/html
+COPY . .
+
+RUN apt-get update && apt-get -y install unzip && \
+    composer install --no-dev && \
+    sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
