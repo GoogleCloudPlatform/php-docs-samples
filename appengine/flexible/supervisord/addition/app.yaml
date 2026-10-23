@@ -3,6 +3,8 @@ runtime: php
 
 runtime_config:
   document_root: web
+  operating_system: ubuntu22
+  runtime_version: 8.3
 
 manual_scaling:
   instances: 1
