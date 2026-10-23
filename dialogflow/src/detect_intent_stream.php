@@ -78,18 +78,23 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
     foreach ($requests as $request) {
         $stream->write($request);
     }
+
+    // The query result is not always on the last response. When output audio is
+    // requested the server keeps streaming audio after it, so keep the last one
+    // we see instead of only looking at the final response.
+    $queryResult = null;
     foreach ($stream->closeWriteAndReadAll() as $response) {
         $recognitionResult = $response->getRecognitionResult();
         if ($recognitionResult) {
             $transcript = $recognitionResult->getTranscript();
             printf('Intermediate transcript: %s' . PHP_EOL, $transcript);
         }
+        $queryResult = $response->getQueryResult() ?: $queryResult;
     }
 
     // get final response and relevant info
-    if ($response) {
+    if ($queryResult) {
         print(str_repeat('=', 20) . PHP_EOL);
-        $queryResult = $response->getQueryResult();
         $queryText = $queryResult->getQueryText();
         $intent = $queryResult->getIntent();
         $displayName = $intent->getDisplayName();
