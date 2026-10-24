@@ -20,8 +20,12 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 use Google\ApiCore\ApiException as GaxApiException;
+use Google\Cloud\Iam\V1\Binding;
+use Google\Cloud\Iam\V1\GetIamPolicyRequest;
+use Google\Cloud\Iam\V1\SetIamPolicyRequest;
 use Google\Cloud\ResourceManager\V3\DeleteTagKeyRequest;
 use Google\Cloud\ResourceManager\V3\DeleteTagValueRequest;
+use Google\Cloud\ResourceManager\V3\Client\ProjectsClient;
 use Google\Cloud\ResourceManager\V3\Client\TagKeysClient;
 use Google\Cloud\ResourceManager\V3\CreateTagKeyRequest;
 use Google\Cloud\ResourceManager\V3\TagKey;
@@ -35,6 +39,7 @@ use Google\Cloud\SecretManager\V1\DeleteSecretRequest;
 use Google\Cloud\SecretManager\V1\DisableSecretVersionRequest;
 use Google\Cloud\SecretManager\V1\GetSecretRequest;
 use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\Secret\SecretType;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
@@ -44,9 +49,13 @@ class regionalsecretmanagerTest extends TestCase
 {
     use TestTrait;
 
+    // Role granted to the secret's identity to enable managed rotation.
+    private const CLOUD_SQL_ROLE = 'roles/cloudsql.admin';
+
     private static $client;
     private static $tagKeyClient;
     private static $tagValuesClient;
+    private static $projectsClient;
 
     private static $testSecret;
     private static $testSecretToDelete;
@@ -68,6 +77,7 @@ class regionalsecretmanagerTest extends TestCase
     private static $testSecretWithCMEKToCreateName;
     private static $testSecretWithTopicToCreateName;
     private static $testSecretWithRotationToCreateName;
+    private static $testSecretCloudSqlToCreateName;
 
     private static $iamUser = 'user:kapishsingh@google.com';
     private static $locationId = 'us-central1';
@@ -85,12 +95,17 @@ class regionalsecretmanagerTest extends TestCase
     private static $skipRotationTests = false;
     private static $testRotationTopic;
 
+    private static $skipCloudSqlTests = false;
+    private static $cloudSqlInstanceId;
+    private static $cloudSqlUsername;
+
     public static function setUpBeforeClass(): void
     {
         $options = ['apiEndpoint' => 'secretmanager.' . self::$locationId . '.rep.googleapis.com' ];
         self::$client = new SecretManagerServiceClient($options);
         self::$tagKeyClient = new TagKeysClient();
         self::$tagValuesClient = new TagValuesClient();
+        self::$projectsClient = new ProjectsClient();
 
         self::$testSecret = self::createSecret();
         self::$testSecretToDelete = self::createSecret();
@@ -105,6 +120,7 @@ class regionalsecretmanagerTest extends TestCase
         self::$testSecretWithCMEKToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretWithTopicToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
         self::$testSecretWithRotationToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
+        self::$testSecretCloudSqlToCreateName = self::$client->projectLocationSecretName(self::$projectId, self::$locationId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -127,6 +143,16 @@ class regionalsecretmanagerTest extends TestCase
         } else {
             self::$testRotationTopic = $envTopic;
         }
+
+        $cloudSqlInstance = getenv('CLOUD_SQL_INSTANCE');
+        $cloudSqlUser = getenv('CLOUD_SQL_USER');
+        if ($cloudSqlInstance === false || $cloudSqlInstance === '' || $cloudSqlUser === false || $cloudSqlUser === '') {
+            self::$skipCloudSqlTests = true;
+            printf('Skipping Cloud SQL managed-rotation tests dependent on CLOUD_SQL_INSTANCE/CLOUD_SQL_USER as they are not set.%s', PHP_EOL);
+        } else {
+            self::$cloudSqlInstanceId = $cloudSqlInstance;
+            self::$cloudSqlUsername = $cloudSqlUser;
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -147,6 +173,7 @@ class regionalsecretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithCMEKToCreateName);
         self::deleteSecret(self::$testSecretWithTopicToCreateName);
         self::deleteSecret(self::$testSecretWithRotationToCreateName);
+        self::deleteSecret(self::$testSecretCloudSqlToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -204,6 +231,105 @@ class regionalsecretmanagerTest extends TestCase
         $name = self::$client->projectLocationSecretName($projectId, $locationId, $secretId);
         $getSecretRequest = (new GetSecretRequest())->setName($name);
         return self::$client->getSecret($getSecretRequest);
+    }
+
+    private static function createCloudSqlCredentialsSecret(): Secret
+    {
+        $parent = self::$client->locationName(self::$projectId, self::$locationId);
+        $secretId = self::randomSecretId();
+        $secret = new Secret(['secret_type' => SecretType::CLOUD_SQL_DB_CREDENTIALS]);
+        $createSecretRequest = CreateSecretRequest::build($parent, $secretId, $secret);
+
+        return self::$client->createSecret($createSecretRequest);
+    }
+
+    /**
+     * Grants self::CLOUD_SQL_ROLE to $member on the project.
+     */
+    private static function grantCloudSqlRole(string $member): void
+    {
+        $resource = 'projects/' . self::$projectId;
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $policy = self::$projectsClient->getIamPolicy(
+                (new GetIamPolicyRequest())->setResource($resource)
+            );
+
+            $bindings = $policy->getBindings();
+            $found = false;
+            foreach ($bindings as $binding) {
+                if ($binding->getRole() === self::CLOUD_SQL_ROLE) {
+                    $members = $binding->getMembers();
+                    if (!in_array($member, iterator_to_array($members), true)) {
+                        $members[] = $member;
+                    }
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $bindings[] = new Binding([
+                    'role' => self::CLOUD_SQL_ROLE,
+                    'members' => [$member],
+                ]);
+            }
+
+            try {
+                self::$projectsClient->setIamPolicy(
+                    (new SetIamPolicyRequest())->setResource($resource)->setPolicy($policy)
+                );
+                // Wait for the IAM grant to propagate.
+                sleep(10);
+                return;
+            } catch (GaxApiException $e) {
+                if ($e->getStatus() !== 'ABORTED' || $attempt === 4) {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    /** Removes $member from self::CLOUD_SQL_ROLE on the project, added by grantCloudSqlRole(). */
+    private static function revokeCloudSqlRole(string $member): void
+    {
+        $resource = 'projects/' . self::$projectId;
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $policy = self::$projectsClient->getIamPolicy(
+                (new GetIamPolicyRequest())->setResource($resource)
+            );
+
+            $changed = false;
+            foreach ($policy->getBindings() as $binding) {
+                if ($binding->getRole() === self::CLOUD_SQL_ROLE) {
+                    $members = $binding->getMembers();
+                    $remaining = array_values(array_filter(
+                        iterator_to_array($members),
+                        fn ($m) => $m !== $member
+                    ));
+                    if (count($remaining) !== count($members)) {
+                        $binding->setMembers($remaining);
+                        $changed = true;
+                    }
+                    break;
+                }
+            }
+
+            if (!$changed) {
+                return;
+            }
+
+            try {
+                self::$projectsClient->setIamPolicy(
+                    (new SetIamPolicyRequest())->setResource($resource)->setPolicy($policy)
+                );
+                return;
+            } catch (GaxApiException $e) {
+                if ($e->getStatus() !== 'ABORTED' || $attempt === 4) {
+                    throw $e;
+                }
+            }
+        }
     }
 
     private static function createTagKey(string $short_name): string
@@ -941,5 +1067,140 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Deleted tag binding', $output);
+    }
+
+    public function testCreateSecretWithCloudSqlCredentials()
+    {
+        $name = self::$client->parseName(self::$testSecretCloudSqlToCreateName);
+
+        $output = $this->runFunctionSnippet('create_regional_secret_with_cloud_sql_credentials', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Created secret', $output);
+        $this->assertStringContainsString('Grant this identity Cloud SQL IAM permissions', $output);
+
+        $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
+        $this->assertSame(SecretType::CLOUD_SQL_DB_CREDENTIALS, $secret->getSecretType());
+    }
+
+    public function testEnableRegionalSecretManagedRotation()
+    {
+        if (self::$skipCloudSqlTests) {
+            $this->markTestSkipped('CLOUD_SQL_INSTANCE/CLOUD_SQL_USER not set');
+        }
+
+        $secret = self::createCloudSqlCredentialsSecret();
+        $member = $secret->getPolicyMember()->getIamPolicyUidPrincipal();
+
+        try {
+            self::grantCloudSqlRole($member);
+            $name = self::$client->parseName($secret->getName());
+
+            $output = $this->runFunctionSnippet('enable_regional_secret_managed_rotation', [
+                $name['project'],
+                $name['location'],
+                $name['secret'],
+                self::$cloudSqlInstanceId,
+                self::$cloudSqlUsername,
+            ]);
+
+            $this->assertStringContainsString('Enabled managed rotation', $output);
+        } finally {
+            self::revokeCloudSqlRole($member);
+            self::deleteSecret($secret->getName());
+        }
+    }
+
+    public function testRotateRegionalSecret()
+    {
+        if (self::$skipCloudSqlTests) {
+            $this->markTestSkipped('CLOUD_SQL_INSTANCE/CLOUD_SQL_USER not set');
+        }
+
+        $secret = self::createCloudSqlCredentialsSecret();
+        $member = $secret->getPolicyMember()->getIamPolicyUidPrincipal();
+
+        try {
+            self::grantCloudSqlRole($member);
+            $name = self::$client->parseName($secret->getName());
+
+            $this->runFunctionSnippet('enable_regional_secret_managed_rotation', [
+                $name['project'],
+                $name['location'],
+                $name['secret'],
+                self::$cloudSqlInstanceId,
+                self::$cloudSqlUsername,
+            ]);
+
+            $output = $this->runFunctionSnippet('rotate_regional_secret', [
+                $name['project'],
+                $name['location'],
+                $name['secret'],
+            ]);
+
+            $this->assertStringContainsString('Rotated secret', $output);
+        } finally {
+            self::revokeCloudSqlRole($member);
+            self::deleteSecret($secret->getName());
+        }
+    }
+
+    public function testUpdateRegionalSecretWithManagedRotationSchedule()
+    {
+        if (self::$skipCloudSqlTests) {
+            $this->markTestSkipped('CLOUD_SQL_INSTANCE/CLOUD_SQL_USER not set');
+        }
+
+        $secret = self::createCloudSqlCredentialsSecret();
+        $member = $secret->getPolicyMember()->getIamPolicyUidPrincipal();
+
+        try {
+            self::grantCloudSqlRole($member);
+            $name = self::$client->parseName($secret->getName());
+
+            $this->runFunctionSnippet('enable_regional_secret_managed_rotation', [
+                $name['project'],
+                $name['location'],
+                $name['secret'],
+                self::$cloudSqlInstanceId,
+                self::$cloudSqlUsername,
+            ]);
+
+            $rotationPeriodSeconds = 3600;
+            $output = $this->runFunctionSnippet('update_regional_secret_with_managed_rotation_schedule', [
+                $name['project'],
+                $name['location'],
+                $name['secret'],
+                $rotationPeriodSeconds,
+            ]);
+
+            $this->assertStringContainsString('Updated regional secret rotation schedule', $output);
+
+            $updatedSecret = self::getSecret($name['project'], $name['location'], $name['secret']);
+            $this->assertSame($rotationPeriodSeconds, $updatedSecret->getRotation()->getRotationPeriod()->getSeconds());
+        } finally {
+            self::revokeCloudSqlRole($member);
+            self::deleteSecret($secret->getName());
+        }
+    }
+
+    /**
+     * @depends testCreateSecretWithCloudSqlCredentials
+     */
+    public function testGetRegionalSecretType()
+    {
+        $name = self::$client->parseName(self::$testSecretCloudSqlToCreateName);
+
+        $output = $this->runFunctionSnippet('get_regional_secret_type', [
+            $name['project'],
+            $name['location'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Found regional secret', $output);
+        $this->assertStringContainsString('CLOUD_SQL_DB_CREDENTIALS', $output);
     }
 }
