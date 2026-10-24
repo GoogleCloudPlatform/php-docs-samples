@@ -36,7 +36,7 @@ use Google\Cloud\ParameterManager\V1\RenderParameterVersionRequest;
  * @param string $projectId The Google Cloud Project ID (e.g. 'my-project')
  * @param string $locationId The Parameter Location (e.g. 'us-central1')
  * @param string $parameterId The Parameter ID (e.g. 'my-param')
- * @param string $versionId The Version ID (e.g. 'my-param-version')
+ * @param string $versionId The Version ID (e.g. 'my-param-version' or 'latest')
  */
 function render_regional_param_version(string $projectId, string $locationId, string $parameterId, string $versionId): void
 {
