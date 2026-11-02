@@ -65,9 +65,15 @@ function update_rapid_cache(string $bucketName, string $rapidCacheId, int $ttlSe
     ]);
 
     // Updating a Rapid Cache is a long-running operation. This sample blocks
-    // until it completes.
+    // until it completes. A totalPollTimeoutMillis of 0 waits with no time
+    // limit, instead of the client library default of 5 minutes.
     $operation = $storageControlClient->updateRapidCache($request);
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete(['totalPollTimeoutMillis' => 0]);
+
+    if (!$operation->operationSucceeded()) {
+        printf('Error: %s' . PHP_EOL, $operation->getError()->getMessage());
+        return;
+    }
 
     /** @var RapidCache $rapidCacheResult */
     $rapidCacheResult = $operation->getResult();

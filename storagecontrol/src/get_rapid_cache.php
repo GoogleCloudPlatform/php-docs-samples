@@ -51,6 +51,7 @@ function get_rapid_cache(string $bucketName, string $rapidCacheId): void
 
     printf('Got Rapid Cache: %s' . PHP_EOL, $response->getName());
     printf('Zone: %s' . PHP_EOL, $response->getZone());
+    printf('Cache type: %s' . PHP_EOL, $response->getCacheType());
     printf('State: %s' . PHP_EOL, $response->getState());
 }
 # [END storage_control_get_rapid_cache]

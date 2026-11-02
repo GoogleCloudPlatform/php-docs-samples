@@ -27,6 +27,7 @@ namespace Google\Cloud\Samples\StorageControl;
 # [START storage_control_disable_rapid_cache]
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\DisableRapidCacheRequest;
+use Google\Cloud\Storage\Control\V2\RapidCache;
 
 /**
  * Disables a Rapid Cache instance.
@@ -35,8 +36,11 @@ use Google\Cloud\Storage\Control\V2\DisableRapidCacheRequest;
  *        (e.g. 'my-bucket')
  * @param string $rapidCacheId The ID of the Rapid Cache.
  *        (e.g. 'us-central1-a')
+ * @param int $timeoutMillis Optional. The maximum time to wait for the
+ *        operation to complete, in milliseconds. 0 waits until it completes.
+ *        (e.g. 600000 for 10 minutes)
  */
-function disable_rapid_cache(string $bucketName, string $rapidCacheId): void
+function disable_rapid_cache(string $bucketName, string $rapidCacheId, int $timeoutMillis = 0): void
 {
     $storageControlClient = new StorageControlClient();
 
@@ -47,15 +51,27 @@ function disable_rapid_cache(string $bucketName, string $rapidCacheId): void
         'name' => $formattedName,
     ]);
 
-    // Disabling a Rapid Cache starts a long-running operation. The cache moves
-    // to the "disabled" state within seconds, but the operation only completes
-    // once the cache has been fully removed, which can take more than an hour.
-    // This sample does not wait for the operation to complete; use
-    // get_rapid_cache to check the cache state.
+    // Disabling a Rapid Cache is a long-running operation. This sample waits
+    // for the long-running operation to complete. A totalPollTimeoutMillis of
+    // 0 waits with no time limit.
     $operation = $storageControlClient->disableRapidCache($request);
+    $completed = $operation->pollUntilComplete([
+        'totalPollTimeoutMillis' => $timeoutMillis,
+    ]);
 
-    printf('Disabling Rapid Cache: %s' . PHP_EOL, $formattedName);
-    printf('Operation: %s' . PHP_EOL, $operation->getName());
+    if (!$completed) {
+        printf('Disable operation is still running: %s' . PHP_EOL, $operation->getName());
+        return;
+    }
+
+    if (!$operation->operationSucceeded()) {
+        printf('Error: %s' . PHP_EOL, $operation->getError()->getMessage());
+        return;
+    }
+
+    /** @var RapidCache $rapidCacheResult */
+    $rapidCacheResult = $operation->getResult();
+    printf('Disabled Rapid Cache: %s' . PHP_EOL, $rapidCacheResult->getName());
 }
 # [END storage_control_disable_rapid_cache]
 

@@ -28,6 +28,7 @@ namespace Google\Cloud\Samples\StorageControl;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\CreateRapidCacheRequest;
 use Google\Cloud\Storage\Control\V2\RapidCache;
+use Google\Protobuf\Duration;
 
 /**
  * Creates a Rapid Cache instance.
@@ -43,27 +44,40 @@ function create_rapid_cache(string $bucketName, string $zone): void
     $storageControlClient = new StorageControlClient();
 
     // Set project to "_" to signify global bucket
-    $formattedName = $storageControlClient->bucketName('_', $bucketName);
+    $formattedParent = $storageControlClient->bucketName('_', $bucketName);
+
+    // The Rapid Cache ID must be the same as the zone.
+    $formattedName = $storageControlClient->rapidCacheName('_', $bucketName, $zone);
 
     // Rapid Cache Ultra requires a bucket with hierarchical namespace enabled.
     $rapidCache = new RapidCache([
+        'name' => $formattedName,
         'zone' => $zone,
         'cache_type' => 'rapid-cache-ultra',
+        // Time to live (TTL) for cache entries: 86400 seconds (24 hours).
+        'ttl' => new Duration(['seconds' => 86400]),
     ]);
 
     $request = new CreateRapidCacheRequest([
-        'parent' => $formattedName,
+        'parent' => $formattedParent,
         'rapid_cache' => $rapidCache,
     ]);
 
     // Creating a Rapid Cache is a long-running operation. This sample blocks
-    // until it completes.
+    // until it completes. A totalPollTimeoutMillis of 0 waits with no time
+    // limit, instead of the client library default of 5 minutes.
     $operation = $storageControlClient->createRapidCache($request);
-    $operation->pollUntilComplete();
+    $operation->pollUntilComplete(['totalPollTimeoutMillis' => 0]);
+
+    if (!$operation->operationSucceeded()) {
+        printf('Error: %s' . PHP_EOL, $operation->getError()->getMessage());
+        return;
+    }
 
     /** @var RapidCache $rapidCacheResult */
     $rapidCacheResult = $operation->getResult();
     printf('Created Rapid Cache: %s' . PHP_EOL, $rapidCacheResult->getName());
+    printf('State: %s' . PHP_EOL, $rapidCacheResult->getState());
 }
 # [END storage_control_create_rapid_cache]
 
