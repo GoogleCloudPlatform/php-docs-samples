@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_create_regional_secret_with_cloud_sql_credentials]
+// Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\CreateSecretRequest;
 use Google\Cloud\SecretManager\V1\Secret;
 use Google\Cloud\SecretManager\V1\Secret\SecretType;

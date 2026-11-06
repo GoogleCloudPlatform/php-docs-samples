@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_update_regional_secret_with_managed_rotation_schedule]
+// Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\Secret;
 use Google\Cloud\SecretManager\V1\Rotation;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
@@ -76,9 +77,7 @@ function update_regional_secret_with_managed_rotation_schedule(string $projectId
     $fieldMask = new FieldMask();
     $fieldMask->setPaths(['rotation.next_rotation_time', 'rotation.rotation_period']);
 
-    $request = (new UpdateSecretRequest())
-        ->setSecret($secret)
-        ->setUpdateMask($fieldMask);
+    $request = UpdateSecretRequest::build($secret, $fieldMask);
 
     // Update the secret.
     $updatedSecret = $client->updateSecret($request);

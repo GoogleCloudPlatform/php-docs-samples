@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_enable_regional_secret_managed_rotation]
+// Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\EnableManagedRotationRequest;
 use Google\Cloud\SecretManager\V1\EnableManagedRotationRequest\CloudSQLSingleUserCredentials;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;

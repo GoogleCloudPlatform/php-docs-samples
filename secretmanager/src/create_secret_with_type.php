@@ -40,7 +40,7 @@ use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
  *
  * @param string $projectId Your Google Cloud Project ID (e.g. 'my-project')
  * @param string $secretId  Your secret ID (e.g. 'my-secret')
- * @param string $secretType Your secret type (e.g. 'OTHER')
+ * @param string $secretType Your secret type (e.g. 'ACCESS_KEY')
  */
 function create_secret_with_type(string $projectId, string $secretId, string $secretType): void
 {

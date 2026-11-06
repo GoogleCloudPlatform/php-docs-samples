@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Google\Cloud\Samples\SecretManager;
 
 // [START secretmanager_rotate_regional_secret]
+// Import the Secret Manager client library.
 use Google\Cloud\SecretManager\V1\RotateSecretRequest;
 use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
 
@@ -48,8 +49,7 @@ function rotate_regional_secret(string $projectId, string $locationId, string $s
     // Build the resource name of the secret.
     $parent = $client->projectLocationSecretName($projectId, $locationId, $secretId);
 
-    $request = (new RotateSecretRequest())
-        ->setParent($parent);
+    $request = RotateSecretRequest::build($parent);
 
     // Rotate the secret.
     $version = $client->rotateSecret($request);

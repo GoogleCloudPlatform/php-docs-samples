@@ -1080,7 +1080,7 @@ class regionalsecretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Created secret', $output);
-        $this->assertStringContainsString('Grant this identity Cloud SQL IAM permissions', $output);
+        $this->assertStringContainsString('Grant the Cloud SQL User rotate IAM permissions to enable managed rotation to:', $output);
 
         $secret = self::getSecret($name['project'], $name['location'], $name['secret']);
         $this->assertSame(SecretType::CLOUD_SQL_DB_CREDENTIALS, $secret->getSecretType());
