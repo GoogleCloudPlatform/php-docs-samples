@@ -19,7 +19,9 @@ namespace Google\Cloud\Samples\ErrorReporting;
 
 use Google\ApiCore\ApiException;
 use Google\Cloud\Core\ExponentialBackoff;
-use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
+use Google\Cloud\ErrorReporting\V1beta1\Client\ErrorStatsServiceClient;
+use Google\Cloud\ErrorReporting\V1beta1\ListEventsRequest;
+use Google\Cloud\ErrorReporting\V1beta1\ListGroupStatsRequest;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
 use Google\Cloud\TestUtils\TestTrait;
@@ -56,15 +58,18 @@ trait VerifyReportedErrorTrait
         // Iterate through all elements
         $testFunc = function () use ($errorStats, $projectName, $timeRange, $message) {
             $messages = [];
-            $response = $errorStats->listGroupStats($projectName, [
-                'timeRange' => $timeRange,
-                'pageSize' => 100,
-            ]);
+            $request = (new ListGroupStatsRequest())
+                ->setProjectName($projectName)
+                ->setTimeRange($timeRange)
+                ->setPageSize(100);
+            $response = $errorStats->listGroupStats($request);
             foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId(), [
-                    'timeRange' => $timeRange,
-                    'pageSize' => 100,
-                ]);
+                $eventsRequest = (new ListEventsRequest())
+                    ->setProjectName($projectName)
+                    ->setGroupId($groupStat->getGroup()->getGroupId())
+                    ->setTimeRange($timeRange)
+                    ->setPageSize(100);
+                $response = $errorStats->listEvents($eventsRequest);
                 foreach ($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }

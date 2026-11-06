@@ -18,9 +18,11 @@ namespace Google\Cloud\Test\ErrorReporting;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
+use Google\Cloud\ErrorReporting\V1beta1\Client\ErrorStatsServiceClient;
+use Google\Cloud\ErrorReporting\V1beta1\ListEventsRequest;
+use Google\Cloud\ErrorReporting\V1beta1\ListGroupStatsRequest;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange_Period;
+use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -101,7 +103,7 @@ class DeployTest extends TestCase
         $projectName = $errorStats->projectName(self::$projectId);
 
         $timeRange = (new QueryTimeRange())
-            ->setPeriod(QueryTimeRange_Period::PERIOD_1_HOUR);
+            ->setPeriod(Period::PERIOD_1_HOUR);
 
         // Iterate through all elements
         $this->runEventuallyConsistentTest(function () use (
@@ -111,14 +113,16 @@ class DeployTest extends TestCase
             $message
         ) {
             $messages = [];
-            $response = $errorStats->listGroupStats(
-                $projectName,
-                ['timeRange' => $timeRange]
-            );
+            $request = (new ListGroupStatsRequest())
+                ->setProjectName($projectName)
+                ->setTimeRange($timeRange);
+            $response = $errorStats->listGroupStats($request);
             foreach ($response->iterateAllElements() as $groupStat) {
-                $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId(), [
-                    'timeRange' => $timeRange,
-                ]);
+                $eventsRequest = (new ListEventsRequest())
+                    ->setProjectName($projectName)
+                    ->setGroupId($groupStat->getGroup()->getGroupId())
+                    ->setTimeRange($timeRange);
+                $response = $errorStats->listEvents($eventsRequest);
                 foreach ($response->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
