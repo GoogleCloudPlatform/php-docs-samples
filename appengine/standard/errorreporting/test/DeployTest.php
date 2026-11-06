@@ -116,14 +116,14 @@ class DeployTest extends TestCase
             $request = (new ListGroupStatsRequest())
                 ->setProjectName($projectName)
                 ->setTimeRange($timeRange);
-            $response = $errorStats->listGroupStats($request);
-            foreach ($response->iterateAllElements() as $groupStat) {
+            $groupStatsResponse = $errorStats->listGroupStats($request);
+            foreach ($groupStatsResponse->iterateAllElements() as $groupStat) {
                 $eventsRequest = (new ListEventsRequest())
                     ->setProjectName($projectName)
                     ->setGroupId($groupStat->getGroup()->getGroupId())
                     ->setTimeRange($timeRange);
-                $response = $errorStats->listEvents($eventsRequest);
-                foreach ($response->iterateAllElements() as $event) {
+                $eventsResponse = $errorStats->listEvents($eventsRequest);
+                foreach ($eventsResponse->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
             }

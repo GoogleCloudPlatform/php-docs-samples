@@ -62,15 +62,15 @@ trait VerifyReportedErrorTrait
                 ->setProjectName($projectName)
                 ->setTimeRange($timeRange)
                 ->setPageSize(100);
-            $response = $errorStats->listGroupStats($request);
-            foreach ($response->iterateAllElements() as $groupStat) {
+            $groupStatsResponse = $errorStats->listGroupStats($request);
+            foreach ($groupStatsResponse->iterateAllElements() as $groupStat) {
                 $eventsRequest = (new ListEventsRequest())
                     ->setProjectName($projectName)
                     ->setGroupId($groupStat->getGroup()->getGroupId())
                     ->setTimeRange($timeRange)
                     ->setPageSize(100);
-                $response = $errorStats->listEvents($eventsRequest);
-                foreach ($response->iterateAllElements() as $event) {
+                $eventsResponse = $errorStats->listEvents($eventsRequest);
+                foreach ($eventsResponse->iterateAllElements() as $event) {
                     $messages[] = $event->getMessage();
                 }
             }
