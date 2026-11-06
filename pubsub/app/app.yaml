@@ -1,4 +1,4 @@
-runtime: php81
+runtime: php83
 
 handlers:
 - url: /pubsub\.js
