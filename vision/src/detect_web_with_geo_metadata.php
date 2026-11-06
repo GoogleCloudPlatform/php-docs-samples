@@ -18,7 +18,12 @@
 // [START vision_web_detection_include_geo]
 namespace Google\Cloud\Samples\Vision;
 
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
 use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
 use Google\Cloud\Vision\V1\ImageContext;
 use Google\Cloud\Vision\V1\WebDetectionParams;
 
@@ -39,8 +44,17 @@ function detect_web_with_geo_metadata(string $path)
     $imageContext-> setWebDetectionParams($params);
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->webDetection($image, ['imageContext' => $imageContext]);
+    $image = (new Image())
+        ->setContent(file_get_contents($path));
+    $feature = (new Feature())
+        ->setType(Type::WEB_DETECTION);
+    $request = (new AnnotateImageRequest())
+        ->setImage($image)
+        ->setFeatures([$feature])
+        ->setImageContext($imageContext);
+    $batchRequest = (new BatchAnnotateImagesRequest())
+        ->setRequests([$request]);
+    $response = $imageAnnotator->batchAnnotateImages($batchRequest)->getResponses()[0];
     $web = $response->getWebDetection();
 
     if ($web && $web->getWebEntities()->count()) {

@@ -18,7 +18,13 @@
 // [START vision_image_property_detection_gcs]
 namespace Google\Cloud\Samples\Vision;
 
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
 use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
+use Google\Cloud\Vision\V1\ImageSource;
 
 /**
  * @param string $path GCS path to the image, e.g. "gs://path/to/your/image.jpg"
@@ -28,7 +34,18 @@ function detect_image_property_gcs(string $path)
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $response = $imageAnnotator->imagePropertiesDetection($path);
+    $source = (new ImageSource())
+        ->setImageUri($path);
+    $image = (new Image())
+        ->setSource($source);
+    $feature = (new Feature())
+        ->setType(Type::IMAGE_PROPERTIES);
+    $request = (new AnnotateImageRequest())
+        ->setImage($image)
+        ->setFeatures([$feature]);
+    $batchRequest = (new BatchAnnotateImagesRequest())
+        ->setRequests([$request]);
+    $response = $imageAnnotator->batchAnnotateImages($batchRequest)->getResponses()[0];
     $props = $response->getImagePropertiesAnnotation();
 
     if ($props) {

@@ -32,15 +32,14 @@ from PHP.
     (if composer is installed globally).
 5.  **Run** with the command `php src/SNIPPET_NAME.php`. For example:
     ```sh
-    $ php src/list_languages.php
-    af: Afrikaans
-    sq: Albanian
-    am: Amharic
+    $ php src/v3_get_supported_languages.php YOUR_PROJECT_ID
+    Language Code: af
+    Language Code: sq
+    Language Code: am
     ...
 
-    $ php src/translate.php "This is my text to translate" fr
-    Source language: en
-    Translation: Ceci est mon texte à traduire
+    $ php src/v3_translate_text.php "This is my text to translate" fr YOUR_PROJECT_ID
+    Translated text: Ceci est mon texte à traduire
     ```
 
 ## Contributing changes

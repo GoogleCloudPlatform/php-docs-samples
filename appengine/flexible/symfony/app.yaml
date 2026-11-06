@@ -3,6 +3,8 @@ env: flex
 
 runtime_config:
   document_root: web
+  operating_system: ubuntu22
+  runtime_version: 8.3
   front_controller_file: app.php
   enable_stackdriver_integration: true
 
