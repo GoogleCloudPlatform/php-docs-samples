@@ -54,7 +54,7 @@ function delete_object_contexts(string $bucketName, string $objectName): void
             'custom' => null,
         ],
     ], [
-        'ifMetagenerationMatch' => $info['metageneration'],
+        'ifMetagenerationMatch' => $info['metageneration'] ?? null,
     ]);
 
     printf('Deleted object contexts for object %s in bucket %s.' . PHP_EOL, $objectName, $bucketName);

@@ -57,7 +57,8 @@ function get_regional_param_template_version(string $projectId, string $location
 
     // Print the template version details.
     printf('Got regional template version %s' . PHP_EOL, $templateVersion->getName());
-    printf('Payload: %s' . PHP_EOL, $templateVersion->getPayload()->getData());
+    $payload = $templateVersion->getPayload();
+    printf('Payload: %s' . PHP_EOL, $payload ? $payload->getData() : '');
 }
 // [END parametermanager_get_regional_param_template_version]
 

@@ -48,7 +48,7 @@ function create_param_template(string $projectId, string $templateId, string $fo
 
     // Build the template.
     $template = (new Template())
-        ->setFormat(TemplateFormat::value('TEMPLATE_FORMAT_' . $format));
+        ->setFormat(TemplateFormat::value('TEMPLATE_FORMAT_' . strtoupper($format)));
 
     // Build the request.
     $request = (new CreateTemplateRequest())
