@@ -28,10 +28,11 @@ namespace Google\Cloud\Samples\StorageControl;
 use Google\Cloud\Storage\Control\V2\Client\StorageControlClient;
 use Google\Cloud\Storage\Control\V2\CreateRapidCacheRequest;
 use Google\Cloud\Storage\Control\V2\RapidCache;
-use Google\Protobuf\Duration;
 
 /**
- * Creates a Rapid Cache instance.
+ * Creates a Rapid Cache instance with only the required fields. Optional
+ * settings use their defaults (for example, a 24-hour TTL) and can be
+ * changed later with update_rapid_cache.
  *
  * @param string $bucketName The name of your Cloud Storage bucket.
  *        (e.g. 'my-bucket')
@@ -47,15 +48,14 @@ function create_rapid_cache(string $bucketName, string $zone): void
     $formattedParent = $storageControlClient->bucketName('_', $bucketName);
 
     // The Rapid Cache ID must be the same as the zone.
-    $formattedName = $storageControlClient->rapidCacheName('_', $bucketName, $zone);
+    $rapidCacheId = $zone;
+    $formattedName = $storageControlClient->rapidCacheName('_', $bucketName, $rapidCacheId);
 
     // Rapid Cache Ultra requires a bucket with hierarchical namespace enabled.
     $rapidCache = new RapidCache([
         'name' => $formattedName,
         'zone' => $zone,
         'cache_type' => 'rapid-cache-ultra',
-        // Time to live (TTL) for cache entries: 86400 seconds (24 hours).
-        'ttl' => new Duration(['seconds' => 86400]),
     ]);
 
     $request = new CreateRapidCacheRequest([

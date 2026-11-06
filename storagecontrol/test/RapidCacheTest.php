@@ -40,6 +40,9 @@ class RapidCacheTest extends TestCase
     // can run for more than an hour.
     private const DISABLE_TIMEOUT_MILLIS = 600000;
 
+    // New time to live (TTL) set by the update step: 172800 seconds (2 days).
+    private const UPDATED_TTL_SECONDS = 172800;
+
     // Best-effort bucket cleanup: retry for up to ~2 minutes.
     private const DELETE_RETRY_ATTEMPTS = 6;
     private const DELETE_RETRY_INTERVAL_SECONDS = 20;
@@ -49,7 +52,7 @@ class RapidCacheTest extends TestCase
     private static $location;
     private static $zone;
     private static $cacheName;
-    private static $cacheDisabled = false;
+    private static $cacheActive = false;
 
     public static function setUpBeforeClass(): void
     {
@@ -74,41 +77,61 @@ class RapidCacheTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        if (!self::$sourceBucket) {
-            return;
+        if (self::$cacheActive) {
+            self::disableCacheQuietly();
         }
-        // Disable the Rapid Cache if the test did not, so that the bucket can
-        // be deleted once the cache has been removed. Errors are ignored.
-        if (self::$cacheName && !self::$cacheDisabled) {
-            try {
-                $storageControlClient = new StorageControlClient();
-                $storageControlClient->disableRapidCache(new DisableRapidCacheRequest([
-                    'name' => self::$cacheName,
-                ]));
-            } catch (\Exception $e) {
-                // Ignore errors: the cache may already be disabled.
-            }
+        if (self::$sourceBucket) {
+            self::deleteBucketQuietly();
         }
-        // A bucket cannot be deleted until its disabled Rapid Cache has been
-        // fully removed, which can take more than two hours. Cleanup is
-        // best-effort: a short retry, after which the bucket is left behind
-        // for later cleanup.
+    }
+
+    /**
+     * Starts disabling the Rapid Cache if the test did not, so that the bucket
+     * can be deleted once the cache has been removed. Errors are ignored.
+     */
+    private static function disableCacheQuietly(): void
+    {
+        try {
+            $storageControlClient = new StorageControlClient();
+            $storageControlClient->disableRapidCache(new DisableRapidCacheRequest([
+                'name' => self::$cacheName,
+            ]));
+        } catch (\Exception $e) {
+            fwrite(STDERR, sprintf(
+                'Could not disable Rapid Cache %s: %s' . PHP_EOL,
+                self::$cacheName,
+                $e->getMessage()
+            ));
+        }
+    }
+
+    /**
+     * Deletes the test bucket on a best-effort basis. A bucket cannot be
+     * deleted until its disabled Rapid Cache has been fully removed, which can
+     * take more than two hours, so this retries briefly and then leaves the
+     * bucket behind for later cleanup.
+     */
+    private static function deleteBucketQuietly(): void
+    {
+        $lastError = 'unknown error';
         for ($attempt = 1; $attempt <= self::DELETE_RETRY_ATTEMPTS; $attempt++) {
+            if ($attempt > 1) {
+                sleep(self::DELETE_RETRY_INTERVAL_SECONDS);
+            }
             try {
                 self::$sourceBucket->delete();
                 return;
             } catch (ConflictException $e) {
-                if ($attempt < self::DELETE_RETRY_ATTEMPTS) {
-                    sleep(self::DELETE_RETRY_INTERVAL_SECONDS);
-                }
+                $lastError = $e->getMessage();
             } catch (\Exception $e) {
+                $lastError = $e->getMessage();
                 break;
             }
         }
         fwrite(STDERR, sprintf(
             'Could not delete bucket %s: %s' . PHP_EOL,
             self::$sourceBucket->name(),
-            isset($e) ? $e->getMessage() : 'unknown error'
+            $lastError
         ));
     }
 
@@ -120,7 +143,10 @@ class RapidCacheTest extends TestCase
         $cacheName = StorageControlClient::rapidCacheName('_', $bucketName, $cacheId);
         self::$cacheName = $cacheName;
 
-        // Test create Rapid Cache
+        // Test create Rapid Cache. Mark the cache as active before creating it
+        // so that tearDownAfterClass disables it even if this step fails after
+        // the cache was created.
+        self::$cacheActive = true;
         $output = $this->runFunctionSnippet('create_rapid_cache', [
             $bucketName,
             self::$zone,
@@ -147,19 +173,20 @@ class RapidCacheTest extends TestCase
         $output = $this->runFunctionSnippet('update_rapid_cache', [
             $bucketName,
             $cacheId,
-            172800,
+            self::UPDATED_TTL_SECONDS,
         ]);
         $this->assertStringContainsString(sprintf('Updated Rapid Cache: %s', $cacheName), $output);
-        $this->assertStringContainsString('TTL: 172800 seconds', $output);
+        $this->assertStringContainsString(sprintf('TTL: %d seconds', self::UPDATED_TTL_SECONDS), $output);
 
-        // Test disable Rapid Cache, with a bounded wait so that the test
-        // cannot hang on the long-running operation.
+        // Test disable Rapid Cache, with a bounded wait (the native
+        // totalPollTimeoutMillis LRO option) so that the test cannot hang on
+        // the long-running operation.
         $output = $this->runFunctionSnippet('disable_rapid_cache', [
             $bucketName,
             $cacheId,
             self::DISABLE_TIMEOUT_MILLIS,
         ]);
-        self::$cacheDisabled = true;
+        self::$cacheActive = false;
         if (str_contains($output, 'Disable operation is still running')) {
             // The operation did not finish in time; the cache state must
             // already show "disabled".
