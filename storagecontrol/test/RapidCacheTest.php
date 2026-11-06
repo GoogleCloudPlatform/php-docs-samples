@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for the Rapid Cache storage control samples.
  */
-class rapidCacheTest extends TestCase
+class RapidCacheTest extends TestCase
 {
     use TestTrait;
 

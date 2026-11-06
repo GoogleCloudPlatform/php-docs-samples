@@ -78,7 +78,9 @@ function update_rapid_cache(string $bucketName, string $rapidCacheId, int $ttlSe
     /** @var RapidCache $rapidCacheResult */
     $rapidCacheResult = $operation->getResult();
     printf('Updated Rapid Cache: %s' . PHP_EOL, $rapidCacheResult->getName());
-    printf('TTL: %d seconds' . PHP_EOL, $rapidCacheResult->getTtl()->getSeconds());
+    if ($rapidCacheResult->hasTtl()) {
+        printf('TTL: %d seconds' . PHP_EOL, $rapidCacheResult->getTtl()->getSeconds());
+    }
 }
 # [END storage_control_update_rapid_cache]
 
