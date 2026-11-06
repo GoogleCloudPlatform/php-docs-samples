@@ -21,6 +21,8 @@ use Google\ApiCore\ApiException as GaxApiException;
 use Google\Cloud\ParameterManager\V1\Client\ParameterManagerClient;
 use Google\Cloud\ParameterManager\V1\DeleteParameterRequest;
 use Google\Cloud\ParameterManager\V1\DeleteParameterVersionRequest;
+use Google\Cloud\ParameterManager\V1\DeleteTemplateRequest;
+use Google\Cloud\ParameterManager\V1\DeleteTemplateVersionRequest;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -31,11 +33,13 @@ class regionalquickstartTest extends TestCase
     private static $parameterId;
     private static $locationId;
     private static $versionId;
+    private static $templateId;
 
     public static function setUpBeforeClass(): void
     {
         self::$parameterId = uniqid('php-quickstart-');
         self::$versionId = uniqid('php-quickstart-');
+        self::$templateId = uniqid('php-quickstart-');
         self::$locationId = 'us-central1';
     }
 
@@ -59,6 +63,20 @@ class regionalquickstartTest extends TestCase
                 throw $e;
             }
         }
+
+        $templateName = $client->templateName(self::$projectId, self::$locationId, self::$templateId);
+        $templateVersionName = $client->templateVersionName(self::$projectId, self::$locationId, self::$templateId, self::$versionId);
+
+        try {
+            $client->deleteTemplateVersion((new DeleteTemplateVersionRequest())->setName($templateVersionName));
+            $client->deleteTemplate((new DeleteTemplateRequest())->setName($templateName));
+            $client->deleteParameterVersion((new DeleteParameterVersionRequest())->setName($client->parameterVersionName(self::$projectId, self::$locationId, self::$parameterId . '-template', self::$versionId)));
+            $client->deleteParameter((new DeleteParameterRequest())->setName($client->parameterName(self::$projectId, self::$locationId, self::$parameterId . '-template')));
+        } catch (GaxApiException $e) {
+            if ($e->getStatus() != 'NOT_FOUND') {
+                throw $e;
+            }
+        }
     }
 
     public function testQuickstart()
@@ -73,5 +91,22 @@ class regionalquickstartTest extends TestCase
         $this->assertStringContainsString('Created regional parameter', $output);
         $this->assertStringContainsString('Created regional parameter version', $output);
         $this->assertStringContainsString('Payload', $output);
+    }
+
+    public function testTemplateQuickstart()
+    {
+        $output = self::runSnippet('regional_template_quickstart', [
+            self::$projectId,
+            self::$locationId,
+            self::$templateId,
+            self::$parameterId . '-template',
+            self::$versionId,
+        ]);
+
+        $this->assertStringContainsString('Created regional template', $output);
+        $this->assertStringContainsString('Created regional template version', $output);
+        $this->assertStringContainsString('Created regional parameter', $output);
+        $this->assertStringContainsString('Created regional parameter version', $output);
+        $this->assertStringContainsString('Rendered payload: {"username":"test-user","host":"localhost"}', $output);
     }
 }
