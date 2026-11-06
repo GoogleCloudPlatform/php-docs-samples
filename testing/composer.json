@@ -4,7 +4,7 @@
     },
     "require-dev": {
         "bshaffer/phpunit-retry-annotations": "^0.3.0",
-        "google/auth": "^1.12",
+        "google/auth": "^1.45",
         "google/cloud-tools": "dev-main",
         "guzzlehttp/guzzle": "^8.0",
         "phpunit/phpunit": "^9.0",

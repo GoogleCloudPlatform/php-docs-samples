@@ -56,6 +56,9 @@ function get_param_version_verify_checksum(string $projectId, string $parameterI
 
     // Verify the payload checksum.
     $payload = $parameterVersion->getPayload();
+    if ($payload === null) {
+        throw new \UnexpectedValueException(sprintf('No payload found for %s', $parameterVersion->getName()));
+    }
     if (hexdec(hash('crc32c', $payload->getData())) !== $payload->getDataCrc32C()) {
         throw new \UnexpectedValueException(sprintf('Checksum mismatch for %s: data corrupted', $parameterVersion->getName()));
     }

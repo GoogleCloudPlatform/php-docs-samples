@@ -62,7 +62,8 @@ function render_regional_param_template_version(string $projectId, string $locat
     $response = $client->renderTemplateVersion($request);
 
     // Print the template payload and the rendered payload.
-    printf('Template payload: %s' . PHP_EOL, $response->getPayload()->getData());
+    $payload = $response->getPayload();
+    printf('Template payload: %s' . PHP_EOL, $payload ? $payload->getData() : '');
     printf('Rendered payload: %s' . PHP_EOL, $response->getRenderedPayload());
 }
 // [END parametermanager_render_regional_param_template_version]

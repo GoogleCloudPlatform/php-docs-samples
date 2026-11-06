@@ -53,7 +53,8 @@ function get_param_template_version(string $projectId, string $templateId, strin
 
     // Print the template version details.
     printf('Got template version %s' . PHP_EOL, $templateVersion->getName());
-    printf('Payload: %s' . PHP_EOL, $templateVersion->getPayload()->getData());
+    $payload = $templateVersion->getPayload();
+    printf('Payload: %s' . PHP_EOL, $payload ? $payload->getData() : '');
 }
 // [END parametermanager_get_param_template_version]
 

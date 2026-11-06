@@ -89,7 +89,9 @@ function detect_intent_stream($projectId, $path, $sessionId, $languageCode = 'en
             $transcript = $recognitionResult->getTranscript();
             printf('Intermediate transcript: %s' . PHP_EOL, $transcript);
         }
-        $queryResult = $response->getQueryResult() ?: $queryResult;
+        if ($response->hasQueryResult()) {
+            $queryResult = $response->getQueryResult();
+        }
     }
 
     // get final response and relevant info
