@@ -18,24 +18,28 @@
 # Includes the autoloader for libraries installed with composer
 require __DIR__ . '/vendor/autoload.php';
 
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
-use Google\Cloud\Speech\V1\StreamingRecognizeRequest;
-use Google\Cloud\Speech\V1\RecognitionConfig_AudioEncoding;
+use Google\Cloud\Speech\V2\Client\SpeechClient;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig;
+use Google\Cloud\Speech\V2\ExplicitDecodingConfig\AudioEncoding;
+use Google\Cloud\Speech\V2\RecognitionConfig;
+use Google\Cloud\Speech\V2\StreamingRecognitionConfig;
+use Google\Cloud\Speech\V2\StreamingRecognizeRequest;
 
 $audioFile = __DIR__ . '/audio32KHz.raw';
 $languageCode = 'en-US';
-$sampleRateHertz = '32000';
+$sampleRateHertz = 32000;
 $encoding = 'LINEAR16';
 
 $speechClient = new SpeechClient();
-$config = new RecognitionConfig();
-$config->setLanguageCode($languageCode);
-$config->setSampleRateHertz($sampleRateHertz);
 // encoding must be an enum, convert from string
-$encodingEnum = constant(RecognitionConfig_AudioEncoding::class . '::' . $encoding);
-$config->setEncoding($encodingEnum);
+$encodingEnum = constant(AudioEncoding::class . '::' . $encoding);
+$decodingConfig = (new ExplicitDecodingConfig())
+    ->setSampleRateHertz($sampleRateHertz)
+    ->setEncoding($encodingEnum);
+
+$config = (new RecognitionConfig())
+    ->setLanguageCodes([$languageCode])
+    ->setExplicitDecodingConfig($decodingConfig);
 
 $strmConfig = new StreamingRecognitionConfig();
 $strmConfig->setConfig($config);
@@ -50,7 +54,7 @@ $strmReq = new StreamingRecognizeRequest();
 $f = fopen($audioFile, 'rb');
 $fsize = filesize($audioFile);
 $bytes = fread($f, $fsize);
-$strmReq->setAudioContent($bytes);
+$strmReq->setAudio($bytes);
 $strm->write($strmReq);
 
 foreach ($strm->closeWriteAndReadAll() as $response) {

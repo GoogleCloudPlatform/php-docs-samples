@@ -1,0 +1,5 @@
+parameters:
+    level: 5
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+    - '#Parameter \#2 \.\.\.\$values of function printf expects bool\|float\|int\|string\|null, object given#'
