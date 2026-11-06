@@ -18,7 +18,12 @@
 namespace Google\Cloud\Samples\Vision;
 
 // [START vision_face_detection_tutorial_imports]
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
 use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
 
 // [END vision_face_detection_tutorial_imports]
 /**
@@ -35,8 +40,16 @@ function detect_face(string $path, string $outFile = null)
     // [START vision_face_detection_tutorial_send_request]
     # annotate the image
     // $path = 'path/to/your/image.jpg'
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->faceDetection($image);
+    $image = (new Image())
+        ->setContent(file_get_contents($path));
+    $feature = (new Feature())
+        ->setType(Type::FACE_DETECTION);
+    $request = (new AnnotateImageRequest())
+        ->setImage($image)
+        ->setFeatures([$feature]);
+    $batchRequest = (new BatchAnnotateImagesRequest())
+        ->setRequests([$request]);
+    $response = $imageAnnotator->batchAnnotateImages($batchRequest)->getResponses()[0];
     $faces = $response->getFaceAnnotations();
     // [END vision_face_detection_tutorial_send_request]
 
