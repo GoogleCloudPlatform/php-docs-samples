@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/cloud-storage-control": "^1.9"
+        "google/cloud-storage-control": "^1.12"
     },
     "require-dev": {
         "google/cloud-storage": "^2.0"
