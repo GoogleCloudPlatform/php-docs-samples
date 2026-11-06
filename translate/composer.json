@@ -2,9 +2,9 @@
     "name": "google/translate-sample",
     "type": "project",
     "require": {
-        "google/cloud-translate": "^1.17"
+        "google/cloud-translate": "^2.0"
     },
     "require-dev": {
-        "google/cloud-storage": "^1.36"
+        "google/cloud-storage": "^2.0"
     }
 }

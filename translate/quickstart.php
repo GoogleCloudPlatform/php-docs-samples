@@ -20,27 +20,30 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # Imports the Google Cloud client library
-use Google\Cloud\Translate\TranslateClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
 # Your Google Cloud Platform project ID
 $projectId = 'YOUR_PROJECT_ID';
 
 # Instantiates a client
-$translate = new TranslateClient([
-    'projectId' => $projectId
-]);
+$translate = new TranslationServiceClient();
 
 # The text to translate
 $text = 'Hello, world!';
 # The target language
-$target = 'ru';
+$targetLanguage = 'ru';
 
 # Translates some text into Russian
-$translation = $translate->translate($text, [
-    'target' => $target
-]);
+$request = (new TranslateTextRequest())
+    ->setContents([$text])
+    ->setTargetLanguageCode($targetLanguage)
+    ->setParent(TranslationServiceClient::locationName($projectId, 'global'));
+$response = $translate->translateText($request);
 
-echo 'Text: ' . $text . '
-Translation: ' . $translation['text'];
+foreach ($response->getTranslations() as $translation) {
+    printf('Text: %s' . PHP_EOL, $text);
+    printf('Translation: %s' . PHP_EOL, $translation->getTranslatedText());
+}
 # [END translate_quickstart]
-return $translation;
+return $response;

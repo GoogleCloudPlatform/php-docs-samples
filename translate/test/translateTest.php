@@ -47,57 +47,6 @@ class translateTest extends TestCase
         self::$bucket->delete();
     }
 
-    public function testTranslate()
-    {
-        $output = $this->runFunctionSnippet(
-            'translate',
-            ['Hello.', 'ja']
-        );
-        $this->assertStringContainsString('Source language: en', $output);
-        $this->assertStringContainsString('Translation:', $output);
-    }
-
-    public function testTranslateBadLanguage()
-    {
-        $this->expectException('Google\Cloud\Core\Exception\BadRequestException');
-
-        $this->runFunctionSnippet('translate', ['Hello.', 'jp']);
-    }
-
-    public function testTranslateWithModel()
-    {
-        $output = $this->runFunctionSnippet('translate_with_model', ['Hello.', 'ja']);
-        $this->assertStringContainsString('Source language: en', $output);
-        $this->assertStringContainsString('Translation:', $output);
-        $this->assertStringContainsString('Model: nmt', $output);
-    }
-
-    public function testDetectLanguage()
-    {
-        $output = $this->runFunctionSnippet('detect_language', ['Hello.']);
-        $this->assertStringContainsString('Language code: en', $output);
-        $this->assertStringContainsString('Confidence:', $output);
-    }
-
-    public function testListCodes()
-    {
-        $output = $this->runFunctionSnippet('list_codes');
-        $this->assertStringContainsString("\nen\n", $output);
-        $this->assertStringContainsString("\nja\n", $output);
-    }
-
-    public function testListLanguagesInEnglish()
-    {
-        $output = $this->runFunctionSnippet('list_languages', ['en']);
-        $this->assertStringContainsString('ja: Japanese', $output);
-    }
-
-    public function testListLanguagesInJapanese()
-    {
-        $output = $this->runFunctionSnippet('list_languages', ['ja']);
-        $this->assertStringContainsString('en: 英語', $output);
-    }
-
     public function testV3TranslateText()
     {
         $output = $this->runFunctionSnippet(

@@ -18,7 +18,12 @@
 // [START vision_localize_objects]
 namespace Google\Cloud\Samples\Vision;
 
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
 use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
 
 /**
  * @param string $path Path to the image, e.g. "path/to/your/image.jpg"
@@ -28,8 +33,16 @@ function detect_object(string $path)
     $imageAnnotator = new ImageAnnotatorClient();
 
     # annotate the image
-    $image = file_get_contents($path);
-    $response = $imageAnnotator->objectLocalization($image);
+    $image = (new Image())
+        ->setContent(file_get_contents($path));
+    $feature = (new Feature())
+        ->setType(Type::OBJECT_LOCALIZATION);
+    $request = (new AnnotateImageRequest())
+        ->setImage($image)
+        ->setFeatures([$feature]);
+    $batchRequest = (new BatchAnnotateImagesRequest())
+        ->setRequests([$request]);
+    $response = $imageAnnotator->batchAnnotateImages($batchRequest)->getResponses()[0];
     $objects = $response->getLocalizedObjectAnnotations();
 
     foreach ($objects as $object) {
