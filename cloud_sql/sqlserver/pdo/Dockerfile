@@ -23,4 +23,4 @@ RUN apt-get update && \
 RUN pecl install pdo_sqlsrv && \
     docker-php-ext-enable pdo_sqlsrv
 RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
-RUN composer install --no-dev
+RUN composer install --no-dev --no-interaction --optimize-autoloader

@@ -9,5 +9,5 @@ COPY . .
 
 RUN apt-get update && apt-get -y install --no-install-recommends unzip && \
     rm -rf /var/lib/apt/lists/* && \
-    composer install --no-dev && \
+    composer install --no-dev --no-interaction --optimize-autoloader && \
     sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
