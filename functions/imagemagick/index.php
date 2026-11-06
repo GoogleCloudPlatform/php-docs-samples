@@ -18,7 +18,13 @@
 // [START functions_imagemagick_setup]
 use Google\CloudFunctions\CloudEvent;
 use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
+use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
+use Google\Cloud\Vision\V1\ImageSource;
 use Google\Cloud\Vision\V1\Likelihood;
 use Google\Rpc\Code;
 
@@ -40,7 +46,19 @@ function blurOffensiveImages(CloudEvent $cloudevent): void
     $storage = new StorageClient();
 
     try {
-        $response = $annotator->safeSearchDetection($filePath);
+        $source = (new ImageSource())
+            ->setImageUri($filePath);
+        $image = (new Image())
+            ->setSource($source);
+        $feature = (new Feature())
+            ->setType(Type::SAFE_SEARCH_DETECTION);
+        $request = (new AnnotateImageRequest())
+            ->setImage($image)
+            ->setFeatures([$feature]);
+        $batchRequest = (new BatchAnnotateImagesRequest())
+            ->setRequests([$request]);
+        $response = $annotator->batchAnnotateImages($batchRequest)->getResponses()[0];
+        $annotator->close();
 
         // Handle error
         if ($response->hasError()) {

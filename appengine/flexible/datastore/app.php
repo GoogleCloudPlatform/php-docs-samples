@@ -16,6 +16,7 @@
  */
 
 use Google\Cloud\Datastore\DatastoreClient;
+use Google\Cloud\Datastore\Query\Query;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use RKA\Middleware\IpAddress;
@@ -62,7 +63,7 @@ $app->get('/', function (Request $request, Response $response) {
     // Query recent visits.
     $query = $datastore->query()
         ->kind('visit')
-        ->order('timestamp', 'DESCENDING')
+        ->order('timestamp', Query::ORDER_DESCENDING)
         ->limit(10);
     $results = $datastore->runQuery($query);
     $visits = [];
