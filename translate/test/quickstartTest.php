@@ -16,6 +16,7 @@
  */
 
 use Google\Cloud\TestUtils\TestTrait;
+use Google\Cloud\Translate\V3\TranslateTextResponse;
 use PHPUnit\Framework\TestCase;
 
 class quickstartTest extends TestCase
@@ -35,16 +36,12 @@ class quickstartTest extends TestCase
 
         // Invoke quickstart.php
         ob_start();
-        $translation = include $file;
+        $response = include $file;
         $output = ob_get_clean();
 
         // Make sure it looks correct
-        $this->assertTrue(is_array($translation));
-        $this->assertArrayHasKey('source', $translation);
-        $this->assertArrayHasKey('input', $translation);
-        $this->assertArrayHasKey('text', $translation);
-        $this->assertEquals('en', $translation['source']);
-        $this->assertEquals('Hello, world!', $translation['input']);
-        $this->assertStringContainsString('мир', $translation['text']);
+        $this->assertInstanceOf(TranslateTextResponse::class, $response);
+        $this->assertCount(1, $response->getTranslations());
+        $this->assertStringContainsString('мир', $response->getTranslations()[0]->getTranslatedText());
     }
 }

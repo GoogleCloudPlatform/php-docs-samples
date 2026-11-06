@@ -54,7 +54,7 @@ function regional_iam_revoke_access(string $projectId, string $locationId, strin
     // Remove the member from the list of bindings.
     foreach ($policy->getBindings() as $binding) {
         if ($binding->getRole() == 'roles/secretmanager.secretAccessor') {
-            $members = $binding->getMembers();
+            $members = iterator_to_array($binding->getMembers());
             foreach ($members as $i => $existingMember) {
                 if ($member == $existingMember) {
                     unset($members[$i]);

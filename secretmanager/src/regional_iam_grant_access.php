@@ -55,7 +55,7 @@ function regional_iam_grant_access(string $projectId, string $locationId, string
     $policy = $client->getIamPolicy((new GetIamPolicyRequest)->setResource($name));
 
     // Update the bindings to include the new member.
-    $bindings = $policy->getBindings();
+    $bindings = iterator_to_array($policy->getBindings());
     $bindings[] = new Binding([
         'members' => [$member],
         'role' => 'roles/secretmanager.secretAccessor',

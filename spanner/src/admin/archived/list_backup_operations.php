@@ -38,7 +38,7 @@ use Google\Cloud\Spanner\SpannerClient;
 function list_backup_operations(
     string $instanceId,
     string $databaseId,
-    string $backupId = null
+    ?string $backupId = null
 ): void {
     $spanner = new SpannerClient();
     $instance = $spanner->instance($instanceId);

@@ -1,7 +1,7 @@
 {
     "require": {
         "google/cloud-bigquery": "^1.28",
-        "google/cloud-storage": "^1.36",
+        "google/cloud-storage": "^2.0",
         "google/cloud-asset": "^2.0"
     }
 }

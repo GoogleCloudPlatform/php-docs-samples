@@ -493,6 +493,26 @@ class spannerTest extends TestCase
     }
 
     /**
+     * @depends testInsertData
+     */
+    public function testReadLockMode()
+    {
+        $output = $this->runFunctionSnippet('read_lock_mode');
+        $this->assertStringContainsString('Current Album Title:', $output);
+        $this->assertStringContainsString('record(s) updated.', $output);
+    }
+
+    /**
+     * @depends testInsertData
+     */
+    public function testIsolationLevel()
+    {
+        $output = $this->runFunctionSnippet('isolation_level');
+        $this->assertStringContainsString('Current Album Title:', $output);
+        $this->assertStringContainsString('record(s) updated.', $output);
+    }
+
+    /**
      * @depends testAddColumn
      */
     public function testCreateIndex()

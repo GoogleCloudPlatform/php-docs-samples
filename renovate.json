@@ -20,8 +20,7 @@
     }
   ],
   "ignorePaths": [
-    "appengine/flexible/",
-    "run/laravel/"
+    "appengine/flexible/"
   ],
   "branchPrefix": "renovate/",
   "additionalBranchPrefix": "{{parentDir}}-",
