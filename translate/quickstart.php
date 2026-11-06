@@ -42,8 +42,8 @@ $request = (new TranslateTextRequest())
 $response = $translate->translateText($request);
 
 foreach ($response->getTranslations() as $translation) {
-    echo 'Text: ' . $text . '
-Translation: ' . $translation->getTranslatedText();
+    printf('Text: %s' . PHP_EOL, $text);
+    printf('Translation: %s' . PHP_EOL, $translation->getTranslatedText());
 }
 # [END translate_quickstart]
 return $response;
