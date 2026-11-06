@@ -20,7 +20,12 @@
 require __DIR__ . '/vendor/autoload.php';
 
 # imports the Google Cloud client library
+use Google\Cloud\Vision\V1\AnnotateImageRequest;
+use Google\Cloud\Vision\V1\BatchAnnotateImagesRequest;
 use Google\Cloud\Vision\V1\Client\ImageAnnotatorClient;
+use Google\Cloud\Vision\V1\Feature;
+use Google\Cloud\Vision\V1\Feature\Type;
+use Google\Cloud\Vision\V1\Image;
 
 # instantiates a client
 $imageAnnotator = new ImageAnnotatorClient();
@@ -29,10 +34,18 @@ $imageAnnotator = new ImageAnnotatorClient();
 $fileName = 'test/data/wakeupcat.jpg';
 
 # prepare the image to be annotated
-$image = file_get_contents($fileName);
+$image = (new Image())
+    ->setContent(file_get_contents($fileName));
+$feature = (new Feature())
+    ->setType(Type::LABEL_DETECTION);
+$request = (new AnnotateImageRequest())
+    ->setImage($image)
+    ->setFeatures([$feature]);
+$batchRequest = (new BatchAnnotateImagesRequest())
+    ->setRequests([$request]);
 
 # performs label detection on the image file
-$response = $imageAnnotator->labelDetection($image);
+$response = $imageAnnotator->batchAnnotateImages($batchRequest)->getResponses()[0];
 $labels = $response->getLabelAnnotations();
 
 if ($labels) {
