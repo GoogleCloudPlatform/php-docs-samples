@@ -1,6 +1,6 @@
 # Use the official PHP 8.3 Apache image for App Engine Flexible custom runtimes.
 # https://hub.docker.com/_/php
-FROM php:8.3-apache
+FROM php:8.5-apache
 
 COPY --from=composer:latest-bin /composer /usr/local/bin/composer
 
