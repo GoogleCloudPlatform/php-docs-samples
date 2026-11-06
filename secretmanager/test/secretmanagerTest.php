@@ -37,6 +37,7 @@ use Google\Cloud\SecretManager\V1\GetSecretRequest;
 use Google\Cloud\SecretManager\V1\Replication;
 use Google\Cloud\SecretManager\V1\Replication\Automatic;
 use Google\Cloud\SecretManager\V1\Secret;
+use Google\Cloud\SecretManager\V1\Secret\SecretType;
 use Google\Cloud\SecretManager\V1\SecretPayload;
 use Google\Cloud\SecretManager\V1\SecretVersion;
 use Google\Cloud\TestUtils\TestTrait;
@@ -71,6 +72,7 @@ class secretmanagerTest extends TestCase
     private static $testSecretWithCMEKToCreateName;
     private static $testSecretWithTopicToCreateName;
     private static $testSecretWithRotationToCreateName;
+    private static $testSecretWithTypeToCreateName;
 
     private static $iamUser = 'user:sethvargo@google.com';
     private static $testLabelKey = 'test-label-key';
@@ -107,6 +109,7 @@ class secretmanagerTest extends TestCase
         self::$testSecretWithCMEKToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithTopicToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
         self::$testSecretWithRotationToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
+        self::$testSecretWithTypeToCreateName = self::$client->secretName(self::$projectId, self::randomSecretId());
 
         self::$testSecretVersion = self::addSecretVersion(self::$testSecretWithVersions);
         self::$testSecretVersionToDestroy = self::addSecretVersion(self::$testSecretWithVersions);
@@ -148,6 +151,7 @@ class secretmanagerTest extends TestCase
         self::deleteSecret(self::$testSecretWithCMEKToCreateName);
         self::deleteSecret(self::$testSecretWithTopicToCreateName);
         self::deleteSecret(self::$testSecretWithRotationToCreateName);
+        self::deleteSecret(self::$testSecretWithTypeToCreateName);
         sleep(15); // Added a sleep to wait for the tag unbinding
         self::deleteTagValue();
         self::deleteTagKey();
@@ -918,5 +922,37 @@ class secretmanagerTest extends TestCase
         ]);
 
         $this->assertStringContainsString('Deleted tag binding', $output);
+    }
+
+    public function testCreateSecretWithType()
+    {
+        $name = self::$client->parseName(self::$testSecretWithTypeToCreateName);
+
+        $output = $this->runFunctionSnippet('create_secret_with_type', [
+            $name['project'],
+            $name['secret'],
+            'ACCESS_KEY',
+        ]);
+
+        $this->assertStringContainsString('Created secret with secret type', $output);
+
+        $secret = self::getSecret($name['project'], $name['secret']);
+        $this->assertSame(SecretType::ACCESS_KEY, $secret->getSecretType());
+    }
+
+    /**
+     * @depends testCreateSecretWithType
+     */
+    public function testGetSecretType()
+    {
+        $name = self::$client->parseName(self::$testSecretWithTypeToCreateName);
+
+        $output = $this->runFunctionSnippet('get_secret_type', [
+            $name['project'],
+            $name['secret'],
+        ]);
+
+        $this->assertStringContainsString('Found secret', $output);
+        $this->assertStringContainsString('ACCESS_KEY', $output);
     }
 }
