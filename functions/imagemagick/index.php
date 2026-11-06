@@ -58,6 +58,7 @@ function blurOffensiveImages(CloudEvent $cloudevent): void
         $batchRequest = (new BatchAnnotateImagesRequest())
             ->setRequests([$request]);
         $response = $annotator->batchAnnotateImages($batchRequest)->getResponses()[0];
+        $annotator->close();
 
         // Handle error
         if ($response->hasError()) {
