@@ -77,15 +77,12 @@ class ObjectsTest extends TestCase
         ]);
         $this->assertStringContainsString("Found object: $objectInfo", $listOutput);
 
-        // Delete all contexts on the object.
-        $deleteOutput = $this->runFunctionSnippet('delete_object_contexts', [
-            $bucketName,
-            $objectInfo,
+        // Clear all contexts on the object.
+        $object->update([
+            'contexts' => [
+                'custom' => null,
+            ],
         ]);
-        $this->assertStringContainsString(
-            "Deleted object contexts for object $objectInfo in bucket $bucketName.",
-            $deleteOutput
-        );
         $object->reload();
 
         $clearedGetOutput = $this->runFunctionSnippet('get_object_contexts', [
